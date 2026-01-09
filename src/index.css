@@ -2,95 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Bebas+Neue&family=Creepster&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core VHS Horror Palette */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 90%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 90%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 90%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Blood Red Primary */
+    --primary: 0 100% 31%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Neon Cyan Secondary */
+    --secondary: 186 100% 50%;
+    --secondary-foreground: 0 0% 4%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* VHS Yellow Accent */
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 4%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 186 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Custom Horror Tokens */
+    --blood-red: 0 100% 31%;
+    --blood-red-glow: 0 100% 40%;
+    --neon-cyan: 186 100% 50%;
+    --neon-cyan-glow: 186 100% 60%;
+    --vhs-yellow: 60 100% 50%;
+    --midnight: 0 0% 4%;
+    --vhs-static: 0 0% 20%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Gradients */
+    --gradient-blood: linear-gradient(135deg, hsl(0 100% 31%), hsl(0 100% 20%));
+    --gradient-neon: linear-gradient(135deg, hsl(186 100% 50%), hsl(186 100% 30%));
+    --gradient-vhs: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%);
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Shadows */
+    --shadow-blood: 0 0 20px hsl(0 100% 31% / 0.5);
+    --shadow-neon: 0 0 20px hsl(186 100% 50% / 0.5);
+    --shadow-yellow: 0 0 15px hsl(60 100% 50% / 0.4);
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Fonts */
+    --font-vhs: 'VT323', monospace;
+    --font-title: 'Bebas Neue', sans-serif;
+    --font-horror: 'Creepster', cursive;
 
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 0 0% 6%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 0 100% 31%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 186 100% 50%;
+    --sidebar-accent-foreground: 0 0% 4%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 186 100% 50%;
   }
 }
 
@@ -101,5 +82,185 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-vhs);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-title);
+    letter-spacing: 0.05em;
+  }
+}
+
+/* CRT Scanline Overlay */
+@layer utilities {
+  .scanlines {
+    position: relative;
+  }
+
+  .scanlines::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* CRT Flicker Animation */
+  .crt-flicker {
+    animation: flicker 0.15s infinite;
+  }
+
+  @keyframes flicker {
+    0% { opacity: 0.97; }
+    50% { opacity: 1; }
+    100% { opacity: 0.98; }
+  }
+
+  /* VHS Tracking Glitch */
+  .vhs-glitch {
+    animation: vhs-tracking 8s infinite;
+  }
+
+  @keyframes vhs-tracking {
+    0%, 95%, 100% { 
+      transform: translateX(0);
+      filter: none;
+    }
+    96% { 
+      transform: translateX(-2px);
+      filter: hue-rotate(90deg);
+    }
+    97% { 
+      transform: translateX(2px);
+      filter: saturate(2);
+    }
+    98% { 
+      transform: translateX(-1px);
+      filter: hue-rotate(-90deg);
+    }
+  }
+
+  /* Glitch Hover Effect */
+  .glitch-hover {
+    position: relative;
+    transition: all 0.1s ease;
+  }
+
+  .glitch-hover:hover {
+    animation: glitch-effect 0.3s ease;
+    text-shadow: 
+      2px 0 hsl(var(--neon-cyan)),
+      -2px 0 hsl(var(--blood-red));
+  }
+
+  @keyframes glitch-effect {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  /* Neon Glow Text */
+  .neon-text {
+    text-shadow: 
+      0 0 5px hsl(var(--neon-cyan)),
+      0 0 10px hsl(var(--neon-cyan)),
+      0 0 20px hsl(var(--neon-cyan)),
+      0 0 40px hsl(var(--neon-cyan));
+  }
+
+  .blood-glow {
+    text-shadow: 
+      0 0 5px hsl(var(--blood-red)),
+      0 0 10px hsl(var(--blood-red)),
+      0 0 20px hsl(var(--blood-red));
+  }
+
+  /* Glassmorphism with Grain */
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(20, 20, 20, 0.8) 0%,
+      rgba(10, 10, 10, 0.9) 100%
+    );
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--border));
+    position: relative;
+  }
+
+  .glass-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* VCR Button Style */
+  .vcr-button {
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 2px solid #3a3a3a;
+    box-shadow: 
+      inset 0 1px 0 rgba(255,255,255,0.1),
+      0 2px 4px rgba(0,0,0,0.5);
+    transition: all 0.1s ease;
+  }
+
+  .vcr-button:hover {
+    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+  }
+
+  .vcr-button:active {
+    transform: translateY(1px);
+    box-shadow: 
+      inset 0 1px 0 rgba(0,0,0,0.2),
+      0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  /* VHS Label Style */
+  .vhs-label {
+    background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+    border: 1px solid #333;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-vhs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Pulse Animation for Important Elements */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px hsl(var(--blood-red) / 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px hsl(var(--blood-red) / 0.8), 0 0 40px hsl(var(--blood-red) / 0.4);
+    }
+  }
+
+  /* Static noise background */
+  .static-bg {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
   }
 }
