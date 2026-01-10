@@ -57,9 +57,9 @@ export const SelectionSlot = ({
       value && colors.border,
       value && colors.shadow
     )}>
-      <div className="flex items-center gap-2 mb-3">
-        <span className={cn("w-5 h-5", colors.text)}>{icon}</span>
-        <span className="font-title text-lg text-foreground uppercase tracking-wide">
+      <div className="flex items-center gap-3 mb-3">
+        <span className={cn("shrink-0", colors.text)}>{icon}</span>
+        <span className="font-title text-2xl text-foreground uppercase tracking-wide">
           {label}
         </span>
       </div>
