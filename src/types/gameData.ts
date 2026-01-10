@@ -5,6 +5,7 @@ export interface FeatureFilm {
   killer: string;
   location: string;
   finalGirls: [string, string];
+  boxArt?: string;
 }
 
 export interface SessionLog {
@@ -26,11 +27,11 @@ export interface GameSelection {
 
 export const FEATURE_FILMS: FeatureFilm[] = [
   // Season 1
-  { id: 's1-camp-happy-trails', name: 'Camp Happy Trails', season: 1, killer: 'Hans', location: 'Camp Happy Trails', finalGirls: ['Laurie', 'Reiko'] },
-  { id: 's1-creech-manor', name: 'Creech Manor', season: 1, killer: 'Poltergeist', location: 'Creech Manor', finalGirls: ['Alice', 'Selena'] },
-  { id: 's1-sacred-groves', name: 'Sacred Groves', season: 1, killer: 'Inkanyamba', location: 'Sacred Groves', finalGirls: ['Barbara', 'Sheila'] },
-  { id: 's1-carnival-of-blood', name: 'Carnival of Blood', season: 1, killer: 'Geppetto', location: 'Carnival of Blood', finalGirls: ['Asami', 'Charlie'] },
-  { id: 's1-maple-lane', name: 'Maple Lane', season: 1, killer: 'Dr. Fright', location: 'Maple Lane', finalGirls: ['Nancy', 'Diana'] },
+  { id: 's1-camp-happy-trails', name: 'The Happy Trails Horror', season: 1, killer: 'Hans', location: 'Camp Happy Trails', finalGirls: ['Laurie', 'Reiko'], boxArt: '/box-art/happy-trails-horror.png' },
+  { id: 's1-creech-manor', name: 'The Haunting of Creech Manor', season: 1, killer: 'Poltergeist', location: 'Creech Manor', finalGirls: ['Alice', 'Selena'], boxArt: '/box-art/haunting-creech-manor.png' },
+  { id: 's1-sacred-groves', name: 'Slaughter in the Groves', season: 1, killer: 'Inkanyamba', location: 'Sacred Groves', finalGirls: ['Barbara', 'Sheila'], boxArt: '/box-art/slaughter-groves.png' },
+  { id: 's1-carnival-of-blood', name: 'Carnage at the Carnival', season: 1, killer: 'Geppetto', location: 'Carnival of Blood', finalGirls: ['Asami', 'Charlie'], boxArt: '/box-art/carnage-carnival.png' },
+  { id: 's1-maple-lane', name: 'Frightmare on Maple Lane', season: 1, killer: 'Dr. Fright', location: 'Maple Lane', finalGirls: ['Nancy', 'Diana'], boxArt: '/box-art/frightmare-maple-lane.png' },
   
   // Season 2
   { id: 's2-uss-konrad', name: 'USS Konrad', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'] },
