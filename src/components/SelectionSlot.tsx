@@ -1,4 +1,4 @@
-import { Shuffle, ChevronDown } from 'lucide-react';
+import { Shuffle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Select,

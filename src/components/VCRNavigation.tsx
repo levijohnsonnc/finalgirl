@@ -18,11 +18,11 @@ export const VCRNavigation = ({ currentPage, onNavigate }: VCRNavigationProps) =
               <div className="absolute inset-0 blur-md bg-secondary/30" />
             </div>
             <div className="flex flex-col">
-              <span className="font-horror text-2xl text-primary blood-glow tracking-wider">
+              <span className="font-display text-2xl text-primary blood-glow tracking-wider">
                 FINAL GIRL
               </span>
               <span className="font-vhs text-xs text-muted-foreground -mt-1">
-                VHS SLASHER COMPANION v1.0
+                SLASHER COMPANION
               </span>
             </div>
           </div>

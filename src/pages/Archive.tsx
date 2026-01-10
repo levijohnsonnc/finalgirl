@@ -25,7 +25,7 @@ const Archive = () => {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="font-horror text-5xl text-primary blood-glow tracking-wider">
+        <h1 className="font-display text-5xl text-primary blood-glow tracking-wider">
           THE ARCHIVE
         </h1>
         <p className="font-vhs text-muted-foreground">
