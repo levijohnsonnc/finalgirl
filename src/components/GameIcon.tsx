@@ -27,7 +27,7 @@ export const GameIcon = ({ type, className }: GameIconProps) => {
     <img
       src={iconMap[type]}
       alt={altMap[type]}
-      className={cn('w-5 h-5 object-contain', className)}
+      className={cn('w-10 h-10 object-contain', className)}
     />
   );
 };
