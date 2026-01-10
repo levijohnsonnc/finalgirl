@@ -21,17 +21,12 @@ export const FilmToggle = ({ film, isOwned, onToggle }: FilmToggleProps) => {
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <h3 className={cn(
-              "font-title text-lg truncate transition-colors",
-              isOwned ? "text-primary blood-glow" : "text-foreground"
-            )}>
-              {film.name}
-            </h3>
-            <span className="font-vhs text-xs px-2 py-0.5 bg-muted rounded text-muted-foreground">
-              S{film.season}
-            </span>
-          </div>
+          <h3 className={cn(
+            "font-title text-lg truncate transition-colors mb-2",
+            isOwned ? "text-primary blood-glow" : "text-foreground"
+          )}>
+            {film.name}
+          </h3>
 
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-sm">
