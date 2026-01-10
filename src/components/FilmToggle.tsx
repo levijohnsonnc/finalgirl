@@ -22,13 +22,13 @@ export const FilmToggle = ({ film, isOwned, onToggle }: FilmToggleProps) => {
       <div className="flex gap-4">
         {/* Box Art */}
         {film.boxArt && (
-          <div className="flex-shrink-0 w-20">
+          <div className="flex-shrink-0 w-28 relative z-10">
             <img 
               src={film.boxArt} 
               alt={`${film.name} box art`}
               className={cn(
-                "w-full h-auto rounded border-2 transition-all",
-                isOwned ? "border-primary/50 shadow-blood" : "border-border opacity-60"
+                "w-full h-auto rounded transition-all",
+                isOwned ? "shadow-blood" : "opacity-60 grayscale-[30%]"
               )}
             />
           </div>
