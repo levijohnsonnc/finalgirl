@@ -76,6 +76,7 @@ export default {
         vhs: ['VT323', 'monospace'],
         title: ['Bebas Neue', 'sans-serif'],
         horror: ['Creepster', 'cursive'],
+        display: ['Roslindale Display Condensed', 'Times New Roman', 'serif'],
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -14,9 +14,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background scanlines crt-flicker">
-      {/* Static noise background layer */}
-      <div className="fixed inset-0 static-bg pointer-events-none" />
+    <div className="min-h-screen bg-background">
       
       {/* VCR Navigation */}
       <VCRNavigation currentPage={currentPage} onNavigate={setCurrentPage} />
@@ -34,7 +32,7 @@ const Index = () => {
             <span className="font-vhs text-xs text-muted-foreground">PLAY ▶</span>
           </div>
           <div className="font-vhs text-xs text-muted-foreground">
-            FINAL GIRL™ VHS COMPANION • {time.toLocaleDateString()}
+            FINAL GIRL™ SLASHER COMPANION • {time.toLocaleDateString()}
           </div>
           <div className="flex items-center gap-4">
             <span className="font-vhs text-xs text-secondary neon-text">

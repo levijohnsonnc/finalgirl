@@ -1,12 +1,12 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Skull, MapPin, User, Trophy } from 'lucide-react';
+import { Skull, Trophy, Shuffle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { TotalTerrorButton } from '@/components/TotalTerrorButton';
 import { SelectionSlot } from '@/components/SelectionSlot';
 import { SessionLogPanel } from '@/components/SessionLogPanel';
 import { StoryGenerator } from '@/components/StoryGenerator';
+import { GameIcon } from '@/components/GameIcon';
 import { GameSelection, SessionLog, getOwnedContent } from '@/types/gameData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { v4 as uuidv4 } from 'uuid';
@@ -97,7 +97,7 @@ const Dashboard = () => {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="font-horror text-5xl text-primary blood-glow tracking-wider">
+        <h1 className="font-display text-5xl text-primary blood-glow tracking-wider">
           PROJECTION ROOM
         </h1>
         <p className="font-vhs text-muted-foreground">
@@ -107,7 +107,7 @@ const Dashboard = () => {
 
       {!hasOwnedContent ? (
         <div className="glass-card p-8 rounded-lg text-center">
-          <Skull className="w-16 h-16 text-primary mx-auto mb-4 animate-pulse" />
+          <GameIcon type="killer" className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <h2 className="font-title text-2xl text-foreground mb-2">NO FILMS IN COLLECTION</h2>
           <p className="font-vhs text-muted-foreground">
             Visit THE ARCHIVE to add Feature Films to your collection
@@ -115,42 +115,50 @@ const Dashboard = () => {
         </div>
       ) : (
         <>
-          {/* Total Terror Button */}
-          <TotalTerrorButton
-            onClick={handleTotalTerror}
-            disabled={!hasOwnedContent}
-            isAnimating={isAnimating}
-          />
-
-          {/* Selection Slots */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <SelectionSlot
-              label="Killer"
-              value={selection.killer}
-              options={ownedContent.killers}
-              onRandomize={() => handleRandomizeSlot('killer')}
-              onSelect={(v) => handleSelectSlot('killer', v)}
-              icon={<Skull className="w-5 h-5" />}
-              accentColor="primary"
-            />
-            <SelectionSlot
-              label="Location"
-              value={selection.location}
-              options={ownedContent.locations}
-              onRandomize={() => handleRandomizeSlot('location')}
-              onSelect={(v) => handleSelectSlot('location', v)}
-              icon={<MapPin className="w-5 h-5" />}
-              accentColor="secondary"
-            />
-            <SelectionSlot
-              label="Final Girl"
-              value={selection.finalGirl}
-              options={ownedContent.finalGirls}
-              onRandomize={() => handleRandomizeSlot('finalGirl')}
-              onSelect={(v) => handleSelectSlot('finalGirl', v)}
-              icon={<User className="w-5 h-5" />}
-              accentColor="accent"
-            />
+          {/* Selection Slots with Randomize All */}
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <Button
+                onClick={handleTotalTerror}
+                disabled={!hasOwnedContent || isAnimating}
+                variant="outline"
+                size="sm"
+                className="vcr-button font-vhs text-sm"
+              >
+                <Shuffle className={`w-4 h-4 mr-2 ${isAnimating ? 'animate-spin' : ''}`} />
+                {isAnimating ? 'RANDOMIZING...' : 'RANDOMIZE ALL'}
+              </Button>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-4">
+              <SelectionSlot
+                label="Killer"
+                value={selection.killer}
+                options={ownedContent.killers}
+                onRandomize={() => handleRandomizeSlot('killer')}
+                onSelect={(v) => handleSelectSlot('killer', v)}
+                icon={<GameIcon type="killer" />}
+                accentColor="primary"
+              />
+              <SelectionSlot
+                label="Location"
+                value={selection.location}
+                options={ownedContent.locations}
+                onRandomize={() => handleRandomizeSlot('location')}
+                onSelect={(v) => handleSelectSlot('location', v)}
+                icon={<GameIcon type="location" />}
+                accentColor="secondary"
+              />
+              <SelectionSlot
+                label="Final Girl"
+                value={selection.finalGirl}
+                options={ownedContent.finalGirls}
+                onRandomize={() => handleRandomizeSlot('finalGirl')}
+                onSelect={(v) => handleSelectSlot('finalGirl', v)}
+                icon={<GameIcon type="finalGirl" />}
+                accentColor="accent"
+              />
+            </div>
           </div>
 
           {/* Setup Inputs */}
