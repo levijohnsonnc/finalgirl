@@ -24,10 +24,6 @@ export interface GameSelection {
   initialSetupCard: string;
 }
 
-export interface AppSettings {
-  openaiApiKey: string;
-}
-
 export const FEATURE_FILMS: FeatureFilm[] = [
   // Season 1
   { id: 's1-camp-happy-trails', name: 'Camp Happy Trails', season: 1, killer: 'Hans', location: 'Camp Happy Trails', finalGirls: ['Laurie', 'Reiko'] },
