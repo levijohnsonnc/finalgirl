@@ -23,14 +23,18 @@ export const FilmToggle = ({ film, isOwned, onToggle }: FilmToggleProps) => {
         {/* Box Art */}
         {film.boxArt && (
           <div className="flex-shrink-0 w-28 relative z-10">
-            <img 
-              src={film.boxArt} 
-              alt={`${film.name} box art`}
-              className={cn(
-                "w-full h-auto rounded transition-all",
-                isOwned ? "shadow-blood" : "opacity-60 grayscale-[30%]"
-              )}
-            />
+              <img 
+                src={film.boxArt} 
+                alt={`${film.name} box art`}
+                className={cn(
+                  "w-full h-auto rounded transition-all",
+                  isOwned ? "shadow-blood" : "opacity-60 grayscale-[30%]"
+                )}
+                onError={(e) => {
+                  console.error(`Failed to load box art for ${film.id}:`, film.boxArt);
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
           </div>
         )}
 

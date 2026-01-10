@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+
 import { Film, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FilmToggle } from '@/components/FilmToggle';
@@ -8,13 +8,12 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 const Archive = () => {
   const [ownedFilms, setOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
 
-  const filmsBySeason = useMemo(() => {
-    return FEATURE_FILMS.reduce((acc, film) => {
-      if (!acc[film.season]) acc[film.season] = [];
-      acc[film.season].push(film);
-      return acc;
-    }, {} as Record<number, typeof FEATURE_FILMS>);
-  }, []);
+  // Group films by season - no memoization needed, FEATURE_FILMS is static
+  const filmsBySeason = FEATURE_FILMS.reduce((acc, film) => {
+    if (!acc[film.season]) acc[film.season] = [];
+    acc[film.season].push(film);
+    return acc;
+  }, {} as Record<number, typeof FEATURE_FILMS>);
 
   const handleToggleFilm = (filmId: string) => {
     setOwnedFilms(prev => 

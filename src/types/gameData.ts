@@ -1,3 +1,10 @@
+// Box art imports - bundled by Vite for cache-busting and build-time validation
+import happyTrailsArt from '@/assets/box-art/happy-trails-horror.png';
+import creechManorArt from '@/assets/box-art/haunting-creech-manor.png';
+import slaughterGrovesArt from '@/assets/box-art/slaughter-groves.png';
+import carnageCarnivalArt from '@/assets/box-art/carnage-carnival.png';
+import frightmareMapleArt from '@/assets/box-art/frightmare-maple-lane.png';
+
 export interface FeatureFilm {
   id: string;
   name: string;
@@ -27,11 +34,11 @@ export interface GameSelection {
 
 export const FEATURE_FILMS: FeatureFilm[] = [
   // Season 1
-  { id: 's1-camp-happy-trails', name: 'The Happy Trails Horror', season: 1, killer: 'Hans', location: 'Camp Happy Trails', finalGirls: ['Laurie', 'Reiko'], boxArt: '/box-art/happy-trails-horror.png' },
-  { id: 's1-creech-manor', name: 'The Haunting of Creech Manor', season: 1, killer: 'Poltergeist', location: 'Creech Manor', finalGirls: ['Alice', 'Selena'], boxArt: '/box-art/haunting-creech-manor.png' },
-  { id: 's1-sacred-groves', name: 'Slaughter in the Groves', season: 1, killer: 'Inkanyamba', location: 'Sacred Groves', finalGirls: ['Barbara', 'Sheila'], boxArt: '/box-art/slaughter-groves.png' },
-  { id: 's1-carnival-of-blood', name: 'Carnage at the Carnival', season: 1, killer: 'Geppetto', location: 'Carnival of Blood', finalGirls: ['Asami', 'Charlie'], boxArt: '/box-art/carnage-carnival.png' },
-  { id: 's1-maple-lane', name: 'Frightmare on Maple Lane', season: 1, killer: 'Dr. Fright', location: 'Maple Lane', finalGirls: ['Nancy', 'Diana'], boxArt: '/box-art/frightmare-maple-lane.png' },
+  { id: 's1-camp-happy-trails', name: 'The Happy Trails Horror', season: 1, killer: 'Hans', location: 'Camp Happy Trails', finalGirls: ['Laurie', 'Reiko'], boxArt: happyTrailsArt },
+  { id: 's1-creech-manor', name: 'The Haunting of Creech Manor', season: 1, killer: 'Poltergeist', location: 'Creech Manor', finalGirls: ['Alice', 'Selena'], boxArt: creechManorArt },
+  { id: 's1-sacred-groves', name: 'Slaughter in the Groves', season: 1, killer: 'Inkanyamba', location: 'Sacred Groves', finalGirls: ['Barbara', 'Sheila'], boxArt: slaughterGrovesArt },
+  { id: 's1-carnival-of-blood', name: 'Carnage at the Carnival', season: 1, killer: 'Geppetto', location: 'Carnival of Blood', finalGirls: ['Asami', 'Charlie'], boxArt: carnageCarnivalArt },
+  { id: 's1-maple-lane', name: 'Frightmare on Maple Lane', season: 1, killer: 'Dr. Fright', location: 'Maple Lane', finalGirls: ['Nancy', 'Diana'], boxArt: frightmareMapleArt },
   
   // Season 2
   { id: 's2-uss-konrad', name: 'USS Konrad', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'] },
