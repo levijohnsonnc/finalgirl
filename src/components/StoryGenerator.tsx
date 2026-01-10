@@ -7,16 +7,15 @@ interface StoryGeneratorProps {
   killer: string | null;
   location: string | null;
   finalGirl: string | null;
-  apiKey: string;
 }
 
-export const StoryGenerator = ({ killer, location, finalGirl, apiKey }: StoryGeneratorProps) => {
+export const StoryGenerator = ({ killer, location, finalGirl }: StoryGeneratorProps) => {
   const [story, setStory] = useState<string | null>(null);
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canGenerate = killer && location && finalGirl && apiKey;
+  const canGenerate = killer && location && finalGirl;
 
   const generateStory = async () => {
     if (!canGenerate) return;
@@ -25,65 +24,9 @@ export const StoryGenerator = ({ killer, location, finalGirl, apiKey }: StoryGen
     setError(null);
 
     try {
-      // Generate story using OpenAI
-      const storyResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            {
-              role: 'system',
-              content: `You are a horror movie copywriter from the 1980s writing VHS back-of-box descriptions. Write in a dramatic, pulpy style with short punchy sentences. Always build tension and end with a cliffhanger question.`
-            },
-            {
-              role: 'user',
-              content: `Write a 3-paragraph VHS back-of-box synopsis for a slasher movie featuring:
-              - Killer: ${killer}
-              - Location: ${location}  
-              - Final Girl: ${finalGirl}
-              
-              Make it dramatic, scary, and authentic to 80s horror marketing. Include the character names naturally.`
-            }
-          ],
-          max_tokens: 500,
-          temperature: 0.8,
-        }),
-      });
-
-      if (!storyResponse.ok) {
-        throw new Error('Failed to generate story');
-      }
-
-      const storyData = await storyResponse.json();
-      setStory(storyData.choices[0].message.content);
-
-      // Generate poster using DALL-E
-      const posterResponse = await fetch('https://api.openai.com/v1/images/generations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'dall-e-3',
-          prompt: `80s hand-painted horror movie VHS cover art. A dramatic slasher movie poster featuring ${killer} as the villain lurking in ${location}, with ${finalGirl} as the terrified heroine. Style: Drew Struzan, painted, dramatic lighting, neon colors, grain texture, vintage horror aesthetic. Include fake wear marks and VHS rental sticker aesthetic.`,
-          size: '1024x1024',
-          quality: 'standard',
-          n: 1,
-        }),
-      });
-
-      if (!posterResponse.ok) {
-        console.warn('Failed to generate poster, continuing without it');
-      } else {
-        const posterData = await posterResponse.json();
-        setPosterUrl(posterData.data[0].url);
-      }
-
+      // TODO: API integration will be added later
+      // For now, show a placeholder message
+      setError('API integration coming soon');
     } catch (err) {
       console.error('Generation error:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate content');
@@ -120,12 +63,6 @@ export const StoryGenerator = ({ killer, location, finalGirl, apiKey }: StoryGen
           )}
         </Button>
       </div>
-
-      {!apiKey && (
-        <p className="font-vhs text-sm text-accent">
-          ⚠ Add your OpenAI API key in The Archive to enable story generation
-        </p>
-      )}
 
       {error && (
         <p className="font-vhs text-sm text-primary">

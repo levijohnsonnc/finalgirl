@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
 const Dashboard = () => {
   const [ownedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
   const [sessionLogs, setSessionLogs] = useLocalStorage<SessionLog[]>('final-girl-session-logs', []);
-  const [apiKey] = useLocalStorage<string>('final-girl-openai-key', '');
   
   const [selection, setSelection] = useState<GameSelection>({
     killer: null,
@@ -210,7 +209,6 @@ const Dashboard = () => {
             killer={selection.killer}
             location={selection.location}
             finalGirl={selection.finalGirl}
-            apiKey={apiKey}
           />
 
           {/* Session Log */}

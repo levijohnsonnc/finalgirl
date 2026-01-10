@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
-import { Key, Film, CheckCircle2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Film, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS, getOwnedContent } from '@/types/gameData';
@@ -9,7 +7,6 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const Archive = () => {
   const [ownedFilms, setOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
-  const [apiKey, setApiKey] = useLocalStorage<string>('final-girl-openai-key', '');
 
   const filmsBySeason = useMemo(() => {
     return FEATURE_FILMS.reduce((acc, film) => {
@@ -47,30 +44,6 @@ const Archive = () => {
         <p className="font-vhs text-muted-foreground">
           MANAGE YOUR COLLECTION • CONFIGURE SETTINGS
         </p>
-      </div>
-
-      {/* API Key Settings */}
-      <div className="glass-card p-6 rounded-lg">
-        <div className="flex items-center gap-2 mb-4">
-          <Key className="w-5 h-5 text-secondary" />
-          <h2 className="font-title text-xl text-foreground">API CONFIGURATION</h2>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="apiKey" className="font-vhs text-sm text-muted-foreground">
-            OPENAI API KEY
-          </Label>
-          <Input
-            id="apiKey"
-            type="password"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder="sk-..."
-            className="vcr-button font-vhs"
-          />
-          <p className="font-vhs text-xs text-muted-foreground">
-            Required for AI-generated movie synopses and poster art. Your key is stored locally.
-          </p>
-        </div>
       </div>
 
       {/* Collection Stats */}
