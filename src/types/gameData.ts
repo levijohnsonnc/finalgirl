@@ -41,25 +41,25 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's1-maple-lane', name: 'Frightmare on Maple Lane', season: 1, killer: 'Dr. Fright', location: 'Maple Lane', finalGirls: ['Nancy', 'Diana'], boxArt: frightmareMapleArt },
   
   // Season 2
-  { id: 's2-uss-konrad', name: 'USS Konrad', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'] },
-  { id: 's2-station-2891', name: 'Station 2891', season: 2, killer: 'Organism', location: 'Station 2891', finalGirls: ['Kate', 'Umi'] },
-  { id: 's2-wolfe-asylum', name: 'Wolfe Asylum', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'] },
-  { id: 's2-storybook-woods', name: 'Storybook Woods', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'] },
-  { id: 's2-wingard-cottage', name: 'Wingard Cottage', season: 2, killer: 'Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'] },
+  { id: 's2-into-the-void', name: 'Into the Void', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'] },
+  { id: 's2-panic-station-2891', name: 'Panic at Station 2891', season: 2, killer: 'Organism', location: 'Station 2891', finalGirls: ['Kate', 'Umi'] },
+  { id: 's2-madness-in-dark', name: 'Madness in the Dark', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'] },
+  { id: 's2-once-upon-full-moon', name: 'Once Upon a Full Moon', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'] },
+  { id: 's2-knock-at-door', name: 'A Knock at the Door', season: 2, killer: 'Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'] },
   
   // Season 3
-  { id: 's3-falconwood', name: 'Falconwood', season: 3, killer: 'Butcher', location: 'Falconwood', finalGirls: ['Sookie', 'Tanya'] },
-  { id: 's3-sunnydaze-mall', name: 'Sunnydaze Mall', season: 3, killer: 'Toymaker', location: 'Sunnydaze Mall', finalGirls: ['Trish', 'Clementine'] },
-  { id: 's3-hellscape', name: 'Hellscape', season: 3, killer: 'Hellview Killers', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'] },
-  { id: 's3-marrek-warehouse', name: 'Marrek Warehouse', season: 3, killer: 'Terminus', location: 'Marrek Warehouse', finalGirls: ['Jada', 'Gia'] },
-  { id: 's3-utopia', name: 'Utopia', season: 3, killer: 'Ancient', location: 'Utopia', finalGirls: ['Agnes', 'Constance'] },
+  { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Butcher', location: 'Falconwood', finalGirls: ['Sookie', 'Tanya'] },
+  { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'Toymaker', location: 'Sunnydaze Mall', finalGirls: ['Trish', 'Clementine'] },
+  { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Hellview Killers', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'] },
+  { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'Terminus', location: 'Marrek Warehouse', finalGirls: ['Jada', 'Gia'] },
+  { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'Ancient', location: 'Utopia', finalGirls: ['Agnes', 'Constance'] },
   
   // Season 4
-  { id: 's4-the-last-stop', name: 'The Last Stop', season: 4, killer: 'The Hitchhiker', location: 'The Last Stop', finalGirls: ['Sasha', 'Mindy'] },
-  { id: 's4-dead-by-dawn', name: 'Dead by Dawn', season: 4, killer: 'The Deadite', location: 'Dead by Dawn', finalGirls: ['Ashlee', 'Linda'] },
-  { id: 's4-north-pole-nightmare', name: 'North Pole Nightmare', season: 4, killer: 'Krampus', location: 'North Pole', finalGirls: ['Cindy', 'Holly'] },
-  { id: 's4-blood-moon-bay', name: 'Blood Moon Bay', season: 4, killer: 'The Siren', location: 'Blood Moon Bay', finalGirls: ['Marina', 'Coral'] },
-  { id: 's4-haunted-heights', name: 'Haunted Heights', season: 4, killer: 'The Specter', location: 'Haunted Heights', finalGirls: ['Victoria', 'Madeline'] },
+  { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
+  { id: 's4-demon-shadows', name: 'A Demon in the Shadows', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
+  { id: 's4-buddyland', name: 'Bad Times at Buddyland', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
+  { id: 's4-rotten-harvest', name: 'A Rotten Harvest', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
+  { id: 's4-green-terror', name: 'The Green Terror', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
 ];
 
 export const getOwnedContent = (ownedFilms: string[]) => {
