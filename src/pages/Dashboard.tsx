@@ -118,7 +118,7 @@ const Dashboard = () => {
         <>
           {/* Selection Slots with Randomize All */}
           <div className="space-y-4">
-            <div className="flex justify-end">
+            <div className="flex justify-end -my-4">
               <button
                 onClick={handleTotalTerror}
                 disabled={!hasOwnedContent || isAnimating}
@@ -127,7 +127,7 @@ const Dashboard = () => {
                 <img 
                   src={randomizeAllButton} 
                   alt="Randomize All" 
-                  className="h-32 w-auto"
+                  className="h-24 w-auto"
                 />
               </button>
             </div>
