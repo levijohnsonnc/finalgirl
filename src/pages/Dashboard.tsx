@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Skull, Trophy, Shuffle } from 'lucide-react';
+import { Skull, Trophy } from 'lucide-react';
+import randomizeAllButton from '@/assets/randomize-all-button.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -117,17 +118,18 @@ const Dashboard = () => {
         <>
           {/* Selection Slots with Randomize All */}
           <div className="space-y-4">
-            <div className="flex justify-end">
-              <Button
+            <div className="flex justify-center">
+              <button
                 onClick={handleTotalTerror}
                 disabled={!hasOwnedContent || isAnimating}
-                variant="outline"
-                size="sm"
-                className="vcr-button font-vhs text-sm"
+                className={`transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${isAnimating ? 'animate-pulse' : ''}`}
               >
-                <Shuffle className={`w-4 h-4 mr-2 ${isAnimating ? 'animate-spin' : ''}`} />
-                {isAnimating ? 'RANDOMIZING...' : 'RANDOMIZE ALL'}
-              </Button>
+                <img 
+                  src={randomizeAllButton} 
+                  alt="Randomize All" 
+                  className="h-20 w-auto"
+                />
+              </button>
             </div>
             
             <div className="grid md:grid-cols-3 gap-4">
