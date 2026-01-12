@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Skull, Trophy } from 'lucide-react';
 import randomizeAllButton from '@/assets/randomize-all-button.png';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ const Dashboard = () => {
   });
   
   const [isAnimating, setIsAnimating] = useState(false);
+  const prevLocationRef = useRef<string | null>(null);
 
   const ownedContent = useMemo(() => getOwnedContent(ownedFilms), [ownedFilms]);
 
@@ -48,11 +49,14 @@ const Dashboard = () => {
 
   // Reset event and setup card when location changes
   useEffect(() => {
-    setSelection(prev => ({
-      ...prev,
-      startingEvent: '',
-      initialSetupCard: '',
-    }));
+    if (prevLocationRef.current !== null && prevLocationRef.current !== selection.location) {
+      setSelection(prev => ({
+        ...prev,
+        startingEvent: '',
+        initialSetupCard: '',
+      }));
+    }
+    prevLocationRef.current = selection.location;
   }, [selection.location]);
 
   const getRandomItem = useCallback((items: string[]) => {
