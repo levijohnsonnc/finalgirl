@@ -1,14 +1,15 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Skull, Trophy } from 'lucide-react';
 import randomizeAllButton from '@/assets/randomize-all-button.png';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SelectionSlot } from '@/components/SelectionSlot';
 import { SessionLogPanel } from '@/components/SessionLogPanel';
 import { StoryGenerator } from '@/components/StoryGenerator';
 import { GameIcon } from '@/components/GameIcon';
-import { GameSelection, SessionLog, getOwnedContent } from '@/types/gameData';
+import { GameSelection, SessionLog, getOwnedContent, getFilmIdByLocation } from '@/types/gameData';
+import { getEventsForLocation, getSetupCardsForLocation } from '@/types/featureFilmDetails';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -27,6 +28,32 @@ const Dashboard = () => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const ownedContent = useMemo(() => getOwnedContent(ownedFilms), [ownedFilms]);
+
+  // Get the film ID based on the selected location
+  const filmId = useMemo(() => {
+    if (!selection.location) return null;
+    return getFilmIdByLocation(selection.location);
+  }, [selection.location]);
+
+  // Get available events and setup cards for the current location
+  const availableEvents = useMemo(() => {
+    if (!filmId) return [];
+    return getEventsForLocation(filmId);
+  }, [filmId]);
+
+  const availableSetupCards = useMemo(() => {
+    if (!filmId) return [];
+    return getSetupCardsForLocation(filmId);
+  }, [filmId]);
+
+  // Reset event and setup card when location changes
+  useEffect(() => {
+    setSelection(prev => ({
+      ...prev,
+      startingEvent: '',
+      initialSetupCard: '',
+    }));
+  }, [selection.location]);
 
   const getRandomItem = useCallback((items: string[]) => {
     if (items.length === 0) return null;
@@ -91,8 +118,14 @@ const Dashboard = () => {
     setSessionLogs(prev => [...prev, newLog]);
   }, [selection, setSessionLogs]);
 
+  const handleTotalTerrorClick = () => {
+    if (isAnimating) return;
+    handleTotalTerror();
+  };
+
   const hasSelection = selection.killer && selection.location && selection.finalGirl;
   const hasOwnedContent = ownedFilms.length > 0;
+  const hasDetailedData = availableEvents.length > 0 || availableSetupCards.length > 0;
 
   return (
     <div className="space-y-8">
@@ -120,7 +153,7 @@ const Dashboard = () => {
           <div className="space-y-4">
             <div className="flex justify-end -my-4">
               <button
-                onClick={handleTotalTerror}
+                onClick={handleTotalTerrorClick}
                 disabled={!hasOwnedContent || isAnimating}
                 className={`transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${isAnimating ? 'animate-pulse' : ''}`}
               >
@@ -172,25 +205,53 @@ const Dashboard = () => {
                   <Label htmlFor="startingEvent" className="font-vhs text-sm text-muted-foreground">
                     STARTING EVENT
                   </Label>
-                  <Input
-                    id="startingEvent"
-                    value={selection.startingEvent}
-                    onChange={(e) => setSelection(prev => ({ ...prev, startingEvent: e.target.value }))}
-                    placeholder="Enter starting event..."
-                    className="vcr-button font-vhs"
-                  />
+                  {hasDetailedData && availableEvents.length > 0 ? (
+                    <Select
+                      value={selection.startingEvent}
+                      onValueChange={(value) => setSelection(prev => ({ ...prev, startingEvent: value }))}
+                    >
+                      <SelectTrigger className="vcr-button font-vhs">
+                        <SelectValue placeholder="Select starting event..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableEvents.map((event) => (
+                          <SelectItem key={event.name} value={event.name} className="font-vhs">
+                            {event.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <div className="vcr-button font-vhs px-3 py-2 text-muted-foreground text-sm">
+                      No events available for this location
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="setupCard" className="font-vhs text-sm text-muted-foreground">
                     INITIAL SETUP CARD
                   </Label>
-                  <Input
-                    id="setupCard"
-                    value={selection.initialSetupCard}
-                    onChange={(e) => setSelection(prev => ({ ...prev, initialSetupCard: e.target.value }))}
-                    placeholder="Enter setup card..."
-                    className="vcr-button font-vhs"
-                  />
+                  {hasDetailedData && availableSetupCards.length > 0 ? (
+                    <Select
+                      value={selection.initialSetupCard}
+                      onValueChange={(value) => setSelection(prev => ({ ...prev, initialSetupCard: value }))}
+                    >
+                      <SelectTrigger className="vcr-button font-vhs">
+                        <SelectValue placeholder="Select setup card..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableSetupCards.map((card) => (
+                          <SelectItem key={card.name} value={card.name} className="font-vhs">
+                            {card.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <div className="vcr-button font-vhs px-3 py-2 text-muted-foreground text-sm">
+                      No setup cards available for this location
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -219,6 +280,9 @@ const Dashboard = () => {
             killer={selection.killer}
             location={selection.location}
             finalGirl={selection.finalGirl}
+            startingEvent={selection.startingEvent || null}
+            startingSetup={selection.initialSetupCard || null}
+            filmId={filmId}
           />
 
           {/* Session Log */}
