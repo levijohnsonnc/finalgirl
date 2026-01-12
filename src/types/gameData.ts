@@ -71,3 +71,15 @@ export const getOwnedContent = (ownedFilms: string[]) => {
     finalGirls: [...new Set(owned.flatMap(f => f.finalGirls))],
   };
 };
+
+// Helper to find film ID by location name
+export const getFilmIdByLocation = (locationName: string): string | null => {
+  const film = FEATURE_FILMS.find(f => f.location === locationName);
+  return film?.id ?? null;
+};
+
+// Helper to find film ID by killer name
+export const getFilmIdByKiller = (killerName: string): string | null => {
+  const film = FEATURE_FILMS.find(f => f.killer === killerName);
+  return film?.id ?? null;
+};

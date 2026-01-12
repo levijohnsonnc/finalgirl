@@ -1,17 +1,29 @@
 import { useState } from 'react';
-import { Film, Loader2, Sparkles } from 'lucide-react';
+import { Film, Loader2, Sparkles, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { getFilmDetails } from '@/types/featureFilmDetails';
+import { toast } from 'sonner';
 
 interface StoryGeneratorProps {
   killer: string | null;
   location: string | null;
   finalGirl: string | null;
+  startingEvent: string | null;
+  startingSetup: string | null;
+  filmId: string | null;
 }
 
-export const StoryGenerator = ({ killer, location, finalGirl }: StoryGeneratorProps) => {
+export const StoryGenerator = ({ 
+  killer, 
+  location, 
+  finalGirl, 
+  startingEvent, 
+  startingSetup,
+  filmId 
+}: StoryGeneratorProps) => {
   const [story, setStory] = useState<string | null>(null);
-  const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,14 +34,67 @@ export const StoryGenerator = ({ killer, location, finalGirl }: StoryGeneratorPr
 
     setIsGenerating(true);
     setError(null);
+    setStory(null);
 
     try {
-      // TODO: API integration will be added later
-      // For now, show a placeholder message
-      setError('API integration coming soon');
+      // Get detailed context if available
+      const filmDetails = filmId ? getFilmDetails(filmId) : undefined;
+      
+      // Build request payload with detailed info when available
+      const killerDetail = filmDetails?.killer;
+      const finalGirlDetail = filmDetails?.finalGirls.find(fg => fg.name === finalGirl);
+      const locationDetail = filmDetails?.location;
+      const eventDetail = locationDetail?.events.find(e => e.name === startingEvent);
+      const setupDetail = locationDetail?.setupCards.find(s => s.name === startingSetup);
+
+      const payload = {
+        killer: {
+          name: killer,
+          description: killerDetail?.description,
+        },
+        location: {
+          name: location,
+          description: locationDetail?.description,
+        },
+        finalGirl: {
+          name: finalGirl,
+          backstory: finalGirlDetail?.backstory,
+        },
+        startingEvent: startingEvent ? {
+          name: startingEvent,
+          description: eventDetail?.description,
+        } : null,
+        startingSetup: startingSetup ? {
+          name: startingSetup,
+          description: setupDetail?.description,
+        } : null,
+      };
+
+      console.log('Generating story with payload:', payload);
+
+      const { data, error: fnError } = await supabase.functions.invoke('generate-story', {
+        body: payload,
+      });
+
+      if (fnError) {
+        console.error('Function error:', fnError);
+        throw new Error(fnError.message || 'Failed to generate story');
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      if (data?.story) {
+        setStory(data.story);
+      } else {
+        throw new Error('No story was generated');
+      }
     } catch (err) {
       console.error('Generation error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to generate content');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate content';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsGenerating(false);
     }
@@ -42,67 +107,84 @@ export const StoryGenerator = ({ killer, location, finalGirl }: StoryGeneratorPr
           <Film className="w-5 h-5 text-primary" />
           MOVIE SYNOPSIS
         </h3>
-        <Button
-          onClick={generateStory}
-          disabled={!canGenerate || isGenerating}
-          className={cn(
-            "vcr-button font-vhs glitch-hover",
-            canGenerate && !isGenerating && "bg-primary hover:bg-primary/90"
+        <div className="flex gap-2">
+          {story && (
+            <Button
+              onClick={generateStory}
+              disabled={!canGenerate || isGenerating}
+              variant="outline"
+              className="vcr-button font-vhs"
+            >
+              <RefreshCw className={cn("w-4 h-4 mr-2", isGenerating && "animate-spin")} />
+              REGENERATE
+            </Button>
           )}
-        >
-          {isGenerating ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              GENERATING...
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-4 h-4 mr-2" />
-              START MOVIE
-            </>
+          {!story && (
+            <Button
+              onClick={generateStory}
+              disabled={!canGenerate || isGenerating}
+              className={cn(
+                "vcr-button font-vhs glitch-hover",
+                canGenerate && !isGenerating && "bg-primary hover:bg-primary/90"
+              )}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  GENERATING...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  START MOVIE
+                </>
+              )}
+            </Button>
           )}
-        </Button>
+        </div>
       </div>
 
-      {error && (
+      {error && !isGenerating && (
         <p className="font-vhs text-sm text-primary">
           ✕ {error}
         </p>
       )}
 
-      {(story || posterUrl) && (
-        <div className="grid md:grid-cols-2 gap-6 mt-4">
-          {posterUrl && (
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
-              <img
-                src={posterUrl}
-                alt="Generated movie poster"
-                className="w-full rounded border-2 border-primary/50 shadow-blood"
-              />
-              <div className="absolute bottom-2 left-2 right-2 z-20">
-                <div className="vhs-label text-center">
-                  <span className="font-vhs text-xs text-secondary">VHS ORIGINAL</span>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {story && (
-            <div className="space-y-4">
-              <div className="vhs-label border-l-4 border-primary p-4">
-                <p className="font-vhs text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-                  {story}
-                </p>
-              </div>
-            </div>
-          )}
+      {isGenerating && (
+        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+          <div className="relative">
+            <Loader2 className="w-12 h-12 text-primary animate-spin" />
+            <div className="absolute inset-0 w-12 h-12 rounded-full border-2 border-primary/30 animate-pulse" />
+          </div>
+          <p className="font-vhs text-sm text-muted-foreground animate-pulse">
+            [ GENERATING YOUR VHS HORROR STORY... ]
+          </p>
         </div>
       )}
 
-      {!story && !posterUrl && !isGenerating && canGenerate && (
+      {story && !isGenerating && (
+        <div className="space-y-4 mt-4">
+          <div className="vhs-label border-l-4 border-primary p-4 bg-background/50">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="font-vhs text-xs text-secondary tracking-widest">▶ NOW PLAYING</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-secondary/50 to-transparent" />
+            </div>
+            <p className="font-vhs text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+              {story}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {!story && !isGenerating && !error && canGenerate && (
         <p className="font-vhs text-sm text-muted-foreground text-center py-8">
           [ PRESS "START MOVIE" TO GENERATE YOUR VHS SYNOPSIS ]
+        </p>
+      )}
+
+      {!canGenerate && !isGenerating && (
+        <p className="font-vhs text-sm text-muted-foreground text-center py-8">
+          [ SELECT A KILLER, LOCATION, AND FINAL GIRL TO BEGIN ]
         </p>
       )}
     </div>
