@@ -98,18 +98,6 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
       
       {/* Content - Centered button area */}
       <div className="relative z-10 flex flex-col items-center text-center px-4 mt-32 md:mt-40">
-        {/* Subtitle - Diegetic, feels projected not overlaid */}
-        <p 
-          className="text-sm md:text-base text-foreground/25 mb-8 tracking-wide italic drop-shadow-md projector-text-flicker"
-          style={{ 
-            fontFamily: 'var(--font-vhs)', 
-            textShadow: '1px 1px 4px rgba(0,0,0,0.8)',
-            filter: 'blur(0.3px)'
-          }}
-        >
-          Insert tape. Turn off the lights.
-        </p>
-        
         {/* Main Button - The Ritual Action */}
         <button
           onClick={handleStart}

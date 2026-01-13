@@ -383,12 +383,19 @@
 
   /* Projector brightness pulsing - slow, analog warmth */
   .projector-pulse {
-    animation: projector-brightness 11s ease-in-out infinite;
+    animation: projector-brightness 8s ease-in-out infinite;
   }
 
   @keyframes projector-brightness {
-    0%, 100% { filter: blur(0.3px) saturate(0.9) contrast(1.05) brightness(1); }
-    50% { filter: blur(0.3px) saturate(0.92) contrast(1.03) brightness(1.04); }
+    0%, 100% { 
+      filter: brightness(0.92) saturate(0.88) contrast(1.02); 
+    }
+    35% { 
+      filter: brightness(1.02) saturate(0.95) contrast(0.98); 
+    }
+    70% { 
+      filter: brightness(0.96) saturate(0.9) contrast(1.01); 
+    }
   }
 
   /* Horizontal roll effect - brief tracking distortion */
