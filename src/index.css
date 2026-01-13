@@ -453,4 +453,177 @@
     75% { opacity: 0.2; }
     100% { opacity: 0; }
   }
+
+  /* ========== CASTING ROOM STYLES ========== */
+
+  /* Poster Card - Physical media feel */
+  .poster-card {
+    background: linear-gradient(135deg, hsl(0 0% 12%) 0%, hsl(0 0% 6%) 100%);
+    border: 2px solid hsl(0 0% 20%);
+    box-shadow: 
+      4px 4px 0 hsl(0 0% 5%),
+      8px 8px 20px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    transform: perspective(500px) rotateY(-2deg) rotateX(1deg);
+    transition: all 0.3s ease;
+  }
+
+  .poster-card:hover {
+    transform: perspective(500px) rotateY(0deg) rotateX(0deg) scale(1.02);
+    box-shadow: 
+      2px 2px 0 hsl(0 0% 5%),
+      6px 6px 25px rgba(0,0,0,0.7),
+      0 0 30px hsl(var(--blood-red) / 0.2),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .poster-card-empty {
+    border-style: dashed;
+    border-color: hsl(0 0% 25%);
+  }
+
+  .poster-card-filled {
+    border-color: hsl(0 0% 30%);
+  }
+
+  /* Mystery static for empty slots */
+  .mystery-static {
+    background: 
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.03) 2px,
+        rgba(255,255,255,0.03) 4px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+    animation: static-shimmer 0.5s steps(10) infinite;
+  }
+
+  @keyframes static-shimmer {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.25; }
+  }
+
+  /* VHS softness overlay */
+  .vhs-softness {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0,0,0,0.1) 50%,
+      rgba(0,0,0,0.3) 100%
+    );
+    mix-blend-mode: multiply;
+  }
+
+  /* Shuffle flicker animation */
+  .shuffle-flicker {
+    animation: card-shuffle 0.08s steps(2) infinite;
+  }
+
+  @keyframes card-shuffle {
+    0% { 
+      opacity: 0.7;
+      filter: blur(1px) brightness(1.2);
+    }
+    50% { 
+      opacity: 1;
+      filter: blur(0) brightness(0.9);
+    }
+    100% { 
+      opacity: 0.8;
+      filter: blur(0.5px) brightness(1.1);
+    }
+  }
+
+  /* Typewriter fade for names */
+  .typewriter-fade {
+    animation: type-in 0.3s ease-out;
+  }
+
+  @keyframes type-in {
+    0% { 
+      opacity: 0;
+      filter: blur(2px);
+      transform: translateY(4px);
+    }
+    100% { 
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
+  }
+
+  /* CTA Button States */
+  .cta-locked {
+    background: linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%);
+    border: 2px dashed hsl(0 0% 20%);
+    box-shadow: none;
+    animation: locked-flicker 3s ease-in-out infinite;
+  }
+
+  @keyframes locked-flicker {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.5; }
+  }
+
+  .cta-unlocked {
+    animation: cta-ready 2s ease-in-out infinite;
+  }
+
+  @keyframes cta-ready {
+    0%, 100% { 
+      box-shadow: 
+        inset 0 2px 0 rgba(255,255,255,0.1),
+        inset 0 -2px 0 rgba(0,0,0,0.3),
+        0 4px 8px rgba(0,0,0,0.5),
+        0 0 20px hsl(var(--blood-red) / 0.3);
+    }
+    50% { 
+      box-shadow: 
+        inset 0 2px 0 rgba(255,255,255,0.1),
+        inset 0 -2px 0 rgba(0,0,0,0.3),
+        0 4px 8px rgba(0,0,0,0.5),
+        0 0 40px hsl(var(--blood-red) / 0.5);
+    }
+  }
+
+  /* Shuffle All Button Enhancement */
+  .shuffle-all-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shuffle-all-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.1),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .shuffle-all-btn:hover::before {
+    left: 100%;
+  }
+
+  /* Picker Card Hover */
+  .picker-card {
+    transition: all 0.2s ease;
+  }
+
+  .picker-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .picker-card:active {
+    transform: translateY(-2px);
+  }
 }
