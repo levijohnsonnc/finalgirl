@@ -43,31 +43,28 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
         <div className="static-burst absolute inset-0 z-40 pointer-events-none" />
       )}
       
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4">
-        {/* Title - Restrained, top area */}
-        <div className="mb-8 md:mb-12">
-          <h1 
-            className="text-4xl md:text-5xl lg:text-6xl tracking-wider text-foreground/90 mb-2"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 500 }}
-          >
-            FINAL GIRL
-          </h1>
-          <p 
-            className="text-lg md:text-xl tracking-[0.3em] uppercase text-foreground/70"
-            style={{ fontFamily: 'var(--font-vhs)' }}
-          >
-            Slasher Companion
-          </p>
-        </div>
-        
-        {/* Spacer to push button lower */}
-        <div className="h-24 md:h-32" />
-        
+      {/* Title - Upper left corner */}
+      <div className="absolute top-8 left-8 md:top-12 md:left-12 z-10">
+        <h1 
+          className="text-3xl md:text-4xl lg:text-5xl tracking-wider text-foreground/90 mb-1 drop-shadow-lg"
+          style={{ fontFamily: 'var(--font-display)', fontWeight: 500, textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}
+        >
+          FINAL GIRL
+        </h1>
+        <p 
+          className="text-base md:text-lg tracking-[0.3em] uppercase text-foreground/70 drop-shadow-md"
+          style={{ fontFamily: 'var(--font-vhs)', textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}
+        >
+          Slasher Companion
+        </p>
+      </div>
+      
+      {/* Content - Centered button area */}
+      <div className="relative z-10 flex flex-col items-center text-center px-4 mt-32 md:mt-40">
         {/* Subtitle - Very subtle */}
         <p 
-          className="text-sm md:text-base text-foreground/40 mb-8 tracking-wide italic"
-          style={{ fontFamily: 'var(--font-vhs)' }}
+          className="text-sm md:text-base text-foreground/40 mb-8 tracking-wide italic drop-shadow-md"
+          style={{ fontFamily: 'var(--font-vhs)', textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}
         >
           Insert tape. Turn off the lights.
         </p>
