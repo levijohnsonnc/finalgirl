@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { VCRNavigation } from '@/components/VCRNavigation';
+import { Marquee } from '@/components/Marquee';
 import Dashboard from './Dashboard';
 import Archive from './Archive';
 
 const Index = () => {
+  const [hasStarted, setHasStarted] = useState(false);
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive'>('dashboard');
   const [time, setTime] = useState(new Date());
 
@@ -12,6 +14,21 @@ const Index = () => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleStart = () => {
+    setHasStarted(true);
+    setCurrentPage('dashboard');
+  };
+
+  const handleArchive = () => {
+    setHasStarted(true);
+    setCurrentPage('archive');
+  };
+
+  // Show Marquee until user starts
+  if (!hasStarted) {
+    return <Marquee onStart={handleStart} onArchive={handleArchive} />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
