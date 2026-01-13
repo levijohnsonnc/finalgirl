@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Play } from 'lucide-react';
 import marqueeBg from '@/assets/marquee-bg.png';
 
@@ -9,6 +9,39 @@ interface MarqueeProps {
 
 export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
   const [isClicked, setIsClicked] = useState(false);
+  const [showFlicker, setShowFlicker] = useState(false);
+  const [showFrameJump, setShowFrameJump] = useState(false);
+
+  // Random analog imperfection effects
+  useEffect(() => {
+    // Flicker effect - random interval between 15-30 seconds
+    const scheduleFlicker = () => {
+      const delay = Math.random() * 15000 + 15000; // 15-30 seconds
+      return setTimeout(() => {
+        setShowFlicker(true);
+        setTimeout(() => setShowFlicker(false), 150);
+        scheduleFlicker();
+      }, delay);
+    };
+
+    // Frame jump effect - random interval between 40-60 seconds
+    const scheduleFrameJump = () => {
+      const delay = Math.random() * 20000 + 40000; // 40-60 seconds
+      return setTimeout(() => {
+        setShowFrameJump(true);
+        setTimeout(() => setShowFrameJump(false), 120);
+        scheduleFrameJump();
+      }, delay);
+    };
+
+    const flickerTimeout = scheduleFlicker();
+    const frameJumpTimeout = scheduleFrameJump();
+
+    return () => {
+      clearTimeout(flickerTimeout);
+      clearTimeout(frameJumpTimeout);
+    };
+  }, []);
 
   const handleStart = () => {
     setIsClicked(true);
@@ -20,14 +53,18 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
 
   return (
     <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden transition-opacity duration-500 ${isClicked ? 'opacity-0' : 'opacity-100'}`}>
-      {/* Background Image with VHS Effects */}
+      {/* Background Image with VHS Effects + Projector Pulse */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''}`}
         style={{ 
           backgroundImage: `url(${marqueeBg})`,
-          filter: 'blur(0.3px) saturate(0.9) contrast(1.05)',
         }}
       />
+      
+      {/* Screen Flicker Overlay */}
+      {showFlicker && (
+        <div className="absolute inset-0 bg-white/10 screen-flicker pointer-events-none z-10" />
+      )}
       
       {/* Film Grain Overlay */}
       <div className="film-grain absolute inset-0 pointer-events-none" />
@@ -43,16 +80,16 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
         <div className="static-burst absolute inset-0 z-40 pointer-events-none" />
       )}
       
-      {/* Title - Upper left corner */}
+      {/* Title - Upper left corner, breathing into the scene */}
       <div className="absolute top-8 left-8 md:top-12 md:left-12 z-10">
         <h1 
-          className="text-3xl md:text-4xl lg:text-5xl tracking-wider text-foreground/90 mb-1 drop-shadow-lg"
+          className="text-3xl md:text-4xl lg:text-5xl tracking-wider text-foreground/65 mb-1 drop-shadow-lg"
           style={{ fontFamily: 'var(--font-display)', fontWeight: 500, textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}
         >
           FINAL GIRL
         </h1>
         <p 
-          className="text-base md:text-lg tracking-[0.3em] uppercase text-foreground/70 drop-shadow-md"
+          className="text-base md:text-lg tracking-[0.3em] uppercase text-foreground/50 drop-shadow-md"
           style={{ fontFamily: 'var(--font-vhs)', textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}
         >
           Slasher Companion
@@ -61,10 +98,14 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
       
       {/* Content - Centered button area */}
       <div className="relative z-10 flex flex-col items-center text-center px-4 mt-32 md:mt-40">
-        {/* Subtitle - Very subtle */}
+        {/* Subtitle - Diegetic, feels projected not overlaid */}
         <p 
-          className="text-sm md:text-base text-foreground/40 mb-8 tracking-wide italic drop-shadow-md"
-          style={{ fontFamily: 'var(--font-vhs)', textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}
+          className="text-sm md:text-base text-foreground/25 mb-8 tracking-wide italic drop-shadow-md projector-text-flicker"
+          style={{ 
+            fontFamily: 'var(--font-vhs)', 
+            textShadow: '1px 1px 4px rgba(0,0,0,0.8)',
+            filter: 'blur(0.3px)'
+          }}
         >
           Insert tape. Turn off the lights.
         </p>
