@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { VCRNavigation } from '@/components/VCRNavigation';
 import { Marquee } from '@/components/Marquee';
-import Dashboard from './Dashboard';
+import CastingRoom from './CastingRoom';
 import Archive from './Archive';
 
 const Index = () => {
@@ -37,8 +37,8 @@ const Index = () => {
       <VCRNavigation currentPage={currentPage} onNavigate={setCurrentPage} />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 relative z-10">
-        {currentPage === 'dashboard' ? <Dashboard /> : <Archive />}
+      <main className="container mx-auto px-4 py-8 pb-20 relative z-10">
+        {currentPage === 'dashboard' ? <CastingRoom /> : <Archive />}
       </main>
 
       {/* VHS Footer */}
