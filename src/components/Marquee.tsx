@@ -97,8 +97,8 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
         </p>
       </div>
       
-      {/* Content - Button positioned relative to screen in background */}
-      <div className="absolute top-[52%] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+      {/* Content - Button positioned relative to screen in background (screen is ~2% right of center) */}
+      <div className="absolute top-[52%] left-[52%] -translate-x-1/2 z-10 flex flex-col items-center">
         {/* Main Button - The Ritual Action */}
         <button
           onClick={handleStart}
