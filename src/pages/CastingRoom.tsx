@@ -122,8 +122,8 @@ const CastingRoom = () => {
         }}
       />
       
-      {/* Film Grain Overlay */}
-      <div className="film-grain fixed inset-0 pointer-events-none opacity-40" />
+      {/* Film Grain Overlay - very subtle */}
+      <div className="film-grain fixed inset-0 pointer-events-none opacity-15" />
       
       {/* Vignette */}
       <div className="vignette fixed inset-0 pointer-events-none" />
