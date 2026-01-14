@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { VCRNavigation } from '@/components/VCRNavigation';
 import { Marquee } from '@/components/Marquee';
+import { AppHeader } from '@/components/AppHeader';
 import CastingRoom from './CastingRoom';
 import Archive from './Archive';
 
@@ -25,19 +25,22 @@ const Index = () => {
     setCurrentPage('archive');
   };
 
+  const handleNavigateHome = () => {
+    setHasStarted(false);
+  };
+
   // Show Marquee until user starts
   if (!hasStarted) {
-    return <Marquee onStart={handleStart} onArchive={handleArchive} />;
+    return <Marquee onStart={handleStart} onArchive={handleArchive} onNavigateHome={handleNavigateHome} />;
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Shared App Header */}
+      <AppHeader onNavigateHome={handleNavigateHome} />
       
-      {/* VCR Navigation */}
-      <VCRNavigation currentPage={currentPage} onNavigate={setCurrentPage} />
-
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 pb-20 relative z-10">
+      <main className="container mx-auto px-4 pt-32 pb-20 relative z-10">
         {currentPage === 'dashboard' ? <CastingRoom /> : <Archive />}
       </main>
 
