@@ -6,7 +6,7 @@ export const AppHeader = ({ onNavigateHome }: AppHeaderProps) => {
   return (
     <button
       onClick={onNavigateHome}
-      className="absolute top-8 left-8 md:top-12 md:left-12 z-10 text-left hover:opacity-80 transition-opacity"
+      className="absolute top-8 left-8 md:top-12 md:left-12 z-40 text-left hover:opacity-80 transition-opacity cursor-pointer"
     >
       <h1 
         className="text-3xl md:text-4xl lg:text-5xl tracking-wider text-foreground/65 mb-1 drop-shadow-lg"
