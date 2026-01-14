@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Play } from 'lucide-react';
 import marqueeBg from '@/assets/marquee-bg.png';
+import { AppHeader } from './AppHeader';
 
 interface MarqueeProps {
   onStart: () => void;
   onArchive: () => void;
+  onNavigateHome: () => void;
 }
 
-export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
+export const Marquee = ({ onStart, onArchive, onNavigateHome }: MarqueeProps) => {
   const [isClicked, setIsClicked] = useState(false);
   const [showFlicker, setShowFlicker] = useState(false);
   const [showFrameJump, setShowFrameJump] = useState(false);
@@ -81,21 +83,8 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
         <div className="static-burst absolute inset-0 z-40 pointer-events-none" />
       )}
       
-      {/* Title - Upper left corner, breathing into the scene */}
-      <div className="absolute top-8 left-8 md:top-12 md:left-12 z-10">
-        <h1 
-          className="text-3xl md:text-4xl lg:text-5xl tracking-wider text-foreground/65 mb-1 drop-shadow-lg"
-          style={{ fontFamily: 'var(--font-display)', fontWeight: 500, textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}
-        >
-          FINAL GIRL
-        </h1>
-        <p 
-          className="text-base md:text-lg tracking-[0.3em] uppercase text-foreground/50 drop-shadow-md"
-          style={{ fontFamily: 'var(--font-vhs)', textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}
-        >
-          Slasher Companion
-        </p>
-      </div>
+      {/* App Header - clickable to return home */}
+      <AppHeader onNavigateHome={onNavigateHome} />
       
       {/* Content - Button positioned relative to screen in background (screen is ~2% right of center) */}
       <div className="absolute top-[52%] left-[52%] -translate-x-1/2 z-10 flex flex-col items-center">
