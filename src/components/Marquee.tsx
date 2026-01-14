@@ -11,6 +11,7 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
   const [isClicked, setIsClicked] = useState(false);
   const [showFlicker, setShowFlicker] = useState(false);
   const [showFrameJump, setShowFrameJump] = useState(false);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   // Random analog imperfection effects
   useEffect(() => {
@@ -53,9 +54,9 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
 
   return (
     <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden transition-opacity duration-500 ${isClicked ? 'opacity-0' : 'opacity-100'}`}>
-      {/* Background Image with VHS Effects + Projector Pulse */}
+      {/* Background Image with VHS Effects + Projector Pulse + Hover Response */}
       <div 
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''}`}
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''} ${isButtonHovered ? 'screen-hover-flicker' : ''}`}
         style={{ 
           backgroundImage: `url(${marqueeBg})`,
         }}
@@ -96,21 +97,23 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
         </p>
       </div>
       
-      {/* Content - Centered button area */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 mt-32 md:mt-40">
+      {/* Screen glow spill - connects button to the screen above */}
+      <div className="screen-glow-spill absolute top-[42%] left-1/2 -translate-x-1/2 w-[60%] h-32 z-10" />
+      
+      {/* Content - Button positioned relative to screen in background */}
+      <div className="absolute top-[52%] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
         {/* Main Button - The Ritual Action */}
         <button
           onClick={handleStart}
+          onMouseEnter={() => setIsButtonHovered(true)}
+          onMouseLeave={() => setIsButtonHovered(false)}
           disabled={isClicked}
-          className="vcr-tape-button group relative px-10 py-4 md:px-14 md:py-5 text-xl md:text-2xl tracking-[0.2em] uppercase transition-all duration-150 disabled:pointer-events-none"
+          className="vcr-tape-button group relative px-8 py-3 md:px-10 md:py-4 text-lg md:text-xl tracking-[0.15em] uppercase transition-all duration-150 disabled:pointer-events-none"
           style={{ fontFamily: 'var(--font-vhs)' }}
         >
-          {/* Button glow effect */}
-          <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
           {/* Button content */}
-          <span className="relative flex items-center gap-3 text-foreground group-hover:text-primary-foreground">
-            <Play className="w-5 h-5 md:w-6 md:h-6 fill-current" />
+          <span className="relative flex items-center gap-2.5 text-foreground/80 group-hover:text-foreground">
+            <Play className="w-4 h-4 md:w-5 md:h-5 fill-current" />
             START THE TAPE
           </span>
         </button>
