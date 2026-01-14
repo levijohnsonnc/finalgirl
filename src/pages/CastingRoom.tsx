@@ -5,6 +5,7 @@ import { CastingPicker } from '@/components/CastingPicker';
 import { GameIcon } from '@/components/GameIcon';
 import { getOwnedContent } from '@/types/gameData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import castingRoomBg from '@/assets/casting-room-bg.png';
 
 interface CastingSelection {
   killer: string | null;
@@ -111,82 +112,100 @@ const CastingRoom = () => {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-[70vh] py-4">
-      {/* Global Shuffle Button - THE STAR */}
-      <div className="mb-12 md:mb-16">
-        <button
-          onClick={handleShuffleAll}
-          disabled={isShufflingAll}
-          className={`
-            shuffle-all-btn vcr-tape-button relative
-            px-8 py-4 md:px-12 md:py-5
-            flex items-center gap-3
-            font-title text-xl md:text-2xl tracking-widest uppercase
-            text-foreground
-            ${isShufflingAll ? 'animate-pulse' : ''}
-          `}
-        >
-          <Dices className="w-6 h-6 md:w-7 md:h-7" />
-          <span>Shuffle the Feature</span>
-        </button>
-      </div>
+    <div className="relative min-h-[80vh]">
+      {/* Background Image - subtle, atmospheric */}
+      <div 
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ 
+          backgroundImage: `url(${castingRoomBg})`,
+          opacity: 0.35,
+        }}
+      />
+      
+      {/* Film Grain Overlay */}
+      <div className="film-grain fixed inset-0 pointer-events-none opacity-40" />
+      
+      {/* Vignette */}
+      <div className="vignette fixed inset-0 pointer-events-none" />
+      
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center py-4">
+        {/* Global Shuffle Button - THE STAR */}
+        <div className="mb-12 md:mb-16">
+          <button
+            onClick={handleShuffleAll}
+            disabled={isShufflingAll}
+            className={`
+              shuffle-all-btn vcr-tape-button relative
+              px-8 py-4 md:px-12 md:py-5
+              flex items-center gap-3
+              font-title text-xl md:text-2xl tracking-widest uppercase
+              text-foreground
+              ${isShufflingAll ? 'animate-pulse' : ''}
+            `}
+          >
+            <Dices className="w-6 h-6 md:w-7 md:h-7" />
+            <span>Shuffle the Feature</span>
+          </button>
+        </div>
 
-      {/* Three Casting Slots */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12 md:mb-16 w-full max-w-4xl px-4">
-        <CastingSlot
-          type="killer"
-          value={selection.killer}
-          options={ownedContent.killers}
-          onShuffle={() => handleSlotShuffle('killer')}
-          onChoose={() => setActivePicker('killer')}
-          isShuffling={isShufflingAll || shufflingSlot === 'killer'}
-        />
-        <CastingSlot
-          type="location"
-          value={selection.location}
-          options={ownedContent.locations}
-          onShuffle={() => handleSlotShuffle('location')}
-          onChoose={() => setActivePicker('location')}
-          isShuffling={isShufflingAll || shufflingSlot === 'location'}
-        />
-        <CastingSlot
-          type="finalGirl"
-          value={selection.finalGirl}
-          options={ownedContent.finalGirls}
-          onShuffle={() => handleSlotShuffle('finalGirl')}
-          onChoose={() => setActivePicker('finalGirl')}
-          isShuffling={isShufflingAll || shufflingSlot === 'finalGirl'}
-        />
-      </div>
+        {/* Three Casting Slots */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12 md:mb-16 w-full max-w-4xl px-4">
+          <CastingSlot
+            type="killer"
+            value={selection.killer}
+            options={ownedContent.killers}
+            onShuffle={() => handleSlotShuffle('killer')}
+            onChoose={() => setActivePicker('killer')}
+            isShuffling={isShufflingAll || shufflingSlot === 'killer'}
+          />
+          <CastingSlot
+            type="location"
+            value={selection.location}
+            options={ownedContent.locations}
+            onShuffle={() => handleSlotShuffle('location')}
+            onChoose={() => setActivePicker('location')}
+            isShuffling={isShufflingAll || shufflingSlot === 'location'}
+          />
+          <CastingSlot
+            type="finalGirl"
+            value={selection.finalGirl}
+            options={ownedContent.finalGirls}
+            onShuffle={() => handleSlotShuffle('finalGirl')}
+            onChoose={() => setActivePicker('finalGirl')}
+            isShuffling={isShufflingAll || shufflingSlot === 'finalGirl'}
+          />
+        </div>
 
-      {/* Final CTA - Locked until complete */}
-      <div className="relative">
-        <button
-          onClick={handleThreadProjector}
-          disabled={!isComplete}
-          className={`
-            thread-projector-btn
-            px-8 py-4 md:px-10 md:py-5
-            flex items-center gap-3
-            font-title text-lg md:text-xl tracking-widest uppercase
-            transition-all duration-500
-            ${isComplete 
-              ? 'cta-unlocked vcr-tape-button text-foreground' 
-              : 'cta-locked text-muted-foreground/50 cursor-not-allowed'
-            }
-          `}
-          title={!isComplete ? 'Cast your feature to begin' : undefined}
-        >
-          <Play className={`w-5 h-5 ${isComplete ? 'text-primary' : ''}`} />
-          <span>Thread the Projector</span>
-        </button>
-        
-        {/* Subtle hint when locked */}
-        {!isComplete && (
-          <p className="absolute -bottom-6 left-1/2 -translate-x-1/2 font-vhs text-xs text-muted-foreground/40 whitespace-nowrap">
-            Cast your feature to begin
-          </p>
-        )}
+        {/* Final CTA - Locked until complete */}
+        <div className="relative">
+          <button
+            onClick={handleThreadProjector}
+            disabled={!isComplete}
+            className={`
+              thread-projector-btn
+              px-8 py-4 md:px-10 md:py-5
+              flex items-center gap-3
+              font-title text-lg md:text-xl tracking-widest uppercase
+              transition-all duration-500
+              ${isComplete 
+                ? 'cta-unlocked vcr-tape-button text-foreground' 
+                : 'cta-locked text-muted-foreground/50 cursor-not-allowed'
+              }
+            `}
+            title={!isComplete ? 'Cast your feature to begin' : undefined}
+          >
+            <Play className={`w-5 h-5 ${isComplete ? 'text-primary' : ''}`} />
+            <span>Thread the Projector</span>
+          </button>
+          
+          {/* Subtle hint when locked */}
+          {!isComplete && (
+            <p className="absolute -bottom-6 left-1/2 -translate-x-1/2 font-vhs text-xs text-muted-foreground/40 whitespace-nowrap">
+              Cast your feature to begin
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Picker Modal */}
