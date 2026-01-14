@@ -97,9 +97,6 @@ export const Marquee = ({ onStart, onArchive }: MarqueeProps) => {
         </p>
       </div>
       
-      {/* Screen glow spill - connects button to the screen above */}
-      <div className="screen-glow-spill absolute top-[42%] left-1/2 -translate-x-1/2 w-[60%] h-32 z-10" />
-      
       {/* Content - Button positioned relative to screen in background */}
       <div className="absolute top-[52%] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
         {/* Main Button - The Ritual Action */}
