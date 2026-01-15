@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import diceIcon from '@/assets/icons/dice-icon.png';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
+import shuffleSound from '@/assets/sounds/card-shuffle.mp3';
 
 interface CastingSlotProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -10,6 +11,7 @@ interface CastingSlotProps {
   onShuffle: () => void;
   onChoose: () => void;
   isShuffling?: boolean;
+  shuffleKey?: number;
 }
 
 const SLOT_LABELS = {
@@ -50,38 +52,65 @@ export const CastingSlot = ({
   options, 
   onShuffle, 
   onChoose,
-  isShuffling = false 
+  isShuffling = false,
+  shuffleKey = 0
 }: CastingSlotProps) => {
   const [displayValue, setDisplayValue] = useState(value);
   const [isAnimating, setIsAnimating] = useState(false);
-  const animationRef = useRef<NodeJS.Timeout | null>(null);
+  const animationRef = useRef<{ timeouts: NodeJS.Timeout[] }>({ timeouts: [] });
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Handle shuffle animation
+  // Handle shuffle animation with slot machine effect
   useEffect(() => {
     if (isShuffling && options.length > 0) {
       setIsAnimating(true);
-      let count = 0;
-      const maxIterations = 8;
       
-      animationRef.current = setInterval(() => {
-        const randomIdx = Math.floor(Math.random() * options.length);
-        setDisplayValue(options[randomIdx]);
-        count++;
+      // Play shuffle sound
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      audioRef.current = new Audio(shuffleSound);
+      audioRef.current.volume = 0.4;
+      audioRef.current.play().catch(() => {}); // Ignore autoplay errors
+      
+      // Clear any existing timeouts
+      animationRef.current.timeouts.forEach(t => clearTimeout(t));
+      animationRef.current.timeouts = [];
+      
+      const maxIterations = 18;
+      const baseInterval = 40; // Start fast
+      let elapsed = 0;
+      
+      // Schedule each iteration with increasing delays (slot machine easing)
+      for (let i = 0; i < maxIterations; i++) {
+        const progress = i / maxIterations;
+        // Exponential slowdown: 40ms → ~220ms at the end
+        const interval = baseInterval + Math.floor(progress * progress * 180);
+        elapsed += interval;
         
-        if (count >= maxIterations) {
-          if (animationRef.current) clearInterval(animationRef.current);
-          setDisplayValue(value);
-          setIsAnimating(false);
-        }
-      }, 80);
+        const timeout = setTimeout(() => {
+          if (i < maxIterations - 1) {
+            const randomIdx = Math.floor(Math.random() * options.length);
+            setDisplayValue(options[randomIdx]);
+          } else {
+            // Final iteration - show the actual value
+            setDisplayValue(value);
+            setIsAnimating(false);
+          }
+        }, elapsed);
+        
+        animationRef.current.timeouts.push(timeout);
+      }
 
       return () => {
-        if (animationRef.current) clearInterval(animationRef.current);
+        animationRef.current.timeouts.forEach(t => clearTimeout(t));
+        animationRef.current.timeouts = [];
       };
-    } else {
+    } else if (!isShuffling) {
       setDisplayValue(value);
     }
-  }, [isShuffling, value, options]);
+  }, [isShuffling, shuffleKey, value, options]);
 
   const cardImage = getImageForValue(type, displayValue);
   const isEmpty = !displayValue;
@@ -107,6 +136,7 @@ export const CastingSlot = ({
             : 'w-48 h-48 md:w-56 md:h-56'
           }
           ${isEmpty ? 'poster-card-empty' : 'poster-card-filled'}
+          ${isAnimating ? 'poster-card-shuffling' : ''}
         `}
       >
         {/* Background - either character/location image or mystery static */}
@@ -114,10 +144,10 @@ export const CastingSlot = ({
           <img 
             src={cardImage} 
             alt={displayValue || ''} 
-            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : ''}`}
+            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : ''} ${isAnimating ? 'shuffle-slide shuffle-flicker' : ''}`}
           />
         ) : (
-          <div className="absolute inset-0 mystery-static" />
+          <div className={`absolute inset-0 mystery-static ${isAnimating ? 'shuffle-flicker' : ''}`} />
         )}
 
         {/* VHS softness overlay */}

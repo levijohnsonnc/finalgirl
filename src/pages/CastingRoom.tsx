@@ -40,6 +40,7 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
   const [isShufflingAll, setIsShufflingAll] = useState(false);
   const [shufflingSlot, setShufflingSlot] = useState<'killer' | 'location' | 'finalGirl' | null>(null);
   const [activePicker, setActivePicker] = useState<'killer' | 'location' | 'finalGirl' | null>(null);
+  const [shuffleKey, setShuffleKey] = useState(0);
 
   const ownedContent = useMemo(() => getOwnedContent(ownedFilms), [ownedFilms]);
   const hasOwnedContent = ownedFilms.length > 0;
@@ -52,8 +53,8 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
 
   // Individual slot shuffle
   const handleSlotShuffle = useCallback((slot: 'killer' | 'location' | 'finalGirl') => {
-    if (shufflingSlot) return;
-    
+    // Increment shuffle key to allow re-shuffling
+    setShuffleKey(prev => prev + 1);
     setShufflingSlot(slot);
     
     const items = slot === 'killer' 
@@ -62,21 +63,18 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
         ? ownedContent.locations 
         : ownedContent.finalGirls;
     
-    // Quick shuffle animation
-    let count = 0;
-    const interval = setInterval(() => {
-      setSelection(prev => ({
-        ...prev,
-        [slot]: getRandomItem(items),
-      }));
-      count++;
-      
-      if (count >= 8) {
-        clearInterval(interval);
-        setShufflingSlot(null);
-      }
-    }, 80);
-  }, [shufflingSlot, ownedContent, getRandomItem]);
+    // Pick final value upfront
+    const finalValue = getRandomItem(items);
+    setSelection(prev => ({
+      ...prev,
+      [slot]: finalValue,
+    }));
+    
+    // Clear shuffling state after animation completes (~1.8s)
+    setTimeout(() => {
+      setShufflingSlot(null);
+    }, 1800);
+  }, [ownedContent, getRandomItem]);
 
   // Handle manual selection from picker
   const handleSelect = useCallback((slot: 'killer' | 'location' | 'finalGirl', value: string) => {
@@ -137,6 +135,7 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
             onShuffle={() => handleSlotShuffle('killer')}
             onChoose={() => setActivePicker('killer')}
             isShuffling={isShufflingAll || shufflingSlot === 'killer'}
+            shuffleKey={shuffleKey}
           />
           <CastingSlot
             type="location"
@@ -145,6 +144,7 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
             onShuffle={() => handleSlotShuffle('location')}
             onChoose={() => setActivePicker('location')}
             isShuffling={isShufflingAll || shufflingSlot === 'location'}
+            shuffleKey={shuffleKey}
           />
           <CastingSlot
             type="finalGirl"
@@ -153,6 +153,7 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
             onShuffle={() => handleSlotShuffle('finalGirl')}
             onChoose={() => setActivePicker('finalGirl')}
             isShuffling={isShufflingAll || shufflingSlot === 'finalGirl'}
+            shuffleKey={shuffleKey}
           />
         </div>
 
