@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Trophy, Skull, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { getFilmDetails } from '@/types/featureFilmDetails';
+import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
 
@@ -38,19 +39,41 @@ const NowPlaying = ({
     setError(null);
 
     try {
-      // Get film details for richer context
-      const filmDetails = filmId ? getFilmDetails(filmId) : null;
-      
-      // Build the payload
+      // Look up each entity from its OWN film (supports cross-film combinations)
+      const killerFilmId = getFilmIdByKiller(killer);
+      const locationFilmId = getFilmIdByLocation(location);
+      const finalGirlFilmId = getFilmIdByFinalGirl(finalGirl);
+
+      const killerFilmDetails = killerFilmId ? getFilmDetails(killerFilmId) : null;
+      const locationFilmDetails = locationFilmId ? getFilmDetails(locationFilmId) : null;
+      const finalGirlFilmDetails = finalGirlFilmId ? getFilmDetails(finalGirlFilmId) : null;
+
+      const killerDetails = killerFilmDetails?.killer;
+      const locationDetails = locationFilmDetails?.location;
+      const finalGirlDetails = finalGirlFilmDetails?.finalGirls?.find(fg => fg.name === finalGirl);
+
+      // Build payload with complete objects matching the edge function's StoryRequest interface
       const payload = {
-        killer,
-        location,
-        finalGirl,
-        startingEvent: startingEvent || undefined,
-        startingSetup: setupScenario || undefined,
-        killerDetails: filmDetails?.killer,
-        locationDetails: filmDetails?.location,
-        finalGirlDetails: filmDetails?.finalGirls?.find(fg => fg.name === finalGirl),
+        killer: {
+          name: killer,
+          description: killerDetails?.description || `A terrifying killer known as ${killer}.`
+        },
+        location: {
+          name: location,
+          description: locationDetails?.description || `A dangerous place called ${location}.`
+        },
+        finalGirl: {
+          name: finalGirl,
+          backstory: finalGirlDetails?.backstory || `A survivor named ${finalGirl}.`
+        },
+        startingEvent: startingEvent ? {
+          name: startingEvent,
+          description: locationDetails?.events?.find(e => e.name === startingEvent)?.description || startingEvent
+        } : undefined,
+        startingSetup: setupScenario ? {
+          name: setupScenario,
+          description: locationDetails?.setupCards?.find(s => s.name === setupScenario)?.description || setupScenario
+        } : undefined
       };
 
       console.log('Generating story with payload:', payload);
