@@ -7,9 +7,10 @@ interface FilmToggleProps {
   film: FeatureFilm;
   isOwned: boolean;
   onToggle: (filmId: string) => void;
+  disabled?: boolean;
 }
 
-export const FilmToggle = ({ film, isOwned, onToggle }: FilmToggleProps) => {
+export const FilmToggle = ({ film, isOwned, onToggle, disabled = false }: FilmToggleProps) => {
   return (
     <div 
       className={cn(
@@ -94,6 +95,7 @@ export const FilmToggle = ({ film, isOwned, onToggle }: FilmToggleProps) => {
               checked={isOwned}
               onCheckedChange={() => onToggle(film.id)}
               className="data-[state=checked]:bg-primary"
+              disabled={disabled}
             />
             <span className="font-vhs text-[10px] text-muted-foreground uppercase">
               {isOwned ? 'Owned' : 'Unowned'}

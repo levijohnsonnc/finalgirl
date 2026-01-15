@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Play } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { CastingSlot } from '@/components/CastingSlot';
 import { CastingPicker } from '@/components/CastingPicker';
 import { ScenarioDropdowns } from '@/components/ScenarioDropdowns';
@@ -98,10 +99,14 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
   if (!hasOwnedContent) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-        <GameIcon type="killer" className="w-20 h-20 mb-6 opacity-40" />
+        <GameIcon type="killer" className="w-60 h-60 mb-6 opacity-40" />
         <h2 className="font-display text-3xl text-foreground mb-3 tracking-wider">NO FILMS IN COLLECTION</h2>
         <p className="font-vhs text-muted-foreground max-w-md">
-          Visit THE ARCHIVE to add Feature Films to your collection before casting.
+          Visit{' '}
+          <Link to="/archive" className="text-primary hover:text-primary/80 underline underline-offset-2">
+            My Collection
+          </Link>
+          {' '}to add Feature Films before casting.
         </p>
       </div>
     );
