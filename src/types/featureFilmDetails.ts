@@ -154,6 +154,75 @@ Slow to let people in, but loyal to a fault, Charlie would fight tooth and nail 
       name: 'Geppetto',
       description: `He travels from state to state and runs his operation for a few days just like any other freakshow would. When it grows in popularity… that's when he makes his move, adding as many of them to his family as he can. He keeps us around to keep up appearances, but I fear one day soon he will welcome me into the family too.`
     }
+  },
+  's1-maple-lane': {
+    filmId: 's1-maple-lane',
+    finalGirls: [
+      {
+        name: 'Sheila',
+        backstory: `Sheila is a medium brown-skinned Asian girl with long, dark brown hair. She wears a purple collared shirt under a pink sweater. Over that is a blue-purple fur-trimmed jacket.
+
+Sheila Smalley was adopted by Mike and Rhonda Smalley the year after the tragic death of their first daughter from (at least in their minds) the influence of Dr. Franklin Wright. Sheila was saved from the streets of India at a young age, though she was ripped away from her older brother who was taking care of her. She doesn't remember much from her years as a child in India. The Smalleys made every effort to shield Sheila from the events of the past and, namely, their murder of Dr. Wright. His transition into the dream world before death was unknown to them, but it would soon become known to Sheila.
+
+Sheila was well-liked in school and had a lot of friends. She'd even recently gotten a boyfriend when a really smart kid, ok a nerd, named Tommy asked her to 'go steady.' Tommy really won her heart when he stood up to a group of jocks that were making racially insensitive comments to Sheila. He paid for it with a black eye and some bruises, but Sheila knew in that moment that she could trust Tommy to protect her no matter what.
+
+When Sheila set her mind on something she could be very effective. She just had to overcome her fears first. She was a meticulous planner and strategist and as long as she didn't get paralyzed by fear and uncertainty, she was a force to be reckoned with.`
+      },
+      {
+        name: 'Nancy',
+        backstory: `Nancy is a Caucasian woman with short, wavy brown hair. She wears a teal top and tan pants, with brown shoes.
+
+Nancy Lang was basically the All-American girl. An only child, she was constantly being doted on by her parents. In the rare instance where she did get into trouble, her father's position and influence as a ranking officer in law enforcement was usually enough to get her out of it.
+
+Nancy suffered from night terrors, often thrashing violently in her sleep. Her parents were considering something for Nancy they'd recently heard about called "dream therapy" and apparently, there was a local doctor that does that sort of thing.
+
+Nancy was a bright young woman. A senior in high school who was well liked. Her boyfriend lived just around the corner and, while he was a good guy, he wasn't someone Nancy saw herself with long term.
+
+Nancy was always extremely resilient and persistent. She'd beat the odds even when they were heavily stacked against her.`
+      }
+    ],
+    location: {
+      name: 'Maple Lane',
+      description: `Maple Lane runs through a typical American suburban neighborhood in the quaint town of Spring Hill. Maple Lane was a street like any other... at least until someone got murdered. Now the residents are fearful of outsiders and weary of each other, but that doesn't stop them from gathering for holidays and letting their children play in the streets. They may soon regret having such a false sense of security.`,
+      setupCards: [
+        {
+          name: 'A Quiet Place',
+          description: 'Victims are spread apart, with relatively low clustering, and the Killer starts offset rather than embedded in a dense group.'
+        },
+        {
+          name: 'Block Party',
+          description: 'A large cluster of victims in the central space (including a high-value victim), with the Killer starting nearby.'
+        },
+        {
+          name: 'Maple Lane',
+          description: 'A balanced distribution: moderate clustering, reasonable spacing, and neutral Killer positioning.'
+        },
+        {
+          name: 'Revenge',
+          description: 'The Final Girl begins closer to danger, while victims are positioned such that intervention often requires stepping into the Killer\'s path.'
+        },
+        {
+          name: 'Playtime',
+          description: 'Victims are clustered near the center, but not as tightly as Block Party, and the Killer starts close enough to threaten quickly without immediate overlap.'
+        }
+      ],
+      events: [
+        { name: 'Boyfriend', description: 'Place this Special Victim in the Boyfriend\'s House. This is your Boyfriend! If the Killer would target you, the Killer instead targets the Boyfriend.' },
+        { name: 'Fire!', description: 'Roll a die and place the Fire token in: 1-3: The Boyfriend\'s House 4-6: The Smalley\'s House Any Victims in the House Space or that panic into the House Space are killed. You or Enemies in the House Space take 1 damage. The House Space may no longer be entered or searched.' },
+        { name: 'Friendly Neighbors', description: 'Roll +1 Dice when resolving Convince Action cards.' },
+        { name: 'It\'s Raining', description: 'Panic Victims in the Intersection. Then, move every Victim that is on a Street space to its adjacent House Space.' },
+        { name: '"It\'s the 4th of July!"', description: 'Move all Victims inside a House Space to the adjacent Street space.' },
+        { name: 'Officer Kopp', description: 'Place the Cop Car token on the Exit Space of your choice. Each Upkeep, move it one space towards the opposite exit. Victims in the space with the Cop Car will move with it and are considered saved when they reach the Exit Space.' },
+        { name: 'Party in the Burbs!', description: 'Place 4 new Victims in any House Space that contains at least one Victim. If none do, place them in the Intersection.' },
+        { name: 'The Smalleys', description: 'Place 2 Special Victims in the Smalley\'s House. Each time one of the Smalleys is killed, +1 Bloodlust.' },
+        { name: 'Under Construction', description: 'Roll a die and place a Roadblock token on the following Exit Space: 1: West 2: East 3: North 4: South 5: East or West 6: North or South Victims may not be saved from that space.' },
+        { name: '"What is going on over there?"', description: 'Place 1 new Victim on each Exit Space.' }
+      ]
+    },
+    killer: {
+      name: 'Dr. Fright',
+      description: `I was in some sort of boiler room and a grotesque man with a pitchfork was chasing me! I was sure he was going to kill me… it felt so real! He had pock mark scars all over his skin and his eyes were milky white. A strange black… something, maybe a cloud but with eyes, swirled behind him. I was terrified, so I turned and ran. I rounded a corner and lost my footing. I staggered into some pipes and they burnt my skin so badly. That's when I woke up. I thought it was all in a dream, but I had a severe burn on my arm from the pipes!`
+    }
   }
 };
 
