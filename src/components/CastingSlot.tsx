@@ -96,11 +96,13 @@ export const CastingSlot = ({
       </span>
 
       {/* Poster Card - different dimensions for location vs characters */}
+      {/* Location: landscape ~16:10 ratio, same height as character cards */}
+      {/* Characters: square 1:1 ratio */}
       <div 
         className={`
           poster-card relative rounded-sm overflow-hidden
           ${isLocation 
-            ? 'w-64 h-40 md:w-80 md:h-52' 
+            ? 'w-[19rem] h-48 md:w-[22.5rem] md:h-56' 
             : 'w-48 h-48 md:w-56 md:h-56'
           }
           ${isEmpty ? 'poster-card-empty' : 'poster-card-filled'}
