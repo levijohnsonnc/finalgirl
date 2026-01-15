@@ -80,7 +80,7 @@ export const ScenarioDropdowns = ({
                 <SelectItem 
                   key={card.name} 
                   value={card.name}
-                  className="font-display text-sm tracking-wide uppercase cursor-pointer"
+                  className="font-display text-sm tracking-wide uppercase cursor-pointer focus:bg-primary/20 focus:text-primary-foreground data-[highlighted]:bg-primary/20 data-[highlighted]:text-foreground"
                 >
                   {card.name}
                 </SelectItem>
@@ -111,12 +111,12 @@ export const ScenarioDropdowns = ({
             <SelectTrigger className="scenario-dropdown font-display text-sm tracking-wider uppercase">
               <SelectValue placeholder={events.length > 0 ? "Select Event..." : "Coming Soon"} />
             </SelectTrigger>
-            <SelectContent className="scenario-dropdown-content">
+            <SelectContent className="scenario-dropdown-content" side="bottom">
               {events.map((event) => (
                 <SelectItem 
                   key={event.name} 
                   value={event.name}
-                  className="font-display text-sm tracking-wide uppercase cursor-pointer"
+                  className="font-display text-sm tracking-wide uppercase cursor-pointer focus:bg-primary/20 focus:text-primary-foreground data-[highlighted]:bg-primary/20 data-[highlighted]:text-foreground"
                 >
                   {event.name}
                 </SelectItem>
