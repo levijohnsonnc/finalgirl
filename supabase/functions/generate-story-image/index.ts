@@ -25,27 +25,27 @@ serve(async (req) => {
 
     console.log(`Generating image for position ${position}:`, { killer, location, finalGirl });
 
-    // Build scene-specific prompts based on position
+    // Build scene-specific prompts based on position - using safe language to avoid content filters
     let sceneDescription: string;
     
     switch (position) {
       case 1:
-        sceneDescription = `Establishing shot of ${location}, eerie and foreboding atmosphere, abandoned and sinister, night time with fog`;
+        sceneDescription = `Establishing shot of ${location}, atmospheric vintage setting, mysterious and moody, nighttime with fog, cinematic composition`;
         break;
       case 2:
-        sceneDescription = `Shadowy silhouette of ${killer} lurking in the darkness, partially obscured, menacing presence, glimpse of danger`;
+        sceneDescription = `Mysterious figure named ${killer} in shadows, dramatic lighting, noir style, silhouette against dark background, suspenseful mood`;
         break;
       case 3:
-        sceneDescription = `${finalGirl} sensing danger, looking over her shoulder nervously, atmospheric tension, vulnerable but determined`;
+        sceneDescription = `Young woman named ${finalGirl}, looking cautiously over her shoulder, determined expression, dramatic lighting, vintage film look`;
         break;
       case 4:
-        sceneDescription = `Dramatic confrontation scene between ${killer} and ${finalGirl} at ${location}, climactic moment, horror movie tension`;
+        sceneDescription = `Dramatic scene at ${location}, two figures in tense standoff, cinematic framing, suspenseful atmosphere, vintage movie still`;
         break;
       default:
-        sceneDescription = `Horror scene at ${location} featuring ${killer}, atmospheric dread`;
+        sceneDescription = `Atmospheric scene at ${location}, mysterious mood, vintage cinematic style`;
     }
 
-    const prompt = `VHS screenshot from a 1980s horror movie, grainy film quality, muted desaturated colors, analog video artifacts, tracking lines. ${sceneDescription}. Style: retro slasher film, atmospheric dread, practical effects era, low budget indie horror aesthetic. Aspect ratio 4:3, dark and moody lighting.`;
+    const prompt = `Vintage 1980s movie still, grainy film quality, muted desaturated colors, analog aesthetic. ${sceneDescription}. Style: retro indie film, atmospheric, practical lighting, 4:3 aspect ratio, moody and cinematic.`;
 
     console.log(`Generated prompt for position ${position}:`, prompt);
 
