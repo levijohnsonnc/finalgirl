@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
-import { X, Shuffle } from 'lucide-react';
-import { FEATURE_FILMS } from '@/types/gameData';
+import { X } from 'lucide-react';
+import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
+import diceIcon from '@/assets/icons/dice-icon.png';
 
 interface CastingPickerProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -15,8 +16,20 @@ const PICKER_TITLES = {
   finalGirl: 'CHOOSE YOUR FINAL GIRL',
 };
 
-// Get box art for a value by finding the film it belongs to
-const getBoxArtForValue = (type: 'killer' | 'location' | 'finalGirl', value: string): string | null => {
+// Get image for a value - prioritize character/location specific images, fall back to box art
+const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: string): string | null => {
+  // Check for character/location specific images first
+  if (type === 'killer' && CHARACTER_IMAGES[value]) {
+    return CHARACTER_IMAGES[value];
+  }
+  if (type === 'finalGirl' && CHARACTER_IMAGES[value]) {
+    return CHARACTER_IMAGES[value];
+  }
+  if (type === 'location' && LOCATION_IMAGES[value]) {
+    return LOCATION_IMAGES[value];
+  }
+  
+  // Fall back to box art
   const film = FEATURE_FILMS.find(f => {
     if (type === 'killer') return f.killer === value;
     if (type === 'location') return f.location === value;
@@ -60,19 +73,19 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
       <div className="absolute inset-0 scanlines-overlay pointer-events-none opacity-30" />
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col items-center py-8 px-4 overflow-y-auto">
+      <div className="relative z-10 h-full flex flex-col items-center pt-28 pb-8 px-4 overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between w-full max-w-4xl mb-8">
-          <h2 className="font-title text-2xl md:text-3xl text-foreground tracking-wider">
+          <h2 className="font-display text-2xl md:text-3xl text-muted-foreground tracking-wider">
             {PICKER_TITLES[type]}
           </h2>
           <div className="flex items-center gap-4">
             {/* Random pick button */}
             <button
               onClick={handleRandomPick}
-              className="vcr-button px-4 py-2 flex items-center gap-2 font-vhs text-sm uppercase text-accent hover:text-accent/80"
+              className="vcr-button pl-1 pr-4 py-2 flex items-center gap-1 font-display text-sm uppercase text-muted-foreground hover:text-foreground"
             >
-              <Shuffle className="w-4 h-4" />
+              <img src={diceIcon} alt="Random" className="w-10 h-10 -my-2 object-contain" />
               Random
             </button>
             {/* Close button */}
@@ -88,7 +101,7 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
         {/* Grid of options */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 w-full max-w-4xl">
           {options.map((option) => {
-            const boxArt = getBoxArtForValue(type, option);
+            const cardImage = getImageForValue(type, option);
             
             return (
               <button
@@ -98,9 +111,9 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
               >
                 {/* Poster */}
                 <div className="poster-card poster-card-filled relative w-full aspect-[3/4] rounded-sm overflow-hidden">
-                  {boxArt ? (
+                  {cardImage ? (
                     <img 
-                      src={boxArt} 
+                      src={cardImage} 
                       alt={option} 
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
@@ -116,7 +129,7 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
                 </div>
 
                 {/* Name */}
-                <span className="font-title text-sm md:text-base text-foreground/70 group-hover:text-foreground transition-colors text-center">
+                <span className="font-display text-sm md:text-base text-muted-foreground group-hover:text-foreground transition-colors text-center">
                   {option}
                 </span>
               </button>
