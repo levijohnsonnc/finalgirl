@@ -115,9 +115,10 @@ export const CastingSlot = ({
             ? 'w-[19rem] h-48 md:w-[22.5rem] md:h-56' 
             : 'w-48 h-48 md:w-56 md:h-56'
           }
-          ${isEmpty ? 'poster-card-empty' : 'poster-card-filled'}
+          ${isEmpty ? 'poster-card-empty cursor-pointer hover:border-primary/50' : 'poster-card-filled'}
           ${isAnimating ? 'poster-card-shuffling' : ''}
         `}
+        onClick={isEmpty ? onChoose : undefined}
       >
         {/* Scrolling reel during animation */}
         {isAnimating && shuffleSequence.length > 0 ? (
