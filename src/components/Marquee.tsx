@@ -105,13 +105,13 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome }: MarqueeProps) =>
         </button>
       </div>
       
-      {/* Archive Link - Bottom corner, subtle */}
+      {/* My Collection Link - Bottom corner, subtle */}
       <button
         onClick={onArchive}
         className="absolute bottom-6 right-6 text-xs tracking-wider uppercase text-foreground/30 hover:text-foreground/60 transition-colors duration-300"
         style={{ fontFamily: 'var(--font-vhs)' }}
       >
-        Archive
+        My Collection
       </button>
     </div>
   );
