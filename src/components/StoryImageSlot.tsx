@@ -92,18 +92,20 @@ const StoryImageSlot = ({
         />
       ) : (
         <div className="absolute inset-0 mystery-static flex items-center justify-center">
-          <div className="font-vhs text-xs text-muted-foreground/40">
-            Scene {position}
+          <div className="font-vhs text-xs text-muted-foreground/40 animate-pulse">
+            TRACKING...
           </div>
         </div>
       )}
       
-      {/* VHS label overlay */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-2">
-        <span className="font-vhs text-[10px] text-muted-foreground/70 uppercase tracking-wider line-clamp-2">
-          {sceneLabel}
-        </span>
-      </div>
+      {/* VHS label overlay - only show when image loaded */}
+      {imageUrl && sceneLabel && (
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-2">
+          <span className="font-vhs text-[10px] text-muted-foreground/70 uppercase tracking-wider line-clamp-2">
+            {sceneLabel}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
