@@ -1,7 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Dices, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { CastingSlot } from '@/components/CastingSlot';
 import { CastingPicker } from '@/components/CastingPicker';
+import { ScenarioDropdowns } from '@/components/ScenarioDropdowns';
 import { GameIcon } from '@/components/GameIcon';
 import { getOwnedContent } from '@/types/gameData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -34,29 +35,6 @@ const CastingRoom = () => {
     if (items.length === 0) return null;
     return items[Math.floor(Math.random() * items.length)];
   }, []);
-
-  // Global shuffle - all three slots at once
-  const handleShuffleAll = useCallback(() => {
-    if (!hasOwnedContent || isShufflingAll) return;
-    
-    setIsShufflingAll(true);
-    
-    // Animate through random selections
-    let count = 0;
-    const interval = setInterval(() => {
-      setSelection({
-        killer: getRandomItem(ownedContent.killers),
-        location: getRandomItem(ownedContent.locations),
-        finalGirl: getRandomItem(ownedContent.finalGirls),
-      });
-      count++;
-      
-      if (count >= 10) {
-        clearInterval(interval);
-        setIsShufflingAll(false);
-      }
-    }, 80);
-  }, [hasOwnedContent, isShufflingAll, ownedContent, getRandomItem]);
 
   // Individual slot shuffle
   const handleSlotShuffle = useCallback((slot: 'killer' | 'location' | 'finalGirl') => {
@@ -92,18 +70,18 @@ const CastingRoom = () => {
     setActivePicker(null);
   }, []);
 
-  // Handle thread the projector
-  const handleThreadProjector = useCallback(() => {
+  // Handle press play
+  const handlePressPlay = useCallback(() => {
     if (!isComplete) return;
     // TODO: Navigate to "Now Showing" / game setup screen
-    console.log('Threading projector with:', selection);
+    console.log('Press Play with:', selection);
   }, [isComplete, selection]);
 
   if (!hasOwnedContent) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
         <GameIcon type="killer" className="w-20 h-20 mb-6 opacity-40" />
-        <h2 className="font-title text-3xl text-foreground mb-3">NO FILMS IN COLLECTION</h2>
+        <h2 className="font-display text-3xl text-foreground mb-3 tracking-wider">NO FILMS IN COLLECTION</h2>
         <p className="font-vhs text-muted-foreground max-w-md">
           Visit THE ARCHIVE to add Feature Films to your collection before casting.
         </p>
@@ -123,34 +101,15 @@ const CastingRoom = () => {
       />
       
       {/* Film Grain Overlay - very subtle */}
-      <div className="film-grain fixed inset-0 pointer-events-none opacity-15" />
+      <div className="film-grain fixed inset-0 pointer-events-none opacity-[0.07]" />
       
       {/* Vignette */}
       <div className="vignette fixed inset-0 pointer-events-none" />
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center py-4">
-        {/* Global Shuffle Button - THE STAR */}
-        <div className="mb-12 md:mb-16">
-          <button
-            onClick={handleShuffleAll}
-            disabled={isShufflingAll}
-            className={`
-              shuffle-all-btn vcr-tape-button relative
-              px-8 py-4 md:px-12 md:py-5
-              flex items-center gap-3
-              font-title text-xl md:text-2xl tracking-widest uppercase
-              text-foreground
-              ${isShufflingAll ? 'animate-pulse' : ''}
-            `}
-          >
-            <Dices className="w-6 h-6 md:w-7 md:h-7" />
-            <span>Shuffle the Feature</span>
-          </button>
-        </div>
-
+      <div className="relative z-10 flex flex-col items-center py-8">
         {/* Three Casting Slots */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12 md:mb-16 w-full max-w-4xl px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-10 md:mb-14 w-full max-w-4xl px-4">
           <CastingSlot
             type="killer"
             value={selection.killer}
@@ -177,16 +136,19 @@ const CastingRoom = () => {
           />
         </div>
 
+        {/* Setup Scenario & Event Dropdowns */}
+        <ScenarioDropdowns selectedLocation={selection.location} />
+
         {/* Final CTA - Locked until complete */}
         <div className="relative">
           <button
-            onClick={handleThreadProjector}
+            onClick={handlePressPlay}
             disabled={!isComplete}
             className={`
-              thread-projector-btn
+              press-play-btn
               px-8 py-4 md:px-10 md:py-5
               flex items-center gap-3
-              font-title text-lg md:text-xl tracking-widest uppercase
+              font-display text-lg md:text-xl tracking-[0.15em] uppercase
               transition-all duration-500
               ${isComplete 
                 ? 'cta-unlocked vcr-tape-button text-foreground' 
@@ -196,7 +158,7 @@ const CastingRoom = () => {
             title={!isComplete ? 'Cast your feature to begin' : undefined}
           >
             <Play className={`w-5 h-5 ${isComplete ? 'text-primary' : ''}`} />
-            <span>Thread the Projector</span>
+            <span>Press Play</span>
           </button>
           
           {/* Subtle hint when locked */}
