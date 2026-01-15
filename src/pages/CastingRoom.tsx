@@ -14,7 +14,17 @@ interface CastingSelection {
   finalGirl: string | null;
 }
 
-const CastingRoom = () => {
+interface CastingRoomProps {
+  onStartGame: (selection: {
+    killer: string;
+    location: string;
+    finalGirl: string;
+    setupScenario: string | null;
+    startingEvent: string | null;
+  }) => void;
+}
+
+const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
   const [ownedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
   
   const [selection, setSelection] = useState<CastingSelection>({
@@ -22,6 +32,10 @@ const CastingRoom = () => {
     location: null,
     finalGirl: null,
   });
+  
+  // Track scenario selections
+  const [selectedSetup, setSelectedSetup] = useState<string | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   
   const [isShufflingAll, setIsShufflingAll] = useState(false);
   const [shufflingSlot, setShufflingSlot] = useState<'killer' | 'location' | 'finalGirl' | null>(null);
@@ -72,10 +86,16 @@ const CastingRoom = () => {
 
   // Handle press play
   const handlePressPlay = useCallback(() => {
-    if (!isComplete) return;
-    // TODO: Navigate to "Now Showing" / game setup screen
-    console.log('Press Play with:', selection);
-  }, [isComplete, selection]);
+    if (!isComplete || !selection.killer || !selection.location || !selection.finalGirl) return;
+    
+    onStartGame({
+      killer: selection.killer,
+      location: selection.location,
+      finalGirl: selection.finalGirl,
+      setupScenario: selectedSetup,
+      startingEvent: selectedEvent,
+    });
+  }, [isComplete, selection, selectedSetup, selectedEvent, onStartGame]);
 
   if (!hasOwnedContent) {
     return (
@@ -137,7 +157,11 @@ const CastingRoom = () => {
         </div>
 
         {/* Setup Scenario & Event Dropdowns */}
-        <ScenarioDropdowns selectedLocation={selection.location} />
+        <ScenarioDropdowns 
+          selectedLocation={selection.location}
+          onSetupChange={setSelectedSetup}
+          onEventChange={setSelectedEvent}
+        />
 
         {/* Final CTA - Locked until complete */}
         <div className="relative">

@@ -3,11 +3,23 @@ import { Marquee } from '@/components/Marquee';
 import { AppHeader } from '@/components/AppHeader';
 import CastingRoom from './CastingRoom';
 import Archive from './Archive';
+import NowPlaying from './NowPlaying';
 import { Library } from 'lucide-react';
+import { getFilmIdByLocation } from '@/types/gameData';
+
+interface GameSelection {
+  killer: string;
+  location: string;
+  finalGirl: string;
+  setupScenario: string | null;
+  startingEvent: string | null;
+  filmId: string | null;
+}
 
 const Index = () => {
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying'>('dashboard');
+  const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
   const [time, setTime] = useState(new Date());
 
   // Update time every second for VCR display
@@ -28,12 +40,58 @@ const Index = () => {
 
   const handleNavigateHome = () => {
     setHasStarted(false);
+    setGameSelection(null);
+    setCurrentPage('dashboard');
+  };
+
+  const handleStartGame = (selection: {
+    killer: string;
+    location: string;
+    finalGirl: string;
+    setupScenario: string | null;
+    startingEvent: string | null;
+  }) => {
+    const filmId = getFilmIdByLocation(selection.location);
+    setGameSelection({
+      ...selection,
+      filmId,
+    });
+    setCurrentPage('nowPlaying');
+  };
+
+  const handleBackFromNowPlaying = () => {
+    setGameSelection(null);
+    setCurrentPage('dashboard');
   };
 
   // Show Marquee until user starts
   if (!hasStarted) {
     return <Marquee onStart={handleStart} onArchive={handleArchive} onNavigateHome={handleNavigateHome} />;
   }
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'nowPlaying':
+        if (gameSelection) {
+          return (
+            <NowPlaying
+              killer={gameSelection.killer}
+              location={gameSelection.location}
+              finalGirl={gameSelection.finalGirl}
+              setupScenario={gameSelection.setupScenario}
+              startingEvent={gameSelection.startingEvent}
+              filmId={gameSelection.filmId}
+              onBack={handleBackFromNowPlaying}
+            />
+          );
+        }
+        return <CastingRoom onStartGame={handleStartGame} />;
+      case 'archive':
+        return <Archive />;
+      default:
+        return <CastingRoom onStartGame={handleStartGame} />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -42,7 +100,7 @@ const Index = () => {
       
       {/* Main Content */}
       <main className="container mx-auto px-4 pt-32 pb-20 relative z-10">
-        {currentPage === 'dashboard' ? <CastingRoom /> : <Archive />}
+        {renderPage()}
       </main>
 
       {/* VHS Footer */}
