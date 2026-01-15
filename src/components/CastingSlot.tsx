@@ -46,6 +46,15 @@ const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: stri
   return film?.boxArt ?? null;
 };
 
+// Get object position for specific characters (some need different cropping)
+const getObjectPosition = (type: 'killer' | 'location' | 'finalGirl', value: string | null): string => {
+  // Dr. Fright should use center positioning, not top
+  if (value === 'Dr. Fright') return 'object-center';
+  // Other killers and Geppetto use top positioning
+  if (type === 'killer') return 'object-top';
+  return '';
+};
+
 export const CastingSlot = ({ 
   type, 
   value, 
@@ -129,12 +138,13 @@ export const CastingSlot = ({
           >
             {shuffleSequence.map((option, idx) => {
               const img = getImageForValue(type, option);
+              const positionClass = getObjectPosition(type, option);
               return img ? (
                 <img 
                   key={idx}
                   src={img}
                   alt={option}
-                  className={`w-full h-full object-cover flex-shrink-0 ${type === 'killer' ? 'object-top' : ''}`}
+                  className={`w-full h-full object-cover flex-shrink-0 ${positionClass}`}
                 />
               ) : (
                 <div key={idx} className="w-full h-full mystery-static flex-shrink-0" />
@@ -147,7 +157,7 @@ export const CastingSlot = ({
             <img 
               src={cardImage} 
               alt={displayValue || ''} 
-              className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : ''}`}
+              className={`absolute inset-0 w-full h-full object-cover ${getObjectPosition(type, displayValue)}`}
             />
           ) : (
             <div className="absolute inset-0 mystery-static" />
