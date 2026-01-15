@@ -180,14 +180,9 @@ const NowPlaying = ({
                 </button>
               </div>
             ) : story ? (
-              <div className="space-y-4">
-                <h2 className="font-display text-xl text-foreground tracking-wider uppercase border-b border-border/30 pb-2">
-                  Cold Open
-                </h2>
-                <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {story}
-                </p>
-              </div>
+              <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                {story}
+              </p>
             ) : (
               <div className="flex flex-col items-center justify-center py-12">
                 <p className="font-vhs text-sm text-muted-foreground">
