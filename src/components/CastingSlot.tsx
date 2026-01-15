@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Shuffle, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import diceIcon from '@/assets/icons/dice-icon.png';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 
 interface CastingSlotProps {
@@ -144,7 +145,7 @@ export const CastingSlot = ({
           disabled={isAnimating || options.length === 0}
           className="slot-action-btn group px-4 py-2 flex items-center gap-2 font-display text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
         >
-          <Shuffle className="w-3.5 h-3.5 transition-colors group-hover:text-primary" />
+          <img src={diceIcon} alt="Shuffle" className="w-3.5 h-3.5 object-contain" />
           Shuffle
         </button>
         <button
