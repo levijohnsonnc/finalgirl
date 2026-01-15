@@ -492,6 +492,27 @@
     border-color: hsl(0 0% 35%);
   }
 
+  /* Story Image Slot */
+  .story-image-slot {
+    aspect-ratio: 4/3;
+    border: 2px solid hsl(var(--border));
+    background: hsl(var(--card));
+    position: relative;
+    overflow: hidden;
+  }
+
+  .story-image-loaded {
+    filter: contrast(1.1) saturate(0.85) sepia(0.15);
+    animation: vhs-image-flicker 4s ease-in-out infinite;
+  }
+
+  @keyframes vhs-image-flicker {
+    0%, 100% { opacity: 1; filter: contrast(1.1) saturate(0.85) sepia(0.15); }
+    25% { opacity: 0.98; filter: contrast(1.12) saturate(0.83) sepia(0.17); }
+    50% { opacity: 1; filter: contrast(1.08) saturate(0.87) sepia(0.13); }
+    75% { opacity: 0.99; filter: contrast(1.1) saturate(0.84) sepia(0.16); }
+  }
+
   /* Mystery static for empty slots - static noise without animation */
   .mystery-static {
     background: 

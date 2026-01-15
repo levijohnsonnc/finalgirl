@@ -5,6 +5,7 @@ import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
+import StoryImageSlot from '@/components/StoryImageSlot';
 
 interface NowPlayingProps {
   killer: string;
@@ -154,42 +155,85 @@ const NowPlaying = ({
           {killer} vs {finalGirl} at {location}
         </p>
 
-        {/* Story Container */}
-        <div className="w-full max-w-3xl">
-          <div className="scenario-description p-6 rounded-sm">
-            {isGenerating ? (
-              <div className="flex flex-col items-center justify-center py-12 gap-4">
-                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="font-vhs text-sm text-muted-foreground animate-pulse">
-                  Generating your VHS horror story...
+        {/* Story Container with Side Images */}
+        <div className="w-full flex gap-6 items-start justify-center">
+          {/* Left Images - Desktop only */}
+          <div className="hidden lg:flex flex-col gap-4 w-48 flex-shrink-0">
+            <StoryImageSlot
+              position={1}
+              killer={killer}
+              location={location}
+              finalGirl={finalGirl}
+              storyLoaded={!!story}
+              storySnippet={story || undefined}
+            />
+            <StoryImageSlot
+              position={2}
+              killer={killer}
+              location={location}
+              finalGirl={finalGirl}
+              storyLoaded={!!story}
+              storySnippet={story || undefined}
+            />
+          </div>
+
+          {/* Story Content */}
+          <div className="flex-1 max-w-3xl">
+            <div className="scenario-description p-6 rounded-sm">
+              {isGenerating ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-4">
+                  <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  <p className="font-vhs text-sm text-muted-foreground animate-pulse">
+                    Generating your VHS horror story...
+                  </p>
+                  <p className="font-vhs text-xs text-muted-foreground/60">
+                    The projector is warming up...
+                  </p>
+                </div>
+              ) : error ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-4">
+                  <p className="font-vhs text-sm text-destructive">
+                    {error}
+                  </p>
+                  <button
+                    onClick={generateStory}
+                    className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : story ? (
+                <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  {story}
                 </p>
-                <p className="font-vhs text-xs text-muted-foreground/60">
-                  The projector is warming up...
-                </p>
-              </div>
-            ) : error ? (
-              <div className="flex flex-col items-center justify-center py-12 gap-4">
-                <p className="font-vhs text-sm text-destructive">
-                  {error}
-                </p>
-                <button
-                  onClick={generateStory}
-                  className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : story ? (
-              <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {story}
-              </p>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12">
-                <p className="font-vhs text-sm text-muted-foreground">
-                  Waiting for the story...
-                </p>
-              </div>
-            )}
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <p className="font-vhs text-sm text-muted-foreground">
+                    Waiting for the story...
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Images - Desktop only */}
+          <div className="hidden lg:flex flex-col gap-4 w-48 flex-shrink-0">
+            <StoryImageSlot
+              position={3}
+              killer={killer}
+              location={location}
+              finalGirl={finalGirl}
+              storyLoaded={!!story}
+              storySnippet={story || undefined}
+            />
+            <StoryImageSlot
+              position={4}
+              killer={killer}
+              location={location}
+              finalGirl={finalGirl}
+              storyLoaded={!!story}
+              storySnippet={story || undefined}
+            />
           </div>
         </div>
 
