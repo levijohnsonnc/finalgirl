@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Shuffle, ChevronDown } from 'lucide-react';
-import { FEATURE_FILMS } from '@/types/gameData';
+import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 
 interface CastingSlotProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -17,10 +17,22 @@ const SLOT_LABELS = {
   finalGirl: 'FINAL GIRL',
 };
 
-// Get box art for a value by finding the film it belongs to
-const getBoxArtForValue = (type: 'killer' | 'location' | 'finalGirl', value: string | null): string | null => {
+// Get image for a value - prioritize character/location specific images, fall back to box art
+const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: string | null): string | null => {
   if (!value) return null;
   
+  // Check for character/location specific images first
+  if (type === 'killer' && CHARACTER_IMAGES[value]) {
+    return CHARACTER_IMAGES[value];
+  }
+  if (type === 'finalGirl' && CHARACTER_IMAGES[value]) {
+    return CHARACTER_IMAGES[value];
+  }
+  if (type === 'location' && LOCATION_IMAGES[value]) {
+    return LOCATION_IMAGES[value];
+  }
+  
+  // Fall back to box art
   const film = FEATURE_FILMS.find(f => {
     if (type === 'killer') return f.killer === value;
     if (type === 'location') return f.location === value;
@@ -70,7 +82,7 @@ export const CastingSlot = ({
     }
   }, [isShuffling, value, options]);
 
-  const boxArt = getBoxArtForValue(type, displayValue);
+  const cardImage = getImageForValue(type, displayValue);
   const isEmpty = !displayValue;
 
   return (
@@ -87,10 +99,10 @@ export const CastingSlot = ({
           ${isEmpty ? 'poster-card-empty' : 'poster-card-filled'}
         `}
       >
-        {/* Background - either box art or mystery static */}
-        {boxArt ? (
+        {/* Background - either character/location image or mystery static */}
+        {cardImage ? (
           <img 
-            src={boxArt} 
+            src={cardImage} 
             alt={displayValue || ''} 
             className="absolute inset-0 w-full h-full object-cover"
           />
