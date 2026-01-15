@@ -5,6 +5,12 @@ import slaughterGrovesArt from '@/assets/box-art/slaughter-groves.png';
 import carnageCarnivalArt from '@/assets/box-art/carnage-carnival.png';
 import frightmareMapleArt from '@/assets/box-art/frightmare-maple-lane.png';
 
+// Character/location specific images
+import hansImage from '@/assets/characters/hans.png';
+import laurieImage from '@/assets/characters/laurie.png';
+import reikoImage from '@/assets/characters/reiko.png';
+import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
+
 export interface FeatureFilm {
   id: string;
   name: string;
@@ -14,6 +20,18 @@ export interface FeatureFilm {
   finalGirls: [string, string];
   boxArt?: string;
 }
+
+// Character-specific images (for casting room display)
+export const CHARACTER_IMAGES: Record<string, string> = {
+  'Hans': hansImage,
+  'Laurie': laurieImage,
+  'Reiko': reikoImage,
+};
+
+// Location-specific images (for casting room display)
+export const LOCATION_IMAGES: Record<string, string> = {
+  'Camp Happy Trails': campHappyTrailsImage,
+};
 
 export interface SessionLog {
   id: string;
