@@ -143,7 +143,7 @@ export const CastingSlot = ({
         <button
           onClick={onShuffle}
           disabled={isAnimating || options.length === 0}
-          className="slot-action-btn group px-4 py-2 flex items-center gap-2 font-display text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
+          className="slot-action-btn group pl-1 pr-4 py-2 flex items-center gap-1 font-display text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
         >
           <img src={diceIcon} alt="Shuffle" className="w-12 h-12 -my-3 object-contain" />
           Shuffle
