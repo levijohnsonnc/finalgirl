@@ -73,7 +73,7 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
       <div className="absolute inset-0 scanlines-overlay pointer-events-none opacity-30" />
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col items-center pt-28 pb-8 px-4 overflow-y-auto">
+      <div className="relative z-10 h-full flex flex-col items-center pt-36 pb-8 px-4 overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between w-full max-w-4xl mb-8">
           <h2 className="font-display text-2xl md:text-3xl text-muted-foreground tracking-wider">
