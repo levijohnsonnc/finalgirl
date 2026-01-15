@@ -114,7 +114,7 @@ export const CastingSlot = ({
           <img 
             src={cardImage} 
             alt={displayValue || ''} 
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : ''}`}
           />
         ) : (
           <div className="absolute inset-0 mystery-static" />
