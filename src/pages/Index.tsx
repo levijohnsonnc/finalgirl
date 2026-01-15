@@ -3,6 +3,7 @@ import { Marquee } from '@/components/Marquee';
 import { AppHeader } from '@/components/AppHeader';
 import CastingRoom from './CastingRoom';
 import Archive from './Archive';
+import { Library } from 'lucide-react';
 
 const Index = () => {
   const [hasStarted, setHasStarted] = useState(false);
@@ -55,6 +56,13 @@ const Index = () => {
             FINAL GIRL™ SLASHER COMPANION • {time.toLocaleDateString()}
           </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setCurrentPage('archive')}
+              className="font-vhs text-xs text-muted-foreground hover:text-secondary transition-colors flex items-center gap-1.5"
+            >
+              <Library className="w-3 h-3" />
+              MY COLLECTION
+            </button>
             <span className="font-vhs text-xs text-secondary neon-text">
               {time.toLocaleTimeString('en-US', { hour12: false })}
             </span>
