@@ -76,7 +76,7 @@ export const CastingSlot = ({
   return (
     <div className="casting-slot flex flex-col items-center gap-3">
       {/* Label */}
-      <span className="font-vhs text-xs text-muted-foreground tracking-widest uppercase">
+      <span className="font-display text-xs text-muted-foreground tracking-[0.2em] uppercase">
         {SLOT_LABELS[type]}
       </span>
 
@@ -85,7 +85,6 @@ export const CastingSlot = ({
         className={`
           poster-card relative w-40 h-56 md:w-48 md:h-64 rounded-sm overflow-hidden
           ${isEmpty ? 'poster-card-empty' : 'poster-card-filled'}
-          ${isAnimating ? 'shuffle-flicker' : ''}
         `}
       >
         {/* Background - either box art or mystery static */}
@@ -109,12 +108,7 @@ export const CastingSlot = ({
       {/* Name */}
       <div className="h-6 flex items-center justify-center">
         {displayValue ? (
-          <span 
-            className={`
-              font-title text-lg text-foreground tracking-wide text-center
-              ${isAnimating ? 'typewriter-fade' : ''}
-            `}
-          >
+          <span className="font-display text-lg text-foreground tracking-wide text-center">
             {displayValue}
           </span>
         ) : (
@@ -127,17 +121,17 @@ export const CastingSlot = ({
         <button
           onClick={onShuffle}
           disabled={isAnimating || options.length === 0}
-          className="slot-shuffle-btn vcr-button px-4 py-2 flex items-center gap-2 font-vhs text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
+          className="slot-action-btn group px-4 py-2 flex items-center gap-2 font-display text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
         >
-          <Shuffle className="w-3.5 h-3.5" />
+          <Shuffle className="w-3.5 h-3.5 transition-colors group-hover:text-primary" />
           Shuffle
         </button>
         <button
           onClick={onChoose}
           disabled={options.length === 0}
-          className="slot-choose-btn vcr-button px-4 py-2 flex items-center gap-2 font-vhs text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground disabled:opacity-50"
+          className="slot-action-btn group px-4 py-2 flex items-center gap-2 font-display text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground disabled:opacity-50"
         >
-          <ChevronDown className="w-3.5 h-3.5" />
+          <ChevronDown className="w-3.5 h-3.5 transition-colors group-hover:text-primary" />
           Choose
         </button>
       </div>
