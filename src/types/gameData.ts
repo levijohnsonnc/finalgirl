@@ -12,8 +12,12 @@ import reikoImage from '@/assets/characters/reiko.png';
 import drFrightImage from '@/assets/characters/dr-fright.png';
 import nancyImage from '@/assets/characters/nancy.png';
 import sheilaImage from '@/assets/characters/sheila.png';
+import geppettoImage from '@/assets/characters/geppetto.png';
+import asamiImage from '@/assets/characters/asami.png';
+import charlieImage from '@/assets/characters/charlie.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
 import mapleLaneImage from '@/assets/locations/maple-lane.png';
+import carnivalOfBloodImage from '@/assets/locations/carnival-of-blood.png';
 
 export interface FeatureFilm {
   id: string;
@@ -33,12 +37,16 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Dr. Fright': drFrightImage,
   'Nancy': nancyImage,
   'Sheila': sheilaImage,
+  'Geppetto': geppettoImage,
+  'Asami': asamiImage,
+  'Charlie': charlieImage,
 };
 
 // Location-specific images (for casting room display)
 export const LOCATION_IMAGES: Record<string, string> = {
   'Camp Happy Trails': campHappyTrailsImage,
   'Maple Lane': mapleLaneImage,
+  'Carnival of Blood': carnivalOfBloodImage,
 };
 
 export interface SessionLog {
