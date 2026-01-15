@@ -85,6 +85,9 @@ export const CastingSlot = ({
   const cardImage = getImageForValue(type, displayValue);
   const isEmpty = !displayValue;
 
+  // Location cards are landscape (16:10), character cards are square (1:1)
+  const isLocation = type === 'location';
+  
   return (
     <div className="casting-slot flex flex-col items-center gap-3">
       {/* Label */}
@@ -92,10 +95,14 @@ export const CastingSlot = ({
         {SLOT_LABELS[type]}
       </span>
 
-      {/* Poster Card */}
+      {/* Poster Card - different dimensions for location vs characters */}
       <div 
         className={`
-          poster-card relative w-40 h-56 md:w-48 md:h-64 rounded-sm overflow-hidden
+          poster-card relative rounded-sm overflow-hidden
+          ${isLocation 
+            ? 'w-64 h-40 md:w-80 md:h-52' 
+            : 'w-48 h-48 md:w-56 md:h-56'
+          }
           ${isEmpty ? 'poster-card-empty' : 'poster-card-filled'}
         `}
       >
