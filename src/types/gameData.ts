@@ -117,3 +117,9 @@ export const getFilmIdByKiller = (killerName: string): string | null => {
   const film = FEATURE_FILMS.find(f => f.killer === killerName);
   return film?.id ?? null;
 };
+
+// Helper to find film ID by final girl name
+export const getFilmIdByFinalGirl = (finalGirlName: string): string | null => {
+  const film = FEATURE_FILMS.find(f => f.finalGirls.includes(finalGirlName));
+  return film?.id ?? null;
+};
