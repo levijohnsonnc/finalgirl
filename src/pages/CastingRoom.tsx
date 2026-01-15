@@ -107,7 +107,7 @@ const CastingRoom = () => {
       <div className="vignette fixed inset-0 pointer-events-none" />
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center py-8">
+      <div className="relative z-10 flex flex-col items-center py-8 pt-24">
         {/* Three Casting Slots */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-10 md:mb-14 w-full max-w-4xl px-4">
           <CastingSlot
