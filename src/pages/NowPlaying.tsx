@@ -1,0 +1,202 @@
+import { useState, useEffect } from 'react';
+import { Trophy, Skull, ArrowLeft } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { getFilmDetails } from '@/types/featureFilmDetails';
+import { toast } from 'sonner';
+import nowPlayingBg from '@/assets/now-playing-bg.png';
+
+interface NowPlayingProps {
+  killer: string;
+  location: string;
+  finalGirl: string;
+  setupScenario: string | null;
+  startingEvent: string | null;
+  filmId: string | null;
+  onBack: () => void;
+}
+
+const NowPlaying = ({
+  killer,
+  location,
+  finalGirl,
+  setupScenario,
+  startingEvent,
+  filmId,
+  onBack,
+}: NowPlayingProps) => {
+  const [story, setStory] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Auto-generate story on mount
+  useEffect(() => {
+    generateStory();
+  }, []);
+
+  const generateStory = async () => {
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      // Get film details for richer context
+      const filmDetails = filmId ? getFilmDetails(filmId) : null;
+      
+      // Build the payload
+      const payload = {
+        killer,
+        location,
+        finalGirl,
+        startingEvent: startingEvent || undefined,
+        startingSetup: setupScenario || undefined,
+        killerDetails: filmDetails?.killer,
+        locationDetails: filmDetails?.location,
+        finalGirlDetails: filmDetails?.finalGirls?.find(fg => fg.name === finalGirl),
+      };
+
+      console.log('Generating story with payload:', payload);
+
+      const { data, error: fnError } = await supabase.functions.invoke('generate-story', {
+        body: payload,
+      });
+
+      if (fnError) {
+        console.error('Edge function error:', fnError);
+        throw new Error(fnError.message || 'Failed to generate story');
+      }
+
+      if (data?.story) {
+        setStory(data.story);
+      } else if (data?.error) {
+        throw new Error(data.error);
+      } else {
+        throw new Error('No story returned from the generator');
+      }
+    } catch (err) {
+      console.error('Story generation error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate story';
+      setError(errorMessage);
+      toast.error('Story generation failed', {
+        description: errorMessage,
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleWon = () => {
+    console.log('Game Won!', { killer, location, finalGirl, setupScenario, startingEvent });
+    toast.success('Victory! The Final Girl survived!');
+    // TODO: Save result to database
+  };
+
+  const handleLost = () => {
+    console.log('Game Lost!', { killer, location, finalGirl, setupScenario, startingEvent });
+    toast.error('Defeat... The killer claims another victim.');
+    // TODO: Save result to database
+  };
+
+  return (
+    <div className="relative min-h-[80vh]">
+      {/* Background Image */}
+      <div 
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ 
+          backgroundImage: `url(${nowPlayingBg})`,
+          opacity: 0.4,
+        }}
+      />
+      
+      {/* Film Grain Overlay */}
+      <div className="film-grain fixed inset-0 pointer-events-none opacity-[0.07]" />
+      
+      {/* Vignette */}
+      <div className="vignette fixed inset-0 pointer-events-none" />
+      
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center py-8 pt-24 px-4">
+        {/* Back Button */}
+        <button
+          onClick={onBack}
+          className="absolute top-4 left-4 flex items-center gap-2 font-vhs text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Casting
+        </button>
+
+        {/* Title */}
+        <h1 className="font-display text-3xl md:text-4xl text-foreground tracking-[0.15em] uppercase mb-2">
+          Now Playing
+        </h1>
+        <p className="font-vhs text-sm text-muted-foreground mb-8">
+          {killer} vs {finalGirl} at {location}
+        </p>
+
+        {/* Story Container */}
+        <div className="w-full max-w-3xl">
+          <div className="scenario-description p-6 rounded-sm">
+            {isGenerating ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-4">
+                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                <p className="font-vhs text-sm text-muted-foreground animate-pulse">
+                  Generating your VHS horror story...
+                </p>
+                <p className="font-vhs text-xs text-muted-foreground/60">
+                  The projector is warming up...
+                </p>
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-4">
+                <p className="font-vhs text-sm text-destructive">
+                  {error}
+                </p>
+                <button
+                  onClick={generateStory}
+                  className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : story ? (
+              <div className="space-y-4">
+                <h2 className="font-display text-xl text-foreground tracking-wider uppercase border-b border-border/30 pb-2">
+                  Cold Open
+                </h2>
+                <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  {story}
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12">
+                <p className="font-vhs text-sm text-muted-foreground">
+                  Waiting for the story...
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Outcome Buttons */}
+        <div className="flex gap-6 mt-10">
+          <button
+            onClick={handleWon}
+            disabled={isGenerating}
+            className="outcome-btn outcome-btn-won flex items-center gap-3 px-8 py-4 font-display text-lg tracking-[0.15em] uppercase transition-all duration-300"
+          >
+            <Trophy className="w-5 h-5" />
+            Won
+          </button>
+          <button
+            onClick={handleLost}
+            disabled={isGenerating}
+            className="outcome-btn outcome-btn-lost flex items-center gap-3 px-8 py-4 font-display text-lg tracking-[0.15em] uppercase transition-all duration-300"
+          >
+            <Skull className="w-5 h-5" />
+            Lost
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NowPlaying;
