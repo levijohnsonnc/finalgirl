@@ -57,12 +57,12 @@ export const CastingSlot = ({
 }: CastingSlotProps) => {
   const [displayValue, setDisplayValue] = useState(value);
   const [isAnimating, setIsAnimating] = useState(false);
-  const animationRef = useRef<{ timeouts: NodeJS.Timeout[] }>({ timeouts: [] });
+  const [shuffleSequence, setShuffleSequence] = useState<string[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Handle shuffle animation with slot machine effect
+  // Build shuffle sequence when shuffling starts
   useEffect(() => {
-    if (isShuffling && options.length > 0) {
+    if (isShuffling && options.length > 0 && value) {
       setIsAnimating(true);
       
       // Play shuffle sound
@@ -72,48 +72,30 @@ export const CastingSlot = ({
       }
       audioRef.current = new Audio(shuffleSound);
       audioRef.current.volume = 0.4;
-      audioRef.current.play().catch(() => {}); // Ignore autoplay errors
-      
-      // Clear any existing timeouts
-      animationRef.current.timeouts.forEach(t => clearTimeout(t));
-      animationRef.current.timeouts = [];
-      
-      const maxIterations = 18;
-      const baseInterval = 40; // Start fast
-      let elapsed = 0;
-      
-      // Schedule each iteration with increasing delays (slot machine easing)
-      for (let i = 0; i < maxIterations; i++) {
-        const progress = i / maxIterations;
-        // Exponential slowdown: 40ms → ~220ms at the end
-        const interval = baseInterval + Math.floor(progress * progress * 180);
-        elapsed += interval;
-        
-        const timeout = setTimeout(() => {
-          if (i < maxIterations - 1) {
-            const randomIdx = Math.floor(Math.random() * options.length);
-            setDisplayValue(options[randomIdx]);
-          } else {
-            // Final iteration - show the actual value
-            setDisplayValue(value);
-            setIsAnimating(false);
-          }
-        }, elapsed);
-        
-        animationRef.current.timeouts.push(timeout);
-      }
+      audioRef.current.play().catch(() => {});
 
-      return () => {
-        animationRef.current.timeouts.forEach(t => clearTimeout(t));
-        animationRef.current.timeouts = [];
-      };
+      // Build sequence: 12 random options ending with the selected value
+      const sequence: string[] = [];
+      for (let i = 0; i < 12; i++) {
+        const randomIdx = Math.floor(Math.random() * options.length);
+        sequence.push(options[randomIdx]);
+      }
+      sequence.push(value); // Final item is the selected value
+      setShuffleSequence(sequence);
     } else if (!isShuffling) {
       setDisplayValue(value);
     }
   }, [isShuffling, shuffleKey, value, options]);
 
+  // Handle animation end
+  const handleAnimationEnd = () => {
+    setIsAnimating(false);
+    setShuffleSequence([]);
+    setDisplayValue(value);
+  };
+
   const cardImage = getImageForValue(type, displayValue);
-  const isEmpty = !displayValue;
+  const isEmpty = !displayValue && !isAnimating;
 
   // Location cards are landscape (16:10), character cards are square (1:1)
   const isLocation = type === 'location';
@@ -126,8 +108,6 @@ export const CastingSlot = ({
       </span>
 
       {/* Poster Card - different dimensions for location vs characters */}
-      {/* Location: landscape ~16:10 ratio, same height as character cards */}
-      {/* Characters: square 1:1 ratio */}
       <div 
         className={`
           poster-card relative rounded-sm overflow-hidden
@@ -139,19 +119,42 @@ export const CastingSlot = ({
           ${isAnimating ? 'poster-card-shuffling' : ''}
         `}
       >
-        {/* Background - either character/location image or mystery static */}
-        {cardImage ? (
-          <img 
-            src={cardImage} 
-            alt={displayValue || ''} 
-            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : ''} ${isAnimating ? 'shuffle-slide shuffle-flicker' : ''}`}
-          />
+        {/* Scrolling reel during animation */}
+        {isAnimating && shuffleSequence.length > 0 ? (
+          <div 
+            className="slot-reel absolute inset-0"
+            style={{ '--item-count': shuffleSequence.length } as React.CSSProperties}
+            onAnimationEnd={handleAnimationEnd}
+          >
+            {shuffleSequence.map((option, idx) => {
+              const img = getImageForValue(type, option);
+              return img ? (
+                <img 
+                  key={idx}
+                  src={img}
+                  alt={option}
+                  className={`w-full h-full object-cover flex-shrink-0 ${type === 'killer' ? 'object-top' : ''}`}
+                />
+              ) : (
+                <div key={idx} className="w-full h-full mystery-static flex-shrink-0" />
+              );
+            })}
+          </div>
         ) : (
-          <div className={`absolute inset-0 mystery-static ${isAnimating ? 'shuffle-flicker' : ''}`} />
+          /* Static display */
+          cardImage ? (
+            <img 
+              src={cardImage} 
+              alt={displayValue || ''} 
+              className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : ''}`}
+            />
+          ) : (
+            <div className="absolute inset-0 mystery-static" />
+          )
         )}
 
         {/* VHS softness overlay */}
-        <div className="absolute inset-0 vhs-softness" />
+        <div className="absolute inset-0 vhs-softness pointer-events-none" />
         
         {/* Film grain */}
         <div className="absolute inset-0 film-grain pointer-events-none" />
@@ -159,7 +162,9 @@ export const CastingSlot = ({
 
       {/* Name */}
       <div className="h-6 flex items-center justify-center">
-        {displayValue ? (
+        {isAnimating ? (
+          <span className="font-vhs text-sm text-muted-foreground/50 animate-pulse">...</span>
+        ) : displayValue ? (
           <span className="font-display text-lg text-foreground tracking-wide text-center">
             {displayValue}
           </span>
