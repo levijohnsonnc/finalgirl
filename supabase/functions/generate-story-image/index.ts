@@ -7,11 +7,8 @@ const corsHeaders = {
 };
 
 interface ImageRequest {
-  position: number; // 1-4: determines the scene type
-  killer: string;
-  location: string;
-  finalGirl: string;
-  storySnippet?: string;
+  position: number;
+  fullStory: string;
 }
 
 serve(async (req) => {
@@ -21,38 +18,54 @@ serve(async (req) => {
   }
 
   try {
-    const { position, killer, location, finalGirl, storySnippet } = await req.json() as ImageRequest;
+    const { position, fullStory } = await req.json() as ImageRequest;
 
-    console.log(`Generating image for position ${position}:`, { killer, location, finalGirl });
+    console.log(`Generating image for position ${position}, story length: ${fullStory?.length || 0}`);
 
-    // Build scene-specific prompts based on position - using safe language to avoid content filters
-    let sceneDescription: string;
-    
-    switch (position) {
-      case 1:
-        sceneDescription = `Establishing shot of ${location}, atmospheric vintage setting, mysterious and moody, nighttime with fog, cinematic composition`;
-        break;
-      case 2:
-        sceneDescription = `Mysterious figure named ${killer} in shadows, dramatic lighting, noir style, silhouette against dark background, suspenseful mood`;
-        break;
-      case 3:
-        sceneDescription = `Young woman named ${finalGirl}, looking cautiously over her shoulder, determined expression, dramatic lighting, vintage film look`;
-        break;
-      case 4:
-        sceneDescription = `Dramatic scene at ${location}, two figures in tense standoff, cinematic framing, suspenseful atmosphere, vintage movie still`;
-        break;
-      default:
-        sceneDescription = `Atmospheric scene at ${location}, mysterious mood, vintage cinematic style`;
+    if (!fullStory || fullStory.length < 50) {
+      throw new Error('Story text is required');
     }
-
-    const prompt = `Vintage 1980s movie still, grainy film quality, muted desaturated colors, analog aesthetic. ${sceneDescription}. Style: retro indie film, atmospheric, practical lighting, 4:3 aspect ratio, moody and cinematic.`;
-
-    console.log(`Generated prompt for position ${position}:`, prompt);
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
+
+    // First, use a text model to extract the most powerful visual from the story
+    const extractionPrompt = `Read this story excerpt and identify the ${position === 1 ? 'first' : position === 2 ? 'second' : position === 3 ? 'third' : 'fourth'} most visually striking moment or scene. Describe it in ONE sentence as a cinematic shot description (no character names, just descriptions like "a tall figure in shadows", "an abandoned carnival at night", etc.). Focus on atmosphere, lighting, and composition. Keep it safe for image generation - no graphic content.
+
+Story:
+${fullStory}
+
+Reply with ONLY the one-sentence visual description, nothing else.`;
+
+    // Extract the visual description using text model
+    const extractResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-lite",
+        messages: [{ role: "user", content: extractionPrompt }],
+      })
+    });
+
+    if (!extractResponse.ok) {
+      throw new Error(`Failed to extract visual: ${extractResponse.status}`);
+    }
+
+    const extractData = await extractResponse.json();
+    const visualDescription = extractData.choices?.[0]?.message?.content?.trim() || 
+      'Atmospheric vintage scene with dramatic lighting';
+
+    console.log(`Extracted visual for position ${position}:`, visualDescription);
+
+    // Now generate the image with the extracted description
+    const imagePrompt = `Vintage 1980s movie still, grainy film quality, muted desaturated colors, analog VHS aesthetic. ${visualDescription}. Style: retro indie film, atmospheric, practical lighting, moody and cinematic, widescreen composition.`;
+
+    console.log(`Image prompt for position ${position}:`, imagePrompt);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -62,12 +75,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash-image-preview",
-        messages: [
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
+        messages: [{ role: "user", content: imagePrompt }],
         modalities: ["image", "text"]
       })
     });
@@ -79,7 +87,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('AI response received for position', position);
+    console.log('AI image response received for position', position);
 
     // Extract the base64 image from the response
     const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
@@ -90,7 +98,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ imageUrl, position }),
+      JSON.stringify({ imageUrl, position, visualDescription }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

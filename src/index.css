@@ -492,13 +492,14 @@
     border-color: hsl(0 0% 35%);
   }
 
-  /* Story Image Slot */
+  /* Story Image Slot - wider and taller */
   .story-image-slot {
-    aspect-ratio: 4/3;
+    aspect-ratio: 2/3;
     border: 2px solid hsl(var(--border));
     background: hsl(var(--card));
     position: relative;
     overflow: hidden;
+    min-height: 320px;
   }
 
   .story-image-loaded {

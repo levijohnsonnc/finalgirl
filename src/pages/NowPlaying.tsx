@@ -158,22 +158,16 @@ const NowPlaying = ({
         {/* Story Container with Side Images */}
         <div className="w-full flex gap-6 items-start justify-center">
           {/* Left Images - Desktop only */}
-          <div className="hidden lg:flex flex-col gap-4 w-48 flex-shrink-0">
+          <div className="hidden lg:flex flex-col gap-4 w-64 flex-shrink-0">
             <StoryImageSlot
               position={1}
-              killer={killer}
-              location={location}
-              finalGirl={finalGirl}
+              fullStory={story || ''}
               storyLoaded={!!story}
-              storySnippet={story || undefined}
             />
             <StoryImageSlot
               position={2}
-              killer={killer}
-              location={location}
-              finalGirl={finalGirl}
+              fullStory={story || ''}
               storyLoaded={!!story}
-              storySnippet={story || undefined}
             />
           </div>
 
@@ -217,22 +211,16 @@ const NowPlaying = ({
           </div>
 
           {/* Right Images - Desktop only */}
-          <div className="hidden lg:flex flex-col gap-4 w-48 flex-shrink-0">
+          <div className="hidden lg:flex flex-col gap-4 w-64 flex-shrink-0">
             <StoryImageSlot
               position={3}
-              killer={killer}
-              location={location}
-              finalGirl={finalGirl}
+              fullStory={story || ''}
               storyLoaded={!!story}
-              storySnippet={story || undefined}
             />
             <StoryImageSlot
               position={4}
-              killer={killer}
-              location={location}
-              finalGirl={finalGirl}
+              fullStory={story || ''}
               storyLoaded={!!story}
-              storySnippet={story || undefined}
             />
           </div>
         </div>
