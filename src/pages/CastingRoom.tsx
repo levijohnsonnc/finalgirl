@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Play } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { CastingSlot } from '@/components/CastingSlot';
 import { CastingPicker } from '@/components/CastingPicker';
 import { ScenarioDropdowns } from '@/components/ScenarioDropdowns';
@@ -23,9 +22,10 @@ interface CastingRoomProps {
     setupScenario: string | null;
     startingEvent: string | null;
   }) => void;
+  onGoToArchive?: () => void;
 }
 
-const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
+const CastingRoom = ({ onStartGame, onGoToArchive }: CastingRoomProps) => {
   const [ownedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
   
   const [selection, setSelection] = useState<CastingSelection>({
@@ -103,9 +103,12 @@ const CastingRoom = ({ onStartGame }: CastingRoomProps) => {
         <h2 className="font-display text-3xl text-foreground mb-3 tracking-wider">NO FILMS IN COLLECTION</h2>
         <p className="font-vhs text-muted-foreground max-w-md">
           Visit{' '}
-          <Link to="/archive" className="text-primary hover:text-primary/80 underline underline-offset-2">
+          <button 
+            onClick={onGoToArchive}
+            className="text-primary hover:text-primary/80 underline underline-offset-2"
+          >
             My Collection
-          </Link>
+          </button>
           {' '}to add Feature Films before casting.
         </p>
       </div>
