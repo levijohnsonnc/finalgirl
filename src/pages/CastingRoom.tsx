@@ -108,8 +108,8 @@ const CastingRoom = () => {
       
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center py-8 pt-24">
-        {/* Three Casting Slots */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-10 md:mb-14 w-full max-w-4xl px-4">
+        {/* Three Casting Slots - flex layout for different card sizes */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-10 mb-10 md:mb-14 w-full px-4">
           <CastingSlot
             type="killer"
             value={selection.killer}
