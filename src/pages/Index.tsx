@@ -85,11 +85,11 @@ const Index = () => {
             />
           );
         }
-        return <CastingRoom onStartGame={handleStartGame} />;
+        return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
       case 'archive':
-        return <Archive />;
+        return <Archive onBack={() => setCurrentPage('dashboard')} />;
       default:
-        return <CastingRoom onStartGame={handleStartGame} />;
+        return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
     }
   };
 

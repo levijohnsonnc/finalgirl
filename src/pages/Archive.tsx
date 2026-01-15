@@ -1,11 +1,13 @@
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
-const Archive = () => {
-  const navigate = useNavigate();
+interface ArchiveProps {
+  onBack?: () => void;
+}
+
+const Archive = ({ onBack }: ArchiveProps) => {
   const [ownedFilms, setOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
 
   // Group films by season - no memoization needed, FEATURE_FILMS is static
@@ -23,23 +25,21 @@ const Archive = () => {
     );
   };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
-
   // Seasons that are in development
   const inDevelopmentSeasons = [2, 3, 4];
 
   return (
     <div className="space-y-8">
-      {/* Back Button */}
-      <button
-        onClick={handleBack}
-        className="flex items-center gap-2 font-vhs text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </button>
+      {/* Back Button - positioned to align with content */}
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 font-vhs text-sm text-primary hover:text-primary/80 transition-colors mt-4 mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="underline underline-offset-2">Back</span>
+        </button>
+      )}
 
       {/* Header */}
       <div className="text-center space-y-2">
