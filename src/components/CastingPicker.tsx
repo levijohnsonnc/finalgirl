@@ -98,10 +98,15 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
           </div>
         </div>
 
-        {/* Grid of options */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 w-full max-w-4xl">
+        {/* Grid of options - different layout for locations */}
+        <div className={`grid gap-4 md:gap-6 w-full max-w-5xl ${
+          type === 'location' 
+            ? 'grid-cols-1 md:grid-cols-2' 
+            : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+        }`}>
           {options.map((option) => {
             const cardImage = getImageForValue(type, option);
+            const isLocation = type === 'location';
             
             return (
               <button
@@ -109,8 +114,10 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
                 onClick={() => onSelect(option)}
                 className="picker-card group flex flex-col items-center gap-2 p-2 rounded-sm transition-all duration-200"
               >
-                {/* Poster */}
-                <div className="poster-card poster-card-filled relative w-full aspect-[3/4] rounded-sm overflow-hidden">
+                {/* Poster - landscape for locations, portrait for characters */}
+                <div className={`poster-card poster-card-filled relative w-full rounded-sm overflow-hidden ${
+                  isLocation ? 'aspect-[16/10]' : 'aspect-[3/4]'
+                }`}>
                   {cardImage ? (
                     <img 
                       src={cardImage} 
