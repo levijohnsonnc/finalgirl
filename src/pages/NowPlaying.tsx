@@ -178,9 +178,6 @@ const NowPlaying = ({
                 <div className="flex flex-col items-center justify-center py-12 gap-4">
                   <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                   <p className="font-vhs text-sm text-muted-foreground animate-pulse">
-                    Generating your VHS horror story...
-                  </p>
-                  <p className="font-vhs text-xs text-muted-foreground/60">
                     The projector is warming up...
                   </p>
                 </div>
