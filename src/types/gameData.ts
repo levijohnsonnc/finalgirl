@@ -9,7 +9,11 @@ import frightmareMapleArt from '@/assets/box-art/frightmare-maple-lane.png';
 import hansImage from '@/assets/characters/hans.png';
 import laurieImage from '@/assets/characters/laurie.png';
 import reikoImage from '@/assets/characters/reiko.png';
+import drFrightImage from '@/assets/characters/dr-fright.png';
+import nancyImage from '@/assets/characters/nancy.png';
+import sheilaImage from '@/assets/characters/sheila.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
+import mapleLaneImage from '@/assets/locations/maple-lane.png';
 
 export interface FeatureFilm {
   id: string;
@@ -26,11 +30,15 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Hans': hansImage,
   'Laurie': laurieImage,
   'Reiko': reikoImage,
+  'Dr. Fright': drFrightImage,
+  'Nancy': nancyImage,
+  'Sheila': sheilaImage,
 };
 
 // Location-specific images (for casting room display)
 export const LOCATION_IMAGES: Record<string, string> = {
   'Camp Happy Trails': campHappyTrailsImage,
+  'Maple Lane': mapleLaneImage,
 };
 
 export interface SessionLog {
