@@ -23,8 +23,6 @@ export const ScenarioDropdowns = ({
 }: ScenarioDropdownsProps) => {
   const [selectedSetup, setSelectedSetup] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
-  const [showSetupDesc, setShowSetupDesc] = useState(false);
-  const [showEventDesc, setShowEventDesc] = useState(false);
 
   const filmId = selectedLocation ? getFilmIdByLocation(selectedLocation) : null;
   
@@ -45,13 +43,11 @@ export const ScenarioDropdowns = ({
 
   const handleSetupChange = (value: string) => {
     setSelectedSetup(value);
-    setShowSetupDesc(true);
     onSetupChange?.(value);
   };
 
   const handleEventChange = (value: string) => {
     setSelectedEvent(value);
-    setShowEventDesc(true);
     onEventChange?.(value);
   };
 
@@ -87,15 +83,6 @@ export const ScenarioDropdowns = ({
               ))}
             </SelectContent>
           </Select>
-          
-          {/* Setup Description */}
-          {showSetupDesc && selectedSetupData && (
-            <div className="scenario-description mt-2 p-3 rounded-sm">
-              <p className="font-vhs text-xs text-muted-foreground leading-relaxed">
-                {selectedSetupData.description}
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Event Dropdown */}
@@ -123,15 +110,6 @@ export const ScenarioDropdowns = ({
               ))}
             </SelectContent>
           </Select>
-          
-          {/* Event Description */}
-          {showEventDesc && selectedEventData && (
-            <div className="scenario-description mt-2 p-3 rounded-sm">
-              <p className="font-vhs text-xs text-muted-foreground leading-relaxed">
-                {selectedEventData.description}
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>
