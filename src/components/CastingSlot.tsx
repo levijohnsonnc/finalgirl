@@ -50,7 +50,9 @@ const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: stri
 const getObjectPosition = (type: 'killer' | 'location' | 'finalGirl', value: string | null): string => {
   // Dr. Fright should use center positioning, not top
   if (value === 'Dr. Fright') return 'object-center';
-  // Other killers and Geppetto use top positioning
+  // Poltergeist needs bottom positioning to show the ghost figure
+  if (value === 'Poltergeist') return 'object-bottom';
+  // Other killers use top positioning
   if (type === 'killer') return 'object-top';
   return '';
 };
