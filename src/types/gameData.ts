@@ -15,9 +15,17 @@ import sheilaImage from '@/assets/characters/sheila.png';
 import geppettoImage from '@/assets/characters/geppetto.png';
 import asamiImage from '@/assets/characters/asami.png';
 import charlieImage from '@/assets/characters/charlie.png';
+import aliceImage from '@/assets/characters/alice.png';
+import selenaImage from '@/assets/characters/selena.png';
+import adelaideImage from '@/assets/characters/adelaide.png';
+import barbaraImage from '@/assets/characters/barbara.png';
+import poltergeistImage from '@/assets/characters/poltergeist.png';
+import inkanyambaImage from '@/assets/characters/inkanyamba.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
 import mapleLaneImage from '@/assets/locations/maple-lane.png';
 import carnivalOfBloodImage from '@/assets/locations/carnival-of-blood.png';
+import creechManorImage from '@/assets/locations/creech-manor.png';
+import sacredGrovesImage from '@/assets/locations/sacred-groves.png';
 
 export interface FeatureFilm {
   id: string;
@@ -40,6 +48,12 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Geppetto': geppettoImage,
   'Asami': asamiImage,
   'Charlie': charlieImage,
+  'Alice': aliceImage,
+  'Selena': selenaImage,
+  'Adelaide': adelaideImage,
+  'Barbara': barbaraImage,
+  'Poltergeist': poltergeistImage,
+  'Inkanyamba': inkanyambaImage,
 };
 
 // Location-specific images (for casting room display)
@@ -47,6 +61,8 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Camp Happy Trails': campHappyTrailsImage,
   'Maple Lane': mapleLaneImage,
   'Carnival of Blood': carnivalOfBloodImage,
+  'Creech Manor': creechManorImage,
+  'Sacred Groves': sacredGrovesImage,
 };
 
 export interface SessionLog {
