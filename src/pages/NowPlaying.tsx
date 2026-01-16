@@ -207,54 +207,57 @@ const NowPlaying = ({
           {killer} vs {finalGirl} at {location}
         </p>
 
-        {/* Story Container */}
-        <div className="w-full max-w-3xl">
-          <div className="scenario-description p-6 rounded-sm">
-            {isGenerating ? (
-              <div className="flex flex-col items-center justify-center py-12 gap-4">
-                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="font-vhs text-sm text-muted-foreground animate-pulse">
-                  The projector is warming up...
-                </p>
-              </div>
-            ) : error ? (
-              <div className="flex flex-col items-center justify-center py-12 gap-4">
-                <p className="font-vhs text-sm text-destructive">
-                  {error}
-                </p>
-                <button
-                  onClick={generateStory}
-                  className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : story ? (
-              <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {story}
-              </p>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12">
-                <p className="font-vhs text-sm text-muted-foreground">
-                  Waiting for the story...
-                </p>
-              </div>
+        {/* Story Container with Narrate Button */}
+        <div className="w-full max-w-3xl flex items-start gap-6">
+          {/* Narrate Button - Left of text */}
+          <div className="flex-shrink-0 pt-6">
+            {story && (
+              <button
+                onClick={handleNarrate}
+                disabled={isNarrating}
+                className="vcr-tape-button px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300"
+              >
+                {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
+              </button>
             )}
           </div>
-        </div>
-
-        {/* Narrate Button */}
-        {story && (
-          <div className="flex gap-6 mt-10">
-            <button
-              onClick={handleNarrate}
-              disabled={isNarrating}
-              className="vcr-tape-button px-8 py-4 font-display text-lg tracking-[0.15em] uppercase transition-all duration-300"
-            >
-              {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
-            </button>
+          
+          {/* Story Text */}
+          <div className="flex-1">
+            <div className="scenario-description p-6 rounded-sm">
+              {isGenerating ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-4">
+                  <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  <p className="font-vhs text-sm text-muted-foreground animate-pulse">
+                    The projector is warming up...
+                  </p>
+                </div>
+              ) : error ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-4">
+                  <p className="font-vhs text-sm text-destructive">
+                    {error}
+                  </p>
+                  <button
+                    onClick={generateStory}
+                    className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : story ? (
+                <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  {story}
+                </p>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <p className="font-vhs text-sm text-muted-foreground">
+                    Waiting for the story...
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
