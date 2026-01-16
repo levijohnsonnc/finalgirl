@@ -1,0 +1,52 @@
+/**
+ * Visual descriptions for Killer characters
+ * Used to augment AI image generation with accurate character appearances
+ */
+
+export const KILLER_DESCRIPTIONS: Record<string, string> = {
+  "Hans": `A tall, broad-shouldered humanoid figure with a heavy, imposing build and an unmistakably predatory presence. The figure wears a realistic pig mask that fully obscures the human face beneath it. The mask has pale, fleshy skin texture, pronounced snout, upright ears, and glowing red eyes that feel artificial and inhuman rather than emotional. The expression of the mask is fixed and unreadable, which makes the figure more unsettling.
+
+The body language is dominant and deliberate—shoulders squared, stance grounded, movements economical and purposeful. This is not a frantic killer; it is controlled, confident, and patient.
+
+The figure wears utilitarian work clothing: a light-colored button-up shirt with sleeves rolled up and a heavily stained, worn apron that suggests slaughterhouse or butcher work. Clothing is practical, dirty, and functional, not theatrical. Arms are bare, muscular, and marked by grime and old stains.
+
+The character carries a large butcher's cleaver held low and casually, as if it's a familiar tool rather than a weapon.
+
+The overall impression is of a human-shaped force of violence hidden behind an animal identity—ritualistic, industrial, and merciless. Realistic pig mask, not cartoonish. Upright ears, full snout, skin-textured latex look. Glowing red eyes (unnatural, not emotional). Mask never changes expression. Industrial, slaughterhouse-adjacent clothing. Apron is mandatory. Fabrics are stiff, stained, and worn. Colors are muted: off-whites, browns, faded blues. Nothing decorative, no symbols, no flair.`,
+
+  "Geppetto": `A slender, adult male figure with a tall, wiry build and an exaggerated, theatrical presence. His posture is expressive and performative, with deliberate gestures meant to be seen and savored. He moves like someone on stage even when standing still.
+
+His face is fully painted in stark, theatrical makeup: a white-painted base covering the entire face, heavy black makeup smeared and dripping downward from the eyes, and a wide, exaggerated red smile painted across the mouth, partially smeared and stained. The makeup looks worn, cracked, and intentionally grotesque rather than clean or polished. His expression beneath the paint is knowingly playful and predatory—eyes locked directly on the viewer, amused and inviting.
+
+His eyes are light-colored (pale gray or light hazel), sharp and expressive, communicating delight rather than rage.
+
+He has medium-length brown hair, slightly messy and unstyled, peeking out from beneath a tall black top hat. The hat is worn and scuffed, not pristine. He wears an ornate, old-fashioned ringmaster or carnival showman outfit:
+
+A deep red velvet tailcoat with gold trim and epaulettes. A high-collared shirt or cravat beneath, stained and rumpled. High-waisted trousers with bold vertical stripes (yellow and dark tones). Decorative elements feel theatrical but aged and damaged. The outfit must feel once-grand, now decayed—torn, stained, and lived-in.
+
+He holds wooden marionette control bars with long strings dangling down, implying control over unseen victims. The marionette strings are essential symbolism, even if no puppet is visible.
+
+This character radiates playful cruelty. He enjoys being watched. Violence is a performance, not a necessity. He taunts rather than rushes, smiles rather than scowls, and always appears one step ahead. He is not frantic. He is entertained.`,
+
+  "Dr. Fright": `A middle-aged man in his late 40s to early 50s with a stocky, work-hardened build and a hunched, aggressive posture. His body language is tense and animalistic—shoulders forward, arms slightly bent, as if perpetually mid-lunge. He looks like someone who has snapped rather than transformed.
+
+His face is weathered and rough, with deep lines, broken skin, and fresh cuts smeared with blood. His expression is furious and unhinged—eyes wide, jaw clenched, lips pulled tight in a snarl. There's no irony or playfulness here; his violence is raw and emotional.
+
+His eyes are dark and intense, fixed on his target with obsessive focus.
+
+He has medium-length, thinning brown hair, greasy and disheveled, clinging to his head and forehead. Hair looks neglected rather than styled.
+
+He reads as a man driven past reason—rage-fueled, territorial, and deeply personal. He wears rural work clothing: A yellow or mustard sweater vest over a long-sleeve button-up shirt. Work trousers, dirty and worn. Clothing is soaked and smeared with blood, especially across the chest and sleeves.
+
+He carries a rusted metal pitchfork, held tightly and angled forward like a spear. The pitchfork is not ceremonial—it's a familiar farm tool turned weapon.
+
+The look should always feel domestic and agricultural, never stylized or theatrical.`
+};
+
+/**
+ * Get the visual description for a killer by name
+ * Returns undefined if no description exists
+ */
+export function getKillerDescription(name: string): string | undefined {
+  return KILLER_DESCRIPTIONS[name];
+}
