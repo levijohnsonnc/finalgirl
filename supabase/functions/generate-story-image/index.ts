@@ -62,40 +62,52 @@ Reply with ONLY the one-sentence visual description, nothing else.`;
 
     console.log(`Extracted visual for position ${position}:`, visualDescription);
 
-    // Now generate the image with the extracted description
+    // Now generate the image with the extracted description using Google's native API
     const imagePrompt = `Vintage 1980s movie still, grainy film quality, muted desaturated colors, analog VHS aesthetic. ${visualDescription}. Style: retro indie film, atmospheric, practical lighting, moody and cinematic, widescreen composition.`;
 
     console.log(`Image prompt for position ${position}:`, imagePrompt);
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
-        messages: [{ role: "user", content: imagePrompt }],
-        modalities: ["image", "text"]
-      })
-    });
+    const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
+    if (!GOOGLE_API_KEY) {
+      throw new Error('GOOGLE_API_KEY not configured');
+    }
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${GOOGLE_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: imagePrompt }] }],
+          generationConfig: { 
+            responseModalities: ["image", "text"]
+          }
+        })
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Lovable AI API error:', response.status, errorText);
-      throw new Error(`AI API error: ${response.status}`);
+      console.error('Google API error:', response.status, errorText);
+      throw new Error(`Google API error: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('AI image response received for position', position);
+    console.log('Google image response received for position', position);
 
-    // Extract the base64 image from the response
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-
-    if (!imageUrl) {
+    // Extract the base64 image from Google's response format
+    const candidates = data.candidates;
+    const parts = candidates?.[0]?.content?.parts;
+    const imagePart = parts?.find((part: { inlineData?: { mimeType: string; data: string } }) => part.inlineData);
+    
+    if (!imagePart?.inlineData) {
       console.error('No image in response:', JSON.stringify(data, null, 2));
       throw new Error('No image generated');
     }
+
+    const imageUrl = `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}`;
 
     return new Response(
       JSON.stringify({ imageUrl, position, visualDescription }),
