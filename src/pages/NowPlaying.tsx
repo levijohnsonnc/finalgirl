@@ -5,7 +5,6 @@ import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
-import StoryImageSlot from '@/components/StoryImageSlot';
 
 interface NowPlayingProps {
   killer: string;
@@ -155,70 +154,39 @@ const NowPlaying = ({
           {killer} vs {finalGirl} at {location}
         </p>
 
-        {/* Story Container with Side Images */}
-        <div className="w-full flex gap-6 items-start justify-center">
-          {/* Left Images - Desktop only */}
-          <div className="hidden lg:flex flex-col gap-4 w-64 flex-shrink-0">
-            <StoryImageSlot
-              position={1}
-              fullStory={story || ''}
-              storyLoaded={!!story}
-            />
-            <StoryImageSlot
-              position={2}
-              fullStory={story || ''}
-              storyLoaded={!!story}
-            />
-          </div>
-
-          {/* Story Content */}
-          <div className="flex-1 max-w-3xl">
-            <div className="scenario-description p-6 rounded-sm">
-              {isGenerating ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4">
-                  <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  <p className="font-vhs text-sm text-muted-foreground animate-pulse">
-                    The projector is warming up...
-                  </p>
-                </div>
-              ) : error ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4">
-                  <p className="font-vhs text-sm text-destructive">
-                    {error}
-                  </p>
-                  <button
-                    onClick={generateStory}
-                    className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              ) : story ? (
-                <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {story}
+        {/* Story Container */}
+        <div className="w-full max-w-3xl">
+          <div className="scenario-description p-6 rounded-sm">
+            {isGenerating ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-4">
+                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                <p className="font-vhs text-sm text-muted-foreground animate-pulse">
+                  The projector is warming up...
                 </p>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <p className="font-vhs text-sm text-muted-foreground">
-                    Waiting for the story...
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right Images - Desktop only */}
-          <div className="hidden lg:flex flex-col gap-4 w-64 flex-shrink-0">
-            <StoryImageSlot
-              position={3}
-              fullStory={story || ''}
-              storyLoaded={!!story}
-            />
-            <StoryImageSlot
-              position={4}
-              fullStory={story || ''}
-              storyLoaded={!!story}
-            />
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-4">
+                <p className="font-vhs text-sm text-destructive">
+                  {error}
+                </p>
+                <button
+                  onClick={generateStory}
+                  className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : story ? (
+              <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                {story}
+              </p>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12">
+                <p className="font-vhs text-sm text-muted-foreground">
+                  Waiting for the story...
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
