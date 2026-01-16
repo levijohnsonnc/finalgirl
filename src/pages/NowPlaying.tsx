@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Trophy, Skull, ArrowLeft } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
@@ -28,6 +28,9 @@ const NowPlaying = ({
   const [story, setStory] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isNarrating, setIsNarrating] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Auto-generate story on mount
   useEffect(() => {
@@ -106,16 +109,66 @@ const NowPlaying = ({
     }
   };
 
-  const handleWon = () => {
-    console.log('Game Won!', { killer, location, finalGirl, setupScenario, startingEvent });
-    toast.success('Victory! The Final Girl survived!');
-    // TODO: Save result to database
-  };
+  const handleNarrate = async () => {
+    if (!story) return;
+    
+    // If already playing, stop and reset
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      return;
+    }
 
-  const handleLost = () => {
-    console.log('Game Lost!', { killer, location, finalGirl, setupScenario, startingEvent });
-    toast.error('Defeat... The killer claims another victim.');
-    // TODO: Save result to database
+    setIsNarrating(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/narrate-story`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text: story }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Narration request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Use data URI for audio playback
+      const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      
+      audio.onended = () => {
+        setIsPlaying(false);
+      };
+      
+      audio.onerror = () => {
+        setIsPlaying(false);
+        toast.error('Audio playback failed');
+      };
+
+      await audio.play();
+      setIsPlaying(true);
+      
+    } catch (err) {
+      console.error('Narration error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate narration';
+      toast.error('Narration failed', { description: errorMessage });
+    } finally {
+      setIsNarrating(false);
+    }
   };
 
   return (
@@ -190,25 +243,18 @@ const NowPlaying = ({
           </div>
         </div>
 
-        {/* Outcome Buttons */}
-        <div className="flex gap-6 mt-10">
-          <button
-            onClick={handleWon}
-            disabled={isGenerating}
-            className="outcome-btn outcome-btn-won flex items-center gap-3 px-8 py-4 font-display text-lg tracking-[0.15em] uppercase transition-all duration-300"
-          >
-            <Trophy className="w-5 h-5" />
-            Won
-          </button>
-          <button
-            onClick={handleLost}
-            disabled={isGenerating}
-            className="outcome-btn outcome-btn-lost flex items-center gap-3 px-8 py-4 font-display text-lg tracking-[0.15em] uppercase transition-all duration-300"
-          >
-            <Skull className="w-5 h-5" />
-            Lost
-          </button>
-        </div>
+        {/* Narrate Button */}
+        {story && (
+          <div className="flex gap-6 mt-10">
+            <button
+              onClick={handleNarrate}
+              disabled={isNarrating}
+              className="vcr-tape-button px-8 py-4 font-display text-lg tracking-[0.15em] uppercase transition-all duration-300"
+            >
+              {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
