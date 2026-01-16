@@ -223,6 +223,62 @@ Nancy was always extremely resilient and persistent. She'd beat the odds even wh
       name: 'Dr. Fright',
       description: `I was in some sort of boiler room and a grotesque man with a pitchfork was chasing me! I was sure he was going to kill me… it felt so real! He had pock mark scars all over his skin and his eyes were milky white. A strange black… something, maybe a cloud but with eyes, swirled behind him. I was terrified, so I turned and ran. I rounded a corner and lost my footing. I staggered into some pipes and they burnt my skin so badly. That's when I woke up. I thought it was all in a dream, but I had a severe burn on my arm from the pipes!`
     }
+  },
+  's1-creech-manor': {
+    filmId: 's1-creech-manor',
+    finalGirls: [
+      {
+        name: 'Alice',
+        backstory: `Alice is a Caucasian woman with wavy ginger hair and green eyes. She wears a green t-shirt, white skirt, brown bag, dark green leggings and shoes.
+
+Alice Cranston was the definition of a fiery redhead. Her friends loved her boisterous personality and her take-no-shit demeanor. When she decided she wanted something, she never let anything get in her way.
+
+She got bored of things quickly though, including her relationships. As such, she never really had any deep or meaningful relationships. To put it bluntly, there wasn't anyone who could handle her. At least no-one she'd found yet.
+
+Alice had some growing up to do, but she loved the clubbing lifestyle and was out almost every night. She was in great shape and between her dancing and her workouts during the day, her cardio was top notch.
+
+Don't bet against Alice, but dealing with a bloodthirsty murderer is a lot different than dealing with some mouthy club rat or handsy gentleman caller.`
+      },
+      {
+        name: 'Selena',
+        backstory: `Selena is a medium brown-skinned woman with textured, dark brown hair in a bob. She wears a yellow tank top and black athletic pants.
+
+Selena Villanueva came from a big family. Having so many brothers and sisters was a blessing and a curse. On the one hand, they all got along and had each other's backs, but on the other hand, it made her thirst for the attention of her parents.
+
+Selena's thirst for attention caused her to look elsewhere. She always ended up going for the bad boy type and as hard as she tried, the relationships never worked out. Eventually, she learned to observe little things and use a discerning eye to stay out of bad relationships.
+
+By the time she went off to college, she knew she wanted to major in criminal justice. She could tell things about people and her surroundings using her keen observation skills, and she wanted to use it to solve crimes and mysteries.
+
+Little did she know that she would have to survive Creech Manor first!`
+      }
+    ],
+    location: {
+      name: 'Creech Manor',
+      description: `Creech Manor is over 100 years old with the kind of character and historic charm that people love. It is the kind of home where every step, every new room, can call to one's imagination a story from the past. But the stories of Creech Manor are filled with horrifying events, macabre happenings, and supernatural powers beyond human understanding. Go away, for evil reigns within...`,
+      setupCards: [
+        { name: 'Creepshow', description: 'A setup for The Haunting of Creech Manor featuring initial victim and token placement.' },
+        { name: 'Dancing Queen', description: 'A setup for The Haunting of Creech Manor featuring initial victim and token placement.' },
+        { name: 'Strange Trophies', description: 'A setup for The Haunting of Creech Manor featuring initial victim and token placement.' },
+        { name: 'The Dead Zone', description: 'A setup for The Haunting of Creech Manor featuring initial victim and token placement.' },
+        { name: 'The Ladder', description: 'A setup for The Haunting of Creech Manor featuring initial victim and token placement.' }
+      ],
+      events: [
+        { name: 'Clingy Victims', description: 'You must have at least 1 Victim follow you if able.' },
+        { name: 'Curiosity Killed the People', description: 'Place 3 new Victims in the Foyer and panic them immediately.' },
+        { name: 'Frozen in Fear', description: 'Victims will no longer panic during the Panic phase.' },
+        { name: 'Ghost Hunters', description: 'Replace the 3 Victims closest to you (or as many as able) with the Special Victim meeples. These Victims will not follow you until one of them has been killed. Each time one of these Victims is killed, increase Bloodlust by 1 more.' },
+        { name: 'Helicopter Rescue', description: 'Place the Helicopter token on the roof of the house. Once during the game, you may move from the Attic to the Helicopter as though they are adjacent. Any Victims (or Carolyn) with you may be saved. Unless you have saved Carolyn, you must return to the Attic and the token must be removed. The Helicopter is not considered an exit space.' },
+        { name: "I Ain't Afraid of No Ghost", description: 'Move each Victim 1 space towards the Attic.' },
+        { name: "Light's Out", description: 'Roll 1 fewer dice (minimum of 1) when resolving an Action card that allows movement. Ignore this effect if you have a Flashlight or Candle.' },
+        { name: 'Liquid Courage', description: "Victims will follow you into the Killer's space." },
+        { name: 'No One Comes Back', description: 'Place the Skull token in the Attic. All Victims in the Attic are killed. Whenever a Victim enters the Attic, they are killed immediately.' },
+        { name: 'Pushed to the Edge', description: 'Roll a die for each Victim in a Window Space. If the roll is a 1-4, that Victim jumps and is killed.' }
+      ]
+    },
+    killer: {
+      name: 'Poltergeist',
+      description: `"How do you fight a poltergeist? Let me ask you something... how does one fight something one cannot see? It's simple, you don't. You get the hell out of there and you don't look back, you don't turn back, you don't do anything but run. If you do, it will ruin you. Mentally. Physically. And Emotionally. Then, it will kill you."`
+    }
   }
 };
 
