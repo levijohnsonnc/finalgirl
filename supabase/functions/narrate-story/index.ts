@@ -30,7 +30,7 @@ serve(async (req) => {
     if (!ELEVENLABS_API_KEY) {
       console.error('ELEVENLABS_API_KEY not configured');
       return new Response(
-        JSON.stringify({ error: 'ElevenLabs API key not configured' }),
+        JSON.stringify({ error: 'Narration service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -64,9 +64,17 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('ElevenLabs API error:', response.status, errorText);
+      console.error('Narration API error:', response.status, errorText);
+      
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ error: 'Too many requests. Please wait a moment.' }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       return new Response(
-        JSON.stringify({ error: `ElevenLabs API error: ${response.status}` }),
+        JSON.stringify({ error: 'Failed to generate narration. Please try again.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -82,9 +90,8 @@ serve(async (req) => {
     );
   } catch (error: unknown) {
     console.error('Error generating narration:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to generate narration';
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'Failed to generate narration. Please try again.' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
