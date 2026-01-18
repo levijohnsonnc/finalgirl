@@ -1,14 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-interface NarrationRequest {
-  text: string;
-}
+import { corsHeaders, verifyAuth } from "../_shared/auth.ts";
+import { NarrationRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -17,14 +10,23 @@ serve(async (req) => {
   }
 
   try {
-    const { text }: NarrationRequest = await req.json();
-
-    if (!text || text.trim().length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'No text provided for narration' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Verify authentication
+    const { user, error: authError } = await verifyAuth(req);
+    if (authError) {
+      return authError;
     }
+
+    console.log('Authenticated user:', user?.id);
+
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = validateRequest(NarrationRequestSchema, body);
+    
+    if (!validation.success) {
+      return validation.error;
+    }
+
+    const { text } = validation.data;
 
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
     if (!ELEVENLABS_API_KEY) {

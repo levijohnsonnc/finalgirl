@@ -1,17 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-interface StoryRequest {
-  killer: { name: string; description?: string };
-  location: { name: string; description?: string };
-  finalGirl: { name: string; backstory?: string };
-  startingEvent: { name: string; description?: string } | null;
-  startingSetup: { name: string; description?: string } | null;
-}
+import { corsHeaders, verifyAuth } from "../_shared/auth.ts";
+import { StoryRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -20,7 +9,23 @@ serve(async (req) => {
   }
 
   try {
-    const { killer, location, finalGirl, startingEvent, startingSetup } = await req.json() as StoryRequest;
+    // Verify authentication
+    const { user, error: authError } = await verifyAuth(req);
+    if (authError) {
+      return authError;
+    }
+
+    console.log('Authenticated user:', user?.id);
+
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = validateRequest(StoryRequestSchema, body);
+    
+    if (!validation.success) {
+      return validation.error;
+    }
+
+    const { killer, location, finalGirl, startingEvent, startingSetup } = validation.data;
 
     console.log('Generating story for:', { 
       killer: killer.name, 

@@ -1,15 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-interface ImageRequest {
-  position: number;
-  fullStory: string;
-}
+import { corsHeaders, verifyAuth } from "../_shared/auth.ts";
+import { ImageRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -18,13 +10,25 @@ serve(async (req) => {
   }
 
   try {
-    const { position, fullStory } = await req.json() as ImageRequest;
-
-    console.log(`Generating image for position ${position}, story length: ${fullStory?.length || 0}`);
-
-    if (!fullStory || fullStory.length < 50) {
-      throw new Error('Story text is required');
+    // Verify authentication
+    const { user, error: authError } = await verifyAuth(req);
+    if (authError) {
+      return authError;
     }
+
+    console.log('Authenticated user:', user?.id);
+
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = validateRequest(ImageRequestSchema, body);
+    
+    if (!validation.success) {
+      return validation.error;
+    }
+
+    const { position, fullStory } = validation.data;
+
+    console.log(`Generating image for position ${position}, story length: ${fullStory.length}`);
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
