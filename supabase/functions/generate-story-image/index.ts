@@ -53,7 +53,8 @@ Reply with ONLY the one-sentence visual description, nothing else.`;
     });
 
     if (!extractResponse.ok) {
-      throw new Error(`Failed to extract visual: ${extractResponse.status}`);
+      console.error('Visual extraction failed:', extractResponse.status);
+      throw new Error('Failed to process story content');
     }
 
     const extractData = await extractResponse.json();
@@ -69,7 +70,7 @@ Reply with ONLY the one-sentence visual description, nothing else.`;
 
     const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
     if (!GOOGLE_API_KEY) {
-      throw new Error('GOOGLE_API_KEY not configured');
+      throw new Error('Image generation service not configured');
     }
 
     const response = await fetch(
@@ -90,8 +91,8 @@ Reply with ONLY the one-sentence visual description, nothing else.`;
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Google API error:', response.status, errorText);
-      throw new Error(`Google API error: ${response.status}`);
+      console.error('Image generation API error:', response.status, errorText);
+      throw new Error('Failed to generate image');
     }
 
     const data = await response.json();
@@ -115,10 +116,9 @@ Reply with ONLY the one-sentence visual description, nothing else.`;
     );
 
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Failed to generate image';
-    console.error('Error generating story image:', errorMessage);
+    console.error('Error generating story image:', error);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'Failed to generate image. Please try again.' }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
