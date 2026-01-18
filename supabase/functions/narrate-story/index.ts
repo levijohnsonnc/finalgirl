@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
-import { corsHeaders, verifyAuth } from "../_shared/auth.ts";
+import { corsHeaders } from "../_shared/auth.ts";
 import { NarrationRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 serve(async (req) => {
@@ -10,13 +10,6 @@ serve(async (req) => {
   }
 
   try {
-    // Verify authentication
-    const { user, error: authError } = await verifyAuth(req);
-    if (authError) {
-      return authError;
-    }
-
-    console.log('Authenticated user:', user?.id);
 
     // Parse and validate request body
     const body = await req.json();
