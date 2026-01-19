@@ -379,6 +379,56 @@ And now, kindness and joy have been replaced with cruelty and despair. There is 
 
 The Ratchet Lady wears a torn white gown and has bandages wrapped around her head, covering her eyes. Her right hand is missing, with a metal frame around the forearm. She carries a knife.`
     }
+  },
+  's3-killer-from-tomorrow': {
+    filmId: 's3-killer-from-tomorrow',
+    finalGirls: [
+      {
+        name: 'Kat',
+        backstory: `Kat grew up with an ex-military father who was convinced the world was out to get them both. His paranoia drove him to do everything in his power to prepare his little girl for the horrors that awaited beyond their front door. They lived off the grid and he taught her everything he knew: hand-to-hand combat; weapons handling; surviving off the land; battlefield tactics; hunting and tracking.
+
+By the age of 13 she could hit a tin can at 50 yards with a pistol. By 16 she could survive for a month in the dead of winter with nothing but a bowie knife. By 18 she had had enough of her father's paranoia, and left him and his crazy rants behind.
+
+It was only years later that she would fully appreciate what he had passed on to her when she came face to face with an unstoppable killing machine. The only thing standing between it and its helpless prey was Kat and her small arsenal of weaponry. Truth be told she kind of liked those odds.`
+      },
+      {
+        name: 'Tali',
+        backstory: `Tali grew up in an orphanage south of the border, one of the worst places a child could possibly be raised in. By the time she was 8 she had escaped and was living on the streets, a significant improvement over the conditions she'd endured at the orphanage.
+
+Tali was smart and so it wasn't long before she'd carved out her niche among the roving gangs of street kids, quickly rising to the top of her own fiefdom. She understood that choosing when to fight and how to fight was often more important than winning a fight. She was cautious and chose defense rather than offense, and that wisdom kept her alive in an environment that chewed up lost children and spat them out like day-old bread.
+
+Tali's nose for caution, combined with her street smarts, means that she's a formidable foe for any creature out for blood.`
+      }
+    ],
+    location: {
+      name: 'Sunnydaze Mall',
+      description: `Welcome to the ultimate shopping experience! Step into the heart of fashion, excitement, and endless possibilities! Introducing Sunnydaze Mall, your premiere shopping destination!
+
+Sunnydaze has the latest trends in fashion, state-of-the-art electronics, and a wide variety of culinary delights… all under one roof! Sunnydaze… where every day is filled with sunshine and joy!`,
+      setupCards: [
+        { name: 'Foodcourt Faceoff', description: 'A setup for The Killer from Tomorrow featuring initial victim and token placement in the food court area.' },
+        { name: 'Special Delivery', description: 'A setup for The Killer from Tomorrow featuring initial victim and token placement.' },
+        { name: 'High Score!', description: 'A setup for The Killer from Tomorrow featuring initial victim and token placement in the arcade area.' },
+        { name: 'Family Dinner', description: 'A setup for The Killer from Tomorrow featuring initial victim and token placement.' },
+        { name: 'Black Friday', description: 'A setup for The Killer from Tomorrow featuring chaotic initial victim and token placement throughout the mall.' }
+      ],
+      events: [
+        { name: 'Food Fight!', description: 'If you are an ally, or an enemy enters the food court, they receive damage if there is at least 1 victim in either Food Court space.' },
+        { name: 'Bart the Mall Cop', description: 'Place Bart the Mall Cop in Security. He will move around the spaces surrounding the food court.' },
+        { name: 'Wet Floors', description: 'Whenever a victim in a railing space panics, roll twice and apply the lower result.' },
+        { name: 'Lockdown!', description: 'Both door spaces are sealed off. You can remove this by going to Security.' },
+        { name: 'Flash Mob!', description: 'Place 6 new victims in the food court, then panic all victims in the food court.' },
+        { name: 'Rise of the Nerds!', description: 'Place a new Victim at both Boards \'n Bones and Joystick Heroes.' },
+        { name: 'Fire Sale!', description: 'Move all victims that are adjacent to a store into the store.' },
+        { name: 'Busted Escalators', description: 'Lose 2 time when moving through an escalator.' },
+        { name: 'The Savior\'s Girl', description: 'The victim closest to the savior is now the savior\'s girl.' },
+        { name: 'Renovations', description: 'Destroy a wall on one of the stores.' }
+      ]
+    },
+    killer: {
+      name: 'The Hunter',
+      description: `"I knew the guy was bad news the moment I saw him. Over 6 feet tall, face hidden by that hoodie, big bulge underneath his jacket. I tried to stop him but he just shoved me aside like I was made of cotton. I took the hint and I was outta there! I'm just a mall cop for crying out loud. They don't pay me enough for this kind of shit!" - Bart, Mall Cop`
+    }
   }
 };
 
