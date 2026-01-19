@@ -25,8 +25,20 @@ const Archive = ({ onBack }: ArchiveProps) => {
     );
   };
 
-  // Seasons that are in development
+  // Seasons that are in development (show "In Development" badge)
   const inDevelopmentSeasons = [2, 3, 4];
+  
+  // Films that have been fully configured and are available despite being in development seasons
+  const availableFilmIds = [
+    // Season 1 - all available
+    's1-camp-happy-trails', 's1-creech-manor', 's1-sacred-groves', 's1-carnival-of-blood', 's1-maple-lane',
+    // Season 2 - Madness in the Dark
+    's2-madness-in-dark',
+    // Season 3 - The Killer from Tomorrow
+    's3-killer-from-tomorrow',
+    // Season 4 - A Rotten Harvest
+    's4-rotten-harvest',
+  ];
 
   return (
     <div className="space-y-8">
@@ -58,7 +70,7 @@ const Archive = ({ onBack }: ArchiveProps) => {
         const isInDevelopment = inDevelopmentSeasons.includes(seasonNum);
         
         return (
-          <div key={season} className={`space-y-4 ${isInDevelopment ? 'opacity-50' : ''}`}>
+          <div key={season} className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
               <div className="flex items-center gap-3">
@@ -74,16 +86,23 @@ const Archive = ({ onBack }: ArchiveProps) => {
               <div className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/50 to-transparent" />
             </div>
             
-            <div className={`grid md:grid-cols-2 lg:grid-cols-3 gap-4 ${isInDevelopment ? 'pointer-events-none grayscale' : ''}`}>
-              {films.map(film => (
-                <FilmToggle
-                  key={film.id}
-                  film={film}
-                  isOwned={ownedFilms.includes(film.id)}
-                  onToggle={handleToggleFilm}
-                  disabled={isInDevelopment}
-                />
-              ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {films.map(film => {
+                const isAvailable = availableFilmIds.includes(film.id);
+                return (
+                  <div 
+                    key={film.id} 
+                    className={!isAvailable ? 'opacity-50 grayscale pointer-events-none' : ''}
+                  >
+                    <FilmToggle
+                      film={film}
+                      isOwned={ownedFilms.includes(film.id)}
+                      onToggle={handleToggleFilm}
+                      disabled={!isAvailable}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         );
