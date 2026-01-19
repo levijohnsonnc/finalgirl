@@ -52,7 +52,15 @@ Her eyes are a striking pale green, steady and unblinking, conveying alertness a
 
 She has short, naturally curly brown hair, cut to about chin length. The curls are loose and slightly uneven, framing her face without styling. The haircut reads as practical and unpretentious.
 
-She appears grounded, composed, and quietly resilient—someone who doesn't posture, but doesn't hesitate either. Simple, close-fitting everyday clothing that allows movement. A plain short-sleeve shirt or top in muted or cool tones. Fabric shows signs of wear—stains, small tears—but nothing decorative. Clothing feels civilian and functional rather than tactical or fashionable.`
+She appears grounded, composed, and quietly resilient—someone who doesn't posture, but doesn't hesitate either. Simple, close-fitting everyday clothing that allows movement. A plain short-sleeve shirt or top in muted or cool tones. Fabric shows signs of wear—stains, small tears—but nothing decorative. Clothing feels civilian and functional rather than tactical or fashionable.`,
+
+  "Heather": `A woman in her early 20s with a lean, compact build and a gritty, battle-hardened presence. She has fair skin heavily layered with soot and grime, featuring fresh, shallow lacerations and abrasions across her forehead and cheeks. Her face is heart-shaped with a soft jawline but sharp, focused features. She has large, intense hazel eyes with a weary but piercingly direct gaze, framed by a slight, purposeful squint that suggests a high level of alertness.
+
+Her hair is a shock of dyed yellow-blonde with prominent dark roots, cut into a messy, chin-length bob that appears unwashed and matted with dirt. She wears no makeup, her natural features obscured by the harshness of her environment. Her expression is stoic and unblinking, conveying a sense of hardened survival and quiet defiance. She wears a distressed, dark brown leather motorcycle jacket over a grime-stained black shirt. The overall aesthetic is raw, post-apocalyptic, and grounded in a harsh, realistic world.`,
+
+  "Veronica": `A woman in her mid-20s with a lean, weary build and a haunted, survivalist presence. She has pale, textured skin marked by a trickle of fresh blood on her temple and a significant smear of dark, drying blood across her neck and collarbone. Her face is angular with high, prominent cheekbones and deep-set eyes framed by dark shadows of exhaustion. She has dark, intense eyes with a hollow, "thousand-yard" stare and a furrowed brow that conveys a mix of trauma and grim resolve.
+
+Her hair is dark brown to black, long and unkempt, mostly concealed beneath a dark charcoal knit beanie. She wears no makeup, her appearance defined by the visceral reality of her environment. Her expression is stoic and emotionally drained, bordering on shock. She is dressed in practical, layered clothing: a dark maroon and grey zip-up jacket worn over a grey hoodie, both of which are stained with grime and blood. The overall aesthetic is cinematic, dark, and survival-horror, set within a dimly lit, dilapidated institutional corridor.`
 };
 
 /**
