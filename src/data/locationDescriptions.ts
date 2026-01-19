@@ -42,7 +42,17 @@ In the foreground, a pair of rusted, wrought-iron gates stand partially open, le
 
 The overall aesthetic is one of stagnant isolation and institutional dread. It feels like a place where time has stopped, carrying the heavy weight of forgotten history and buried secrets.
 
-Massive Gothic stone architecture with multi-story gables and slate roofing. Rusted metal archway and partially open iron gates. Boarded-up windows and ivy-covered stone walls. Unkempt grounds with dead leaves and bare, skeletal trees. Dismal, overcast lighting and a small "HAVEN" sign near the door.`
+Massive Gothic stone architecture with multi-story gables and slate roofing. Rusted metal archway and partially open iron gates. Boarded-up windows and ivy-covered stone walls. Unkempt grounds with dead leaves and bare, skeletal trees. Dismal, overcast lighting and a small "HAVEN" sign near the door.`,
+
+  "Sunnydaze Mall": `A bustling two-story indoor shopping mall named "Sunny Daze Mall," characterized by a bright, airy atrium and a mix of niche retail stores overlooking a communal food court. The architecture features clean lines, stark white walls, and a large grid-like skylight that floods the central space with natural light, giving the interior a crisp, midday feel.
+
+The upper level features a glass-railed mezzanine lined with specialty storefronts including "Military Surplus Rus," "Stan's Sporting Goods," and "Boards 'N' Bones." These shops are framed with warm wood paneling and large glass displays, offering a view of the shoppers below. A set of dual escalators serves as the focal point for vertical transit, positioned centrally near the "Atrium" signage.
+
+At the heart of the ground floor is an expansive food court filled with dozens of light-wood tables and chairs. The area is active with people of all ages eating, chatting, and resting between shops. Flanking the seating area are smaller kiosks and service-oriented counters like "Zap Snack," a dedicated "Security" desk, and "Smokin' Subject," while a "Service Entrance" and public restrooms are tucked into the far corner.
+
+The environment feels social and nostalgic—a classic suburban hub captured in a moment of peak weekend activity. The lighting is a blend of cool, natural daylight from the ceiling and the warm, inviting glow of the individual shop interiors, creating a clean and welcoming atmosphere.
+
+Two-story indoor mall with a central atrium and large skylight. Upper-level retail including sporting goods and hobby shops with wood-paneled facades. Ground-level food court with dense communal seating. Functional elements like glass railings, escalators, and security stations. Bright, bustling atmosphere with a diverse crowd of shoppers.`
 };
 
 /**

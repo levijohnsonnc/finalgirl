@@ -60,7 +60,15 @@ Her hair is a shock of dyed yellow-blonde with prominent dark roots, cut into a 
 
   "Veronica": `A woman in her mid-20s with a lean, weary build and a haunted, survivalist presence. She has pale, textured skin marked by a trickle of fresh blood on her temple and a significant smear of dark, drying blood across her neck and collarbone. Her face is angular with high, prominent cheekbones and deep-set eyes framed by dark shadows of exhaustion. She has dark, intense eyes with a hollow, "thousand-yard" stare and a furrowed brow that conveys a mix of trauma and grim resolve.
 
-Her hair is dark brown to black, long and unkempt, mostly concealed beneath a dark charcoal knit beanie. She wears no makeup, her appearance defined by the visceral reality of her environment. Her expression is stoic and emotionally drained, bordering on shock. She is dressed in practical, layered clothing: a dark maroon and grey zip-up jacket worn over a grey hoodie, both of which are stained with grime and blood. The overall aesthetic is cinematic, dark, and survival-horror, set within a dimly lit, dilapidated institutional corridor.`
+Her hair is dark brown to black, long and unkempt, mostly concealed beneath a dark charcoal knit beanie. She wears no makeup, her appearance defined by the visceral reality of her environment. Her expression is stoic and emotionally drained, bordering on shock. She is dressed in practical, layered clothing: a dark maroon and grey zip-up jacket worn over a grey hoodie, both of which are stained with grime and blood. The overall aesthetic is cinematic, dark, and survival-horror, set within a dimly lit, dilapidated institutional corridor.`,
+
+  "Kat": `A woman in her mid-20s with a cool, stoic presence. She has a fair complexion and a soft, oval face with a slightly rounded chin. Her most prominent feature is a pair of classic gold-rimmed aviator sunglasses that reflect a sunset, masking her eyes and adding an air of mystery. Her expression is neutral and calm, bordering on detached.
+
+Her hair is a dirty blonde, wavy and voluminous, falling just past her shoulders with a natural, windswept look that suggests she's been outside for some time. She wears an oversized, olive-green military-style field jacket that looks sturdy and functional.`,
+
+  "Tali": `A woman in her late 20s to early 30s with a lean, athletic build and a haunted, battle-hardened presence. Her skin is heavily smudged with grease, dirt, and dried blood, particularly trailing down her neck and collarbone, suggesting she has recently survived a violent encounter. Her face is sharp and expressive, featuring dark, intense eyes that convey a mixture of trauma and unwavering resolve.
+
+Her dark hair is shoulder-length, matted with sweat and grime, peeking out from beneath a faded, camouflage-patterned patrol cap with a frayed brim. She wears a simple, ribbed white tank top that is stained and distressed, stripped of any ornamentation. Her expression is grim and unsmiling, with a "thousand-yard stare" that suggests deep emotional and physical fatigue.`
 };
 
 /**
