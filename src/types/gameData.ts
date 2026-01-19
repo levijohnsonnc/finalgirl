@@ -27,6 +27,9 @@ import ratchetLadyImage from '@/assets/characters/ratchet-lady.png';
 import katImage from '@/assets/characters/kat.png';
 import taliImage from '@/assets/characters/tali.png';
 import theHunterImage from '@/assets/characters/the-hunter.png';
+import joyImage from '@/assets/characters/joy.png';
+import vickyImage from '@/assets/characters/vicky.png';
+import grimlashImage from '@/assets/characters/grimlash.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
 import sunnydazeMallImage from '@/assets/locations/sunnydaze-mall.png';
 import mapleLaneImage from '@/assets/locations/maple-lane.png';
@@ -34,6 +37,7 @@ import carnivalOfBloodImage from '@/assets/locations/carnival-of-blood.png';
 import creechManorImage from '@/assets/locations/creech-manor.png';
 import sacredGrovesImage from '@/assets/locations/sacred-groves.png';
 import wolfeAsylumImage from '@/assets/locations/wolfe-asylum.png';
+import shadyAcresImage from '@/assets/locations/shady-acres.png';
 
 export interface FeatureFilm {
   id: string;
@@ -68,6 +72,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Kat': katImage,
   'Tali': taliImage,
   'The Hunter': theHunterImage,
+  'Joy': joyImage,
+  'Vicky': vickyImage,
+  'Grimlash': grimlashImage,
 };
 
 // Location-specific images (for casting room display)
@@ -79,6 +86,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Sacred Groves': sacredGrovesImage,
   'Wolfe Asylum': wolfeAsylumImage,
   'Sunnydaze Mall': sunnydazeMallImage,
+  'Shady Acres': shadyAcresImage,
 };
 
 export interface SessionLog {
@@ -124,7 +132,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-demon-shadows', name: 'A Demon in the Shadows', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-buddyland', name: 'Bad Times at Buddyland', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
-  { id: 's4-rotten-harvest', name: 'A Rotten Harvest', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
+  { id: 's4-rotten-harvest', name: 'A Rotten Harvest', season: 4, killer: 'Grimlash', location: 'Shady Acres', finalGirls: ['Joy', 'Vicky'] },
   { id: 's4-green-terror', name: 'The Green Terror', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
 ];
 
