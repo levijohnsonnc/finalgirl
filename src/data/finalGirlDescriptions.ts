@@ -68,7 +68,19 @@ Her hair is a dirty blonde, wavy and voluminous, falling just past her shoulders
 
   "Tali": `A woman in her late 20s to early 30s with a lean, athletic build and a haunted, battle-hardened presence. Her skin is heavily smudged with grease, dirt, and dried blood, particularly trailing down her neck and collarbone, suggesting she has recently survived a violent encounter. Her face is sharp and expressive, featuring dark, intense eyes that convey a mixture of trauma and unwavering resolve.
 
-Her dark hair is shoulder-length, matted with sweat and grime, peeking out from beneath a faded, camouflage-patterned patrol cap with a frayed brim. She wears a simple, ribbed white tank top that is stained and distressed, stripped of any ornamentation. Her expression is grim and unsmiling, with a "thousand-yard stare" that suggests deep emotional and physical fatigue.`
+Her dark hair is shoulder-length, matted with sweat and grime, peeking out from beneath a faded, camouflage-patterned patrol cap with a frayed brim. She wears a simple, ribbed white tank top that is stained and distressed, stripped of any ornamentation. Her expression is grim and unsmiling, with a "thousand-yard stare" that suggests deep emotional and physical fatigue.`,
+
+  "Joy": `A woman in her early 20s with a youthful but weathered and somber presence. She has fair skin heavily smudged with smears of blood and dirt, suggesting a recent violent struggle or a harsh environment. Her face is soft-featured but set in a grim, steady expression, with a straight nose and a neutral, weary mouth. She has piercing light-green eyes that hold a direct, unflinching gaze, conveying a sense of hollowed-out resilience.
+
+Her blonde hair is parted down the middle and styled into two thick, functional braided pigtails. A single stalk of wheat is held between her lips, adding to the rustic, rural setting. She wears no makeup; her appearance is entirely unrefined and practical. Her expression is serious and emotionally exhausted, looking like someone who has seen too much.
+
+She wears a worn, green and black plaid flannel shirt over faded blue denim overalls. The clothing is stained and utilitarian, suited for manual labor or survival in a rural landscape.`,
+
+  "Vicky": `A woman in her late 20s with East Asian features and a vigilant, haunted presence. Her face is smudged with streaks of fresh blood and grime, suggesting she has just emerged from a violent encounter. Her expression is one of alert exhaustion, with dark, wide eyes and a neutral mouth that seems frozen in a moment of shock.
+
+Her dark, wavy hair is long and unstyled, falling messy and voluminous around her shoulders. She wears no visible makeup, emphasizing the raw, unpolished nature of her situation. Around her neck is a thin, buckled leather strap, adding an element of grit or perhaps indicating a restrictive background.
+
+She wears a heavily distressed denim jacket with frayed edges and small tears, layered over a simple charcoal t-shirt.`
 };
 
 /**

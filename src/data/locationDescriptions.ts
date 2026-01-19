@@ -52,7 +52,19 @@ At the heart of the ground floor is an expansive food court filled with dozens o
 
 The environment feels social and nostalgic—a classic suburban hub captured in a moment of peak weekend activity. The lighting is a blend of cool, natural daylight from the ceiling and the warm, inviting glow of the individual shop interiors, creating a clean and welcoming atmosphere.
 
-Two-story indoor mall with a central atrium and large skylight. Upper-level retail including sporting goods and hobby shops with wood-paneled facades. Ground-level food court with dense communal seating. Functional elements like glass railings, escalators, and security stations. Bright, bustling atmosphere with a diverse crowd of shoppers.`
+Two-story indoor mall with a central atrium and large skylight. Upper-level retail including sporting goods and hobby shops with wood-paneled facades. Ground-level food court with dense communal seating. Functional elements like glass railings, escalators, and security stations. Bright, bustling atmosphere with a diverse crowd of shoppers.`,
+
+  "Shady Acres": `A desolate, sunless rural settlement named "Shady Acres" (Population 412), consisting of a few weathered buildings clustered at a dirt road intersection. The town feels stuck in time and slowly decaying, surrounded on all sides by towering, dried-out cornfields that press against the structures like an encroaching wall.
+
+Dominating the foreground is a battered metal sign marking the town's entrance, its paint faded and edges rusted. To the right, a wooden bulletin board is plastered with various flyers and posters, their edges curling from dampness and neglect, hinting at a community once active but now silent.
+
+The small main street features a Sheriff's Department and a modest general store, both built from worn wood with peeling paint. Two vintage pickup trucks—one white with a tan stripe and another darker model—are parked haphazardly on the dirt lot out front, though there are no signs of drivers or pedestrians.
+
+The surrounding houses are old-fashioned, two-story clapboard structures with empty, dark windows and sagging porches. The flat horizon is swallowed by the gray, heavy overcast of a leaden sky, which muffles the light and deepens the sense of rural isolation.
+
+The atmosphere is eerily silent and watchful, as if the residents vanished mid-task, leaving only the rustle of dry corn stalks and the looming presence of the empty, weathered buildings.
+
+Flat rural landscape with massive, encroaching dried cornfields. Weathered wooden buildings, including a Sheriff's Department. Prominent "Shady Acres" town sign and a bulletin board with posters. Two vintage pickup trucks parked on a central dirt lot. Heavy, overcast gray sky creating a sense of eerie desolation.`
 };
 
 /**
