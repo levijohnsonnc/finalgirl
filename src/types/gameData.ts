@@ -4,6 +4,9 @@ import creechManorArt from '@/assets/box-art/haunting-creech-manor.png';
 import slaughterGrovesArt from '@/assets/box-art/slaughter-groves.png';
 import carnageCarnivalArt from '@/assets/box-art/carnage-carnival.png';
 import frightmareMapleArt from '@/assets/box-art/frightmare-maple-lane.png';
+import madnessInDarkArt from '@/assets/box-art/madness-in-the-dark.png';
+import killerFromTomorrowArt from '@/assets/box-art/killer-from-tomorrow.png';
+import rottenHarvestArt from '@/assets/box-art/rotten-harvest.png';
 
 // Character/location specific images
 import hansImage from '@/assets/characters/hans.png';
@@ -117,13 +120,13 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   // Season 2
   { id: 's2-into-the-void', name: 'Into the Void', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'] },
   { id: 's2-panic-station-2891', name: 'Panic at Station 2891', season: 2, killer: 'Organism', location: 'Station 2891', finalGirls: ['Kate', 'Umi'] },
-  { id: 's2-madness-in-dark', name: 'Madness in the Dark', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'] },
+  { id: 's2-madness-in-dark', name: 'Madness in the Dark', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'], boxArt: madnessInDarkArt },
   { id: 's2-once-upon-full-moon', name: 'Once Upon a Full Moon', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'] },
   { id: 's2-knock-at-door', name: 'A Knock at the Door', season: 2, killer: 'Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'] },
   
   // Season 3
   { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Butcher', location: 'Falconwood', finalGirls: ['Sookie', 'Tanya'] },
-  { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'The Hunter', location: 'Sunnydaze Mall', finalGirls: ['Kat', 'Tali'] },
+  { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'The Hunter', location: 'Sunnydaze Mall', finalGirls: ['Kat', 'Tali'], boxArt: killerFromTomorrowArt },
   { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Hellview Killers', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'] },
   { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'Terminus', location: 'Marrek Warehouse', finalGirls: ['Jada', 'Gia'] },
   { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'Ancient', location: 'Utopia', finalGirls: ['Agnes', 'Constance'] },
@@ -132,7 +135,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-demon-shadows', name: 'A Demon in the Shadows', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-buddyland', name: 'Bad Times at Buddyland', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
-  { id: 's4-rotten-harvest', name: 'A Rotten Harvest', season: 4, killer: 'Grimlash', location: 'Shady Acres', finalGirls: ['Joy', 'Vicky'] },
+  { id: 's4-rotten-harvest', name: 'A Rotten Harvest', season: 4, killer: 'Grimlash', location: 'Shady Acres', finalGirls: ['Joy', 'Vicky'], boxArt: rottenHarvestArt },
   { id: 's4-green-terror', name: 'The Green Terror', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
 ];
 
