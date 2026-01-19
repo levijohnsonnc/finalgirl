@@ -24,7 +24,11 @@ import inkanyambaImage from '@/assets/characters/inkanyamba.png';
 import heatherImage from '@/assets/characters/heather.png';
 import veronicaImage from '@/assets/characters/veronica.png';
 import ratchetLadyImage from '@/assets/characters/ratchet-lady.png';
+import katImage from '@/assets/characters/kat.png';
+import taliImage from '@/assets/characters/tali.png';
+import theHunterImage from '@/assets/characters/the-hunter.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
+import sunnydazeMallImage from '@/assets/locations/sunnydaze-mall.png';
 import mapleLaneImage from '@/assets/locations/maple-lane.png';
 import carnivalOfBloodImage from '@/assets/locations/carnival-of-blood.png';
 import creechManorImage from '@/assets/locations/creech-manor.png';
@@ -61,6 +65,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Heather': heatherImage,
   'Veronica': veronicaImage,
   'Ratchet Lady': ratchetLadyImage,
+  'Kat': katImage,
+  'Tali': taliImage,
+  'The Hunter': theHunterImage,
 };
 
 // Location-specific images (for casting room display)
@@ -71,6 +78,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Creech Manor': creechManorImage,
   'Sacred Groves': sacredGrovesImage,
   'Wolfe Asylum': wolfeAsylumImage,
+  'Sunnydaze Mall': sunnydazeMallImage,
 };
 
 export interface SessionLog {
@@ -107,7 +115,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   
   // Season 3
   { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Butcher', location: 'Falconwood', finalGirls: ['Sookie', 'Tanya'] },
-  { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'Toymaker', location: 'Sunnydaze Mall', finalGirls: ['Trish', 'Clementine'] },
+  { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'The Hunter', location: 'Sunnydaze Mall', finalGirls: ['Kat', 'Tali'] },
   { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Hellview Killers', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'] },
   { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'Terminus', location: 'Marrek Warehouse', finalGirls: ['Jada', 'Gia'] },
   { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'Ancient', location: 'Utopia', finalGirls: ['Agnes', 'Constance'] },
