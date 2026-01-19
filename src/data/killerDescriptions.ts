@@ -40,7 +40,11 @@ He reads as a man driven past reason—rage-fueled, territorial, and deeply pers
 
 He carries a rusted metal pitchfork, held tightly and angled forward like a spear. The pitchfork is not ceremonial—it's a familiar farm tool turned weapon.
 
-The look should always feel domestic and agricultural, never stylized or theatrical.`
+The look should always feel domestic and agricultural, never stylized or theatrical.`,
+
+  "Ratchet Lady": `A woman in her early 30s with a lean, frantic build and a terrifying, visceral presence. Her skin is pale and sallow, heavily smudged with soot and grime. Her face is almost entirely encased in thick, dingy medical bandages that wrap tightly around her head and eyes, leaving only her mouth exposed. Her expression is one of primal, unhinged ferocity, with her jaw dropped in a wide, silent scream.
+
+She has no visible hair or features beyond the bandages, creating a sense of total anonymity and psychological distress. She wears a tattered, sleeveless dress made of frayed, off-white fabric that resembles aged bandages or coarse linen, featuring a jagged, uneven hemline and multiple stains. Around her right forearm is a heavy, rusted metal cuff, while her left hand grips a small, dark-bladed knife. The overall aesthetic is high-intensity psychological horror, grounded in a decaying, claustrophobic environment with harsh, abrasive lighting.`
 };
 
 /**

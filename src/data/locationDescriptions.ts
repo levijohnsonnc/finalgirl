@@ -34,7 +34,15 @@ At the edge of the sidewalk sits a small, unsettling detail: abandoned children'
 
 Leafless trees frame the scene, their bare branches cutting into the deep blue evening sky. The neighborhood stretches outward evenly in all directions, offering no obvious refuge—only repetition.
 
-The location feels watched, paused, and vulnerable. Nothing is visibly wrong, which makes everything feel wrong. Key elements: Four-way residential intersection. Single-family suburban houses with warm lights on. Streetlights illuminating wet pavement. Abandoned children's toys near the curb. Leafless trees and empty streets.`
+The location feels watched, paused, and vulnerable. Nothing is visibly wrong, which makes everything feel wrong. Key elements: Four-way residential intersection. Single-family suburban houses with warm lights on. Streetlights illuminating wet pavement. Abandoned children's toys near the curb. Leafless trees and empty streets.`,
+
+  "Wolfe Asylum": `An imposing, Victorian-era psychiatric hospital constructed from weathered, rough-hewn grey stone, set against a bleak and overcast sky. The building, identified by a rusted metal archway as "Wolfe Asylum - Est. 1899," dominates the landscape with its multi-story Gothic architecture, featuring steep gables, narrow windows—some boarded over—and a prominent central arched portico. The left wing is heavily draped in dark green ivy, while the rest of the stone appears soot-stained and neglected.
+
+In the foreground, a pair of rusted, wrought-iron gates stand partially open, leading to a cracked asphalt driveway littered with dead, fallen leaves and overgrown weeds. The surrounding grounds are unkempt, with skeletal trees and wild grass pressing in from the edges, limiting the horizon. A newer, white sign reading "HAVEN" is mounted near the main entrance, creating a jarring, modern contrast against the ancient, forbidding stone walls.
+
+The overall aesthetic is one of stagnant isolation and institutional dread. It feels like a place where time has stopped, carrying the heavy weight of forgotten history and buried secrets.
+
+Massive Gothic stone architecture with multi-story gables and slate roofing. Rusted metal archway and partially open iron gates. Boarded-up windows and ivy-covered stone walls. Unkempt grounds with dead leaves and bare, skeletal trees. Dismal, overcast lighting and a small "HAVEN" sign near the door.`
 };
 
 /**
