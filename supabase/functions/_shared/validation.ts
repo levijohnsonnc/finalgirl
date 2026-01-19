@@ -5,23 +5,23 @@ import { corsHeaders } from './auth.ts';
 export const StoryRequestSchema = z.object({
   killer: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(1000).optional()
+    description: z.string().max(5000).optional()
   }),
   location: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(1000).optional()
+    description: z.string().max(5000).optional()
   }),
   finalGirl: z.object({
     name: z.string().min(1).max(100),
-    backstory: z.string().max(1000).optional()
+    backstory: z.string().max(5000).optional()
   }),
   startingEvent: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(1000).optional()
+    description: z.string().max(5000).optional()
   }).nullable(),
   startingSetup: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(1000).optional()
+    description: z.string().max(5000).optional()
   }).nullable()
 });
 
