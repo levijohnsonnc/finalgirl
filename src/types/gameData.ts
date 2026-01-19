@@ -21,11 +21,15 @@ import adelaideImage from '@/assets/characters/adelaide.png';
 import barbaraImage from '@/assets/characters/barbara.png';
 import poltergeistImage from '@/assets/characters/poltergeist.png';
 import inkanyambaImage from '@/assets/characters/inkanyamba.png';
+import heatherImage from '@/assets/characters/heather.png';
+import veronicaImage from '@/assets/characters/veronica.png';
+import ratchetLadyImage from '@/assets/characters/ratchet-lady.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
 import mapleLaneImage from '@/assets/locations/maple-lane.png';
 import carnivalOfBloodImage from '@/assets/locations/carnival-of-blood.png';
 import creechManorImage from '@/assets/locations/creech-manor.png';
 import sacredGrovesImage from '@/assets/locations/sacred-groves.png';
+import wolfeAsylumImage from '@/assets/locations/wolfe-asylum.png';
 
 export interface FeatureFilm {
   id: string;
@@ -54,6 +58,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Barbara': barbaraImage,
   'Poltergeist': poltergeistImage,
   'Inkanyamba': inkanyambaImage,
+  'Heather': heatherImage,
+  'Veronica': veronicaImage,
+  'Ratchet Lady': ratchetLadyImage,
 };
 
 // Location-specific images (for casting room display)
@@ -63,6 +70,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Carnival of Blood': carnivalOfBloodImage,
   'Creech Manor': creechManorImage,
   'Sacred Groves': sacredGrovesImage,
+  'Wolfe Asylum': wolfeAsylumImage,
 };
 
 export interface SessionLog {
