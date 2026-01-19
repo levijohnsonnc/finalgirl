@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ImageIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
+import { ImagePromptModal } from '@/components/ImagePromptModal';
 
 interface NowPlayingProps {
   killer: string;
@@ -209,16 +210,30 @@ const NowPlaying = ({
 
         {/* Story Container with Narrate Button */}
         <div className="w-full max-w-3xl flex items-start gap-6">
-          {/* Narrate Button - Left of text */}
-          <div className="flex-shrink-0 pt-6">
+          {/* Action Buttons - Left of text */}
+          <div className="flex-shrink-0 pt-6 flex flex-col gap-3">
             {story && (
-              <button
-                onClick={handleNarrate}
-                disabled={isNarrating}
-                className="vcr-tape-button px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300"
-              >
-                {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
-              </button>
+              <>
+                <button
+                  onClick={handleNarrate}
+                  disabled={isNarrating}
+                  className="vcr-tape-button px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300"
+                >
+                  {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
+                </button>
+                
+                <ImagePromptModal
+                  story={story}
+                  killer={killer}
+                  location={location}
+                  finalGirl={finalGirl}
+                >
+                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300">
+                    <ImageIcon className="w-4 h-4" />
+                    Image Prompt
+                  </button>
+                </ImagePromptModal>
+              </>
             )}
           </div>
           
