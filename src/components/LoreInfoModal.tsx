@@ -130,56 +130,6 @@ export const LoreInfoModal = ({ type, name }: LoreInfoModalProps) => {
               </div>
             )}
 
-            {/* Visual Description (for image generation context) */}
-            {lore.visualDescription && (
-              <div className="space-y-2 border-t border-primary/20 pt-4">
-                <h3 className="font-display text-sm uppercase tracking-widest text-muted-foreground">
-                  Visual Profile
-                </h3>
-                <div className="text-xs text-muted-foreground/80 leading-relaxed whitespace-pre-line font-body italic">
-                  {lore.visualDescription}
-                </div>
-              </div>
-            )}
-
-            {/* Setup Cards (for locations) */}
-            {'setupCards' in lore && lore.setupCards && lore.setupCards.length > 0 && (
-              <div className="space-y-3 border-t border-primary/20 pt-4">
-                <h3 className="font-display text-sm uppercase tracking-widest text-primary">
-                  Setup Scenarios
-                </h3>
-                <div className="grid gap-2">
-                  {lore.setupCards.map((card, idx) => (
-                    <div key={idx} className="bg-primary/5 rounded-sm p-3 border border-primary/10">
-                      <div className="font-display text-sm text-foreground">{card.name}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{card.description}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Events (for locations) */}
-            {'events' in lore && lore.events && lore.events.length > 0 && (
-              <div className="space-y-3 border-t border-primary/20 pt-4">
-                <h3 className="font-display text-sm uppercase tracking-widest text-primary">
-                  Events
-                </h3>
-                <div className="grid gap-2">
-                  {lore.events.slice(0, 5).map((event, idx) => (
-                    <div key={idx} className="bg-primary/5 rounded-sm p-3 border border-primary/10">
-                      <div className="font-display text-sm text-foreground">{event.name}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{event.description}</div>
-                    </div>
-                  ))}
-                  {lore.events.length > 5 && (
-                    <div className="text-xs text-muted-foreground/50 text-center italic">
-                      ...and {lore.events.length - 5} more events
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         </ScrollArea>
       </DialogContent>
