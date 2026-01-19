@@ -208,37 +208,35 @@ const NowPlaying = ({
           {killer} vs {finalGirl} at {location}
         </p>
 
-        {/* Story Container with Narrate Button */}
-        <div className="w-full max-w-3xl flex items-start gap-6">
-          {/* Action Buttons - Left of text */}
-          <div className="flex-shrink-0 pt-6 flex flex-col gap-3">
-            {story && (
-              <>
-                <button
-                  onClick={handleNarrate}
-                  disabled={isNarrating}
-                  className="vcr-tape-button px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300"
-                >
-                  {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
+        {/* Story Container */}
+        <div className="w-full max-w-4xl flex flex-col gap-4">
+          {/* Action Buttons - Above text */}
+          {story && (
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={handleNarrate}
+                disabled={isNarrating}
+                className="vcr-tape-button px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300"
+              >
+                {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
+              </button>
+              
+              <ImagePromptModal
+                story={story}
+                killer={killer}
+                location={location}
+                finalGirl={finalGirl}
+              >
+                <button className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300">
+                  <ImageIcon className="w-4 h-4" />
+                  Image Prompt
                 </button>
-                
-                <ImagePromptModal
-                  story={story}
-                  killer={killer}
-                  location={location}
-                  finalGirl={finalGirl}
-                >
-                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300">
-                    <ImageIcon className="w-4 h-4" />
-                    Image Prompt
-                  </button>
-                </ImagePromptModal>
-              </>
-            )}
-          </div>
+              </ImagePromptModal>
+            </div>
+          )}
           
           {/* Story Text */}
-          <div className="flex-1">
+          <div className="w-full">
             <div className="scenario-description p-6 rounded-sm">
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center py-12 gap-4">
