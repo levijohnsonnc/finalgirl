@@ -429,6 +429,46 @@ Sunnydaze has the latest trends in fashion, state-of-the-art electronics, and a 
       name: 'The Hunter',
       description: `"I knew the guy was bad news the moment I saw him. Over 6 feet tall, face hidden by that hoodie, big bulge underneath his jacket. I tried to stop him but he just shoved me aside like I was made of cotton. I took the hint and I was outta there! I'm just a mall cop for crying out loud. They don't pay me enough for this kind of shit!" - Bart, Mall Cop`
     }
+  },
+  's4-rotten-harvest': {
+    filmId: 's4-rotten-harvest',
+    finalGirls: [
+      {
+        name: 'Joy',
+        backstory: `Joy's family has lived in Shady Acres for many generations. She knows its country hills better than anyone, and that made her the first to raise the alarm that something was amiss in town. Joy's convinced that something dark has come to her hometown, and knows that only she can stop it.`
+      },
+      {
+        name: 'Vicky',
+        backstory: `A hardened corporate lawyer, Vicky has come to Shady Acres investigating a family prophecy. Determined to find answers, she brings her relentless drive and unmatched guile to whatever awaits her in Grimlash's dark and twisted fields.`
+      }
+    ],
+    location: {
+      name: 'Shady Acres',
+      description: `"Rural town, Shady Acres. in hardship as missing persons cases top thirteen this fall. Locals have given reports of lost children wandering the town. Officials claim no evidence of foul play as the latest investigation concludes. If you have information on a missing person or a child in distress, please contact the Shady Acres Sheriff's Department."`,
+      setupCards: [
+        { name: 'Demands of the Earth', description: 'A setup for A Rotten Harvest featuring initial victim and token placement around the rural farmland.' },
+        { name: 'Dusk Sacrifice', description: 'A setup for A Rotten Harvest with victims positioned for a twilight ritual scenario.' },
+        { name: 'Final Crop', description: 'A setup for A Rotten Harvest featuring endgame positioning with the harvest at its peak.' },
+        { name: 'Harvest Season', description: 'A setup for A Rotten Harvest with victims spread across the fields during the busy harvest.' },
+        { name: 'Reap What You Sow', description: 'A setup for A Rotten Harvest with karmic positioning based on past actions in the town.' }
+      ],
+      events: [
+        { name: 'Acres of Hatred', description: 'For each Field space with at least 1 Victim, lose 1 Health (max 2).' },
+        { name: 'Festering Rot', description: 'Whenever a Victim is killed in a Field space, plus 1 Horror.' },
+        { name: 'Harvest Cultist', description: 'The closest Victim to you is now the Harvest Cultist. During the Upkeep phase, move the Harvest Cultist 1 space towards you and if they are in your space, you both move 1 space toward the Killer. If you save the Harvest Cultist, minus 2 Horror.' },
+        { name: 'It Hungers for Us', description: 'All Victims panic. For each Victim in the Killer\'s space or an adjacent space, add 1 Horror (max 3).' },
+        { name: 'It Lurks Between the Rows', description: 'Panic every Victim in a Field space. All Victims that panic into the Killer\'s space are killed.' },
+        { name: 'Ralph the Mechanic', description: 'Place Ralph in Ralph\'s Garage. While with Ralph, if you take any Items with limited uses, add an extra Tracking marker even though it will exceed the number of circular spaces.' },
+        { name: 'Sally McCoy', description: 'Place Sally in the McCoy Farmhouse. When Sally is saved, find the Combine Keys Item card. Reshuffle the Item deck(s) if necessary. If you already have the Combine Keys, gain 1 Time.' },
+        { name: '"The fields are moving..."', description: 'Place a Field token in both the Hayfield and Cow Pasture spaces. They are now considered Field spaces.' },
+        { name: 'The Ravens Are Circling', description: 'Each Child moves 2 spaces towards the Killer. Place Health markers on this card equal to the amount of Children in its space. When the Killer takes damage, remove the Health markers from this card.' },
+        { name: 'Umbral Evocation', description: 'Place the Harvest Shadow token in the Killer\'s space. Each time you or a Victim enters that space, plus 1 Bloodlust.' }
+      ]
+    },
+    killer: {
+      name: 'Grimlash',
+      description: `He has slumbered in the bowels of the earth for many centuries. The last of his worshippers now lost to ancient times. But something has reawakened this strange god and his cohort. Is it the season? The bad harvest? Or the moon rising just right over the old oak tree? No mortal can possibly understand his power, or stop it. He has returned and his hunger demands a grim and bountiful harvest.`
+    }
   }
 };
 
