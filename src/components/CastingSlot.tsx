@@ -3,6 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import diceIcon from '@/assets/icons/dice-icon.png';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 import shuffleSound from '@/assets/sounds/card-shuffle.mp3';
+import { LoreInfoModal } from './LoreInfoModal';
 
 interface CastingSlotProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -173,14 +174,17 @@ export const CastingSlot = ({
         <div className="absolute inset-0 film-grain pointer-events-none" />
       </div>
 
-      {/* Name */}
-      <div className="h-6 flex items-center justify-center">
+      {/* Name with Info Icon */}
+      <div className="h-6 flex items-center justify-center gap-1.5">
         {isAnimating ? (
           <span className="font-vhs text-sm text-muted-foreground/50 animate-pulse">...</span>
         ) : displayValue ? (
-          <span className="font-display text-lg text-foreground tracking-wide text-center">
-            {displayValue}
-          </span>
+          <>
+            <span className="font-display text-lg text-foreground tracking-wide text-center">
+              {displayValue}
+            </span>
+            <LoreInfoModal type={type} name={displayValue} />
+          </>
         ) : (
           <span className="font-vhs text-sm text-muted-foreground/50">???</span>
         )}
