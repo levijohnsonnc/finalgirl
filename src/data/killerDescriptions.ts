@@ -44,7 +44,13 @@ The look should always feel domestic and agricultural, never stylized or theatri
 
   "Ratchet Lady": `A woman in her early 30s with a lean, frantic build and a terrifying, visceral presence. Her skin is pale and sallow, heavily smudged with soot and grime. Her face is almost entirely encased in thick, dingy medical bandages that wrap tightly around her head and eyes, leaving only her mouth exposed. Her expression is one of primal, unhinged ferocity, with her jaw dropped in a wide, silent scream.
 
-She has no visible hair or features beyond the bandages, creating a sense of total anonymity and psychological distress. She wears a tattered, sleeveless dress made of frayed, off-white fabric that resembles aged bandages or coarse linen, featuring a jagged, uneven hemline and multiple stains. Around her right forearm is a heavy, rusted metal cuff, while her left hand grips a small, dark-bladed knife. The overall aesthetic is high-intensity psychological horror, grounded in a decaying, claustrophobic environment with harsh, abrasive lighting.`
+She has no visible hair or features beyond the bandages, creating a sense of total anonymity and psychological distress. She wears a tattered, sleeveless dress made of frayed, off-white fabric that resembles aged bandages or coarse linen, featuring a jagged, uneven hemline and multiple stains. Around her right forearm is a heavy, rusted metal cuff, while her left hand grips a small, dark-bladed knife. The overall aesthetic is high-intensity psychological horror, grounded in a decaying, claustrophobic environment with harsh, abrasive lighting.`,
+
+  "The Hunter": `A tall, imposing figure with a broad, powerful build and a silent, predatory presence. Their identity is entirely hidden behind a sleek, featureless dark-blue metallic visor that glows with a faint internal light, stripping away any human emotion. They stand with a rigid, ready posture that projects a sense of calculated, cold-blooded intent.
+
+The clothing is a gritty "urban warrior" ensemble: a deep-red hoodie worn under a heavily weathered, blue leather motorcycle jacket. The jacket is noticeably battle-scarred, featuring several circular bullet holes and scuffed edges that suggest survival through extreme violence. They wear dark, practical denim jeans and grip a heavy, chrome long-barrel revolver in their right hand, held firmly at their side.
+
+The overall aesthetic is "synthwave noir"—a gritty, neon-soaked homage to 80s action thrillers and retro-futuristic vigilantes.`
 };
 
 /**
