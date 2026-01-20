@@ -7,6 +7,7 @@ import frightmareMapleArt from '@/assets/box-art/frightmare-maple-lane.png';
 import madnessInDarkArt from '@/assets/box-art/madness-in-the-dark.png';
 import killerFromTomorrowArt from '@/assets/box-art/killer-from-tomorrow.png';
 import rottenHarvestArt from '@/assets/box-art/rotten-harvest.png';
+import intoTheVoidArt from '@/assets/box-art/into-the-void.png';
 
 // Character/location specific images
 import hansImage from '@/assets/characters/hans.png';
@@ -33,6 +34,9 @@ import theHunterImage from '@/assets/characters/the-hunter.png';
 import joyImage from '@/assets/characters/joy.png';
 import vickyImage from '@/assets/characters/vicky.png';
 import grimlashImage from '@/assets/characters/grimlash.png';
+import ellenImage from '@/assets/characters/ellen.png';
+import jenetteImage from '@/assets/characters/jenette.png';
+import evomorphImage from '@/assets/characters/evomorph.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
 import sunnydazeMallImage from '@/assets/locations/sunnydaze-mall.png';
 import mapleLaneImage from '@/assets/locations/maple-lane.png';
@@ -41,6 +45,7 @@ import creechManorImage from '@/assets/locations/creech-manor.png';
 import sacredGrovesImage from '@/assets/locations/sacred-groves.png';
 import wolfeAsylumImage from '@/assets/locations/wolfe-asylum.png';
 import shadyAcresImage from '@/assets/locations/shady-acres.png';
+import ussKonradImage from '@/assets/locations/uss-konrad.png';
 
 export interface FeatureFilm {
   id: string;
@@ -78,6 +83,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Joy': joyImage,
   'Vicky': vickyImage,
   'Grimlash': grimlashImage,
+  'Ellen': ellenImage,
+  'Jenette': jenetteImage,
+  'Evomorph': evomorphImage,
 };
 
 // Location-specific images (for casting room display)
@@ -90,6 +98,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Wolfe Asylum': wolfeAsylumImage,
   'Sunnydaze Mall': sunnydazeMallImage,
   'Shady Acres': shadyAcresImage,
+  'USS Konrad': ussKonradImage,
 };
 
 export interface SessionLog {
@@ -118,7 +127,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's1-maple-lane', name: 'Frightmare on Maple Lane', season: 1, killer: 'Dr. Fright', location: 'Maple Lane', finalGirls: ['Sheila', 'Nancy'], boxArt: frightmareMapleArt },
   
   // Season 2
-  { id: 's2-into-the-void', name: 'Into the Void', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'] },
+  { id: 's2-into-the-void', name: 'Into the Void', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'], boxArt: intoTheVoidArt },
   { id: 's2-panic-station-2891', name: 'Panic at Station 2891', season: 2, killer: 'Organism', location: 'Station 2891', finalGirls: ['Kate', 'Umi'] },
   { id: 's2-madness-in-dark', name: 'Madness in the Dark', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'], boxArt: madnessInDarkArt },
   { id: 's2-once-upon-full-moon', name: 'Once Upon a Full Moon', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'] },
