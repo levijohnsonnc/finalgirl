@@ -23,12 +23,12 @@ export const FilmToggle = ({ film, isOwned, onToggle, disabled = false }: FilmTo
       <div className="flex gap-4">
         {/* Box Art */}
         {film.boxArt && (
-          <div className="flex-shrink-0 w-28 relative z-10">
+          <div className="flex-shrink-0 w-24 aspect-[2/3] relative z-10">
               <img 
                 src={film.boxArt} 
                 alt={`${film.name} box art`}
                 className={cn(
-                  "w-full h-auto rounded transition-all",
+                  "w-full h-full object-cover object-center rounded transition-all",
                   isOwned ? "shadow-blood" : "opacity-60 grayscale-[30%]"
                 )}
                 onError={(e) => {
