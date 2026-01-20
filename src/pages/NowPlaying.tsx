@@ -5,7 +5,49 @@ import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
+import projectorSound from '@/assets/sounds/projector-start.mp3';
 import { ImagePromptModal } from '@/components/ImagePromptModal';
+
+// Helper to render markdown-style text formatting
+const renderFormattedText = (text: string) => {
+  const parts: React.ReactNode[] = [];
+  let remaining = text;
+  let key = 0;
+
+  while (remaining.length > 0) {
+    // Match **bold** or *italic*
+    const boldMatch = remaining.match(/\*\*(.+?)\*\*/);
+    const italicMatch = remaining.match(/\*([^*]+?)\*/);
+
+    // Find which comes first
+    const boldIndex = boldMatch ? remaining.indexOf(boldMatch[0]) : Infinity;
+    const italicIndex = italicMatch ? remaining.indexOf(italicMatch[0]) : Infinity;
+
+    if (boldIndex === Infinity && italicIndex === Infinity) {
+      // No more formatting
+      parts.push(remaining);
+      break;
+    }
+
+    if (boldIndex <= italicIndex && boldMatch) {
+      // Bold comes first
+      if (boldIndex > 0) {
+        parts.push(remaining.slice(0, boldIndex));
+      }
+      parts.push(<strong key={key++} className="font-bold text-foreground">{boldMatch[1]}</strong>);
+      remaining = remaining.slice(boldIndex + boldMatch[0].length);
+    } else if (italicMatch) {
+      // Italic comes first
+      if (italicIndex > 0) {
+        parts.push(remaining.slice(0, italicIndex));
+      }
+      parts.push(<em key={key++} className="italic text-foreground/90">{italicMatch[1]}</em>);
+      remaining = remaining.slice(italicIndex + italicMatch[0].length);
+    }
+  }
+
+  return parts;
+};
 
 interface NowPlayingProps {
   killer: string;
@@ -41,6 +83,11 @@ const NowPlaying = ({
   const generateStory = async () => {
     setIsGenerating(true);
     setError(null);
+
+    // Play projector sound effect
+    const projectorAudio = new Audio(projectorSound);
+    projectorAudio.volume = 0.5;
+    projectorAudio.play().catch(console.error);
 
     try {
       // Look up each entity from its OWN film (supports cross-film combinations)
@@ -259,7 +306,7 @@ const NowPlaying = ({
                 </div>
               ) : story ? (
                 <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {story}
+                  {renderFormattedText(story)}
                 </p>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12">
