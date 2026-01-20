@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ImageIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/integrations/supabase/client';
 import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
@@ -260,13 +261,21 @@ const NowPlaying = ({
           {/* Action Buttons - Above text */}
           {story && (
             <div className="flex gap-3 justify-center">
-              <button
-                onClick={handleNarrate}
-                disabled={isNarrating}
-                className="vcr-tape-button px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300"
-              >
-                {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
-              </button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      disabled
+                      className="vcr-tape-button px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300 opacity-50 cursor-not-allowed"
+                    >
+                      Narrate
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-vhs text-xs">Coming Soon</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               
               <ImagePromptModal
                 story={story}
