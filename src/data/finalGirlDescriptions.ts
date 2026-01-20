@@ -80,7 +80,23 @@ She wears a worn, green and black plaid flannel shirt over faded blue denim over
 
 Her dark, wavy hair is long and unstyled, falling messy and voluminous around her shoulders. She wears no visible makeup, emphasizing the raw, unpolished nature of her situation. Around her neck is a thin, buckled leather strap, adding an element of grit or perhaps indicating a restrictive background.
 
-She wears a heavily distressed denim jacket with frayed edges and small tears, layered over a simple charcoal t-shirt.`
+She wears a heavily distressed denim jacket with frayed edges and small tears, layered over a simple charcoal t-shirt.`,
+
+  "Ellen": `A woman in her early 30s with a lean, capable build and a calm, resourceful presence. She has fair skin marked by grease smudges and minor scrapes, suggesting hands-on mechanical work rather than combat. Her face is angular with a strong jaw, straight nose, and determined mouth set in a focused, problem-solving expression.
+
+Her eyes are warm brown, steady and observant, conveying intelligence and adaptability rather than aggression. She looks like someone who can fix anything and think her way out of trouble.
+
+Her hair is dark brown, medium-length, and practical—often pulled back in a loose ponytail or tucked behind her ears to keep it out of the way while working. The style is functional rather than fashionable.
+
+She reads as the competent crew member everyone relies on—dependable, resourceful, and unflappable under pressure. She wears a utilitarian jumpsuit or work coveralls in muted industrial colors (navy, grey, or olive), with various tool pouches and utility pockets. The fabric shows wear from use—oil stains, minor tears, faded patches. A name patch or ship insignia may be visible on the chest or shoulder.`,
+
+  "Jenette": `A woman in her late 20s to early 30s with a muscular, athletic build and a fierce, no-nonsense presence. She has medium-brown skin with a sheen of sweat and possibly some combat grime, suggesting recent physical exertion. Her face is strong-featured with high cheekbones, a broad nose, and a firm jaw set in a challenging, confident expression.
+
+Her eyes are dark and intense, with a sharp, assessing gaze that immediately sizes up threats and opportunities. She looks like someone who shoots first and negotiates later.
+
+Her most distinctive feature is a dramatic mohawk—shaved sides with a tall, styled strip of dark hair running from forehead to nape. The mohawk is well-maintained despite harsh conditions, a point of personal pride.
+
+She radiates badass mercenary energy—intimidating, professional, and absolutely lethal. She wears tactical combat gear: a fitted tank top or sleeveless shirt showing off her muscular arms, paired with cargo pants featuring multiple pockets and holsters. She may have visible armor elements like a tactical vest or shoulder guards. Weapons are never far from reach. Colors are practical and military-adjacent—blacks, dark greens, and muted earth tones.`
 };
 
 /**

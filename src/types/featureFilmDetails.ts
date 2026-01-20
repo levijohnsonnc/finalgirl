@@ -469,6 +469,83 @@ Sunnydaze has the latest trends in fashion, state-of-the-art electronics, and a 
       name: 'Grimlash',
       description: `He has slumbered in the bowels of the earth for many centuries. The last of his worshippers now lost to ancient times. But something has reawakened this strange god and his cohort. Is it the season? The bad harvest? Or the moon rising just right over the old oak tree? No mortal can possibly understand his power, or stop it. He has returned and his hunger demands a grim and bountiful harvest.`
     }
+  },
+  's2-into-the-void': {
+    filmId: 's2-into-the-void',
+    finalGirls: [
+      {
+        name: 'Ellen',
+        backstory: `Ellen ended up on the crew of the Konrad almost by accident. She was only traveling between worlds by toll when the Captain happened to take a liking to her and offered her a job. As an apprentice to the Captain, she learned the ship inside and out and it became her home. She became the Captain's most trusted crew member, saving both his, and the ship's bacon on more than one occasion.
+
+Ellen's can-do, never-give-up attitude is what has made her indispensable and what makes her a survivor.`
+      },
+      {
+        name: 'Jenette',
+        backstory: `Jenette has always been a mercenary. Her signature mohawk and her tight muscles are a good outward indicator of that. And if that doesn't give it away, her shrewd negotiating skills do. She'll take all kinds of jobs if the pay is right, but she prefers the ones that require shooting things.
+
+A true badass, Jenette has never backed down from a fight.`
+      }
+    ],
+    location: {
+      name: 'USS Konrad',
+      description: `United Star Ship Konrad, M-Class freight vessel, model 9791-Bision, commissioned in 2122 by the Weygar-Yustarry Mining Corporation, built by the Lockheed Martin Corporation at a cost of $4.2 billion, with a mass of 63,000 metric tons. Current whereabouts: unknown.`,
+      setupCards: [
+        {
+          name: 'Bloody Feast',
+          description: 'A tense scenario involving the crew during a meal when the Evomorph strikes.'
+        },
+        {
+          name: 'Born in Flames',
+          description: 'A high-intensity scenario where fire plays a key role in the encounter.'
+        },
+        {
+          name: 'Junction Danger',
+          description: 'A scenario centered around the ship\'s junction points where movement becomes critical.'
+        },
+        {
+          name: 'Showdown',
+          description: 'A climactic face-to-face confrontation with the Evomorph.'
+        },
+        {
+          name: 'Space Rave',
+          description: 'A scenario set during a recreational event aboard the ship when chaos erupts.'
+        }
+      ],
+      events: [
+        { name: 'Cluttered Shafts', description: 'While moving, you may move through an inactive Maintenance Shaft at the cost of 1 Health. Victims cannot follow you if you move in this manner.' },
+        { name: 'Cramped Escape Pods', description: 'If there is more than 1 Victim in an Exit space, you cannot save Victims in that space.' },
+        { name: 'Emergency Override', description: 'The Incinerator, Airlock, and Self Destruct all require one less Keycard to activate.' },
+        { name: 'Faulty Wiring', description: 'During the Upkeep phase, roll one die for the Furnace and one for the Trash Compactor. 1-2: Everyone at that space loses 1 Health. 3-6: No effect.' },
+        { name: 'Good Cookin\'', description: 'Whenever you end the Action phase in the Mess Hall, recover 1 Health.' },
+        { name: 'Jonas the Cat', description: 'Place the Special Victim meeple with the Victim that is farthest from you. This is Jonas. Jonas will not follow you. During the Upkeep phase, panic Jonas three times. If you end the Action phase in the same space as Jonas, you may choose one of the following: Lose 1 Horror or Gain 3 Time.' },
+        { name: 'Master Access', description: 'If any of the top cards of each Item deck are facedown, flip them faceup. Take any Keycard Item cards that are showing.' },
+        { name: 'Orphan Girl', description: 'The Victim closest to you is now the Orphan Girl. While the Orphan Girl is in your space, +1 Victims will follow you and you may freely move through inactive Maintenance Shafts. If the Orphan Girl dies, gain 3 Horror.' },
+        { name: 'The Captain', description: 'Place the Special Victim meeple on the Bridge. This is the Captain. While he is at the Bridge, it costs one less Keycard to activate the Self Destruct. If the Captain dies, +2 Bloodlust.' },
+        { name: 'Weapons Locker', description: 'Look through the unused Item cards and place any weapons in the Armory\'s Item deck, either faceup on top of facedown underneath.' }
+      ]
+    },
+    killer: {
+      name: 'Evomorph',
+      description: `"The cargo retrieval from Titan-6 was routine. Ore, mining equipment, medical resupply for the outer rim, your basic boring-as-shit manifest. But something was hiding in the cargo, and we brought it on board. A thing, a creature, an animal... no, it was a goddamn monster, and I let it loose on my ship!"
+
+The Adult Evomorph is a large insectoid-like alien, with a white and red exoskeleton, and a scorpion-like tail. It has no visible eyes but does have a set of sharp teeth in its exposed mouth. When the Konrad first became infested after raiding an abandoned and decrepit space freighter, the crew had no idea that a hatchling Evomorph had returned with them.
+
+The hatchling invaded the body of one of the crew by crawling into one of their orifices. Hatchlings incubate inside the host's body until they reach a size where the host is no longer sufficient in size or provided nutrients. At that point, it bursts forth from the host creating its own orifice and killing the host.
+
+Younglings hunt and feed on whatever living beings they can find. They are incredibly quick and deadly. While their exoskeleton is tough, they can be damaged and even killed with human-designed weapons. They are also very susceptible to fire. Once a Youngling has fed on enough victims, it will evolve into its full-grown Adult form.
+
+Adult Evomorphs can survive for several years on no food. They hunt purely for sport as they instinctually learn while being a Youngling, even though they are often only in that stage for a matter of hours. An Adult Evomorph is essentially a killing machine and will even attack other Evomorphs for sole superiority.
+
+When there is nothing to kill, because the Evomorph is alone on a planet or ship, it will then begin to nest out of boredom. It does not produce eggs in large numbers making only one Hatchling each year. A Hatchling can only survive without a host for about a year itself, so it is extremely rare to have more than one or at most two hatchlings in an area at a time.
+
+If an Evomorph is unable to find a new source of food, it will perform a process called morpholosion where it can use its dying body to preserve the Hatchling almost indefinitely. This process is the reason why Evomorphs have continued to exist despite the fact that they kill any and every living thing around them.
+
+Eventually, the cycle continues when the hatchling is introduced to an area with a living organism. The hatchling has acute biological sensors and when it senses such a being, will "hatch" from the morpholosion cocoon to seek out the being as its host.
+
+Evomorphs have eradicated full ship crews and even full planets, though they are often killed before such extreme destruction in cases where they find themselves among a highly populated, well-armed place or in a place with beings more dangerous than the Evomorph, which is rare but possible.
+
+One thing is for sure, the crew of the Konrad is hardly a group that is likely to survive an encounter with an Evomorph.`
+    }
   }
 };
 
