@@ -18,11 +18,11 @@ export const StoryRequestSchema = z.object({
   startingEvent: z.object({
     name: z.string().min(1).max(100),
     description: z.string().max(5000).optional()
-  }).nullable(),
+  }).optional().nullable(),
   startingSetup: z.object({
     name: z.string().min(1).max(100),
     description: z.string().max(5000).optional()
-  }).nullable()
+  }).optional().nullable()
 });
 
 // Schema for generate-story-image endpoint
