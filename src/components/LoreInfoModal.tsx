@@ -114,7 +114,6 @@ export const LoreInfoModal = ({ type, name }: LoreInfoModalProps) => {
                   className={`w-full h-full ${type === 'location' ? 'object-cover' : 'object-cover object-top'}`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                <div className="absolute inset-0 film-grain pointer-events-none opacity-30" />
               </div>
             )}
 
