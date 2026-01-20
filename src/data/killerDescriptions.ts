@@ -56,17 +56,11 @@ The overall aesthetic is "synthwave noir"—a gritty, neon-soaked homage to 80s 
 
 The figure is dressed in a dark, formal suit that is profoundly distressed, scorched, and caked in grime. The fabric is shredded at the cuffs and hem, hanging in tattered ribbons that suggest a long period of decay or a recent emergence from fire. Its hands are entirely engulfed in roaring flames, held slightly away from its body in a vigilant, predatory stance.`,
 
-  "Evomorph": `A large, nightmarish insectoid-like alien creature with a terrifying, biomechanical presence. Its body is covered in a hard, chitinous exoskeleton colored in mottled white and crimson red, giving it a visceral, organic-yet-armored appearance. The creature stands upright on powerful, digitigrade legs that end in sharp, clawed feet.
+  "Evomorph": `A monstrous, biomechanical apex predator with a powerful, sinewy build and a terrifying, lethal presence. Its anatomy is a grotesque blend of glistening, deep-red muscular tissue and pale, exposed skeletal structures that look both organic and engineered. It occupies a low, aggressive crouch, conveying a sense of coiled tension and imminent violence.
 
-Its head is elongated and eyeless, featuring no visible sensory organs except for a horrific mouth filled with rows of razor-sharp, translucent teeth. The jaw can extend or split open to reveal an inner set of mandibles. The lack of eyes makes it impossible to read or anticipate, adding to its alien menace.
+The creature's head is elongated and faceless, featuring a prominent, jagged jaw filled with needle-like teeth and no visible eyes, which enhances its uncanny and relentless appearance. A massive, segmented tail—thick with armored plates and sinew—curls menacingly over its torso, terminating in a sharp, scythe-like stinger. Its limbs are long and corded with visible muscle, terminating in sharp, predatory claws.
 
-A long, segmented tail curves behind and above the creature, ending in a sharp, scorpion-like barb or blade that can strike with lethal precision. The tail is as much a weapon as its clawed hands.
-
-Its limbs are long and multi-jointed, with sharp talons at the end of each elongated finger. The arms can fold close to the body or extend outward in a predatory reach. The overall silhouette is lithe yet powerful—built for speed, climbing, and ambush.
-
-The creature's surface is slick and glistening, as if covered in a thin layer of mucus or organic secretion. Subtle ridges, veins, and textured patterns run across its body, suggesting a living, evolving organism rather than a static monster.
-
-The Evomorph moves with silent, deliberate grace—a perfect predator adapted to hunt in the dark corridors of spacecraft. It is patient, intelligent, and absolutely merciless.`
+The surface of its body appears wet and visceral, as if it has recently emerged from a cocoon or a bloody encounter. It is positioned in a dark, claustrophobic industrial tunnel with circular concrete walls and wet, reflective floors.`
 };
 
 /**

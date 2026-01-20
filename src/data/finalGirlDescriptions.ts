@@ -82,21 +82,17 @@ Her dark, wavy hair is long and unstyled, falling messy and voluminous around he
 
 She wears a heavily distressed denim jacket with frayed edges and small tears, layered over a simple charcoal t-shirt.`,
 
-  "Ellen": `A woman in her early 30s with a lean, capable build and a calm, resourceful presence. She has fair skin marked by grease smudges and minor scrapes, suggesting hands-on mechanical work rather than combat. Her face is angular with a strong jaw, straight nose, and determined mouth set in a focused, problem-solving expression.
+  "Ellen": `A woman in her mid-to-late 30s with a sturdy, capable build and a high-alert, survivalist presence. Her skin is fair but heavily weathered, coated in a layer of sweat, grease, and industrial grime that suggests she has been navigating a harsh environment for some time. Her face is striking and expressive, with a prominent nose, a sharp jawline, and a set mouth that conveys a mix of exhaustion and grim resolve.
 
-Her eyes are warm brown, steady and observant, conveying intelligence and adaptability rather than aggression. She looks like someone who can fix anything and think her way out of trouble.
+She has large, dark, and soul-piercing eyes that are wide with a combination of fear and intense focus. Her dark brown hair is thick and shoulder-length, styled in a mass of wild, tangled curls that appear damp and matted. There is no visible makeup, and her expression is one of strained, defensive vigilance.
 
-Her hair is dark brown, medium-length, and practical—often pulled back in a loose ponytail or tucked behind her ears to keep it out of the way while working. The style is functional rather than fashionable.
+She wears a simple, practical white crew-neck t-shirt that is severely distressed and covered in dark, oily stains. The lighting is cinematic and high-contrast, featuring a sickly green rim light that highlights her silhouette against a dark, cramped industrial tunnel. The overall aesthetic is gritty, visceral, and reminiscent of a classic 1970s sci-fi horror protagonist.`,
 
-She reads as the competent crew member everyone relies on—dependable, resourceful, and unflappable under pressure. She wears a utilitarian jumpsuit or work coveralls in muted industrial colors (navy, grey, or olive), with various tool pouches and utility pockets. The fabric shows wear from use—oil stains, minor tears, faded patches. A name patch or ship insignia may be visible on the chest or shoulder.`,
+  "Jenette": `A woman in her early-to-mid 30s with a lean, muscular, athletic build and a fierce, combat-ready presence. Her skin has a warm, deep tone but is heavily smeared with soot and grime, suggesting she is in the midst of a struggle. Her face is sharp and defined, with high cheekbones and a strong jawline. She has dark, piercing eyes fixed in a stern, unwavering glare, with deeply furrowed brows that signal intense concentration and defiance.
 
-  "Jenette": `A woman in her late 20s to early 30s with a muscular, athletic build and a fierce, no-nonsense presence. She has medium-brown skin with a sheen of sweat and possibly some combat grime, suggesting recent physical exertion. Her face is strong-featured with high cheekbones, a broad nose, and a firm jaw set in a challenging, confident expression.
+Her hair is jet black, styled in a bold, voluminous pompadour with closely cropped, faded sides. She wears no makeup, highlighting the raw, weathered texture of her skin. Her expression is hard and uncompromising, devoid of any softness.
 
-Her eyes are dark and intense, with a sharp, assessing gaze that immediately sizes up threats and opportunities. She looks like someone who shoots first and negotiates later.
-
-Her most distinctive feature is a dramatic mohawk—shaved sides with a tall, styled strip of dark hair running from forehead to nape. The mohawk is well-maintained despite harsh conditions, a point of personal pride.
-
-She radiates badass mercenary energy—intimidating, professional, and absolutely lethal. She wears tactical combat gear: a fitted tank top or sleeveless shirt showing off her muscular arms, paired with cargo pants featuring multiple pockets and holsters. She may have visible armor elements like a tactical vest or shoulder guards. Weapons are never far from reach. Colors are practical and military-adjacent—blacks, dark greens, and muted earth tones.`
+She radiates the strength of a seasoned fighter rather than a victim. She wears a practical, ribbed olive-drab tank top that is stained with dirt and sweat. A striking red cloth is tied tightly around her left bicep, serving as a lone, utilitarian splash of color against the dark backdrop.`
 };
 
 /**

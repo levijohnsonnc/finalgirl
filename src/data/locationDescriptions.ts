@@ -66,25 +66,15 @@ The atmosphere is eerily silent and watchful, as if the residents vanished mid-t
 
 Flat rural landscape with massive, encroaching dried cornfields. Weathered wooden buildings, including a Sheriff's Department. Prominent "Shady Acres" town sign and a bulletin board with posters. Two vintage pickup trucks parked on a central dirt lot. Heavy, overcast gray sky creating a sense of eerie desolation.`,
 
-  "USS Konrad": `A massive M-Class freight vessel drifting through the cold void of deep space, its hull scarred by micrometeorite impacts and years of hard service. The exterior is industrial and utilitarian—dark grey metal plating with faded corporate logos, navigation lights that flicker intermittently, and observation ports that glow with dim interior lighting.
+  "USS Konrad": `A massive, modular industrial mining vessel, the USS KONRAD, suspended in low orbit above a vast, rust-colored terrestrial planet. The ship is a heavy, rectangular behemoth constructed from weathered and scarred metal plating, showing years of exposure to space-borne debris and industrial soot. It is utilitarian and imposing, designed for function rather than aesthetics, with a "used future" aesthetic characterized by exposed machinery and reinforced hull segments.
 
-Inside, the ship is a labyrinth of narrow corridors, maintenance shafts, and functional compartments. The walls are lined with exposed pipes, conduits, and cable bundles. Emergency lighting casts harsh shadows in alternating pools of red and white. The air recyclers hum constantly, occasionally punctuated by the groan of hull stress or the clang of distant machinery.
+Faded corporate logos and registry numbers, including "WEYGAR-YUSTARRY MINING CORP," are stenciled across the ship's weathered flank. Thick, heavy umbilical cables and mechanical docking arms extend from the lower midsection, tethering the ship to a skeletal orbital platform or cargo array. Small, glowing portholes dot the various levels of the superstructure, suggesting a sprawling, pressurized interior.
 
-The Bridge is the command center—a cramped space filled with control consoles, navigation displays, and communication equipment. Worn captain's chair at center, facing a large viewport that shows only endless starfield.
+A harsh, brilliant sun flares from the upper corner, casting long, sharp shadows across the ship's uneven surface and highlighting the gritty texture of the hull. Below the vessel, the curve of the planet glows with a thick, hazy orange atmosphere, its surface appearing desolate and wind-swept. The surrounding space is a deep, cold black, making the massive ship feel like a lonely island of industry in the void.
 
-The Mess Hall serves as the crew's social hub—long metal tables bolted to the floor, food dispensers along one wall, personal effects and pinned photos suggesting the human lives lived here.
+The scene is framed through the thick, dark casing of a nearby window, placing the viewer inside a neighboring vessel or station. The atmosphere is quiet and heavy, conveying the immense scale and isolation of deep-space corporate operations.
 
-The Cargo Bay is cavernous and industrial—massive containers stacked in rows, loading equipment, and freight elevators. Shadows pool between the containers, creating countless hiding spots.
-
-The Maintenance Shafts are claustrophobic service tunnels barely wide enough for a person to crawl through. Grated floors reveal more machinery below. These are the veins of the ship—and perfect hunting grounds for something that moves in the dark.
-
-The Armory contains weapons lockers, emergency equipment, and security gear—a last resort for a crew that never expected to need it.
-
-Escape Pods line the outer hull—small, cramped capsules designed for emergency evacuation. Each pod seats only a few, making rescue a matter of brutal triage.
-
-The overall atmosphere is tense, claustrophobic, and industrial. Every corner could hide something. Every sound echoes. The Konrad is a working vessel turned hunting ground—a place where something has gone terribly wrong, and the survivors are running out of places to hide.
-
-Key elements: Industrial spacecraft interior with exposed infrastructure. Narrow corridors and cramped maintenance shafts. Alternating emergency lighting (red/white). Functional spaces: Bridge, Mess Hall, Cargo Bay, Armory. Escape pods and airlocks as potential salvation or death traps. Deep space isolation—no help is coming.`
+Massive, blocky industrial spaceship in orbit. Weathered, scarred metal hull with corporate branding. Thick umbilical cables connecting to a docking platform. Atmospheric orange planet visible in the background. Harsh sunlight and deep shadows against the void of space.`
 };
 
 /**
