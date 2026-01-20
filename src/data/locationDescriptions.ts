@@ -64,7 +64,27 @@ The surrounding houses are old-fashioned, two-story clapboard structures with em
 
 The atmosphere is eerily silent and watchful, as if the residents vanished mid-task, leaving only the rustle of dry corn stalks and the looming presence of the empty, weathered buildings.
 
-Flat rural landscape with massive, encroaching dried cornfields. Weathered wooden buildings, including a Sheriff's Department. Prominent "Shady Acres" town sign and a bulletin board with posters. Two vintage pickup trucks parked on a central dirt lot. Heavy, overcast gray sky creating a sense of eerie desolation.`
+Flat rural landscape with massive, encroaching dried cornfields. Weathered wooden buildings, including a Sheriff's Department. Prominent "Shady Acres" town sign and a bulletin board with posters. Two vintage pickup trucks parked on a central dirt lot. Heavy, overcast gray sky creating a sense of eerie desolation.`,
+
+  "USS Konrad": `A massive M-Class freight vessel drifting through the cold void of deep space, its hull scarred by micrometeorite impacts and years of hard service. The exterior is industrial and utilitarian—dark grey metal plating with faded corporate logos, navigation lights that flicker intermittently, and observation ports that glow with dim interior lighting.
+
+Inside, the ship is a labyrinth of narrow corridors, maintenance shafts, and functional compartments. The walls are lined with exposed pipes, conduits, and cable bundles. Emergency lighting casts harsh shadows in alternating pools of red and white. The air recyclers hum constantly, occasionally punctuated by the groan of hull stress or the clang of distant machinery.
+
+The Bridge is the command center—a cramped space filled with control consoles, navigation displays, and communication equipment. Worn captain's chair at center, facing a large viewport that shows only endless starfield.
+
+The Mess Hall serves as the crew's social hub—long metal tables bolted to the floor, food dispensers along one wall, personal effects and pinned photos suggesting the human lives lived here.
+
+The Cargo Bay is cavernous and industrial—massive containers stacked in rows, loading equipment, and freight elevators. Shadows pool between the containers, creating countless hiding spots.
+
+The Maintenance Shafts are claustrophobic service tunnels barely wide enough for a person to crawl through. Grated floors reveal more machinery below. These are the veins of the ship—and perfect hunting grounds for something that moves in the dark.
+
+The Armory contains weapons lockers, emergency equipment, and security gear—a last resort for a crew that never expected to need it.
+
+Escape Pods line the outer hull—small, cramped capsules designed for emergency evacuation. Each pod seats only a few, making rescue a matter of brutal triage.
+
+The overall atmosphere is tense, claustrophobic, and industrial. Every corner could hide something. Every sound echoes. The Konrad is a working vessel turned hunting ground—a place where something has gone terribly wrong, and the survivors are running out of places to hide.
+
+Key elements: Industrial spacecraft interior with exposed infrastructure. Narrow corridors and cramped maintenance shafts. Alternating emergency lighting (red/white). Functional spaces: Bridge, Mess Hall, Cargo Bay, Armory. Escape pods and airlocks as potential salvation or death traps. Deep space isolation—no help is coming.`
 };
 
 /**
