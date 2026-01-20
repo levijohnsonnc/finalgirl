@@ -26,7 +26,7 @@ const Archive = ({ onBack }: ArchiveProps) => {
   };
 
   // Seasons that are in development (show "In Development" badge)
-  const inDevelopmentSeasons = [2, 3, 4];
+  const inDevelopmentSeasons = [2, 3, 4, 5];
   
   // Films that have been fully configured and are available despite being in development seasons
   const availableFilmIds = [
@@ -38,6 +38,8 @@ const Archive = ({ onBack }: ArchiveProps) => {
     's3-killer-from-tomorrow',
     // Season 4 - A Rotten Harvest
     's4-rotten-harvest',
+    // Season 5 - Into the Void
+    's5-into-the-void',
   ];
 
   return (
