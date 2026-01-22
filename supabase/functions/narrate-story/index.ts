@@ -10,7 +10,6 @@ serve(async (req) => {
   }
 
   try {
-
     // Parse and validate request body
     const body = await req.json();
     const validation = validateRequest(NarrationRequestSchema, body);
@@ -21,45 +20,39 @@ serve(async (req) => {
 
     const { text } = validation.data;
 
-    const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
-    if (!ELEVENLABS_API_KEY) {
-      console.error('ELEVENLABS_API_KEY not configured');
+    const INWORLD_API_KEY = Deno.env.get('INWORLD_API_KEY');
+    if (!INWORLD_API_KEY) {
+      console.error('INWORLD_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'Narration service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Using "Brian" - a deep male voice (nPczCjzI2devNBz1zQrb)
-    const voiceId = 'nPczCjzI2devNBz1zQrb';
+    // Base64 encode the API key for Basic Auth
+    const authHeader = btoa(INWORLD_API_KEY);
 
-    console.log(`Generating narration for ${text.length} characters using voice ${voiceId}`);
+    console.log(`Generating narration for ${text.length} characters using Inworld voice Blake`);
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+      'https://api.inworld.ai/tts/v1/voice',
       {
         method: 'POST',
         headers: {
-          'xi-api-key': ELEVENLABS_API_KEY,
+          'Authorization': `Basic ${authHeader}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           text,
-          model_id: 'eleven_multilingual_v2',
-          voice_settings: {
-            stability: 0.6,
-            similarity_boost: 0.75,
-            style: 0.3,
-            use_speaker_boost: true,
-            speed: 0.9,
-          },
+          voiceId: 'Blake',
+          modelId: 'inworld-tts-1.5-max'
         }),
       }
     );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Narration API error:', response.status, errorText);
+      console.error('Inworld API error:', response.status, errorText);
       
       if (response.status === 429) {
         return new Response(
@@ -74,13 +67,13 @@ serve(async (req) => {
       );
     }
 
-    const audioBuffer = await response.arrayBuffer();
-    const audioBase64 = base64Encode(audioBuffer);
-
-    console.log('Narration generated successfully, audio size:', audioBuffer.byteLength);
+    // Inworld returns JSON with audioContent as base64
+    const data = await response.json();
+    
+    console.log('Narration generated successfully via Inworld');
 
     return new Response(
-      JSON.stringify({ audioContent: audioBase64 }),
+      JSON.stringify({ audioContent: data.audioContent }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: unknown) {
