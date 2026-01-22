@@ -29,8 +29,8 @@ serve(async (req) => {
       );
     }
 
-    // Base64 encode the API key for Basic Auth
-    const authHeader = btoa(INWORLD_API_KEY);
+    // Inworld provides a pre-encoded Base64 signature - use it directly
+    const authHeader = INWORLD_API_KEY;
 
     console.log(`Generating narration for ${text.length} characters using Inworld voice Blake`);
 
