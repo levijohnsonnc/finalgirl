@@ -19,22 +19,58 @@ serve(async (req) => {
       return validation.error;
     }
 
-    const { position, fullStory } = validation.data;
+    const { 
+      position, 
+      fullStory, 
+      killer, 
+      killerDescription, 
+      finalGirl, 
+      finalGirlDescription, 
+      location, 
+      locationDescription 
+    } = validation.data;
 
     console.log(`Generating image for position ${position}, story length: ${fullStory.length}`);
+    console.log(`Context - Killer: ${killer}, Final Girl: ${finalGirl}, Location: ${location}`);
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    // First, use a text model to extract the most powerful visual from the story
-    const extractionPrompt = `Read this story excerpt and identify the ${position === 1 ? 'first' : position === 2 ? 'second' : position === 3 ? 'third' : 'fourth'} most visually striking moment or scene. Describe it in ONE sentence as a cinematic shot description (no character names, just descriptions like "a tall figure in shadows", "an abandoned carnival at night", etc.). Focus on atmosphere, lighting, and composition. Keep it safe for image generation - no graphic content.
+    // Build character context for the extraction prompt
+    const characterContext = [];
+    if (finalGirl) {
+      characterContext.push(`FINAL GIRL "${finalGirl}": ${finalGirlDescription || 'A determined survivor'}`);
+    }
+    if (killer) {
+      characterContext.push(`KILLER "${killer}": ${killerDescription || 'A menacing antagonist'}`);
+    }
+    if (location) {
+      characterContext.push(`LOCATION "${location}": ${locationDescription || 'An atmospheric setting'}`);
+    }
 
-Story:
+    const positionLabel = position === 1 ? 'first' : position === 2 ? 'second' : position === 3 ? 'third' : 'fourth';
+
+    // Dramatic cinematographer extraction prompt
+    const extractionPrompt = `You are a horror film cinematographer selecting the ${positionLabel} most emotionally powerful shot from this story.
+
+CRITICAL RULES:
+- Focus on ONE dramatic moment of tension, fear, revelation, or confrontation
+- You do NOT need to show all characters or the full location
+- A tight close-up of terrified eyes can be more powerful than a wide shot showing everything
+- IGNORE minor NPCs, background characters, or security guards mentioned in the story
+- Choose the most cinematic framing: character close-up, killer reveal, atmospheric detail, or intense confrontation
+- Describe camera angle, framing, lighting, and emotional focus
+- Use ONLY the main characters listed below if they appear in your chosen moment
+
+MAIN CHARACTERS (use visual details ONLY if they appear in your shot):
+${characterContext.join('\n')}
+
+STORY:
 ${fullStory}
 
-Reply with ONLY the one-sentence visual description, nothing else.`;
+OUTPUT: One vivid sentence describing a powerful cinematic shot. Focus on DRAMA and EMOTION, not completeness. Do NOT mention character names - describe them visually instead.`;
 
     // Extract the visual description using text model
     const extractResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -60,8 +96,13 @@ Reply with ONLY the one-sentence visual description, nothing else.`;
 
     console.log(`Extracted visual for position ${position}:`, visualDescription);
 
-    // Now generate the image with the extracted description using Google's native API
-    const imagePrompt = `Vintage 1980s movie still, grainy film quality, muted desaturated colors, analog VHS aesthetic. ${visualDescription}. Style: retro indie film, atmospheric, practical lighting, moody and cinematic, widescreen composition.`;
+    // Dramatic image prompt that avoids poster-style compositions
+    const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}
+
+Style: Practical on-set lighting, shallow depth of field, cinematic tension, 35mm film grain.
+DO NOT create a movie poster, group portrait, or composite image.
+Focus on this single dramatic moment with authentic vintage analog film quality.
+Muted, desaturated color palette. Widescreen composition. No text or titles.`;
 
     console.log(`Image prompt for position ${position}:`, imagePrompt);
 
