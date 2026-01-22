@@ -28,7 +28,14 @@ export const StoryRequestSchema = z.object({
 // Schema for generate-story-image endpoint
 export const ImageRequestSchema = z.object({
   position: z.number().min(1).max(4),
-  fullStory: z.string().min(50).max(10000)
+  fullStory: z.string().min(50).max(10000),
+  // Character and location context for dramatic image generation
+  killer: z.string().max(100).optional(),
+  killerDescription: z.string().max(3000).optional(),
+  finalGirl: z.string().max(100).optional(),
+  finalGirlDescription: z.string().max(3000).optional(),
+  location: z.string().max(100).optional(),
+  locationDescription: z.string().max(3000).optional()
 });
 
 // Schema for narrate-story endpoint

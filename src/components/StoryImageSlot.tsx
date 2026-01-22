@@ -1,16 +1,25 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { getKillerDescription } from '@/data/killerDescriptions';
+import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
+import { getLocationDescription } from '@/data/locationDescriptions';
 
 interface StoryImageSlotProps {
   position: number;
   fullStory: string;
   storyLoaded: boolean;
+  killer: string;
+  finalGirl: string;
+  location: string;
 }
 
 const StoryImageSlot = ({
   position,
   fullStory,
   storyLoaded,
+  killer,
+  finalGirl,
+  location,
 }: StoryImageSlotProps) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,11 +42,22 @@ const StoryImageSlot = ({
     setIsLoading(true);
     setError(null);
 
+    // Look up visual descriptions for the characters and location
+    const killerDescription = getKillerDescription(killer);
+    const finalGirlDescription = getFinalGirlDescription(finalGirl);
+    const locationDescription = getLocationDescription(location);
+
     try {
       const { data, error: fnError } = await supabase.functions.invoke('generate-story-image', {
         body: {
           position,
           fullStory,
+          killer,
+          killerDescription,
+          finalGirl,
+          finalGirlDescription,
+          location,
+          locationDescription,
         },
       });
 
