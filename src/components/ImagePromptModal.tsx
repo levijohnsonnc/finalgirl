@@ -73,46 +73,44 @@ export const ImagePromptModal = ({
   const hasAnyDescriptions = killerDescription || finalGirlDescription || locationDescription;
 
   const buildPrompt = () => {
-    let prompt = `I want you to make an award winning, ultra photorealistic photo of the scene you best think depicts this short story intro:
-
-${story}`;
-
-    if (hasAnyDescriptions) {
-      prompt += `
-
----
-
-**CHARACTER & SETTING REFERENCES**`;
-
-      if (finalGirlDescription) {
-        prompt += `
-
-**Final Girl - ${finalGirl}:**
-${finalGirlDescription}`;
-      }
-
-      if (killerDescription) {
-        prompt += `
-
-**Killer - ${killer}:**
-${killerDescription}`;
-      }
-
-      if (locationDescription) {
-        prompt += `
-
-**Location - ${location}:**
-${locationDescription}`;
-      }
-    } else {
-      prompt += `
-
----
-
-*No detailed visual descriptions available for the selected characters/location.*`;
+    // Build character context section
+    const characterContext: string[] = [];
+    if (finalGirlDescription) {
+      characterContext.push(`FINAL GIRL - ${finalGirl}: ${finalGirlDescription}`);
+    }
+    if (killerDescription) {
+      characterContext.push(`KILLER - ${killer}: ${killerDescription}`);
+    }
+    if (locationDescription) {
+      characterContext.push(`LOCATION - ${location}: ${locationDescription}`);
     }
 
-    return prompt;
+    const characterSection = characterContext.length > 0 
+      ? characterContext.join('\n\n')
+      : 'No detailed visual descriptions available.';
+
+    return `You are a horror film cinematographer. Based on this story, describe and then generate the SINGLE most dramatic, emotionally powerful image for this scene.
+
+**CRITICAL RULES:**
+- Focus on ONE moment of tension, fear, or confrontation
+- You do NOT need to show all characters or the full location
+- A tight close-up of terrified eyes can be more powerful than a wide establishing shot
+- IGNORE minor NPCs or background characters mentioned in the story
+- Choose: character close-up, killer reveal, atmospheric location detail, or intense confrontation
+- Describe camera angle, framing, and emotional focus
+
+**MAIN CHARACTERS** (use ONLY if they appear in your chosen moment):
+${characterSection}
+
+**STORY:**
+${story}
+
+---
+
+Generate an ultra photorealistic 1980s horror film still based on your chosen moment.
+Style: Practical lighting, shallow depth of field, cinematic tension, 35mm film grain.
+DO NOT create a movie poster or group portrait.
+Muted, desaturated color palette. Widescreen composition. No text or titles.`;
   };
 
   const handleCopy = async () => {
