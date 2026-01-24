@@ -975,6 +975,29 @@
     transform-style: preserve-3d;
   }
 
+  /* 3D Book Spine - center binding */
+  .scrapbook-book::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 100%;
+    background: linear-gradient(90deg,
+      hsl(20 20% 8%) 0%,
+      hsl(20 15% 18%) 20%,
+      hsl(30 12% 25%) 50%,
+      hsl(20 15% 18%) 80%,
+      hsl(20 20% 8%) 100%
+    );
+    z-index: 20;
+    box-shadow: 
+      0 0 15px rgba(0,0,0,0.8),
+      inset 0 0 10px rgba(255,255,255,0.05);
+    border-radius: 2px;
+  }
+
   /* Front Cover - The flipping part */
   .scrapbook-cover {
     position: absolute;
@@ -1050,8 +1073,47 @@
     );
     border-radius: 4px 0 0 4px;
     box-shadow: 
-      inset -15px 0 30px rgba(0,0,0,0.15),
+      inset -20px 0 35px rgba(0,0,0,0.2),
       inset 0 0 40px rgba(139, 69, 19, 0.08);
+    transform: perspective(1200px) rotateY(2deg);
+    transform-origin: right center;
+  }
+
+  /* Stacked pages effect - left side */
+  .scrapbook-page-left::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: -3px;
+    right: 3px;
+    bottom: 3px;
+    background: linear-gradient(90deg,
+      hsl(40 20% 82%) 0%,
+      hsl(40 18% 85%) 100%
+    );
+    border-radius: 4px 0 0 4px;
+    z-index: -1;
+    box-shadow: 
+      -2px 2px 0 hsl(40 15% 78%),
+      -4px 4px 0 hsl(40 12% 74%);
+  }
+
+  /* Left page outer edge - stacked paper texture */
+  .scrapbook-page-left::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: repeating-linear-gradient(
+      180deg,
+      hsl(40 20% 85%) 0px,
+      hsl(40 15% 80%) 1px,
+      hsl(40 20% 88%) 2px
+    );
+    border-radius: 4px 0 0 4px;
+    box-shadow: inset -2px 0 4px rgba(0,0,0,0.1);
   }
 
   .scrapbook-page-right {
@@ -1063,27 +1125,92 @@
     );
     border-radius: 0 4px 4px 0;
     box-shadow: 
-      inset 10px 0 25px rgba(0,0,0,0.1),
+      inset 15px 0 30px rgba(0,0,0,0.15),
       inset 0 0 40px rgba(139, 69, 19, 0.06);
+    transform: perspective(1200px) rotateY(-2deg);
+    transform-origin: left center;
+  }
+
+  /* Stacked pages effect - right side */
+  .scrapbook-page-right::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: -3px;
+    bottom: 3px;
+    background: linear-gradient(90deg,
+      hsl(40 18% 85%) 0%,
+      hsl(40 20% 82%) 100%
+    );
+    border-radius: 0 4px 4px 0;
+    z-index: -1;
+    box-shadow: 
+      2px 2px 0 hsl(40 15% 78%),
+      4px 4px 0 hsl(40 12% 74%);
+  }
+
+  /* Right page outer edge - stacked paper texture */
+  .scrapbook-page-right::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 6px;
+    height: 100%;
+    background: repeating-linear-gradient(
+      180deg,
+      hsl(40 20% 85%) 0px,
+      hsl(40 15% 80%) 1px,
+      hsl(40 20% 88%) 2px
+    );
+    border-radius: 0 4px 4px 0;
+    box-shadow: inset 2px 0 4px rgba(0,0,0,0.1);
   }
 
   .page-content {
     position: absolute;
     top: 16px;
-    left: 16px;
-    right: 16px;
+    left: 20px;
+    right: 20px;
     bottom: 16px;
     display: flex;
     flex-direction: column;
+    /* Counteract page rotation for content */
+    transform: perspective(1200px) rotateY(0deg);
   }
 
   @media (max-width: 640px) {
     .page-content {
       top: 12px;
-      left: 12px;
-      right: 12px;
+      left: 14px;
+      right: 14px;
       bottom: 12px;
     }
+  }
+
+  /* Corner wear effect */
+  .scrapbook-page-left .page-content::before,
+  .scrapbook-page-right .page-content::before {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  .scrapbook-page-left .page-content::before {
+    top: -8px;
+    left: -12px;
+    background: radial-gradient(ellipse at top left, rgba(139, 69, 19, 0.15) 0%, transparent 70%);
+  }
+
+  .scrapbook-page-right .page-content::before {
+    top: -8px;
+    right: -12px;
+    left: auto;
+    background: radial-gradient(ellipse at top right, rgba(139, 69, 19, 0.15) 0%, transparent 70%);
   }
 
   /* Back Cover (static) */
@@ -1096,6 +1223,11 @@
     background: linear-gradient(135deg, hsl(20 15% 12%) 0%, hsl(20 10% 8%) 100%);
     border-radius: 4px;
     z-index: -1;
+    /* Stacked book effect on back */
+    box-shadow: 
+      4px 4px 0 hsl(20 10% 10%),
+      8px 8px 0 hsl(20 8% 8%),
+      12px 12px 20px rgba(0,0,0,0.5);
   }
 
   /* ===== Poster Display ===== */
