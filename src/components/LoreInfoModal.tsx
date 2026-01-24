@@ -79,13 +79,13 @@ export const LoreInfoModal = ({ type, name }: LoreInfoModalProps) => {
     <Dialog>
       <DialogTrigger asChild>
         <button
-          className="p-1 rounded-full hover:bg-primary/20 transition-colors group"
+          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full hover:bg-primary/20 transition-colors group"
           aria-label={`View ${name} info`}
         >
           <Info className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl bg-background/95 backdrop-blur-sm border-primary/30 max-h-[85vh] overflow-hidden">
+      <DialogContent className="w-[calc(100vw-1.5rem)] sm:max-w-2xl bg-background/95 backdrop-blur-sm border-primary/30 max-h-[85vh] overflow-hidden">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <span className="text-xs uppercase tracking-widest text-muted-foreground font-display">
@@ -98,7 +98,7 @@ export const LoreInfoModal = ({ type, name }: LoreInfoModalProps) => {
               </>
             )}
           </div>
-          <DialogTitle className="font-display text-2xl tracking-wide text-foreground">
+          <DialogTitle className="font-display text-xl sm:text-2xl tracking-wide text-foreground">
             {name}
           </DialogTitle>
         </DialogHeader>

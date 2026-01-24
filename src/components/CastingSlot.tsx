@@ -124,8 +124,8 @@ export const CastingSlot = ({
         className={`
           poster-card relative rounded-sm overflow-hidden
           ${isLocation 
-            ? 'w-[19rem] h-48 md:w-[22.5rem] md:h-56' 
-            : 'w-48 h-48 md:w-56 md:h-56'
+            ? 'w-full max-w-[19rem] h-48 md:max-w-[22.5rem] md:h-56' 
+            : 'w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56'
           }
           ${isEmpty ? 'poster-card-empty cursor-pointer hover:border-primary/50' : 'poster-card-filled'}
           ${isAnimating ? 'poster-card-shuffling' : ''}
@@ -195,15 +195,15 @@ export const CastingSlot = ({
         <button
           onClick={onShuffle}
           disabled={isAnimating || options.length === 0}
-          className="slot-action-btn group pl-1 pr-4 py-2 flex items-center gap-1 font-display text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
+          className="slot-action-btn group pl-1 pr-3 sm:pr-4 py-2 min-h-[44px] flex items-center gap-1 font-display text-xs sm:text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
         >
-          <img src={diceIcon} alt="Shuffle" className="w-12 h-12 -my-3 object-contain" />
+          <img src={diceIcon} alt="Shuffle" className="w-10 h-10 sm:w-12 sm:h-12 -my-3 object-contain" />
           Shuffle
         </button>
         <button
           onClick={onChoose}
           disabled={options.length === 0}
-          className="slot-action-btn group px-4 py-2 flex items-center gap-2 font-display text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground disabled:opacity-50"
+          className="slot-action-btn group px-3 sm:px-4 py-2 min-h-[44px] flex items-center gap-2 font-display text-xs sm:text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground disabled:opacity-50"
         >
           <ChevronDown className="w-3.5 h-3.5 transition-colors group-hover:text-primary" />
           Choose

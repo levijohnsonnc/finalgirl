@@ -56,8 +56,8 @@ export const ScenarioDropdowns = ({
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="w-full max-w-2xl mx-auto px-2 sm:px-4 mb-6 sm:mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Setup Scenario Dropdown */}
         <div className="flex flex-col gap-2">
           <label className="font-display text-xs text-muted-foreground tracking-[0.2em] uppercase">
@@ -68,7 +68,7 @@ export const ScenarioDropdowns = ({
             onValueChange={handleSetupChange}
             disabled={setupCards.length === 0}
           >
-            <SelectTrigger className="scenario-dropdown font-display text-sm tracking-wider uppercase">
+            <SelectTrigger className="scenario-dropdown font-display text-xs sm:text-sm tracking-wider uppercase min-h-[44px]">
               <SelectValue placeholder={setupCards.length > 0 ? "Select Setup..." : "Coming Soon"} />
             </SelectTrigger>
             <SelectContent className="scenario-dropdown-content" side="top">
@@ -76,7 +76,7 @@ export const ScenarioDropdowns = ({
                 <SelectItem 
                   key={card.name} 
                   value={card.name}
-                  className="font-display text-sm tracking-wide uppercase cursor-pointer focus:bg-primary/20 focus:text-primary-foreground data-[highlighted]:bg-primary/20 data-[highlighted]:text-foreground"
+                  className="font-display text-xs sm:text-sm tracking-wide uppercase cursor-pointer focus:bg-primary/20 focus:text-primary-foreground data-[highlighted]:bg-primary/20 data-[highlighted]:text-foreground min-h-[44px]"
                 >
                   {card.name}
                 </SelectItem>
@@ -95,7 +95,7 @@ export const ScenarioDropdowns = ({
             onValueChange={handleEventChange}
             disabled={events.length === 0}
           >
-            <SelectTrigger className="scenario-dropdown font-display text-sm tracking-wider uppercase">
+            <SelectTrigger className="scenario-dropdown font-display text-xs sm:text-sm tracking-wider uppercase min-h-[44px]">
               <SelectValue placeholder={events.length > 0 ? "Select Event..." : "Coming Soon"} />
             </SelectTrigger>
             <SelectContent className="scenario-dropdown-content" side="top">
@@ -103,7 +103,7 @@ export const ScenarioDropdowns = ({
                 <SelectItem 
                   key={event.name} 
                   value={event.name}
-                  className="font-display text-sm tracking-wide uppercase cursor-pointer focus:bg-primary/20 focus:text-primary-foreground data-[highlighted]:bg-primary/20 data-[highlighted]:text-foreground"
+                  className="font-display text-xs sm:text-sm tracking-wide uppercase cursor-pointer focus:bg-primary/20 focus:text-primary-foreground data-[highlighted]:bg-primary/20 data-[highlighted]:text-foreground min-h-[44px]"
                 >
                   {event.name}
                 </SelectItem>

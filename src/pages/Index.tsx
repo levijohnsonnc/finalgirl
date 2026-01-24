@@ -99,32 +99,39 @@ const Index = () => {
       <AppHeader onNavigateHome={handleNavigateHome} />
       
       {/* Main Content */}
-      <main className="container mx-auto px-4 pt-32 pb-20 relative z-10">
+      <main className="container mx-auto px-3 sm:px-4 pt-24 sm:pt-32 pb-20 relative z-10">
         {renderPage()}
       </main>
 
       {/* VHS Footer */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur border-t border-border py-2 z-50">
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <footer className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur border-t border-border py-2 z-50 safe-area-bottom">
+        <div className="container mx-auto px-3 sm:px-4 flex items-center justify-between">
+          {/* Left: Play indicator - hidden on mobile */}
+          <div className="hidden sm:flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             <span className="font-vhs text-xs text-muted-foreground">PLAY ▶</span>
           </div>
-          <div className="font-vhs text-xs text-muted-foreground">
-            FINAL GIRL™ SLASHER COMPANION • {time.toLocaleDateString()}
+          
+          {/* Center: Title - simplified on mobile */}
+          <div className="font-vhs text-[10px] sm:text-xs text-muted-foreground truncate">
+            <span className="sm:hidden">FINAL GIRL™</span>
+            <span className="hidden sm:inline">FINAL GIRL™ SLASHER COMPANION • {time.toLocaleDateString()}</span>
           </div>
-          <div className="flex items-center gap-4">
+          
+          {/* Right: Collection + Time */}
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => setCurrentPage('archive')}
-              className="font-vhs text-xs text-muted-foreground hover:text-secondary transition-colors flex items-center gap-1.5"
+              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-secondary transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-2"
             >
               <Library className="w-3 h-3" />
-              MY COLLECTION
+              <span className="hidden xs:inline">MY COLLECTION</span>
+              <span className="xs:hidden">FILMS</span>
             </button>
-            <span className="font-vhs text-xs text-secondary neon-text">
+            <span className="font-vhs text-[10px] sm:text-xs text-secondary neon-text">
               {time.toLocaleTimeString('en-US', { hour12: false })}
             </span>
-            <span className="font-vhs text-xs text-primary">SP</span>
+            <span className="hidden sm:inline font-vhs text-xs text-primary">SP</span>
           </div>
         </div>
       </footer>

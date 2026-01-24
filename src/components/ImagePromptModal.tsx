@@ -128,30 +128,30 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[85vh] bg-background/95 backdrop-blur-sm border-primary/30">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-4xl max-h-[85vh] bg-background/95 backdrop-blur-sm border-primary/30">
         {/* Film Grain Overlay */}
         <div className="film-grain absolute inset-0 pointer-events-none opacity-[0.05] rounded-lg" />
         
         <DialogHeader>
-          <DialogTitle className="font-display text-xl tracking-[0.15em] uppercase text-foreground">
+          <DialogTitle className="font-display text-lg sm:text-xl tracking-[0.1em] sm:tracking-[0.15em] uppercase text-foreground">
             Image Generation Prompt
           </DialogTitle>
         </DialogHeader>
 
-        <div className="relative flex flex-col gap-4">
-          <p className="font-vhs text-xs text-muted-foreground">
+        <div className="relative flex flex-col gap-3 sm:gap-4">
+          <p className="font-vhs text-[10px] sm:text-xs text-muted-foreground">
             Copy this prompt and paste it into your favorite image generation LLM (ChatGPT, Gemini, etc.)
           </p>
 
-          <div className="relative overflow-y-auto max-h-[50vh] p-4 bg-black/40 border border-primary/20 rounded-sm">
-            <div className="font-mono text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">
+          <div className="relative overflow-y-auto max-h-[45vh] sm:max-h-[50vh] p-3 sm:p-4 bg-black/40 border border-primary/20 rounded-sm">
+            <div className="font-mono text-[10px] sm:text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">
               {renderFormattedText(buildPrompt())}
             </div>
           </div>
 
           <button
             onClick={handleCopy}
-            className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300"
+            className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]"
           >
             {copied ? (
               <>

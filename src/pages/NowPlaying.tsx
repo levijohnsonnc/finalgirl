@@ -237,33 +237,34 @@ const NowPlaying = ({
       <div className="vignette fixed inset-0 pointer-events-none" />
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center py-8 pt-24 px-4">
+      <div className="relative z-10 flex flex-col items-center py-6 sm:py-8 pt-16 sm:pt-24 px-3 sm:px-4">
         {/* Back Button */}
         <button
           onClick={onBack}
-          className="absolute top-4 left-4 flex items-center gap-2 font-vhs text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center gap-2 font-vhs text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] px-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Casting
+          <span className="hidden sm:inline">Back to Casting</span>
+          <span className="sm:hidden">Back</span>
         </button>
 
         {/* Title */}
-        <h1 className="font-display text-3xl md:text-4xl text-foreground tracking-[0.15em] uppercase mb-2">
+        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground tracking-[0.1em] sm:tracking-[0.15em] uppercase mb-1 sm:mb-2 text-center">
           Now Playing
         </h1>
-        <p className="font-vhs text-sm text-muted-foreground mb-8">
+        <p className="font-vhs text-xs sm:text-sm text-muted-foreground mb-6 sm:mb-8 text-center px-2">
           {killer} vs {finalGirl} at {location}
         </p>
 
         {/* Story Container */}
         <div className="w-full max-w-4xl flex flex-col gap-4">
-          {/* Action Buttons - Above text */}
+          {/* Action Buttons - Above text, stack on mobile */}
           {story && (
-            <div className="flex gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center px-2">
               <button
                 onClick={handleNarrate}
                 disabled={isNarrating}
-                className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50"
+                className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px]"
               >
                 {isNarrating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -281,7 +282,7 @@ const NowPlaying = ({
                 location={location}
                 finalGirl={finalGirl}
               >
-                <button className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300">
+                <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]">
                   <ImageIcon className="w-4 h-4" />
                   Image Prompt
                 </button>
@@ -290,29 +291,29 @@ const NowPlaying = ({
           )}
           
           {/* Story Text */}
-          <div className="w-full">
-            <div className="scenario-description p-6 rounded-sm">
+          <div className="w-full px-1 sm:px-0">
+            <div className="scenario-description p-4 sm:p-6 rounded-sm">
               {isGenerating ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4">
+                <div className="flex flex-col items-center justify-center py-8 sm:py-12 gap-4">
                   <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  <p className="font-vhs text-sm text-muted-foreground animate-pulse">
+                  <p className="font-vhs text-xs sm:text-sm text-muted-foreground animate-pulse">
                     The projector is warming up...
                   </p>
                 </div>
               ) : error ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4">
-                  <p className="font-vhs text-sm text-destructive">
+                <div className="flex flex-col items-center justify-center py-8 sm:py-12 gap-4">
+                  <p className="font-vhs text-xs sm:text-sm text-destructive text-center px-2">
                     {error}
                   </p>
                   <button
                     onClick={generateStory}
-                    className="font-display text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button"
+                    className="font-display text-xs sm:text-sm tracking-wider uppercase px-4 py-2 vcr-tape-button min-h-[44px]"
                   >
                     Try Again
                   </button>
                 </div>
               ) : story ? (
-                <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                <p className="font-vhs text-sm sm:text-sm text-muted-foreground leading-relaxed sm:leading-relaxed whitespace-pre-wrap">
                   {renderFormattedText(story)}
                 </p>
               ) : (
