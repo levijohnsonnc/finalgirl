@@ -1,13 +1,16 @@
 import { useRef, useState, useCallback } from 'react';
-import { Upload, Check } from 'lucide-react';
+import { Upload, Check, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface ImageUploadSlotProps {
   imageUrl: string;
   onImageChange: (url: string) => void;
+  gameId?: string;
 }
 
-// Resize and compress image to prevent localStorage bloat
-const resizeImage = (file: File, maxWidth: number = 1200): Promise<string> => {
+// Resize and compress image before upload
+const resizeImage = (file: File, maxWidth: number = 1200): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -33,9 +36,18 @@ const resizeImage = (file: File, maxWidth: number = 1200): Promise<string> => {
         
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Convert to JPEG at 80% quality for compression
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-        resolve(dataUrl);
+        // Convert to JPEG blob at 85% quality
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error('Failed to create blob'));
+            }
+          },
+          'image/jpeg',
+          0.85
+        );
       };
       img.onerror = () => reject(new Error('Failed to load image'));
       img.src = e.target?.result as string;
@@ -45,25 +57,53 @@ const resizeImage = (file: File, maxWidth: number = 1200): Promise<string> => {
   });
 };
 
-export const ImageUploadSlot = ({ imageUrl, onImageChange }: ImageUploadSlotProps) => {
+export const ImageUploadSlot = ({ imageUrl, onImageChange, gameId }: ImageUploadSlotProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
       return;
     }
     
     setIsProcessing(true);
     try {
-      const resizedUrl = await resizeImage(file);
-      onImageChange(resizedUrl);
+      // Resize the image first
+      const resizedBlob = await resizeImage(file);
+      
+      // Generate a unique filename
+      const fileName = `${gameId || crypto.randomUUID()}-${Date.now()}.jpg`;
+      const filePath = `game-posters/${fileName}`;
+      
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('posters')
+        .upload(filePath, resizedBlob, {
+          contentType: 'image/jpeg',
+          upsert: true,
+        });
+      
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        toast.error('Failed to upload image');
+        return;
+      }
+      
+      // Get the public URL
+      const { data: urlData } = supabase.storage
+        .from('posters')
+        .getPublicUrl(filePath);
+      
+      onImageChange(urlData.publicUrl);
+      toast.success('Poster uploaded!');
     } catch (error) {
       console.error('Image processing error:', error);
+      toast.error('Failed to process image');
     } finally {
       setIsProcessing(false);
     }
-  }, [onImageChange]);
+  }, [onImageChange, gameId]);
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -96,13 +136,13 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange }: ImageUploadSlotProp
       />
       
       {isProcessing ? (
-        <div className="w-4 h-4 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
+        <Loader2 className="w-4 h-4 animate-spin" />
       ) : hasImage ? (
         <Check className="w-4 h-4 text-secondary" />
       ) : (
         <Upload className="w-4 h-4" />
       )}
-      {isProcessing ? 'Saving...' : hasImage ? 'Poster Saved' : 'Upload Poster'}
+      {isProcessing ? 'Uploading...' : hasImage ? 'Poster Saved' : 'Upload Poster'}
     </button>
   );
 };
