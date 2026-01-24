@@ -42,12 +42,12 @@ const Archive = ({ onBack }: ArchiveProps) => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Back Button - positioned to align with content */}
       {onBack && (
         <button
           onClick={onBack}
-          className="flex items-center gap-2 font-vhs text-sm text-primary hover:text-primary/80 transition-colors mt-4 mb-8"
+          className="flex items-center gap-2 font-vhs text-xs sm:text-sm text-primary hover:text-primary/80 transition-colors mt-2 sm:mt-4 mb-4 sm:mb-8 min-h-[44px] px-2"
         >
           <ArrowLeft className="w-4 h-4" />
           <span className="underline underline-offset-2">Back</span>
@@ -55,11 +55,11 @@ const Archive = ({ onBack }: ArchiveProps) => {
       )}
 
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="font-display text-5xl text-primary blood-glow tracking-wider">
+      <div className="text-center space-y-1 sm:space-y-2">
+        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-primary blood-glow tracking-wider">
           MY COLLECTION
         </h1>
-        <p className="font-vhs text-muted-foreground">
+        <p className="font-vhs text-xs sm:text-sm text-muted-foreground px-2">
           MANAGE YOUR COLLECTION • CONFIGURE SETTINGS
         </p>
       </div>
@@ -71,15 +71,15 @@ const Archive = ({ onBack }: ArchiveProps) => {
         const isInDevelopment = inDevelopmentSeasons.includes(seasonNum);
         
         return (
-          <div key={season} className="space-y-4">
-            <div className="flex items-center gap-3">
+          <div key={season} className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-              <div className="flex items-center gap-3">
-                <h2 className="font-title text-2xl text-foreground px-4">
+              <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
+                <h2 className="font-title text-xl sm:text-2xl text-foreground px-2 sm:px-4">
                   SEASON {season}
                 </h2>
                 {isInDevelopment && (
-                  <span className="font-vhs text-xs bg-muted/50 text-muted-foreground px-2 py-1 rounded uppercase tracking-wider">
+                  <span className="font-vhs text-[10px] sm:text-xs bg-muted/50 text-muted-foreground px-2 py-0.5 sm:py-1 rounded uppercase tracking-wider">
                     In Development
                   </span>
                 )}
@@ -87,7 +87,7 @@ const Archive = ({ onBack }: ArchiveProps) => {
               <div className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/50 to-transparent" />
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {films.map(film => {
                 const isAvailable = availableFilmIds.includes(film.id);
                 return (

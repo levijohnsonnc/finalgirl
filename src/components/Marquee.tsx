@@ -86,29 +86,29 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome }: MarqueeProps) =>
       {/* App Header - clickable to return home */}
       <AppHeader onNavigateHome={onNavigateHome} />
       
-      {/* Content - Button positioned relative to screen in background (screen is ~2% right of center) */}
-      <div className="absolute top-[52%] left-[52%] -translate-x-1/2 z-10 flex flex-col items-center">
+      {/* Content - Button positioned relative to screen in background */}
+      <div className="absolute top-1/2 left-1/2 sm:top-[52%] sm:left-[52%] -translate-x-1/2 -translate-y-1/2 sm:translate-y-0 z-10 flex flex-col items-center">
         {/* Main Button - The Ritual Action */}
         <button
           onClick={handleStart}
           onMouseEnter={() => setIsButtonHovered(true)}
           onMouseLeave={() => setIsButtonHovered(false)}
           disabled={isClicked}
-          className="vcr-tape-button group relative px-8 py-3 md:px-10 md:py-4 text-lg md:text-xl tracking-[0.15em] uppercase transition-all duration-150 disabled:pointer-events-none"
+          className="vcr-tape-button group relative px-6 py-3 sm:px-8 md:px-10 md:py-4 text-base sm:text-lg md:text-xl tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-150 disabled:pointer-events-none min-h-[48px]"
           style={{ fontFamily: 'var(--font-vhs)' }}
         >
           {/* Button content */}
-          <span className="relative flex items-center gap-2.5 text-foreground/80 group-hover:text-foreground">
+          <span className="relative flex items-center gap-2 sm:gap-2.5 text-foreground/80 group-hover:text-foreground">
             <Play className="w-4 h-4 md:w-5 md:h-5 fill-current" />
             START THE TAPE
           </span>
         </button>
       </div>
       
-      {/* My Collection Link - Bottom corner, subtle */}
+      {/* My Collection Link - Bottom corner, subtle, with better touch target */}
       <button
         onClick={onArchive}
-        className="absolute bottom-6 right-6 text-xs tracking-wider uppercase text-foreground/30 hover:text-foreground/60 transition-colors duration-300"
+        className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xs tracking-wider uppercase text-foreground/30 hover:text-foreground/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-3 safe-area-bottom"
         style={{ fontFamily: 'var(--font-vhs)' }}
       >
         My Collection
