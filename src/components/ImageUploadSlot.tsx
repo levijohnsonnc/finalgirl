@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { Upload, X, Image as ImageIcon } from 'lucide-react';
+import { Upload, Check } from 'lucide-react';
 
 interface ImageUploadSlotProps {
   imageUrl: string;
@@ -47,7 +47,6 @@ const resizeImage = (file: File, maxWidth: number = 1200): Promise<string> => {
 
 export const ImageUploadSlot = ({ imageUrl, onImageChange }: ImageUploadSlotProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleFile = useCallback(async (file: File) => {
@@ -66,26 +65,6 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange }: ImageUploadSlotProp
     }
   }, [onImageChange]);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFile(file);
-    }
-  }, [handleFile]);
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
-
   const handleClick = () => {
     fileInputRef.current?.click();
   };
@@ -97,58 +76,16 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange }: ImageUploadSlotProp
     }
   };
 
-  const handleClear = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onImageChange('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  if (imageUrl) {
-    return (
-      <div className="relative group">
-        <div className="relative aspect-[2/3] max-w-[300px] mx-auto overflow-hidden rounded-sm border border-border/50 bg-muted/30">
-          <img
-            src={imageUrl}
-            alt="Movie poster"
-            className="w-full h-full object-cover"
-          />
-          {/* VHS overlay effect */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-            <div className="film-grain opacity-[0.05]" />
-          </div>
-        </div>
-        
-        {/* Clear button */}
-        <button
-          onClick={handleClear}
-          className="absolute top-2 right-2 p-2 bg-background/80 hover:bg-background border border-border/50 rounded-sm transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-        >
-          <X className="w-4 h-4 text-muted-foreground" />
-        </button>
-      </div>
-    );
-  }
+  const hasImage = !!imageUrl;
 
   return (
-    <div
+    <button
+      type="button"
       onClick={handleClick}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      className={`
-        relative aspect-[2/3] max-w-[300px] mx-auto
-        flex flex-col items-center justify-center gap-3
-        border-2 border-dashed rounded-sm cursor-pointer
-        transition-all duration-200
-        ${isDragging 
-          ? 'border-primary bg-primary/10' 
-          : 'border-border/50 bg-muted/20 hover:border-primary/50 hover:bg-muted/30'
-        }
-        ${isProcessing ? 'opacity-50 pointer-events-none' : ''}
-      `}
+      disabled={isProcessing}
+      className={`vcr-tape-button flex items-center justify-center gap-2 px-4 py-3 font-display text-xs tracking-[0.1em] uppercase transition-all duration-300 min-h-[44px] ${
+        isProcessing ? 'opacity-50' : ''
+      }`}
     >
       <input
         ref={fileInputRef}
@@ -159,31 +96,13 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange }: ImageUploadSlotProp
       />
       
       {isProcessing ? (
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="w-4 h-4 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
+      ) : hasImage ? (
+        <Check className="w-4 h-4 text-secondary" />
       ) : (
-        <>
-          <div className="p-3 rounded-full bg-muted/50">
-            {isDragging ? (
-              <ImageIcon className="w-8 h-8 text-primary" />
-            ) : (
-              <Upload className="w-8 h-8 text-muted-foreground" />
-            )}
-          </div>
-          <div className="text-center px-4">
-            <p className="font-vhs text-xs text-muted-foreground">
-              {isDragging ? 'Drop image here' : 'Click or drag to upload'}
-            </p>
-            <p className="font-vhs text-[10px] text-muted-foreground/60 mt-1">
-              PNG, JPG, WebP
-            </p>
-          </div>
-        </>
+        <Upload className="w-4 h-4" />
       )}
-      
-      {/* Static noise background */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
-        <div className="mystery-static w-full h-full" />
-      </div>
-    </div>
+      {isProcessing ? 'Saving...' : hasImage ? 'Poster Saved' : 'Upload Poster'}
+    </button>
   );
 };
