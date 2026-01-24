@@ -5,7 +5,8 @@ import CastingRoom from './CastingRoom';
 import Archive from './Archive';
 import NowPlaying from './NowPlaying';
 import GameOutcome from './GameOutcome';
-import { Library } from 'lucide-react';
+import Scrapbooks from './Scrapbooks';
+import { Library, BookOpen } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
 import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
 
@@ -21,7 +22,7 @@ interface GameSelection {
 
 const Index = () => {
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'scrapbooks'>('dashboard');
   const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
   const [lastGameResult, setLastGameResult] = useState<GameResult | null>(null);
   const [introStory, setIntroStory] = useState<string | undefined>(undefined);
@@ -142,6 +143,8 @@ const Index = () => {
         return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
       case 'archive':
         return <Archive onBack={() => setCurrentPage('dashboard')} />;
+      case 'scrapbooks':
+        return <Scrapbooks onBack={() => setCurrentPage('dashboard')} />;
       default:
         return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
     }
@@ -172,15 +175,21 @@ const Index = () => {
             <span className="hidden sm:inline">FINAL GIRL™ SLASHER COMPANION • {time.toLocaleDateString()}</span>
           </div>
           
-          {/* Right: Collection + Time */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          {/* Right: Collection + Scrapbooks + Time */}
+          <div className="flex items-center gap-1 sm:gap-3">
             <button
               onClick={() => setCurrentPage('archive')}
-              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-secondary transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-2"
+              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-secondary transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
             >
               <Library className="w-3 h-3" />
-              <span className="hidden xs:inline">MY COLLECTION</span>
-              <span className="xs:hidden">FILMS</span>
+              <span className="hidden sm:inline">COLLECTION</span>
+            </button>
+            <button
+              onClick={() => setCurrentPage('scrapbooks')}
+              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
+            >
+              <BookOpen className="w-3 h-3" />
+              <span className="hidden sm:inline">SCRAPBOOKS</span>
             </button>
             <span className="font-vhs text-[10px] sm:text-xs text-secondary neon-text">
               {time.toLocaleTimeString('en-US', { hour12: false })}
