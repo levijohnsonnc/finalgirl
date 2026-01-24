@@ -960,10 +960,10 @@
   /* Scrapbook Container */
   .scrapbook-container {
     position: relative;
-    width: 90vw;
-    max-width: 900px;
-    height: 70vh;
-    max-height: 600px;
+    width: 95vw;
+    max-width: 1100px;
+    height: 85vh;
+    max-height: 750px;
     transform-style: preserve-3d;
   }
 
@@ -1118,7 +1118,7 @@
 
   .poster-display img {
     max-width: 100%;
-    max-height: calc(100% - 60px);
+    max-height: calc(100% - 40px);
     object-fit: contain;
     border: 4px solid hsl(30 20% 25%);
     box-shadow: 
@@ -1166,8 +1166,8 @@
   }
 
   .back-to-grid {
-    font-family: var(--font-vhs);
-    font-size: 11px;
+    font-family: var(--font-display);
+    font-size: 12px;
     color: hsl(30 30% 35%);
     margin-bottom: 8px;
     padding: 4px 8px;
@@ -1247,6 +1247,7 @@
     margin-top: 6px;
     text-align: center;
     color: hsl(30 20% 30%);
+    font-family: var(--font-display);
   }
 
   .scrapbook-scroll {
@@ -1277,8 +1278,8 @@
   }
 
   .story-date {
-    font-family: var(--font-vhs);
-    font-size: 10px;
+    font-family: var(--font-display);
+    font-size: 12px;
     text-align: center;
     color: hsl(30 15% 50%);
     margin-bottom: 12px;
@@ -1290,8 +1291,8 @@
   }
 
   .story-heading {
-    font-family: var(--font-horror);
-    font-size: 16px;
+    font-family: var(--font-display);
+    font-size: 18px;
     color: hsl(0 40% 35%);
     text-align: center;
     margin-bottom: 10px;
@@ -1307,9 +1308,9 @@
   }
 
   .story-text {
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    line-height: 1.6;
+    font-family: var(--font-display);
+    font-size: 13px;
+    line-height: 1.7;
     text-align: justify;
     color: hsl(30 15% 25%);
   }
@@ -1349,8 +1350,8 @@
   }
 
   .footer-detail {
-    font-family: var(--font-vhs);
-    font-size: 10px;
+    font-family: var(--font-display);
+    font-size: 11px;
     display: flex;
     gap: 8px;
   }
