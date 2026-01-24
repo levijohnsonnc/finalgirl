@@ -208,7 +208,7 @@ export const GameOutcomeForm = ({
         </div>
       </div>
 
-      {/* Section: AI Generation */}
+      {/* Section: AI Generation & Poster */}
       <div className="space-y-4">
         <h3 className="font-display text-sm tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-2">
           AI Generation
@@ -241,6 +241,11 @@ export const GameOutcomeForm = ({
               Poster Prompt
             </button>
           </PosterPromptModal>
+
+          <ImageUploadSlot
+            imageUrl={posterImageUrl}
+            onImageChange={setPosterImageUrl}
+          />
         </div>
 
         {/* Ending Narration Display */}
@@ -251,18 +256,6 @@ export const GameOutcomeForm = ({
             </p>
           </div>
         )}
-      </div>
-
-      {/* Section: Movie Poster */}
-      <div className="space-y-4">
-        <h3 className="font-display text-sm tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-2">
-          Movie Poster
-        </h3>
-        
-        <ImageUploadSlot
-          imageUrl={posterImageUrl}
-          onImageChange={setPosterImageUrl}
-        />
       </div>
 
       {/* Action Buttons */}

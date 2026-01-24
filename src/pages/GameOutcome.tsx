@@ -16,7 +16,7 @@ const GameOutcome = ({ result, introStory, onUpdate, onBack }: GameOutcomeProps)
       {/* Header */}
       <div className="text-center space-y-2 mb-8 sm:mb-10">
         <h1 
-          className={`font-display text-3xl sm:text-4xl md:text-5xl tracking-wider uppercase ${
+          className={`font-title text-4xl sm:text-5xl md:text-6xl tracking-[0.3em] uppercase ${
             isWin ? 'text-secondary neon-text' : 'text-primary blood-glow'
           }`}
         >
