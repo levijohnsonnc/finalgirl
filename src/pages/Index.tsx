@@ -16,6 +16,7 @@ interface GameSelection {
   setupScenario: string | null;
   startingEvent: string | null;
   filmId: string | null;
+  introStory?: string;
 }
 
 const Index = () => {
@@ -23,8 +24,9 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome'>('dashboard');
   const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
   const [lastGameResult, setLastGameResult] = useState<GameResult | null>(null);
+  const [introStory, setIntroStory] = useState<string | undefined>(undefined);
   const [time, setTime] = useState(new Date());
-  const { recordGame } = useGameHistory();
+  const { recordGame, updateGame } = useGameHistory();
 
   // Update time every second for VCR display
   useEffect(() => {
@@ -67,11 +69,14 @@ const Index = () => {
   const handleBackFromNowPlaying = () => {
     setGameSelection(null);
     setLastGameResult(null);
+    setIntroStory(undefined);
     setCurrentPage('dashboard');
   };
 
-  const handleGameEnd = (outcome: 'won' | 'lost') => {
+  const handleGameEnd = (outcome: 'won' | 'lost', story?: string) => {
     if (!gameSelection) return;
+    
+    setIntroStory(story);
     
     const result = recordGame({
       outcome,
@@ -80,15 +85,23 @@ const Index = () => {
       finalGirl: gameSelection.finalGirl,
       setupScenario: gameSelection.setupScenario,
       startingEvent: gameSelection.startingEvent,
+      introStory: story,
     });
     
     setLastGameResult(result);
     setCurrentPage('outcome');
   };
 
+  const handleUpdateGame = (updates: Partial<GameResult>) => {
+    if (lastGameResult) {
+      updateGame(lastGameResult.id, updates);
+    }
+  };
+
   const handlePlayAgain = () => {
     setGameSelection(null);
     setLastGameResult(null);
+    setIntroStory(undefined);
     setCurrentPage('dashboard');
   };
 
@@ -120,6 +133,8 @@ const Index = () => {
           return (
             <GameOutcome
               result={lastGameResult}
+              introStory={introStory}
+              onUpdate={handleUpdateGame}
               onBack={handlePlayAgain}
             />
           );

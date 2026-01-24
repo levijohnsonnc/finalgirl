@@ -57,7 +57,7 @@ interface NowPlayingProps {
   startingEvent: string | null;
   filmId: string | null;
   onBack: () => void;
-  onGameEnd: (outcome: 'won' | 'lost') => void;
+  onGameEnd: (outcome: 'won' | 'lost', story?: string) => void;
 }
 
 const NowPlaying = ({
@@ -332,7 +332,7 @@ const NowPlaying = ({
           {story && !isGenerating && !error && (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-6 sm:mt-8 px-2">
               <button
-                onClick={() => onGameEnd('won')}
+                onClick={() => onGameEnd('won', story || undefined)}
                 className="outcome-btn outcome-btn-won group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200"
               >
                 <span className="relative z-10 font-display text-xl sm:text-2xl tracking-[0.2em] uppercase text-secondary drop-shadow-lg">
@@ -341,7 +341,7 @@ const NowPlaying = ({
               </button>
               
               <button
-                onClick={() => onGameEnd('lost')}
+                onClick={() => onGameEnd('lost', story || undefined)}
                 className="outcome-btn outcome-btn-lost group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200"
               >
                 <span className="relative z-10 font-display text-xl sm:text-2xl tracking-[0.2em] uppercase text-primary drop-shadow-lg">
