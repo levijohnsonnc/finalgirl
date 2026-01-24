@@ -113,7 +113,9 @@ export const CastingSlot = ({
   const isLocation = type === 'location';
   
   return (
-    <div className="casting-slot flex flex-col items-center gap-3">
+    <div className={`casting-slot flex flex-col items-center gap-3 shrink min-w-0 max-w-full ${
+      isLocation ? 'w-[28.5rem] md:w-[63rem]' : 'w-60 sm:w-72 md:w-[21rem]'
+    }`}>
       {/* Label */}
       <span className="font-display text-xs text-muted-foreground tracking-[0.2em] uppercase">
         {SLOT_LABELS[type]}
@@ -122,11 +124,8 @@ export const CastingSlot = ({
       {/* Poster Card - different dimensions for location vs characters */}
       <div 
         className={`
-          poster-card relative rounded-sm overflow-hidden
-          ${isLocation 
-            ? 'w-[28.5rem] max-w-[calc(100vw-2rem)] aspect-[3/1] md:w-[63rem]' 
-            : 'w-60 max-w-[calc(100vw-2rem)] aspect-square sm:w-72 md:w-[21rem]'
-          }
+          poster-card relative rounded-sm overflow-hidden w-full
+          ${isLocation ? 'aspect-[3/1]' : 'aspect-square'}
           ${isEmpty ? 'poster-card-empty cursor-pointer hover:border-primary/50' : 'poster-card-filled'}
           ${isAnimating ? 'poster-card-shuffling' : ''}
         `}
