@@ -43,9 +43,38 @@ export const NarrationRequestSchema = z.object({
   text: z.string().min(10).max(10000)
 });
 
+// Schema for generate-ending endpoint
+export const EndingRequestSchema = z.object({
+  // Required fields
+  introStory: z.string().min(50).max(10000),
+  outcome: z.enum(['won', 'lost']),
+  killer: z.object({
+    name: z.string().min(1).max(100),
+    description: z.string().max(3000).optional()
+  }),
+  location: z.object({
+    name: z.string().min(1).max(100),
+    description: z.string().max(3000).optional()
+  }),
+  finalGirl: z.object({
+    name: z.string().min(1).max(100),
+    backstory: z.string().max(3000).optional()
+  }),
+  // Optional game stats
+  finalHorrorLevel: z.number().min(1).max(7).optional(),
+  weaponUsed: z.string().max(100).optional(),
+  finalGirlHealth: z.number().min(0).max(20).optional(),
+  killerHealth: z.number().min(0).max(20).optional(),
+  victimsSaved: z.number().min(0).max(50).optional(),
+  victimsKilled: z.number().min(0).max(50).optional(),
+  endingSubLocation: z.string().max(200).optional(),
+  gameHighlights: z.string().max(2000).optional()
+});
+
 export type StoryRequest = z.infer<typeof StoryRequestSchema>;
 export type ImageRequest = z.infer<typeof ImageRequestSchema>;
 export type NarrationRequest = z.infer<typeof NarrationRequestSchema>;
+export type EndingRequest = z.infer<typeof EndingRequestSchema>;
 
 export function validateRequest<T>(
   schema: z.ZodSchema<T>,

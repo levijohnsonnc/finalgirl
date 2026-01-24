@@ -3,6 +3,11 @@ import { Loader2, Sparkles, ImageIcon, Upload, X } from 'lucide-react';
 import { GameResult } from '@/hooks/useGameHistory';
 import { PosterPromptModal } from './PosterPromptModal';
 import { ImageUploadSlot } from './ImageUploadSlot';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
+import { getKillerDescription } from '@/data/killerDescriptions';
+import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
+import { getLocationDescription } from '@/data/locationDescriptions';
 
 interface GameOutcomeFormProps {
   result: GameResult;
@@ -33,12 +38,82 @@ export const GameOutcomeForm = ({
   const [isGeneratingEnding, setIsGeneratingEnding] = useState(false);
 
   const handleGenerateEnding = async () => {
+    if (!introStory) {
+      toast({
+        title: "Missing intro story",
+        description: "An intro story is required to generate the ending.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsGeneratingEnding(true);
-    // TODO: Implement LLM call for ending narration
-    setTimeout(() => {
+
+    try {
+      // Look up character descriptions
+      const killerDescription = getKillerDescription(result.killer);
+      const finalGirlBackstory = getFinalGirlDescription(result.finalGirl);
+      const locationDescription = getLocationDescription(result.location);
+
+      const payload = {
+        introStory,
+        outcome: result.outcome,
+        killer: {
+          name: result.killer,
+          description: killerDescription,
+        },
+        location: {
+          name: result.location,
+          description: locationDescription,
+        },
+        finalGirl: {
+          name: result.finalGirl,
+          backstory: finalGirlBackstory,
+        },
+        // Optional game stats
+        ...(finalHorrorLevel && { finalHorrorLevel }),
+        ...(weaponUsed && { weaponUsed }),
+        ...(finalGirlHealth !== undefined && { finalGirlHealth }),
+        ...(killerHealth !== undefined && { killerHealth }),
+        ...(victimsSaved !== undefined && { victimsSaved }),
+        ...(victimsKilled !== undefined && { victimsKilled }),
+        ...(endingSubLocation && { endingSubLocation }),
+        ...(gameHighlights && { gameHighlights }),
+      };
+
+      const { data, error } = await supabase.functions.invoke('generate-ending', {
+        body: payload,
+      });
+
+      if (error) {
+        console.error('Error generating ending:', error);
+        toast({
+          title: "Generation failed",
+          description: error.message || "Failed to generate ending. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.ending) {
+        setEndingNarration(data.ending);
+        // Persist to game result
+        onUpdate({ endingNarration: data.ending });
+        toast({
+          title: "Ending generated",
+          description: "Your story's conclusion has been written.",
+        });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsGeneratingEnding(false);
-      setEndingNarration('The ending narration will be generated here...');
-    }, 1500);
+    }
   };
 
   const handleSave = () => {
