@@ -35,22 +35,8 @@ const Scrapbooks = ({ onBack }: ScrapbooksProps) => {
         <span className="font-vhs text-sm">BACK TO DASHBOARD</span>
       </button>
 
-      {/* Page Header */}
-      <div className="text-center mb-8 sm:mb-12">
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-          <h1 className="font-display text-3xl sm:text-5xl text-foreground tracking-wide">
-            SCRAPBOOKS
-          </h1>
-          <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-        </div>
-        <p className="font-vhs text-xs sm:text-sm text-muted-foreground mt-2">
-          YOUR HORROR STORY COLLECTIONS
-        </p>
-      </div>
-
       {/* Scrapbook Covers */}
-      <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 px-4">
+      <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-20 px-4">
         {/* Final Girl Scrapbook */}
         <button
           onClick={() => handleOpenBook('finalGirl')}
@@ -63,13 +49,13 @@ const Scrapbooks = ({ onBack }: ScrapbooksProps) => {
             <img
               src={finalGirlCover}
               alt="Final Girl Scrapbook"
-              className="w-48 sm:w-64 md:w-72 h-auto drop-shadow-2xl"
+              className="w-64 sm:w-80 md:w-96 h-auto drop-shadow-2xl"
               style={{
                 filter: wonGames.length > 0 ? 'drop-shadow(0 0 30px rgba(255, 182, 193, 0.3))' : 'none'
               }}
             />
             {/* Story Count Badge */}
-            <div className="absolute -bottom-3 -right-3 bg-secondary text-secondary-foreground font-vhs text-xs px-3 py-1 rounded-full shadow-lg">
+            <div className="absolute -bottom-3 -right-3 bg-secondary text-secondary-foreground font-vhs text-xs sm:text-sm px-3 py-1.5 rounded-full shadow-lg">
               {wonGames.length} {wonGames.length === 1 ? 'STORY' : 'STORIES'}
             </div>
           </div>
@@ -92,13 +78,13 @@ const Scrapbooks = ({ onBack }: ScrapbooksProps) => {
             <img
               src={killerCover}
               alt="Killer Scrapbook"
-              className="w-48 sm:w-64 md:w-72 h-auto drop-shadow-2xl"
+              className="w-64 sm:w-80 md:w-96 h-auto drop-shadow-2xl"
               style={{
                 filter: lostGames.length > 0 ? 'drop-shadow(0 0 30px rgba(139, 0, 0, 0.4))' : 'none'
               }}
             />
             {/* Story Count Badge */}
-            <div className="absolute -bottom-3 -right-3 bg-primary text-primary-foreground font-vhs text-xs px-3 py-1 rounded-full shadow-lg">
+            <div className="absolute -bottom-3 -right-3 bg-primary text-primary-foreground font-vhs text-xs sm:text-sm px-3 py-1.5 rounded-full shadow-lg">
               {lostGames.length} {lostGames.length === 1 ? 'VICTIM' : 'VICTIMS'}
             </div>
           </div>
