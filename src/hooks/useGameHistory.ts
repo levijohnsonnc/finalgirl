@@ -9,6 +9,18 @@ export interface GameResult {
   finalGirl: string;
   setupScenario?: string | null;
   startingEvent?: string | null;
+  // Extended fields for game details
+  introStory?: string;
+  endingNarration?: string;
+  gameHighlights?: string;
+  finalHorrorLevel?: number; // 1-7
+  finalGirlHealth?: number;
+  killerHealth?: number;
+  weaponUsed?: string;
+  endingSubLocation?: string;
+  victimsSaved?: number;
+  victimsKilled?: number;
+  posterImageUrl?: string;
 }
 
 export interface GameStats {
@@ -33,6 +45,14 @@ export const useGameHistory = () => {
     
     setGameHistory(prev => [newResult, ...prev]);
     return newResult;
+  };
+
+  const updateGame = (id: string, updates: Partial<GameResult>) => {
+    setGameHistory(prev => 
+      prev.map(game => 
+        game.id === id ? { ...game, ...updates } : game
+      )
+    );
   };
 
   const getStats = (): GameStats => {
@@ -72,7 +92,7 @@ export const useGameHistory = () => {
       if (game.outcome === 'won') {
         byLocation[game.location].wins++;
       } else {
-        byLocation[game.location].losses++;
+        byLocation[game.killer].losses++;
       }
     });
 
@@ -94,6 +114,7 @@ export const useGameHistory = () => {
   return {
     gameHistory,
     recordGame,
+    updateGame,
     getStats,
     clearHistory,
   };
