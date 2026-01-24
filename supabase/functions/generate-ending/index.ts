@@ -1,0 +1,183 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { corsHeaders } from "../_shared/auth.ts";
+import { validateRequest, EndingRequestSchema } from "../_shared/validation.ts";
+
+serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const body = await req.json();
+    
+    // Validate request
+    const validation = validateRequest(EndingRequestSchema, body);
+    if (!validation.success) {
+      return validation.error;
+    }
+
+    const {
+      introStory,
+      outcome,
+      killer,
+      location,
+      finalGirl,
+      finalHorrorLevel,
+      weaponUsed,
+      finalGirlHealth,
+      killerHealth,
+      victimsSaved,
+      victimsKilled,
+      endingSubLocation,
+      gameHighlights,
+    } = validation.data;
+
+    // Build the system prompt with refined instructions
+    const systemPrompt = `You are a skilled horror storyteller writing the ending scene for a completed game of Final Girl (solo slasher survival).
+
+Your task: Write a gripping, cinematic closing scene in 3–4 paragraphs (250–450 words) that feels like the final pages of a classic 1980s paperback horror: slow dread, sharp sensory details, uneasy normality trying (and failing) to come back.
+
+Style constraints:
+- Do not imitate or reference any real author.
+- PG-13 only: no explicit gore or sexual content. Imply danger; keep violence off-camera or described obliquely.
+- Maintain continuity with the cold open's details, tone, and any named elements. Don't rewrite the opening—continue from it.
+- Don't immediately resolve the opening's cliffhanger. Build your own tension before the resolution.
+- Avoid clichés (e.g., "dark and stormy night," "too quiet," etc.).
+- Use occasional dark wit only if it fits the moment.
+- Keep the ending decisive based on the outcome, but leave a final sting (a last image, a discovery, a call, a sound, a surviving rumor) that makes the reader go: "It's not over, is it?"
+
+Outcome logic:
+- If WON: the Final Girl survives and the Killer is stopped/killed. Don't make it feel easy. Relief should taste temporary.
+- If LOST: the Killer prevails. The Final Girl's end should be implied with restraint; focus on aftermath, witnesses, unanswered questions, or a chilling continuation.
+
+How to use optional details (only if present):
+- Final Horror Level (1-7 scale, 7 = maximum terror) influences intensity and atmosphere.
+- Weapon Used should appear naturally (object, weight, smell, memory).
+- Final Girl Health (0-20 scale) / Killer Health (0-20 scale) should color the physicality and pace (limping, trembling hands, ragged breath, stubborn endurance).
+- Victims Saved / Killed should shape emotional aftermath (guilt, gratitude, emptiness, survivors' statements).
+- Ending Location anchors the final scene.
+- Game Highlights are "key beats"—pick the 2-3 most dramatic and weave them in as quick flashes, consequences, or callbacks.
+
+Output Rules:
+Return ONLY the story text. No headings, bullet points, or meta commentary.`;
+
+    // Build character context strings
+    const killerContext = killer.description 
+      ? `Killer: ${killer.name}\nDescription: ${killer.description}`
+      : `Killer: ${killer.name}`;
+    
+    const finalGirlContext = finalGirl.backstory
+      ? `Final Girl: ${finalGirl.name}\nBackstory: ${finalGirl.backstory}`
+      : `Final Girl: ${finalGirl.name}`;
+    
+    const locationContext = location.description
+      ? `Location: ${location.name}\nDescription: ${location.description}`
+      : `Location: ${location.name}`;
+
+    // Build optional stats section
+    const optionalStats = [
+      finalHorrorLevel !== undefined ? `Final Horror Level: ${finalHorrorLevel}/7` : null,
+      weaponUsed ? `Weapon Used: ${weaponUsed}` : null,
+      finalGirlHealth !== undefined ? `Final Girl Health: ${finalGirlHealth}/20` : null,
+      killerHealth !== undefined ? `Killer Health: ${killerHealth}/20` : null,
+      victimsSaved !== undefined ? `Victims Saved: ${victimsSaved}` : null,
+      victimsKilled !== undefined ? `Victims Killed: ${victimsKilled}` : null,
+      endingSubLocation ? `Ending Location: ${endingSubLocation}` : null,
+      gameHighlights ? `Game Highlights: ${gameHighlights}` : null,
+    ].filter(Boolean).join('\n');
+
+    const userPrompt = `Initial Opening Story:
+${introStory}
+
+${killerContext}
+
+${finalGirlContext}
+
+${locationContext}
+
+Outcome: ${outcome.toUpperCase()}
+
+${optionalStats ? `Optional Details:\n${optionalStats}` : ''}`.trim();
+
+    console.log("Generating ending narration for:", {
+      killer: killer.name,
+      finalGirl: finalGirl.name,
+      location: location.name,
+      outcome,
+    });
+
+    // Call Lovable AI Gateway
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY not configured");
+      return new Response(
+        JSON.stringify({ error: "AI service not configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+      }),
+    });
+
+    if (!aiResponse.ok) {
+      const errorText = await aiResponse.text();
+      console.error("AI Gateway error:", aiResponse.status, errorText);
+      
+      if (aiResponse.status === 429) {
+        return new Response(
+          JSON.stringify({ error: "Rate limit exceeded. Please wait a moment before generating again." }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
+      if (aiResponse.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "AI credits depleted. Please add credits to continue." }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
+      return new Response(
+        JSON.stringify({ error: "Failed to generate ending" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const aiData = await aiResponse.json();
+    const ending = aiData.choices?.[0]?.message?.content;
+
+    if (!ending) {
+      console.error("No content in AI response:", aiData);
+      return new Response(
+        JSON.stringify({ error: "Failed to generate ending content" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log("Successfully generated ending narration");
+
+    return new Response(
+      JSON.stringify({ ending }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Error in generate-ending:", error);
+    return new Response(
+      JSON.stringify({ error: "Internal server error" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+});
