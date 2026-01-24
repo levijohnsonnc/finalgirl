@@ -318,6 +318,7 @@ export const GameOutcomeForm = ({
           <ImageUploadSlot
             imageUrl={posterImageUrl}
             onImageChange={setPosterImageUrl}
+            gameId={result.id}
           />
         </div>
 
