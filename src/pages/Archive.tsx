@@ -1,7 +1,20 @@
-import { ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useGameHistory } from '@/hooks/useGameHistory';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ArchiveProps {
   onBack?: () => void;
@@ -9,6 +22,8 @@ interface ArchiveProps {
 
 const Archive = ({ onBack }: ArchiveProps) => {
   const [ownedFilms, setOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
+  const { clearHistory } = useGameHistory();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Group films by season - no memoization needed, FEATURE_FILMS is static
   const filmsBySeason = FEATURE_FILMS.reduce((acc, film) => {
@@ -23,6 +38,11 @@ const Archive = ({ onBack }: ArchiveProps) => {
         ? prev.filter(id => id !== filmId)
         : [...prev, filmId]
     );
+  };
+
+  const handleResetPlays = () => {
+    clearHistory();
+    setIsDialogOpen(false);
   };
 
   // Seasons that are in development (show "In Development" badge)
@@ -64,6 +84,41 @@ const Archive = ({ onBack }: ArchiveProps) => {
         </p>
       </div>
 
+      {/* Reset Plays Button - Right aligned */}
+      <div className="flex justify-end px-2">
+        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <AlertDialogTrigger asChild>
+            <button className="flex items-center gap-1.5 font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-primary transition-colors border border-muted-foreground/30 hover:border-primary/50 px-2 sm:px-3 py-1.5 rounded bg-muted/20 hover:bg-primary/10">
+              <Trash2 className="w-3 h-3" />
+              <span>RESET MY PLAYS</span>
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-background border-primary/30 max-w-md">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="font-display text-xl text-primary">
+                Reset All Gameplay Data?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="font-vhs text-sm text-muted-foreground">
+                This will permanently erase all of your game history, including wins, losses, stories, and posters. Your collection settings will remain unchanged.
+                <span className="block mt-2 text-primary/80 font-bold">
+                  This action cannot be undone.
+                </span>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-2 sm:gap-0">
+              <AlertDialogCancel className="font-vhs text-xs bg-muted/50 border-muted-foreground/30 hover:bg-muted hover:text-foreground">
+                BACK OUT
+              </AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleResetPlays}
+                className="font-vhs text-xs bg-primary/20 border border-primary/50 text-primary hover:bg-primary/30"
+              >
+                CONFIRM RESET
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
 
       {/* Feature Films by Season */}
       {Object.entries(filmsBySeason).map(([season, films]) => {
