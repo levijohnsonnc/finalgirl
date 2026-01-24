@@ -4,8 +4,10 @@ import { AppHeader } from '@/components/AppHeader';
 import CastingRoom from './CastingRoom';
 import Archive from './Archive';
 import NowPlaying from './NowPlaying';
+import GameOutcome from './GameOutcome';
 import { Library } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
+import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
 
 interface GameSelection {
   killer: string;
@@ -18,9 +20,11 @@ interface GameSelection {
 
 const Index = () => {
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome'>('dashboard');
   const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
+  const [lastGameResult, setLastGameResult] = useState<GameResult | null>(null);
   const [time, setTime] = useState(new Date());
+  const { recordGame } = useGameHistory();
 
   // Update time every second for VCR display
   useEffect(() => {
@@ -41,6 +45,7 @@ const Index = () => {
   const handleNavigateHome = () => {
     setHasStarted(false);
     setGameSelection(null);
+    setLastGameResult(null);
     setCurrentPage('dashboard');
   };
 
@@ -61,6 +66,29 @@ const Index = () => {
 
   const handleBackFromNowPlaying = () => {
     setGameSelection(null);
+    setLastGameResult(null);
+    setCurrentPage('dashboard');
+  };
+
+  const handleGameEnd = (outcome: 'won' | 'lost') => {
+    if (!gameSelection) return;
+    
+    const result = recordGame({
+      outcome,
+      killer: gameSelection.killer,
+      location: gameSelection.location,
+      finalGirl: gameSelection.finalGirl,
+      setupScenario: gameSelection.setupScenario,
+      startingEvent: gameSelection.startingEvent,
+    });
+    
+    setLastGameResult(result);
+    setCurrentPage('outcome');
+  };
+
+  const handlePlayAgain = () => {
+    setGameSelection(null);
+    setLastGameResult(null);
     setCurrentPage('dashboard');
   };
 
@@ -82,6 +110,17 @@ const Index = () => {
               startingEvent={gameSelection.startingEvent}
               filmId={gameSelection.filmId}
               onBack={handleBackFromNowPlaying}
+              onGameEnd={handleGameEnd}
+            />
+          );
+        }
+        return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
+      case 'outcome':
+        if (lastGameResult) {
+          return (
+            <GameOutcome
+              result={lastGameResult}
+              onBack={handlePlayAgain}
             />
           );
         }
