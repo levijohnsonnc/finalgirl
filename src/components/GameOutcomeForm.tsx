@@ -9,7 +9,6 @@ interface GameOutcomeFormProps {
   introStory?: string;
   onUpdate: (updates: Partial<GameResult>) => void;
   onSaveAndExit: () => void;
-  onPlayAgain: () => void;
 }
 
 export const GameOutcomeForm = ({
@@ -17,7 +16,6 @@ export const GameOutcomeForm = ({
   introStory,
   onUpdate,
   onSaveAndExit,
-  onPlayAgain,
 }: GameOutcomeFormProps) => {
   const isWin = result.outcome === 'won';
   
@@ -60,16 +58,16 @@ export const GameOutcomeForm = ({
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6 sm:space-y-8">
+    <div className="w-full max-w-2xl mx-auto space-y-4 sm:space-y-5">
       {/* Section: Combat Stats */}
-      <div className="space-y-4">
-        <h3 className="font-display text-sm tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-2">
+      <div className="space-y-3">
+        <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
           Combat Stats
         </h3>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Final Horror Level */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="font-vhs text-xs text-muted-foreground">
               Final Horror Level (1-7)
             </label>
@@ -89,7 +87,7 @@ export const GameOutcomeForm = ({
           </div>
 
           {/* Weapon Used */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="font-vhs text-xs text-muted-foreground">
               Weapon Used
             </label>
@@ -103,7 +101,7 @@ export const GameOutcomeForm = ({
           </div>
 
           {/* Final Girl Health */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="font-vhs text-xs text-muted-foreground">
               Final Girl Health
             </label>
@@ -118,7 +116,7 @@ export const GameOutcomeForm = ({
           </div>
 
           {/* Killer Health */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="font-vhs text-xs text-muted-foreground">
               Killer Health
             </label>
@@ -135,14 +133,14 @@ export const GameOutcomeForm = ({
       </div>
 
       {/* Section: Rescue Stats */}
-      <div className="space-y-4">
-        <h3 className="font-display text-sm tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-2">
+      <div className="space-y-3">
+        <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
           Rescue Stats
         </h3>
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {/* Victims Saved */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="font-vhs text-xs text-muted-foreground">
               Victims Saved
             </label>
@@ -157,7 +155,7 @@ export const GameOutcomeForm = ({
           </div>
 
           {/* Victims Killed */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="font-vhs text-xs text-muted-foreground">
               Victims Killed
             </label>
@@ -174,13 +172,13 @@ export const GameOutcomeForm = ({
       </div>
 
       {/* Section: Narrative */}
-      <div className="space-y-4">
-        <h3 className="font-display text-sm tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-2">
+      <div className="space-y-3">
+        <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
           Narrative
         </h3>
         
         {/* Ending Location */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <label className="font-vhs text-xs text-muted-foreground">
             Ending Location
           </label>
@@ -194,7 +192,7 @@ export const GameOutcomeForm = ({
         </div>
 
         {/* Game Highlights */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <label className="font-vhs text-xs text-muted-foreground">
             Game Highlights
           </label>
@@ -209,8 +207,8 @@ export const GameOutcomeForm = ({
       </div>
 
       {/* Section: AI Generation & Poster */}
-      <div className="space-y-4">
-        <h3 className="font-display text-sm tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-2">
+      <div className="space-y-3">
+        <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
           AI Generation
         </h3>
         
@@ -258,22 +256,15 @@ export const GameOutcomeForm = ({
         )}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border/30">
+      {/* Action Button */}
+      <div className="flex justify-center pt-4 border-t border-border/30">
         <button
           onClick={handleSave}
-          className="outcome-btn outcome-btn-won group relative flex-1 h-14 overflow-hidden rounded-sm transition-all duration-200"
+          className="outcome-btn outcome-btn-won group relative w-full max-w-xs h-12 overflow-hidden rounded-sm transition-all duration-200"
         >
-          <span className="relative z-10 font-display text-lg tracking-[0.15em] uppercase text-secondary drop-shadow-lg">
+          <span className="relative z-10 font-display text-base tracking-[0.15em] uppercase text-secondary drop-shadow-lg">
             Save & Exit
           </span>
-        </button>
-        
-        <button
-          onClick={onPlayAgain}
-          className="vcr-tape-button flex items-center justify-center px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]"
-        >
-          Play Again
         </button>
       </div>
     </div>
