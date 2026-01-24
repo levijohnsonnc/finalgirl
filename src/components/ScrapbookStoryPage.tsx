@@ -8,10 +8,26 @@ interface ScrapbookStoryPageProps {
 
 export const ScrapbookStoryPage = ({ game, type }: ScrapbookStoryPageProps) => {
   const formatStoryText = (text: string) => {
-    // Convert **text** to bold and *text* to italic
-    return text
+    // Split into paragraphs based on double newlines or sentence patterns
+    let formatted = text
+      // Convert **text** to bold and *text* to italic
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    
+    // Split into paragraphs - look for double newlines or split every 3-4 sentences
+    const paragraphs = formatted.split(/\n\n+/).filter(p => p.trim());
+    
+    if (paragraphs.length === 1) {
+      // If no natural paragraph breaks, create them every 3-4 sentences
+      const sentences = formatted.match(/[^.!?]+[.!?]+/g) || [formatted];
+      const chunks: string[] = [];
+      for (let i = 0; i < sentences.length; i += 4) {
+        chunks.push(sentences.slice(i, i + 4).join(''));
+      }
+      return chunks.map(p => `<p>${p.trim()}</p>`).join('');
+    }
+    
+    return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
   };
 
   return (
