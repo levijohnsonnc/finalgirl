@@ -124,8 +124,8 @@ export const CastingSlot = ({
         className={`
           poster-card relative rounded-sm overflow-hidden
           ${isLocation 
-            ? 'w-full max-w-[19rem] h-48 md:max-w-[22.5rem] md:h-56' 
-            : 'w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56'
+            ? 'w-full max-w-[28.5rem] h-72 md:max-w-[33.75rem] md:h-[21rem]' 
+            : 'w-60 h-60 sm:w-72 sm:h-72 md:w-[21rem] md:h-[21rem]'
           }
           ${isEmpty ? 'poster-card-empty cursor-pointer hover:border-primary/50' : 'poster-card-filled'}
           ${isAnimating ? 'poster-card-shuffling' : ''}
