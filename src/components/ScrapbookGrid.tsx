@@ -24,7 +24,7 @@ export const ScrapbookGrid = ({ games, selectedGameId, onSelectGame, type }: Scr
 
   return (
     <div className="h-full flex flex-col">
-      <h3 className="font-horror text-xl sm:text-2xl text-center mb-4 text-foreground/80">
+      <h3 className="font-horror text-xl sm:text-2xl text-center mb-4 text-amber-900/90">
         {type === 'finalGirl' ? 'Survivors' : 'Victims'}
       </h3>
       
