@@ -39,7 +39,6 @@ const GameOutcome = ({ result, introStory, onUpdate, onBack }: GameOutcomeProps)
         introStory={introStory}
         onUpdate={onUpdate}
         onSaveAndExit={onBack}
-        onPlayAgain={onBack}
       />
     </div>
   );
