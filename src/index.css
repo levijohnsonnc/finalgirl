@@ -954,3 +954,446 @@
       0 2px 8px rgba(0,0,0,0.5);
   }
 }
+
+/* ========== SCRAPBOOK STYLES ========== */
+@layer utilities {
+  /* Scrapbook Container */
+  .scrapbook-container {
+    position: relative;
+    width: 90vw;
+    max-width: 900px;
+    height: 70vh;
+    max-height: 600px;
+    transform-style: preserve-3d;
+  }
+
+  @media (max-width: 640px) {
+    .scrapbook-container {
+      width: 95vw;
+      height: 80vh;
+      max-height: none;
+    }
+  }
+
+  /* Book wrapper */
+  .scrapbook-book {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+  }
+
+  /* Front Cover - The flipping part */
+  .scrapbook-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    border-radius: 4px 12px 12px 4px;
+    overflow: hidden;
+    box-shadow: 
+      5px 5px 20px rgba(0,0,0,0.5),
+      inset -5px 0 15px rgba(0,0,0,0.3);
+    backface-visibility: hidden;
+  }
+
+  .scrapbook-cover.cover-open {
+    transform: rotateY(-160deg);
+  }
+
+  /* Back of cover (visible when flipped) */
+  .scrapbook-cover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      hsl(30 15% 18%) 0%,
+      hsl(30 12% 22%) 10%,
+      hsl(30 10% 20%) 100%
+    );
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+  }
+
+  /* Inside Pages Container */
+  .scrapbook-pages {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    opacity: 0;
+    transition: opacity 0.4s ease 0.4s;
+    pointer-events: none;
+  }
+
+  .scrapbook-pages.pages-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Individual Page */
+  .scrapbook-page {
+    width: 50%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scrapbook-page-left {
+    /* Left page - aged paper with spine shadow */
+    background: linear-gradient(90deg,
+      hsl(40 25% 88%) 0%,
+      hsl(40 20% 92%) 15%,
+      hsl(40 18% 90%) 100%
+    );
+    border-radius: 4px 0 0 4px;
+    box-shadow: 
+      inset -15px 0 30px rgba(0,0,0,0.15),
+      inset 0 0 40px rgba(139, 69, 19, 0.08);
+  }
+
+  .scrapbook-page-right {
+    /* Right page - cleaner paper */
+    background: linear-gradient(90deg,
+      hsl(40 18% 90%) 0%,
+      hsl(40 20% 92%) 85%,
+      hsl(40 25% 88%) 100%
+    );
+    border-radius: 0 4px 4px 0;
+    box-shadow: 
+      inset 10px 0 25px rgba(0,0,0,0.1),
+      inset 0 0 40px rgba(139, 69, 19, 0.06);
+  }
+
+  .page-content {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (max-width: 640px) {
+    .page-content {
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+    }
+  }
+
+  /* Back Cover (static) */
+  .scrapbook-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, hsl(20 15% 12%) 0%, hsl(20 10% 8%) 100%);
+    border-radius: 4px;
+    z-index: -1;
+  }
+
+  /* ===== Poster Display ===== */
+  .poster-display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .poster-display img {
+    max-width: 100%;
+    max-height: calc(100% - 60px);
+    object-fit: contain;
+    border: 4px solid hsl(30 20% 25%);
+    box-shadow: 
+      0 4px 20px rgba(0,0,0,0.3),
+      inset 0 0 0 1px rgba(255,255,255,0.1);
+  }
+
+  .poster-info {
+    margin-top: 12px;
+    text-align: center;
+    color: hsl(30 15% 25%);
+  }
+
+  .no-poster {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: 
+      repeating-linear-gradient(
+        45deg,
+        hsl(40 15% 85%),
+        hsl(40 15% 85%) 10px,
+        hsl(40 12% 82%) 10px,
+        hsl(40 12% 82%) 20px
+      );
+    border: 2px dashed hsl(30 20% 60%);
+    border-radius: 4px;
+  }
+
+  .empty-page {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: hsl(30 15% 40%);
+  }
+
+  /* ===== Story Display ===== */
+  .story-display {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .back-to-grid {
+    font-family: var(--font-vhs);
+    font-size: 11px;
+    color: hsl(30 30% 35%);
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    background: hsl(40 15% 85%);
+    border: 1px solid hsl(30 20% 70%);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .back-to-grid:hover {
+    background: hsl(40 20% 80%);
+    color: hsl(30 40% 25%);
+  }
+
+  /* ===== Thumbnail Grid ===== */
+  .scrapbook-thumbnail {
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    padding-bottom: 24px;
+    background: hsl(45 30% 95%);
+    border: none;
+    box-shadow: 
+      2px 3px 8px rgba(0,0,0,0.25),
+      0 0 0 1px rgba(0,0,0,0.05);
+    transform: rotate(var(--rotation, 0deg));
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .scrapbook-thumbnail:hover {
+    transform: rotate(0deg) scale(1.08);
+    box-shadow: 
+      4px 6px 16px rgba(0,0,0,0.35),
+      0 0 0 2px hsl(var(--primary) / 0.5);
+    z-index: 10;
+  }
+
+  .scrapbook-thumbnail.thumbnail-selected {
+    box-shadow: 
+      4px 6px 16px rgba(0,0,0,0.35),
+      0 0 0 3px hsl(var(--primary));
+  }
+
+  .thumbnail-frame {
+    width: 100%;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    background: hsl(40 10% 90%);
+  }
+
+  .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thumbnail-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: 
+      repeating-linear-gradient(
+        45deg,
+        hsl(40 10% 88%),
+        hsl(40 10% 88%) 5px,
+        hsl(40 8% 85%) 5px,
+        hsl(40 8% 85%) 10px
+      );
+  }
+
+  .thumbnail-label {
+    margin-top: 6px;
+    text-align: center;
+    color: hsl(30 20% 30%);
+  }
+
+  .scrapbook-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(30 20% 60%) hsl(40 15% 85%);
+  }
+
+  .scrapbook-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrapbook-scroll::-webkit-scrollbar-track {
+    background: hsl(40 15% 85%);
+    border-radius: 3px;
+  }
+
+  .scrapbook-scroll::-webkit-scrollbar-thumb {
+    background: hsl(30 20% 60%);
+    border-radius: 3px;
+  }
+
+  /* ===== Story Page Content ===== */
+  .story-page-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+    color: hsl(30 20% 20%);
+  }
+
+  .story-date {
+    font-family: var(--font-vhs);
+    font-size: 10px;
+    text-align: center;
+    color: hsl(30 15% 50%);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .story-section {
+    margin-bottom: 20px;
+  }
+
+  .story-heading {
+    font-family: var(--font-horror);
+    font-size: 16px;
+    color: hsl(0 40% 35%);
+    text-align: center;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .heading-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(30 30% 60%), transparent);
+  }
+
+  .story-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: justify;
+    color: hsl(30 15% 25%);
+  }
+
+  @media (min-width: 640px) {
+    .story-text {
+      font-size: 13px;
+    }
+    .story-heading {
+      font-size: 18px;
+    }
+  }
+
+  .story-text strong {
+    font-weight: 700;
+    color: hsl(30 25% 20%);
+  }
+
+  .story-text em {
+    font-style: italic;
+    color: hsl(0 30% 35%);
+  }
+
+  .story-missing {
+    font-style: italic;
+    color: hsl(30 15% 50%);
+    text-align: center;
+  }
+
+  .story-footer {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid hsl(30 20% 75%);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .footer-detail {
+    font-family: var(--font-vhs);
+    font-size: 10px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .detail-label {
+    color: hsl(30 15% 50%);
+    min-width: 60px;
+  }
+
+  .detail-value {
+    color: hsl(30 25% 30%);
+  }
+
+  /* ===== Theme Variations ===== */
+  .scrapbook-theme-survivor .scrapbook-page-left,
+  .scrapbook-theme-survivor .scrapbook-page-right {
+    /* Slightly warmer, hopeful tones */
+    background: linear-gradient(90deg,
+      hsl(45 30% 90%) 0%,
+      hsl(45 25% 93%) 50%,
+      hsl(45 30% 90%) 100%
+    );
+  }
+
+  .scrapbook-theme-survivor .story-heading {
+    color: hsl(340 35% 45%);
+  }
+
+  .scrapbook-theme-killer .scrapbook-page-left,
+  .scrapbook-theme-killer .scrapbook-page-right {
+    /* Darker, more ominous paper */
+    background: linear-gradient(90deg,
+      hsl(20 15% 85%) 0%,
+      hsl(20 12% 88%) 50%,
+      hsl(20 15% 85%) 100%
+    );
+  }
+
+  .scrapbook-theme-killer .story-heading {
+    color: hsl(0 50% 35%);
+  }
+
+  .scrapbook-theme-killer .poster-display img {
+    border-color: hsl(0 20% 20%);
+  }
+}
