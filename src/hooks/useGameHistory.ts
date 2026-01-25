@@ -108,6 +108,10 @@ export const useGameHistory = () => {
     };
   };
 
+  const deleteGame = (id: string) => {
+    setGameHistory(prev => prev.filter(game => game.id !== id));
+  };
+
   const clearHistory = () => {
     setGameHistory([]);
   };
@@ -116,6 +120,7 @@ export const useGameHistory = () => {
     gameHistory,
     recordGame,
     updateGame,
+    deleteGame,
     getStats,
     clearHistory,
   };

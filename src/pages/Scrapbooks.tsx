@@ -5,7 +5,7 @@ import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';
 
 const Scrapbooks = () => {
-  const { gameHistory } = useGameHistory();
+  const { gameHistory, updateGame, deleteGame } = useGameHistory();
   const [openBook, setOpenBook] = useState<'finalGirl' | 'killer' | null>(null);
 
   const wonGames = gameHistory.filter(g => g.outcome === 'won');
@@ -17,6 +17,10 @@ const Scrapbooks = () => {
 
   const handleCloseBook = () => {
     setOpenBook(null);
+  };
+
+  const handleDeleteGame = (id: string) => {
+    deleteGame(id);
   };
 
   return (
@@ -88,6 +92,8 @@ const Scrapbooks = () => {
           type={openBook}
           games={openBook === 'finalGirl' ? wonGames : lostGames}
           onClose={handleCloseBook}
+          onUpdateGame={updateGame}
+          onDeleteGame={handleDeleteGame}
         />
       )}
     </div>
