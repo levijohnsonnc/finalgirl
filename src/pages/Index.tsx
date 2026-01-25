@@ -78,7 +78,7 @@ const Index = () => {
     setCurrentPage('dashboard');
   };
 
-  const handleGameEnd = (outcome: 'won' | 'lost', story?: string) => {
+  const handleGameEnd = (outcome: 'won' | 'lost', story?: string, sceneImageUrl?: string) => {
     if (!gameSelection) return;
     
     setIntroStory(story);
@@ -91,6 +91,7 @@ const Index = () => {
       setupScenario: gameSelection.setupScenario,
       startingEvent: gameSelection.startingEvent,
       introStory: story,
+      sceneImageUrl,
     });
     
     setLastGameResult(result);
