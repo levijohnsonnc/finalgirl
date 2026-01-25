@@ -7,7 +7,7 @@ import { BreakdownTabs } from '@/components/stats/BreakdownTabs';
 import { HighlightsReel } from '@/components/stats/HighlightsReel';
 import { TrophyGrid } from '@/components/stats/TrophyGrid';
 import { PlayerArchetypeBadge } from '@/components/stats/PlayerArchetype';
-import { BarChart3, Film } from 'lucide-react';
+import { ArrowLeft, Film } from 'lucide-react';
 
 interface StatsProps {
   onBack: () => void;
@@ -22,48 +22,51 @@ const Stats = ({ onBack }: StatsProps) => {
 
   return (
     <div className="stats-page">
+      {/* Back Button */}
+      <button
+        onClick={onBack}
+        className="group flex items-center gap-2 font-vhs text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
+      >
+        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+        BACK TO DASHBOARD
+      </button>
+
       {/* Header */}
       <div className="stats-header">
-        <div className="flex items-center gap-3">
-          <BarChart3 className="w-6 h-6 text-neon-cyan" />
-          <h1 className="font-title text-2xl sm:text-3xl tracking-wider">STATS</h1>
+        <div className="flex flex-col gap-2">
+          <h1 className="font-display text-4xl sm:text-5xl text-primary blood-glow tracking-wider">
+            STATS
+          </h1>
+          <p className="font-vhs text-xs text-muted-foreground tracking-wider">
+            YOUR SURVIVAL RECORD
+          </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Time Filter */}
-          <div className="time-filter">
-            <button
-              onClick={() => setTimeFilter('all')}
-              className={`filter-chip ${timeFilter === 'all' ? 'filter-chip-active' : ''}`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setTimeFilter('30')}
-              className={`filter-chip ${timeFilter === '30' ? 'filter-chip-active' : ''}`}
-            >
-              30
-            </button>
-            <button
-              onClick={() => setTimeFilter('10')}
-              className={`filter-chip ${timeFilter === '10' ? 'filter-chip-active' : ''}`}
-            >
-              10
-            </button>
-          </div>
-
-          {/* Player Archetype (desktop) */}
-          <div className="hidden lg:block">
-            <PlayerArchetypeBadge 
-              archetype={stats.playerArchetype} 
-              reason={stats.archetypeReason}
-            />
-          </div>
+        {/* Time Filter */}
+        <div className="time-filter">
+          <button
+            onClick={() => setTimeFilter('all')}
+            className={`filter-chip ${timeFilter === 'all' ? 'filter-chip-active' : ''}`}
+          >
+            ALL
+          </button>
+          <button
+            onClick={() => setTimeFilter('30')}
+            className={`filter-chip ${timeFilter === '30' ? 'filter-chip-active' : ''}`}
+          >
+            LAST 30
+          </button>
+          <button
+            onClick={() => setTimeFilter('10')}
+            className={`filter-chip ${timeFilter === '10' ? 'filter-chip-active' : ''}`}
+          >
+            LAST 10
+          </button>
         </div>
       </div>
 
-      {/* Player Archetype (mobile) */}
-      <div className="lg:hidden mb-6">
+      {/* Player Archetype - Full Width */}
+      <div className="mb-8">
         <PlayerArchetypeBadge 
           archetype={stats.playerArchetype} 
           reason={stats.archetypeReason}
@@ -101,7 +104,7 @@ const Stats = ({ onBack }: StatsProps) => {
           <HighlightsReel stats={stats} />
 
           {/* Trophies */}
-          <TrophyGrid gameHistory={gameHistory} />
+          <TrophyGrid />
         </div>
       )}
     </div>
