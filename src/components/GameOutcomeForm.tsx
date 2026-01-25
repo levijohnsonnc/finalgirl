@@ -195,10 +195,12 @@ export const GameOutcomeForm = ({
       <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 border-t border-border/30">
         <button
           onClick={onDiscard}
-          className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.1em] uppercase transition-all duration-300 min-h-[44px] text-muted-foreground hover:text-foreground"
+          className="outcome-btn outcome-btn-lost group relative w-full sm:w-auto min-w-[200px] h-12 overflow-hidden rounded-sm transition-all duration-200 flex items-center justify-center gap-2"
         >
-          <X className="w-4 h-4" />
-          Discard
+          <X className="relative z-10 w-4 h-4 text-muted-foreground" />
+          <span className="relative z-10 font-display text-base tracking-[0.15em] uppercase text-muted-foreground drop-shadow-lg">
+            Discard
+          </span>
         </button>
         
         <button
