@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ScrapbookPolaroidProps {
   sceneImageUrl: string;
@@ -27,8 +28,8 @@ export const ScrapbookPolaroid = ({ sceneImageUrl }: ScrapbookPolaroidProps) => 
         </div>
       )}
 
-      {/* Lightbox - transparent backdrop, floating polaroid */}
-      {showLightbox && (
+      {/* Lightbox - rendered via portal to escape stacking context */}
+      {showLightbox && createPortal(
         <div 
           className="polaroid-lightbox-transparent"
           onClick={() => setShowLightbox(false)}
@@ -47,7 +48,8 @@ export const ScrapbookPolaroid = ({ sceneImageUrl }: ScrapbookPolaroidProps) => 
               RECOVERED EVIDENCE
             </span>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
