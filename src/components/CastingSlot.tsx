@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 import shuffleSound from '@/assets/sounds/card-shuffle.mp3';
 import { LoreInfoModal } from './LoreInfoModal';
@@ -71,13 +71,26 @@ export const CastingSlot = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [shuffleSequence, setShuffleSequence] = useState<string[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const preloadedRef = useRef<boolean>(false);
+
+  // Preload all option images on mount for smooth animation
+  useEffect(() => {
+    if (preloadedRef.current || options.length === 0) return;
+    preloadedRef.current = true;
+    
+    options.forEach(option => {
+      const imgSrc = getImageForValue(type, option);
+      if (imgSrc) {
+        const img = new Image();
+        img.src = imgSrc;
+      }
+    });
+  }, [options, type]);
 
   // Build shuffle sequence when shuffling starts
   useEffect(() => {
     if (isShuffling && options.length > 0 && value) {
-      setIsAnimating(true);
-      
-      // Play shuffle sound
+      // Play shuffle sound immediately
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -86,14 +99,22 @@ export const CastingSlot = ({
       audioRef.current.volume = 0.4;
       audioRef.current.play().catch(() => {});
 
-      // Build sequence: 12 random options ending with the selected value
-      const sequence: string[] = [];
-      for (let i = 0; i < 12; i++) {
-        const randomIdx = Math.floor(Math.random() * options.length);
-        sequence.push(options[randomIdx]);
-      }
-      sequence.push(value); // Final item is the selected value
-      setShuffleSequence(sequence);
+      // Use requestAnimationFrame to ensure DOM is ready before starting animation
+      requestAnimationFrame(() => {
+        // Build sequence: 12 random options ending with the selected value
+        const sequence: string[] = [];
+        for (let i = 0; i < 12; i++) {
+          const randomIdx = Math.floor(Math.random() * options.length);
+          sequence.push(options[randomIdx]);
+        }
+        sequence.push(value); // Final item is the selected value
+        setShuffleSequence(sequence);
+        
+        // Set animating state after sequence is ready
+        requestAnimationFrame(() => {
+          setIsAnimating(true);
+        });
+      });
     } else if (!isShuffling) {
       setDisplayValue(value);
     }
@@ -131,9 +152,10 @@ export const CastingSlot = ({
         `}
         onClick={isEmpty ? onChoose : undefined}
       >
-        {/* Scrolling reel during animation */}
+        {/* Scrolling reel during animation - key forces remount for fresh animation */}
         {isAnimating && shuffleSequence.length > 0 ? (
           <div 
+            key={shuffleKey}
             className="slot-reel absolute inset-0"
             style={{ '--item-count': shuffleSequence.length } as React.CSSProperties}
             onAnimationEnd={handleAnimationEnd}
@@ -147,6 +169,7 @@ export const CastingSlot = ({
                   src={img}
                   alt={option}
                   className={`w-full h-full object-cover flex-shrink-0 ${positionClass}`}
+                  loading="eager"
                 />
               ) : (
                 <div key={idx} className="w-full h-full mystery-static flex-shrink-0" />
