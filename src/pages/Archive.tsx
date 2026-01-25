@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -16,11 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-interface ArchiveProps {
-  onBack?: () => void;
-}
-
-const Archive = ({ onBack }: ArchiveProps) => {
+const Archive = () => {
   const [ownedFilms, setOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
   const { clearHistory } = useGameHistory();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -63,16 +59,6 @@ const Archive = ({ onBack }: ArchiveProps) => {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* Back Button - positioned to align with content */}
-      {onBack && (
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 font-vhs text-xs sm:text-sm text-primary hover:text-primary/80 transition-colors mt-2 sm:mt-4 mb-4 sm:mb-8 min-h-[44px] px-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="underline underline-offset-2">Back</span>
-        </button>
-      )}
 
       {/* Header */}
       <div className="text-center space-y-1 sm:space-y-2">

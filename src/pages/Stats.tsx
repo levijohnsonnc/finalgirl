@@ -7,29 +7,17 @@ import { BreakdownTabs } from '@/components/stats/BreakdownTabs';
 import { HighlightsReel } from '@/components/stats/HighlightsReel';
 import { TrophyGrid } from '@/components/stats/TrophyGrid';
 import { PlayerArchetypeBadge } from '@/components/stats/PlayerArchetype';
-import { ArrowLeft, Film } from 'lucide-react';
-
-interface StatsProps {
-  onBack: () => void;
-}
+import { Film } from 'lucide-react';
 
 type TimeFilter = 'all' | '30' | '10';
 
-const Stats = ({ onBack }: StatsProps) => {
+const Stats = () => {
   const { gameHistory } = useGameHistory();
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const stats = useGameStats(gameHistory, timeFilter);
 
   return (
     <div className="stats-page">
-      {/* Back Button */}
-      <button
-        onClick={onBack}
-        className="group flex items-center gap-2 font-vhs text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-        BACK TO DASHBOARD
-      </button>
 
       {/* Header */}
       <div className="stats-header">
@@ -82,12 +70,6 @@ const Stats = ({ onBack }: StatsProps) => {
             Play your first game and record the outcome to start tracking your stats. 
             Your journey as a Final Girl awaits!
           </p>
-          <button
-            onClick={onBack}
-            className="vcr-button mt-6"
-          >
-            Start Playing
-          </button>
         </div>
       ) : (
         <div className="stats-content">

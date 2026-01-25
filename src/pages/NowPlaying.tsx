@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
@@ -240,15 +240,6 @@ const NowPlaying = ({
       
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center py-6 sm:py-8 pt-16 sm:pt-24 px-3 sm:px-4">
-        {/* Back Button */}
-        <button
-          onClick={onBack}
-          className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center gap-2 font-vhs text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] px-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="hidden sm:inline">Back to Casting</span>
-          <span className="sm:hidden">Back</span>
-        </button>
 
         {/* Title */}
         <h1 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground tracking-[0.1em] sm:tracking-[0.15em] uppercase mb-1 sm:mb-2 text-center">

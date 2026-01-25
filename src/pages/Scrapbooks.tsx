@@ -1,15 +1,10 @@
 import { useState } from 'react';
-import { ArrowLeft, BookOpen } from 'lucide-react';
 import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
 import { ScrapbookBook } from '@/components/ScrapbookBook';
 import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';
 
-interface ScrapbooksProps {
-  onBack: () => void;
-}
-
-const Scrapbooks = ({ onBack }: ScrapbooksProps) => {
+const Scrapbooks = () => {
   const { gameHistory } = useGameHistory();
   const [openBook, setOpenBook] = useState<'finalGirl' | 'killer' | null>(null);
 
@@ -26,15 +21,6 @@ const Scrapbooks = ({ onBack }: ScrapbooksProps) => {
 
   return (
     <div className="min-h-[calc(100vh-12rem)] flex flex-col">
-      {/* Back Button */}
-      <button
-        onClick={onBack}
-        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 sm:mb-8 group min-h-[44px]"
-      >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <span className="font-vhs text-sm">BACK TO DASHBOARD</span>
-      </button>
-
       {/* Scrapbook Covers */}
       <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-20 px-4">
         {/* Final Girl Scrapbook */}

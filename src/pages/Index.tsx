@@ -8,7 +8,7 @@ import GameOutcome from './GameOutcome';
 import TheEnd, { EndingFormData } from './TheEnd';
 import Scrapbooks from './Scrapbooks';
 import Stats from './Stats';
-import { Library, BookOpen, BarChart3 } from 'lucide-react';
+import { Library, BookOpen, BarChart3, ArrowLeft } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
 import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
 import { NewsTicker } from '@/components/NewsTicker';
@@ -195,11 +195,11 @@ const Index = () => {
         }
         return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
       case 'archive':
-        return <Archive onBack={() => setCurrentPage('dashboard')} />;
+        return <Archive />;
       case 'scrapbooks':
-        return <Scrapbooks onBack={() => setCurrentPage('dashboard')} />;
+        return <Scrapbooks />;
       case 'stats':
-        return <Stats onBack={() => setCurrentPage('dashboard')} />;
+        return <Stats />;
       default:
         return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
     }
@@ -221,11 +221,21 @@ const Index = () => {
       {/* VHS Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur border-t border-border py-2 z-50 safe-area-bottom">
         <div className="container mx-auto px-3 sm:px-4 flex items-center justify-between">
-          {/* Left: Play indicator - hidden on mobile */}
-          <div className="hidden sm:flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="font-vhs text-xs text-muted-foreground">PLAY ▶</span>
-          </div>
+          {/* Left: Back button or Play indicator */}
+          {currentPage !== 'dashboard' ? (
+            <button
+              onClick={() => setCurrentPage('dashboard')}
+              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
+            >
+              <ArrowLeft className="w-3 h-3" />
+              <span className="hidden sm:inline">BACK</span>
+            </button>
+          ) : (
+            <div className="hidden sm:flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="font-vhs text-xs text-muted-foreground">PLAY ▶</span>
+            </div>
+          )}
           
           {/* Center: Title - simplified on mobile */}
           <div className="font-vhs text-[10px] sm:text-xs text-muted-foreground truncate">
