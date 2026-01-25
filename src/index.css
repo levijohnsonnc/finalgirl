@@ -1557,6 +1557,205 @@
   .scrapbook-theme-killer .poster-display img {
     border-color: hsl(0 20% 20%);
   }
+
+  /* ===== Clickable Poster Upload ===== */
+  .no-poster.clickable-poster {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-direction: column;
+    border: 2px dashed hsl(30 20% 60%);
+  }
+
+  .no-poster.clickable-poster:hover {
+    background: repeating-linear-gradient(
+      45deg,
+      hsl(40 20% 82%),
+      hsl(40 20% 82%) 10px,
+      hsl(40 18% 78%) 10px,
+      hsl(40 18% 78%) 20px
+    );
+    border-color: hsl(30 30% 50%);
+  }
+
+  .no-poster.clickable-poster:disabled {
+    cursor: wait;
+  }
+
+  /* ===== Delete Entry Button ===== */
+  .delete-entry-btn {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: hsl(0 30% 45%);
+    padding: 4px 8px;
+    background: hsl(40 15% 85%);
+    border: 1px solid hsl(0 20% 70%);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .delete-entry-btn:hover {
+    background: hsl(0 25% 85%);
+    color: hsl(0 50% 35%);
+    border-color: hsl(0 30% 60%);
+  }
+
+  /* ===== Polaroid Scene Image ===== */
+  .scrapbook-polaroid {
+    position: absolute;
+    right: -30px;
+    top: 33%;
+    width: 90px;
+    z-index: 30;
+    transform: rotate(3deg);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .scrapbook-polaroid:hover {
+    transform: rotate(0deg) translateX(-10px) scale(1.08);
+  }
+
+  .polaroid-clip {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 10px;
+    background: linear-gradient(180deg, hsl(0 0% 70%) 0%, hsl(0 0% 55%) 50%, hsl(0 0% 65%) 100%);
+    border-radius: 2px 2px 1px 1px;
+    box-shadow: 
+      0 2px 3px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.4);
+    z-index: 2;
+  }
+
+  .polaroid-clip::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    right: 3px;
+    height: 2px;
+    background: hsl(0 0% 45%);
+    border-radius: 1px;
+  }
+
+  .polaroid-frame {
+    background: hsl(45 30% 95%);
+    padding: 5px 5px 18px 5px;
+    box-shadow: 
+      0 4px 12px rgba(0,0,0,0.35),
+      0 1px 3px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  .polaroid-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+  }
+
+  .polaroid-caption {
+    font-family: var(--font-display);
+    font-size: 8px;
+    text-align: center;
+    color: hsl(30 20% 40%);
+    letter-spacing: 0.15em;
+    margin-top: 5px;
+    display: block;
+  }
+
+  /* Hide polaroid on mobile - margin doesn't exist */
+  @media (max-width: 768px) {
+    .scrapbook-polaroid {
+      display: none;
+    }
+  }
+
+  /* ===== Polaroid Lightbox ===== */
+  .polaroid-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fade-in 0.2s ease;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: hsl(0 0% 60%);
+    transition: color 0.2s ease;
+    padding: 8px;
+  }
+
+  .lightbox-close:hover {
+    color: hsl(0 0% 90%);
+  }
+
+  .lightbox-image {
+    max-width: 90%;
+    max-height: 70vh;
+    object-fit: contain;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+
+  .lightbox-caption {
+    margin-top: 16px;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* ===== Delete Confirm Modal Styling ===== */
+.delete-confirm-modal {
+  background: linear-gradient(135deg, hsl(40 20% 90%) 0%, hsl(35 15% 85%) 100%) !important;
+  border: 2px solid hsl(30 25% 70%) !important;
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.3) !important;
+}
+
+.delete-confirm-modal [data-slot="alert-dialog-title"] {
+  color: hsl(0 50% 35%);
+}
+
+.delete-confirm-modal [data-slot="alert-dialog-description"] {
+  color: hsl(30 20% 30%);
+}
+
+.delete-modal-cancel {
+  font-family: var(--font-display) !important;
+  background: hsl(40 15% 85%) !important;
+  border: 1px solid hsl(30 20% 70%) !important;
+  color: hsl(30 30% 35%) !important;
+}
+
+.delete-modal-cancel:hover {
+  background: hsl(40 20% 80%) !important;
+}
+
+.delete-modal-confirm {
+  font-family: var(--font-display) !important;
+  background: hsl(0 45% 40%) !important;
+  border: 1px solid hsl(0 40% 30%) !important;
+  color: hsl(0 0% 100%) !important;
+}
+
+.delete-modal-confirm:hover {
+  background: hsl(0 50% 35%) !important;
 }
 
 /* =====================================================
