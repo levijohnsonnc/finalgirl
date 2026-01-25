@@ -1549,8 +1549,9 @@
 }
 
 .filter-chip {
-  @apply px-3 py-1.5 rounded-md font-vhs text-xs text-muted-foreground 
-    hover:text-foreground hover:bg-muted/50 transition-all min-h-[32px];
+  @apply px-3 py-1.5 rounded-md font-vhs text-[10px] uppercase tracking-wider
+    text-muted-foreground hover:text-foreground hover:bg-muted/50 
+    transition-all min-h-[32px];
 }
 
 .filter-chip-active {
@@ -1567,7 +1568,8 @@
 
 /* Record Jacket */
 .record-jacket {
-  @apply p-4 sm:p-6 rounded-xl bg-background/40 backdrop-blur border border-border
+  @apply p-4 sm:p-6 rounded-xl bg-background/40 backdrop-blur 
+    border-t-2 border-t-primary/40 border border-border
     shadow-[inset_0_1px_0_hsl(var(--foreground)/0.05),0_4px_20px_hsl(var(--background)/0.5)];
 }
 
@@ -1589,7 +1591,7 @@
 
 /* Section Titles */
 .section-title {
-  @apply font-title text-lg sm:text-xl tracking-wide mb-4 text-foreground/90;
+  @apply font-display text-lg sm:text-xl tracking-wide mb-4 text-foreground/90;
 }
 
 /* Trends Section */
@@ -1761,56 +1763,14 @@
   @apply p-4 sm:p-6 rounded-xl bg-background/40 backdrop-blur border border-border;
 }
 
-.trophy-grid {
-  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3;
-}
-
-.trophy-badge {
-  @apply flex flex-col items-center justify-center p-4 rounded-lg 
-    border min-h-[100px] transition-all duration-300 cursor-help;
-}
-
-.trophy-earned {
-  @apply bg-vhs-yellow/10 border-vhs-yellow/30 
-    shadow-[0_0_15px_hsl(var(--vhs-yellow)/0.1)]
-    hover:shadow-[0_0_20px_hsl(var(--vhs-yellow)/0.2)];
-}
-
-.trophy-locked {
-  @apply bg-background/30 border-border/30 opacity-50;
-}
-
-.trophy-icon {
-  @apply mb-2;
-}
-
-.trophy-earned .trophy-icon {
-  @apply text-vhs-yellow;
-}
-
-.trophy-locked .trophy-icon {
-  @apply text-muted-foreground/50;
-}
-
-.trophy-name {
-  @apply font-vhs text-[9px] sm:text-[10px] uppercase tracking-wider text-center;
-}
-
-.trophy-earned .trophy-name {
-  @apply text-vhs-yellow;
-}
-
-.trophy-locked .trophy-name {
-  @apply text-muted-foreground/50;
-}
-
-.trophy-count {
-  @apply font-vhs text-[10px] text-vhs-yellow/70 mt-1;
+.trophy-coming-soon {
+  @apply flex flex-col items-center justify-center py-12 
+    border border-dashed border-border/50 rounded-lg bg-background/20;
 }
 
 /* Player Archetype */
 .archetype-badge {
-  @apply flex items-center gap-3 px-4 py-3 rounded-lg border backdrop-blur;
+  @apply px-5 py-4 rounded-lg border backdrop-blur;
 }
 
 .archetype-protector {
@@ -1836,18 +1796,14 @@
   @apply bg-muted/20 border-border/50;
 }
 
-.archetype-icon {
-  @apply flex-shrink-0;
-}
-
 .archetype-content {
-  @apply flex flex-col;
+  @apply flex flex-col gap-0.5;
 }
 
 .archetype-name {
-  @apply font-title text-sm sm:text-base tracking-wide;
+  @apply font-display text-lg sm:text-xl tracking-wide;
 }
 
 .archetype-reason {
-  @apply font-vhs text-[10px] text-muted-foreground;
+  @apply font-vhs text-[10px] sm:text-xs text-muted-foreground tracking-wider;
 }
