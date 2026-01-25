@@ -1537,7 +1537,7 @@
    ===================================================== */
 
 .stats-page {
-  @apply max-w-6xl mx-auto;
+  @apply max-w-6xl mx-auto pt-8 sm:pt-12;
 }
 
 .stats-header {
