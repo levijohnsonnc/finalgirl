@@ -5,10 +5,10 @@ export const NewsTicker = () => {
   const tickerContent = [...TICKER_HEADLINES, ...TICKER_HEADLINES];
   
   return (
-    <div className="fixed bottom-[48px] left-0 right-0 z-40 bg-black/90 border-t border-primary/30 overflow-hidden safe-area-bottom">
+    <div className="fixed bottom-12 sm:bottom-10 left-0 right-0 z-40 bg-black/95 border-t border-b border-primary/30 overflow-hidden">
       <div className="relative h-7 sm:h-8 flex items-center">
         {/* Breaking news badge */}
-        <div className="absolute left-0 z-10 h-full flex items-center px-2 sm:px-3 bg-gradient-to-r from-black via-black to-transparent">
+        <div className="absolute left-0 z-10 h-full flex items-center px-2 sm:px-3 bg-gradient-to-r from-black via-black to-transparent pr-8">
           <span className="font-vhs text-[10px] sm:text-xs text-primary uppercase tracking-wider blood-glow animate-pulse">
             ⚠ ALERT ⚠
           </span>
