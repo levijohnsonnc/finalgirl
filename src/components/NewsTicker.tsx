@@ -1,8 +1,22 @@
+import { useMemo } from 'react';
 import { TICKER_HEADLINES } from '@/data/tickerHeadlines';
 
+// Fisher-Yates shuffle
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 export const NewsTicker = () => {
-  // Duplicate content for seamless infinite loop
-  const tickerContent = [...TICKER_HEADLINES, ...TICKER_HEADLINES];
+  // Shuffle headlines once on mount, then duplicate for seamless loop
+  const tickerContent = useMemo(() => {
+    const shuffled = shuffleArray(TICKER_HEADLINES);
+    return [...shuffled, ...shuffled];
+  }, []);
   
   return (
     <div className="fixed bottom-12 sm:bottom-10 left-0 right-0 z-40 bg-black/95 border-t border-b border-primary/30 overflow-hidden">
