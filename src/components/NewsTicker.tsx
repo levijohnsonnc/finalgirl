@@ -19,7 +19,7 @@ export const NewsTicker = () => {
   }, []);
   
   return (
-    <div className="fixed bottom-12 sm:bottom-10 left-0 right-0 z-40 bg-black/95 border-t border-b border-primary/30 overflow-hidden">
+    <div className="fixed bottom-16 sm:bottom-14 left-0 right-0 z-40 bg-black/95 border-t border-b border-primary/30 overflow-hidden">
       <div className="relative h-7 sm:h-8 flex items-center">
         {/* Breaking news badge */}
         <div className="absolute left-0 z-10 h-full flex items-center px-2 sm:px-3 bg-gradient-to-r from-black via-black to-transparent pr-8">
