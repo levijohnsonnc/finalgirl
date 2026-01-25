@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
 import projectorSound from '@/assets/sounds/projector-start.mp3';
 import { ImagePromptModal } from '@/components/ImagePromptModal';
+import { ImageUploadSlot } from '@/components/ImageUploadSlot';
 
 // Helper to render markdown-style text formatting
 const renderFormattedText = (text: string) => {
@@ -57,7 +58,7 @@ interface NowPlayingProps {
   startingEvent: string | null;
   filmId: string | null;
   onBack: () => void;
-  onGameEnd: (outcome: 'won' | 'lost', story?: string) => void;
+  onGameEnd: (outcome: 'won' | 'lost', story?: string, sceneImageUrl?: string) => void;
 }
 
 const NowPlaying = ({
@@ -75,6 +76,7 @@ const NowPlaying = ({
   const [error, setError] = useState<string | null>(null);
   const [isNarrating, setIsNarrating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [sceneImageUrl, setSceneImageUrl] = useState<string>('');
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Auto-generate story on mount
@@ -280,11 +282,17 @@ const NowPlaying = ({
                   Image Prompt
                 </button>
               </ImagePromptModal>
+              
+              <ImageUploadSlot
+                imageUrl={sceneImageUrl}
+                onImageChange={setSceneImageUrl}
+              />
             </div>
           )}
           
-          {/* Story Text */}
-          <div className="w-full px-1 sm:px-0">
+          {/* Story + Image Container */}
+          <div className={`w-full px-1 sm:px-0 ${sceneImageUrl ? 'grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4 lg:gap-6' : ''}`}>
+            {/* Story Text */}
             <div className="scenario-description p-4 sm:p-6 rounded-sm">
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center py-8 sm:py-12 gap-4">
@@ -317,13 +325,28 @@ const NowPlaying = ({
                 </div>
               )}
             </div>
+            
+            {/* Scene Image - Shows when uploaded */}
+            {sceneImageUrl && (
+              <div className="relative aspect-[3/4] w-full max-w-[300px] mx-auto lg:mx-0 rounded-sm overflow-hidden border-2 border-border/50 shadow-lg">
+                <img
+                  src={sceneImageUrl}
+                  alt="Scene still"
+                  className="w-full h-full object-cover"
+                />
+                {/* Film grain overlay on image */}
+                <div className="film-grain absolute inset-0 pointer-events-none opacity-[0.15]" />
+                {/* Subtle vignette on image */}
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+              </div>
+            )}
           </div>
 
           {/* Won/Lost Buttons - Show when story is loaded */}
           {story && !isGenerating && !error && (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-6 sm:mt-8 px-2">
               <button
-                onClick={() => onGameEnd('won', story || undefined)}
+                onClick={() => onGameEnd('won', story || undefined, sceneImageUrl || undefined)}
                 className="outcome-btn outcome-btn-won group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200"
               >
                 <span className="relative z-10 font-display text-xl sm:text-2xl tracking-[0.2em] uppercase text-secondary drop-shadow-lg">
@@ -332,7 +355,7 @@ const NowPlaying = ({
               </button>
               
               <button
-                onClick={() => onGameEnd('lost', story || undefined)}
+                onClick={() => onGameEnd('lost', story || undefined, sceneImageUrl || undefined)}
                 className="outcome-btn outcome-btn-lost group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200"
               >
                 <span className="relative z-10 font-display text-xl sm:text-2xl tracking-[0.2em] uppercase text-primary drop-shadow-lg">

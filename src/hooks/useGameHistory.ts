@@ -21,6 +21,7 @@ export interface GameResult {
   victimsSaved?: number;
   victimsKilled?: number;
   posterImageUrl?: string;
+  sceneImageUrl?: string;
 }
 
 export interface GameStats {
