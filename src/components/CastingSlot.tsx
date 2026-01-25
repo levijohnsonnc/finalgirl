@@ -212,21 +212,29 @@ export const CastingSlot = ({
         )}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-3 mt-1">
+      {/* Action Buttons - 3D Pressable Style */}
+      <div className="flex gap-4 mt-2">
         <button
           onClick={onShuffle}
           disabled={isAnimating || options.length === 0}
-          className="group min-h-[44px] disabled:opacity-50 transition-transform hover:scale-105 active:scale-95"
+          className="group min-h-[44px] disabled:opacity-50 transition-all duration-150 
+            hover:translate-y-[-2px] hover:brightness-110 
+            active:translate-y-[3px] active:brightness-90
+            drop-shadow-[0_6px_0_rgba(0,0,0,0.5)] hover:drop-shadow-[0_8px_0_rgba(0,0,0,0.4)]
+            active:drop-shadow-[0_2px_0_rgba(0,0,0,0.6)]"
         >
-          <img src={shuffleButton} alt="Shuffle" className="h-11 sm:h-[3.3rem] w-auto object-contain" />
+          <img src={shuffleButton} alt="Shuffle" className="h-12 sm:h-14 w-auto object-contain" />
         </button>
         <button
           onClick={onChoose}
           disabled={options.length === 0}
-          className="group min-h-[44px] disabled:opacity-50 transition-transform hover:scale-105 active:scale-95"
+          className="group min-h-[44px] disabled:opacity-50 transition-all duration-150 
+            hover:translate-y-[-2px] hover:brightness-110 
+            active:translate-y-[3px] active:brightness-90
+            drop-shadow-[0_6px_0_rgba(0,0,0,0.5)] hover:drop-shadow-[0_8px_0_rgba(0,0,0,0.4)]
+            active:drop-shadow-[0_2px_0_rgba(0,0,0,0.6)]"
         >
-          <img src={chooseButton} alt="Choose" className="h-11 sm:h-[3.3rem] w-auto object-contain" />
+          <img src={chooseButton} alt="Choose" className="h-12 sm:h-14 w-auto object-contain" />
         </button>
       </div>
     </div>
