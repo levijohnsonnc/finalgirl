@@ -3,6 +3,28 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Bebas+Neue&family=Creepster&display=swap');
+
+/* ========== NEWS TICKER ANIMATION ========== */
+/* Placed outside @layer to prevent Tailwind JIT purging */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.news-ticker {
+  animation: ticker-scroll 120s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.news-ticker:hover {
+  animation-play-state: paused;
+}
 /* Roslindale font imported via index.html for main titles */
 
 @layer base {
@@ -556,26 +578,6 @@
       rgba(0,0,0,0.3) 100%
     );
     mix-blend-mode: multiply;
-  }
-
-  /* ========== NEWS TICKER ANIMATION ========== */
-  
-  @keyframes ticker-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
-  .news-ticker {
-    animation: ticker-scroll 120s linear infinite;
-    will-change: transform;
-  }
-
-  .news-ticker:hover {
-    animation-play-state: paused;
   }
 
   /* ========== SLOT MACHINE REEL ANIMATION ========== */
