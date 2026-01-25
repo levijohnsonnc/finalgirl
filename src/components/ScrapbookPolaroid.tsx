@@ -26,7 +26,7 @@ export const ScrapbookPolaroid = ({ sceneImageUrl }: ScrapbookPolaroidProps) => 
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox - shows as enlarged polaroid */}
       {showLightbox && (
         <div 
           className="polaroid-lightbox"
@@ -38,15 +38,21 @@ export const ScrapbookPolaroid = ({ sceneImageUrl }: ScrapbookPolaroidProps) => 
           >
             <X className="w-6 h-6" />
           </button>
-          <img
-            src={sceneImageUrl}
-            alt="Scene evidence - full view"
-            className="lightbox-image"
+          
+          {/* Polaroid frame in lightbox */}
+          <div 
+            className="lightbox-polaroid-frame"
             onClick={(e) => e.stopPropagation()}
-          />
-          <span className="lightbox-caption font-display text-sm tracking-widest text-foreground/70">
-            RECOVERED EVIDENCE
-          </span>
+          >
+            <img
+              src={sceneImageUrl}
+              alt="Scene evidence - full view"
+              className="lightbox-image"
+            />
+            <span className="lightbox-caption">
+              RECOVERED EVIDENCE
+            </span>
+          </div>
         </div>
       )}
     </>
