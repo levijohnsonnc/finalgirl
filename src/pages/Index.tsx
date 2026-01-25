@@ -124,7 +124,12 @@ const Index = () => {
         posterImageUrl,
       });
     }
-    handlePlayAgain();
+    // Navigate to scrapbooks after saving
+    setGameSelection(null);
+    setLastGameResult(null);
+    setIntroStory(undefined);
+    setEndingFormData(null);
+    setCurrentPage('scrapbooks');
   };
 
   const handleDiscardEnding = () => {

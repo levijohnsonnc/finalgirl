@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ImageIcon, Volume2, VolumeX, Loader2, Upload } from 'lucide-react';
+import { ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
@@ -256,15 +256,6 @@ const TheEnd = ({
       
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center py-6 sm:py-8 pt-16 sm:pt-24 px-3 sm:px-4">
-        {/* Back Button */}
-        <button
-          onClick={onDiscard}
-          className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center gap-2 font-vhs text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] px-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="hidden sm:inline">Discard</span>
-          <span className="sm:hidden">Back</span>
-        </button>
 
         {/* Title */}
         <h1 
@@ -356,9 +347,17 @@ const TheEnd = ({
             </div>
           </div>
 
-          {/* Save Button - Show when story is loaded */}
+          {/* Action Buttons - Show when story is loaded */}
           {endingStory && !isGenerating && !error && (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-6 sm:mt-8 px-2">
+              <button
+                onClick={onDiscard}
+                className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200`}
+              >
+                <span className={`relative z-10 font-display text-xl sm:text-2xl tracking-[0.2em] uppercase text-muted-foreground drop-shadow-lg`}>
+                  DISCARD
+                </span>
+              </button>
               <button
                 onClick={handleSave}
                 className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200`}
