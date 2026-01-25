@@ -142,7 +142,7 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange, gameId }: ImageUpload
       ) : (
         <Upload className="w-4 h-4" />
       )}
-      {isProcessing ? 'Uploading...' : hasImage ? 'Poster Saved' : 'Upload Poster'}
+      {isProcessing ? 'Uploading...' : hasImage ? 'Still Saved' : 'Upload Movie Still'}
     </button>
   );
 };
