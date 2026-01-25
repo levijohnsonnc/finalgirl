@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { ChevronDown } from 'lucide-react';
-import diceIcon from '@/assets/icons/dice-icon.png';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 import shuffleSound from '@/assets/sounds/card-shuffle.mp3';
 import { LoreInfoModal } from './LoreInfoModal';
+import shuffleButton from '@/assets/buttons/shuffle-button.png';
+import chooseButton from '@/assets/buttons/choose-button.png';
 
 interface CastingSlotProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -190,22 +190,20 @@ export const CastingSlot = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2 mt-1">
+      <div className="flex gap-3 mt-1">
         <button
           onClick={onShuffle}
           disabled={isAnimating || options.length === 0}
-          className="slot-action-btn group pl-1 pr-3 sm:pr-4 py-2 min-h-[44px] flex items-center gap-1 font-display text-xs sm:text-sm uppercase tracking-wider text-foreground disabled:opacity-50"
+          className="group min-h-[44px] disabled:opacity-50 transition-transform hover:scale-105 active:scale-95"
         >
-          <img src={diceIcon} alt="Shuffle" className="w-10 h-10 sm:w-12 sm:h-12 -my-3 object-contain" />
-          Shuffle
+          <img src={shuffleButton} alt="Shuffle" className="h-10 sm:h-12 w-auto object-contain" />
         </button>
         <button
           onClick={onChoose}
           disabled={options.length === 0}
-          className="slot-action-btn group px-3 sm:px-4 py-2 min-h-[44px] flex items-center gap-2 font-display text-xs sm:text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground disabled:opacity-50"
+          className="group min-h-[44px] disabled:opacity-50 transition-transform hover:scale-105 active:scale-95"
         >
-          <ChevronDown className="w-3.5 h-3.5 transition-colors group-hover:text-primary" />
-          Choose
+          <img src={chooseButton} alt="Choose" className="h-10 sm:h-12 w-auto object-contain" />
         </button>
       </div>
     </div>
