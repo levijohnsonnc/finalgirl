@@ -1,14 +1,15 @@
 import { GameResult } from '@/hooks/useGameHistory';
 import { GameOutcomeForm } from '@/components/GameOutcomeForm';
+import { EndingFormData } from './TheEnd';
 
 interface GameOutcomeProps {
   result: GameResult;
   introStory?: string;
-  onUpdate: (updates: Partial<GameResult>) => void;
-  onBack: () => void;
+  onContinue: (formData: EndingFormData) => void;
+  onDiscard: () => void;
 }
 
-const GameOutcome = ({ result, introStory, onUpdate, onBack }: GameOutcomeProps) => {
+const GameOutcome = ({ result, introStory, onContinue, onDiscard }: GameOutcomeProps) => {
   const isWin = result.outcome === 'won';
 
   return (
@@ -37,8 +38,8 @@ const GameOutcome = ({ result, introStory, onUpdate, onBack }: GameOutcomeProps)
       <GameOutcomeForm
         result={result}
         introStory={introStory}
-        onUpdate={onUpdate}
-        onSaveAndExit={onBack}
+        onContinue={onContinue}
+        onDiscard={onDiscard}
       />
     </div>
   );

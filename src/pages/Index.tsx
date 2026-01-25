@@ -5,6 +5,7 @@ import CastingRoom from './CastingRoom';
 import Archive from './Archive';
 import NowPlaying from './NowPlaying';
 import GameOutcome from './GameOutcome';
+import TheEnd, { EndingFormData } from './TheEnd';
 import Scrapbooks from './Scrapbooks';
 import Stats from './Stats';
 import { Library, BookOpen, BarChart3 } from 'lucide-react';
@@ -24,10 +25,11 @@ interface GameSelection {
 
 const Index = () => {
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'scrapbooks' | 'stats'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'ending' | 'scrapbooks' | 'stats'>('dashboard');
   const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
   const [lastGameResult, setLastGameResult] = useState<GameResult | null>(null);
   const [introStory, setIntroStory] = useState<string | undefined>(undefined);
+  const [endingFormData, setEndingFormData] = useState<EndingFormData | null>(null);
   const [time, setTime] = useState(new Date());
   const { recordGame, updateGame } = useGameHistory();
 
@@ -105,7 +107,30 @@ const Index = () => {
     setGameSelection(null);
     setLastGameResult(null);
     setIntroStory(undefined);
+    setEndingFormData(null);
     setCurrentPage('dashboard');
+  };
+
+  const handleContinueToEnding = (formData: EndingFormData) => {
+    setEndingFormData(formData);
+    setCurrentPage('ending');
+  };
+
+  const handleSaveEnding = (endingNarration: string, posterImageUrl?: string) => {
+    if (lastGameResult && endingFormData) {
+      updateGame(lastGameResult.id, {
+        ...endingFormData,
+        endingNarration,
+        posterImageUrl,
+      });
+    }
+    handlePlayAgain();
+  };
+
+  const handleDiscardEnding = () => {
+    // Go back to outcome form without saving the ending
+    setEndingFormData(null);
+    setCurrentPage('outcome');
   };
 
   // Show Marquee until user starts
@@ -145,8 +170,21 @@ const Index = () => {
             <GameOutcome
               result={lastGameResult}
               introStory={introStory}
-              onUpdate={handleUpdateGame}
-              onBack={handlePlayAgain}
+              onContinue={handleContinueToEnding}
+              onDiscard={handlePlayAgain}
+            />
+          );
+        }
+        return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
+      case 'ending':
+        if (lastGameResult && endingFormData) {
+          return (
+            <TheEnd
+              result={lastGameResult}
+              introStory={introStory}
+              formData={endingFormData}
+              onSave={handleSaveEnding}
+              onDiscard={handleDiscardEnding}
             />
           );
         }
