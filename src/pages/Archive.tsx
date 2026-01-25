@@ -48,9 +48,10 @@ const Archive = () => {
   const availableFilmIds = [
     // Season 1 - all available
     's1-camp-happy-trails', 's1-creech-manor', 's1-sacred-groves', 's1-carnival-of-blood', 's1-maple-lane',
-    // Season 2 - Into the Void, Madness in the Dark
+    // Season 2 - Into the Void, Madness in the Dark, Panic at Station 2891
     's2-into-the-void',
     's2-madness-in-dark',
+    's2-panic-station-2891',
     // Season 3 - The Killer from Tomorrow
     's3-killer-from-tomorrow',
     // Season 4 - A Rotten Harvest

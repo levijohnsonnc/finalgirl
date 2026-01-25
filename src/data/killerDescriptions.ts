@@ -62,13 +62,11 @@ The creature's head is elongated and faceless, featuring a prominent, jagged jaw
 
 The surface of its body appears wet and visceral, as if it has recently emerged from a cocoon or a bloody encounter. It is positioned in a dark, claustrophobic industrial tunnel with circular concrete walls and wet, reflective floors.`,
 
-  "The Organism": `A grotesque, biomutated abomination of unstable, shifting flesh standing in the midst of a violent Antarctic blizzard. The creature is massive and bloated, its body a chaotic fusion of multiple absorbed victims—limbs, faces, and organs protruding at unnatural angles from a swollen, translucent torso that pulses with sickly bioluminescent fluid.
+  "The Organism": `A grotesque, humanoid monstrosity standing roughly seven feet tall, with a massive, mutated physique that suggests a horrifying biological transformation. Its skin is a sickly, pale yellow-green, covered in weeping pustules, bulging cysts, and raw, red muscle tissue. The creature's most striking feature is a secondary, vertical maw splitting open its entire torso, lined with jagged, uneven teeth and filled with glistening, visceral gore.
 
-Its primary mass is a distended, bulbous form covered in patches of frozen skin, exposed muscle tissue, and clusters of tumorous growths that glow with an inner amber and red light. Thick, rope-like tendrils extend from its shoulders and back, whipping through the air like predatory appendages, some ending in partially formed hands or gnashing mouths.
+From its head and back, several slick, dark tentacles and fleshy, wing-like appendages protrude, writhing in the cold air. Its face is a distorted mask of agony, with wide, pale eyes and a jaw that has unhinged into a cluster of smaller, needle-like feelers. The creature wears the shredded, frozen remnants of dark blue trousers, indicating it may have once been human.
 
-The creature has no single head—instead, multiple half-formed faces emerge from various points on its body, their expressions frozen in silent screams. Some retain recognizable human features, twisted in agony, while others have mutated beyond recognition into eyeless, tooth-filled masses.
-
-Its lower body is a tangle of fused legs and bone spurs that drag through the snow, leaving a trail of black ichor. Snow and ice crust its surface, but the creature radiates enough unnatural heat that steam rises from its wounds. The overall impression is of a viral nightmare given physical form—a walking amalgamation of consumed hosts that continues to grow and adapt with each victim it absorbs.`
+The beast is hunched in a defensive yet aggressive stance amidst a blinding whiteout. Heavy snow cakes its malformed limbs and settles into the crevices of its mutated flesh. The background is a stark, desaturated blizzard that obscures all landmarks, creating an isolated and suffocating atmosphere. The overall aesthetic is one of high-concept body horror, blending visceral biological detail with a cold, unrelenting environment.`
 };
 
 /**
