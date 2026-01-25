@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
 
 interface ScrapbookPolaroidProps {
   sceneImageUrl: string;
@@ -10,38 +9,33 @@ export const ScrapbookPolaroid = ({ sceneImageUrl }: ScrapbookPolaroidProps) => 
 
   return (
     <>
-      {/* Polaroid tucked into margin */}
-      <div className="scrapbook-polaroid" onClick={() => setShowLightbox(true)}>
-        {/* Paperclip */}
-        <div className="polaroid-clip" />
-        
-        {/* Polaroid frame */}
-        <div className="polaroid-frame">
-          <img
-            src={sceneImageUrl}
-            alt="Scene evidence"
-            className="polaroid-image"
-          />
-          <span className="polaroid-caption">EVIDENCE</span>
+      {/* Small polaroid - HIDDEN when lightbox is open */}
+      {!showLightbox && (
+        <div className="scrapbook-polaroid" onClick={() => setShowLightbox(true)}>
+          {/* Paperclip */}
+          <div className="polaroid-clip" />
+          
+          {/* Polaroid frame */}
+          <div className="polaroid-frame">
+            <img
+              src={sceneImageUrl}
+              alt="Scene evidence"
+              className="polaroid-image"
+            />
+            <span className="polaroid-caption">EVIDENCE</span>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Lightbox - shows as enlarged polaroid */}
+      {/* Lightbox - transparent backdrop, floating polaroid */}
       {showLightbox && (
         <div 
-          className="polaroid-lightbox"
+          className="polaroid-lightbox-transparent"
           onClick={() => setShowLightbox(false)}
         >
-          <button
-            onClick={() => setShowLightbox(false)}
-            className="lightbox-close"
-          >
-            <X className="w-6 h-6" />
-          </button>
-          
-          {/* Polaroid frame in lightbox */}
+          {/* Polaroid frame - enlarged, centered, floating with physical look */}
           <div 
-            className="lightbox-polaroid-frame"
+            className="lightbox-polaroid-floating"
             onClick={(e) => e.stopPropagation()}
           >
             <img
