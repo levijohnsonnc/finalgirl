@@ -92,7 +92,7 @@ export const useGameHistory = () => {
       if (game.outcome === 'won') {
         byLocation[game.location].wins++;
       } else {
-        byLocation[game.killer].losses++;
+        byLocation[game.location].losses++;
       }
     });
 

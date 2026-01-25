@@ -6,7 +6,8 @@ import Archive from './Archive';
 import NowPlaying from './NowPlaying';
 import GameOutcome from './GameOutcome';
 import Scrapbooks from './Scrapbooks';
-import { Library, BookOpen } from 'lucide-react';
+import Stats from './Stats';
+import { Library, BookOpen, BarChart3 } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
 import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
 
@@ -22,7 +23,7 @@ interface GameSelection {
 
 const Index = () => {
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'scrapbooks'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'scrapbooks' | 'stats'>('dashboard');
   const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
   const [lastGameResult, setLastGameResult] = useState<GameResult | null>(null);
   const [introStory, setIntroStory] = useState<string | undefined>(undefined);
@@ -145,6 +146,8 @@ const Index = () => {
         return <Archive onBack={() => setCurrentPage('dashboard')} />;
       case 'scrapbooks':
         return <Scrapbooks onBack={() => setCurrentPage('dashboard')} />;
+      case 'stats':
+        return <Stats onBack={() => setCurrentPage('dashboard')} />;
       default:
         return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
     }
@@ -175,7 +178,7 @@ const Index = () => {
             <span className="hidden sm:inline">FINAL GIRL™ SLASHER COMPANION • {time.toLocaleDateString()}</span>
           </div>
           
-          {/* Right: Collection + Scrapbooks + Time */}
+          {/* Right: Collection + Stats + Scrapbooks + Time */}
           <div className="flex items-center gap-1 sm:gap-3">
             <button
               onClick={() => setCurrentPage('archive')}
@@ -183,6 +186,13 @@ const Index = () => {
             >
               <Library className="w-3 h-3" />
               <span className="hidden sm:inline">COLLECTION</span>
+            </button>
+            <button
+              onClick={() => setCurrentPage('stats')}
+              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-neon-cyan transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
+            >
+              <BarChart3 className="w-3 h-3" />
+              <span className="hidden sm:inline">STATS</span>
             </button>
             <button
               onClick={() => setCurrentPage('scrapbooks')}
