@@ -1603,17 +1603,19 @@
   /* ===== Polaroid Scene Image ===== */
   .scrapbook-polaroid {
     position: absolute;
-    right: -30px;
+    /* Position so left half is tucked under the page edge */
+    right: -60px;
     top: 33%;
-    width: 90px;
-    z-index: 30;
+    width: 100px;
+    z-index: 10; /* Below the page to appear tucked */
     transform: rotate(3deg);
     transition: all 0.3s ease;
     cursor: pointer;
   }
 
   .scrapbook-polaroid:hover {
-    transform: rotate(0deg) translateX(-10px) scale(1.08);
+    transform: rotate(0deg) translateX(10px) scale(1.05);
+    z-index: 35;
   }
 
   .polaroid-clip {
