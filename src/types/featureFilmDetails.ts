@@ -546,6 +546,39 @@ Evomorphs have eradicated full ship crews and even full planets, though they are
 
 One thing is for sure, the crew of the Konrad is hardly a group that is likely to survive an encounter with an Evomorph.`
     }
+  },
+  's2-panic-station-2891': {
+    filmId: 's2-panic-station-2891',
+    finalGirls: [
+      {
+        name: 'Kate',
+        backstory: `Kate Carpenter absolutely loved science. From a very young age she had dreamed of walking alongside dinosaurs, traveling on a spaceship to planets unknown, or joining a deep sea exploration to find creatures never seen by human eyes. Her dreams never faltered, and after she graduated with honors from a major university, she began her career as a biologist.
+
+Kate loved field work and was always jumping at the chance to get out there and see, or rather research, the world. She had no idea how much that love would put her life at risk, and in ways she could never imagine.`
+      },
+      {
+        name: 'Uki',
+        backstory: `Uki Fox has been a survivor from birth. Her mother had her own experience as a final girl while in labor (a story for another time). But because they were both tenacious enough to survive the ordeal, her mother named her Uki, an Inuit name meaning "Survivor."
+
+Uki is incredibly tough and along with her dog, an Alaskan Malamute named Gus, is often hired as a companion by adventurers and danger seekers. She is exactly the person the Station 2891 research crew needed to help them survive the frigid wasteland.`
+      }
+    ],
+    location: {
+      name: 'Station 2891',
+      description: `"Cold doesn't begin to describe it. There ain't really no word for it to put it plainly, ma'am. You bundle up and if you go outside at night you never, ever let go of the guide line. Other than that we'll mostly be working all the time." - Stu Carpenter, Station 2891 Facilities Manager.
+
+Station 2891 is an isolated research facility in Antarctica, heavily inspired by John Carpenter's The Thing. The gameplay here is defined by uncertainty. In other Final Girl scenarios, you know exactly where the killer is. At Station 2891, the killer starts hidden among the group. You have to balance the urge to save people with the terrifying possibility that the person you're leading toward the helicopter is actually the monster waiting to mutate.`,
+      setupCards: [],
+      events: []
+    },
+    killer: {
+      name: 'The Organism',
+      description: `When Chief Scientist Samuel Lissard enticed Kate Carpenter to join him to do some very important biological research in the Arctic, she had no idea she would be fighting for her life at Station 2891 in Antarctica.
+
+Unbeknownst to the other scientists, researchers, and staff at the station, Lissard had developed a mutagenic virus that could, in theory, transform humans into super-human versions of themselves with incredible strength, speed, and toughness. It was time to test the virus on human subjects, but knowing the risks, his client insisted on a remote location and secrecy. Not even his fellow residents of the station could know about the experiment... at least not until the subject's performance could be observed.
+
+To cover as many bases as possible, Lissard recruited scientists from a variety of backgrounds, blood types, builds, genders, and ethnicities. To avoid any suspicion, he brought some parasitic worms with him and injected them with the virus. They were the perfect introduction vehicle and would do all the work by finding a human host all on their own. He only had to preserve them until they reached the warmth of the station, then release them, and wait. If the virus worked, the mutations would quickly follow and it would be quite evident if successful.`
+    }
   }
 };
 
