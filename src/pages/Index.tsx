@@ -10,6 +10,7 @@ import Stats from './Stats';
 import { Library, BookOpen, BarChart3 } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
 import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
+import { NewsTicker } from '@/components/NewsTicker';
 
 interface GameSelection {
   killer: string;
@@ -159,9 +160,12 @@ const Index = () => {
       <AppHeader onNavigateHome={handleNavigateHome} />
       
       {/* Main Content */}
-      <main className="container mx-auto px-3 sm:px-4 pt-24 sm:pt-32 pb-20 relative z-10">
+      <main className="container mx-auto px-3 sm:px-4 pt-24 sm:pt-32 pb-28 relative z-10">
         {renderPage()}
       </main>
+
+      {/* News Ticker - above footer */}
+      <NewsTicker />
 
       {/* VHS Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur border-t border-border py-2 z-50 safe-area-bottom">
