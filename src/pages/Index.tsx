@@ -110,7 +110,15 @@ const Index = () => {
 
   // Show Marquee until user starts
   if (!hasStarted) {
-    return <Marquee onStart={handleStart} onArchive={handleArchive} onNavigateHome={handleNavigateHome} />;
+    return (
+      <Marquee 
+        onStart={handleStart} 
+        onArchive={handleArchive} 
+        onNavigateHome={handleNavigateHome}
+        onScrapbooks={() => { setHasStarted(true); setCurrentPage('scrapbooks'); }}
+        onStats={() => { setHasStarted(true); setCurrentPage('stats'); }}
+      />
+    );
   }
 
   const renderPage = () => {

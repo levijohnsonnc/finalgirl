@@ -7,9 +7,11 @@ interface MarqueeProps {
   onStart: () => void;
   onArchive: () => void;
   onNavigateHome: () => void;
+  onScrapbooks?: () => void;
+  onStats?: () => void;
 }
 
-export const Marquee = ({ onStart, onArchive, onNavigateHome }: MarqueeProps) => {
+export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
   const [isClicked, setIsClicked] = useState(false);
   const [showFlicker, setShowFlicker] = useState(false);
   const [showFrameJump, setShowFrameJump] = useState(false);
@@ -105,10 +107,32 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome }: MarqueeProps) =>
         </button>
       </div>
       
-      {/* My Collection Link - Bottom corner, subtle, with better touch target */}
+      {/* Bottom Links - Subtle navigation */}
+      <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-4 sm:gap-6 safe-area-bottom">
+        {onScrapbooks && (
+          <button
+            onClick={onScrapbooks}
+            className="text-xs tracking-wider uppercase text-foreground/30 hover:text-primary/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
+            style={{ fontFamily: 'var(--font-vhs)' }}
+          >
+            Scrapbooks
+          </button>
+        )}
+        {onStats && (
+          <button
+            onClick={onStats}
+            className="text-xs tracking-wider uppercase text-foreground/30 hover:text-green-400/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
+            style={{ fontFamily: 'var(--font-vhs)' }}
+          >
+            Stats
+          </button>
+        )}
+      </div>
+      
+      {/* My Collection Link - Bottom right corner */}
       <button
         onClick={onArchive}
-        className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xs tracking-wider uppercase text-foreground/30 hover:text-foreground/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-3 safe-area-bottom"
+        className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xs tracking-wider uppercase text-foreground/30 hover:text-secondary/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-3 safe-area-bottom"
         style={{ fontFamily: 'var(--font-vhs)' }}
       >
         My Collection
