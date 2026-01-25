@@ -16,7 +16,7 @@
 }
 
 .news-ticker {
-  animation: ticker-scroll 120s linear infinite;
+  animation: ticker-scroll 300s linear infinite;
   will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;

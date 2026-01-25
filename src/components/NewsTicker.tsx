@@ -21,7 +21,7 @@ export const NewsTicker = () => {
               <span className="font-vhs text-[10px] sm:text-xs text-amber-400/90 uppercase tracking-wide">
                 {headline}
               </span>
-              <span className="mx-4 sm:mx-6 text-primary/60">◆</span>
+              <span className="mx-32 sm:mx-48 text-primary/60">◆</span>
             </span>
           ))}
         </div>
