@@ -558,6 +558,26 @@
     mix-blend-mode: multiply;
   }
 
+  /* ========== NEWS TICKER ANIMATION ========== */
+  
+  @keyframes ticker-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .news-ticker {
+    animation: ticker-scroll 120s linear infinite;
+    will-change: transform;
+  }
+
+  .news-ticker:hover {
+    animation-play-state: paused;
+  }
+
   /* ========== SLOT MACHINE REEL ANIMATION ========== */
   
   /* Container for vertical scrolling reel - GPU accelerated */
