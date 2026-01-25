@@ -1,26 +1,20 @@
 import { useState } from 'react';
-import { Loader2, Sparkles, ImageIcon, Upload, X } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
 import { GameResult } from '@/hooks/useGameHistory';
-import { PosterPromptModal } from './PosterPromptModal';
-import { ImageUploadSlot } from './ImageUploadSlot';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
-import { getKillerDescription } from '@/data/killerDescriptions';
-import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
-import { getLocationDescription } from '@/data/locationDescriptions';
+import { EndingFormData } from '@/pages/TheEnd';
 
 interface GameOutcomeFormProps {
   result: GameResult;
   introStory?: string;
-  onUpdate: (updates: Partial<GameResult>) => void;
-  onSaveAndExit: () => void;
+  onContinue: (formData: EndingFormData) => void;
+  onDiscard: () => void;
 }
 
 export const GameOutcomeForm = ({
   result,
   introStory,
-  onUpdate,
-  onSaveAndExit,
+  onContinue,
+  onDiscard,
 }: GameOutcomeFormProps) => {
   const isWin = result.outcome === 'won';
   
@@ -33,103 +27,19 @@ export const GameOutcomeForm = ({
   const [victimsKilled, setVictimsKilled] = useState(result.victimsKilled ?? 0);
   const [endingSubLocation, setEndingSubLocation] = useState(result.endingSubLocation ?? '');
   const [gameHighlights, setGameHighlights] = useState(result.gameHighlights ?? '');
-  const [endingNarration, setEndingNarration] = useState(result.endingNarration ?? '');
-  const [posterImageUrl, setPosterImageUrl] = useState(result.posterImageUrl ?? '');
-  const [isGeneratingEnding, setIsGeneratingEnding] = useState(false);
 
-  const handleGenerateEnding = async () => {
-    if (!introStory) {
-      toast({
-        title: "Missing intro story",
-        description: "An intro story is required to generate the ending.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsGeneratingEnding(true);
-
-    try {
-      // Look up character descriptions
-      const killerDescription = getKillerDescription(result.killer);
-      const finalGirlBackstory = getFinalGirlDescription(result.finalGirl);
-      const locationDescription = getLocationDescription(result.location);
-
-      const payload = {
-        introStory,
-        outcome: result.outcome,
-        killer: {
-          name: result.killer,
-          description: killerDescription,
-        },
-        location: {
-          name: result.location,
-          description: locationDescription,
-        },
-        finalGirl: {
-          name: result.finalGirl,
-          backstory: finalGirlBackstory,
-        },
-        // Optional game stats
-        ...(finalHorrorLevel && { finalHorrorLevel }),
-        ...(weaponUsed && { weaponUsed }),
-        ...(finalGirlHealth !== undefined && { finalGirlHealth }),
-        ...(killerHealth !== undefined && { killerHealth }),
-        ...(victimsSaved !== undefined && { victimsSaved }),
-        ...(victimsKilled !== undefined && { victimsKilled }),
-        ...(endingSubLocation && { endingSubLocation }),
-        ...(gameHighlights && { gameHighlights }),
-      };
-
-      const { data, error } = await supabase.functions.invoke('generate-ending', {
-        body: payload,
-      });
-
-      if (error) {
-        console.error('Error generating ending:', error);
-        toast({
-          title: "Generation failed",
-          description: error.message || "Failed to generate ending. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (data?.ending) {
-        setEndingNarration(data.ending);
-        // Persist to game result
-        onUpdate({ endingNarration: data.ending });
-        toast({
-          title: "Ending generated",
-          description: "Your story's conclusion has been written.",
-        });
-      }
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsGeneratingEnding(false);
-    }
-  };
-
-  const handleSave = () => {
-    onUpdate({
+  const handleContinue = () => {
+    const formData: EndingFormData = {
       finalHorrorLevel,
       finalGirlHealth,
       killerHealth,
-      weaponUsed: weaponUsed || undefined,
+      weaponUsed: weaponUsed || '',
       victimsSaved,
       victimsKilled,
-      endingSubLocation: endingSubLocation || undefined,
-      gameHighlights: gameHighlights || undefined,
-      endingNarration: endingNarration || undefined,
-      posterImageUrl: posterImageUrl || undefined,
-    });
-    onSaveAndExit();
+      endingSubLocation: endingSubLocation || '',
+      gameHighlights: gameHighlights || '',
+    };
+    onContinue(formData);
   };
 
   return (
@@ -281,66 +191,24 @@ export const GameOutcomeForm = ({
         </div>
       </div>
 
-      {/* Section: AI Generation & Poster */}
-      <div className="space-y-3">
-        <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
-          AI Generation
-        </h3>
-        
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={handleGenerateEnding}
-            disabled={isGeneratingEnding}
-            className="vcr-tape-button flex items-center justify-center gap-2 px-4 py-3 font-display text-xs tracking-[0.1em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px]"
-          >
-            {isGeneratingEnding ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Sparkles className="w-4 h-4" />
-            )}
-            {isGeneratingEnding ? 'Generating...' : 'Generate Ending'}
-          </button>
-          
-          <PosterPromptModal
-            introStory={introStory}
-            endingNarration={endingNarration}
-            killer={result.killer}
-            location={result.location}
-            finalGirl={result.finalGirl}
-            outcome={result.outcome}
-          >
-            <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 py-3 font-display text-xs tracking-[0.1em] uppercase transition-all duration-300 min-h-[44px]">
-              <ImageIcon className="w-4 h-4" />
-              Poster Prompt
-            </button>
-          </PosterPromptModal>
-
-          <ImageUploadSlot
-            imageUrl={posterImageUrl}
-            onImageChange={setPosterImageUrl}
-            gameId={result.id}
-          />
-        </div>
-
-        {/* Ending Narration Display */}
-        {endingNarration && (
-          <div className="scenario-description p-4 rounded-sm">
-            <p className="font-vhs text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-              {endingNarration}
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Action Button */}
-      <div className="flex justify-center pt-4 border-t border-border/30">
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 border-t border-border/30">
         <button
-          onClick={handleSave}
-          className="outcome-btn outcome-btn-won group relative w-full max-w-xs h-12 overflow-hidden rounded-sm transition-all duration-200"
+          onClick={onDiscard}
+          className="vcr-tape-button flex items-center justify-center gap-2 px-6 py-3 font-display text-sm tracking-[0.1em] uppercase transition-all duration-300 min-h-[44px] text-muted-foreground hover:text-foreground"
         >
-          <span className="relative z-10 font-display text-base tracking-[0.15em] uppercase text-secondary drop-shadow-lg">
-            Save & Exit
+          <X className="w-4 h-4" />
+          Discard
+        </button>
+        
+        <button
+          onClick={handleContinue}
+          className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative w-full sm:w-auto min-w-[200px] h-12 overflow-hidden rounded-sm transition-all duration-200 flex items-center justify-center gap-2`}
+        >
+          <span className={`relative z-10 font-display text-base tracking-[0.15em] uppercase ${isWin ? 'text-secondary' : 'text-primary'} drop-shadow-lg`}>
+            Continue
           </span>
+          <ArrowRight className={`relative z-10 w-4 h-4 ${isWin ? 'text-secondary' : 'text-primary'}`} />
         </button>
       </div>
     </div>
