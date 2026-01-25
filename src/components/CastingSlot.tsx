@@ -196,14 +196,14 @@ export const CastingSlot = ({
           disabled={isAnimating || options.length === 0}
           className="group min-h-[44px] disabled:opacity-50 transition-transform hover:scale-105 active:scale-95"
         >
-          <img src={shuffleButton} alt="Shuffle" className="h-10 sm:h-12 w-auto object-contain" />
+          <img src={shuffleButton} alt="Shuffle" className="h-11 sm:h-[3.3rem] w-auto object-contain" />
         </button>
         <button
           onClick={onChoose}
           disabled={options.length === 0}
           className="group min-h-[44px] disabled:opacity-50 transition-transform hover:scale-105 active:scale-95"
         >
-          <img src={chooseButton} alt="Choose" className="h-10 sm:h-12 w-auto object-contain" />
+          <img src={chooseButton} alt="Choose" className="h-11 sm:h-[3.3rem] w-auto object-contain" />
         </button>
       </div>
     </div>
