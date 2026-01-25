@@ -60,7 +60,15 @@ The figure is dressed in a dark, formal suit that is profoundly distressed, scor
 
 The creature's head is elongated and faceless, featuring a prominent, jagged jaw filled with needle-like teeth and no visible eyes, which enhances its uncanny and relentless appearance. A massive, segmented tail—thick with armored plates and sinew—curls menacingly over its torso, terminating in a sharp, scythe-like stinger. Its limbs are long and corded with visible muscle, terminating in sharp, predatory claws.
 
-The surface of its body appears wet and visceral, as if it has recently emerged from a cocoon or a bloody encounter. It is positioned in a dark, claustrophobic industrial tunnel with circular concrete walls and wet, reflective floors.`
+The surface of its body appears wet and visceral, as if it has recently emerged from a cocoon or a bloody encounter. It is positioned in a dark, claustrophobic industrial tunnel with circular concrete walls and wet, reflective floors.`,
+
+  "The Organism": `A grotesque, biomutated abomination of unstable, shifting flesh standing in the midst of a violent Antarctic blizzard. The creature is massive and bloated, its body a chaotic fusion of multiple absorbed victims—limbs, faces, and organs protruding at unnatural angles from a swollen, translucent torso that pulses with sickly bioluminescent fluid.
+
+Its primary mass is a distended, bulbous form covered in patches of frozen skin, exposed muscle tissue, and clusters of tumorous growths that glow with an inner amber and red light. Thick, rope-like tendrils extend from its shoulders and back, whipping through the air like predatory appendages, some ending in partially formed hands or gnashing mouths.
+
+The creature has no single head—instead, multiple half-formed faces emerge from various points on its body, their expressions frozen in silent screams. Some retain recognizable human features, twisted in agony, while others have mutated beyond recognition into eyeless, tooth-filled masses.
+
+Its lower body is a tangle of fused legs and bone spurs that drag through the snow, leaving a trail of black ichor. Snow and ice crust its surface, but the creature radiates enough unnatural heat that steam rises from its wounds. The overall impression is of a viral nightmare given physical form—a walking amalgamation of consumed hosts that continues to grow and adapt with each victim it absorbs.`
 };
 
 /**
