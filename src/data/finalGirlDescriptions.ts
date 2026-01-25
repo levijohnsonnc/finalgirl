@@ -94,21 +94,17 @@ Her hair is jet black, styled in a bold, voluminous pompadour with closely cropp
 
 She radiates the strength of a seasoned fighter rather than a victim. She wears a practical, ribbed olive-drab tank top that is stained with dirt and sweat. A striking red cloth is tied tightly around her left bicep, serving as a lone, utilitarian splash of color against the dark backdrop.`,
 
-  "Kate": `A Caucasian woman in her late 20s to early 30s with a slender build and an exhausted, survival-hardened presence. She has pale skin marked with dirt, dried sweat, and flecks of snow, suggesting prolonged exposure to extreme cold. Her face is angular with a defined jaw and prominent cheekbones. Her expression is weary but resolute, eyes focused with the intensity of someone who has been pushed past normal limits.
+  "Kate": `A woman in her late 20s to early 30s with a lean, weary build and a haunted, survivalist presence. She has pale skin that appears damp and flushed from the cold, marked by faint grime and a look of physical exhaustion. Her face is heart-shaped with prominent cheekbones, a slightly pointed chin, and a soft nose. She has large, dark brown eyes with a wide, dazed, and vulnerable stare that suggests shock or hyper-vigilance.
 
-Her eyes are dark brown, wide and alert, conveying a mixture of fear, determination, and scientific curiosity even in crisis.
+Her hair is jet black, shoulder-length, and saturated with moisture, clinging to her forehead and neck in messy, tangled clumps. She wears no makeup, highlighting the raw intensity of her expression. Her mouth is slightly agape, conveying a sense of breathlessness or a silent plea for help.
 
-Her hair is dark brown, nearly black, wet and matted from snow and exertion, falling in messy strands around her face and shoulders. No styling, no makeup—purely functional appearance.
+She is wearing a heavy, olive-drab or brown canvas parka with a thick, fur-lined hood. The jacket is noticeably stained with dirt and dampness, emphasizing a desperate situation rather than casual wear.`,
 
-She wears a heavy brown winter parka with a fur-lined hood over a navy blue zip-up fleece. The parka is weathered and stained from use. Blue insulated winter pants and sturdy black boots complete her cold-weather gear. The clothing is practical and bulky, designed for Antarctic survival rather than style.`,
+  "Uki": `A woman in her late 30s to early 40s with a sturdy, resilient build and a weathered, grounded presence. She has medium-toned skin with subtle textures and wind-chilled coloring that suggest a life spent in harsh environments. Her face is full with soft features, a rounded jawline, and a broad nose. She has dark, deep-set eyes with an unwavering, direct gaze and a steady expression that conveys endurance and quiet strength.
 
-  "Uki": `An Inuit woman in her mid-30s with a sturdy, resilient build and a calm, watchful presence that speaks to a lifetime of Arctic survival. Her skin has a warm, weathered tone, with rosy cheeks from cold exposure. Her face is round with soft features, a broad nose, and a strong, set jaw. Her expression is stoic and observant, conveying deep experience and quiet confidence.
+Her hair is jet black, straight, and slightly windswept, framing her face with stray strands caught in the falling snow. She wears no makeup, emphasizing a raw and natural appearance. Her expression is solemn and guarded, yet deeply resolute, showing no signs of distress despite the freezing conditions.
 
-Her eyes are dark brown, nearly black, sharp and assessing, reflecting the wisdom of someone who reads the environment for survival.
-
-Her hair is jet black, long and straight, worn loose and slightly windswept, with snow flakes caught in the strands. No makeup, her appearance entirely shaped by the harsh environment she navigates.
-
-She wears a bright orange parka with a fur-trimmed hood—the color serving as a practical safety measure against the white Arctic landscape. Beneath is a grey sweater, paired with black insulated trousers and heavy black boots. The clothing is well-worn but maintained, suggesting someone who respects and relies on their gear. She is often accompanied by her Alaskan Malamute, Gus.`
+She is dressed for extreme utility in a heavy, burnt-orange parka with a thick, frost-dusted faux-fur hood. The clothing is functional and high-quality, built for survival rather than style. She is often accompanied by her Alaskan Malamute, Gus.`
 };
 
 /**

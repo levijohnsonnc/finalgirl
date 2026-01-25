@@ -76,15 +76,17 @@ The scene is framed through the thick, dark casing of a nearby window, placing t
 
 Massive, blocky industrial spaceship in orbit. Weathered, scarred metal hull with corporate branding. Thick umbilical cables connecting to a docking platform. Atmospheric orange planet visible in the background. Harsh sunlight and deep shadows against the void of space.`,
 
-  "Station 2891": `An isolated Antarctic research station situated in a vast, featureless expanse of snow and ice under a perpetually grey, overcast sky. The station is a cluster of modular prefabricated buildings connected by enclosed walkways and exposed guide ropes, their surfaces weathered and frost-covered from years of exposure to extreme cold.
+  "Station 2891": `A remote, high-arctic research outpost situated in a vast, frozen wasteland, characterized by a series of low-profile, modular industrial buildings heavily insulated against extreme cold. The station appears utilitarian and high-stakes—structures are wrapped in thick, quilted thermal blankets and reinforced panels, with plumes of steam or exhaust rising from vents into the frigid air.
 
-The main structure is a long, rectangular building with corrugated metal walls partially obscured by accumulated snow and ice. Smoke rises from exhaust vents, suggesting active heating systems fighting against the deadly cold. Smaller outbuildings—storage sheds, a communications array, and a generator housing—are scattered nearby, all connected by the essential guide ropes that mark safe paths through whiteout conditions.
+In the foreground, a weather-beaten metal sign stands partially buried in the snow, clearly marked "STATION 2891 - RESTRICTED AREA," establishing a sense of isolation and military or scientific secrecy. A heavy rope line defines a cleared walkway, cutting through the deep, drifted snow to guide personnel through whiteout conditions.
 
-A prominent metal sign reading "STATION 2891 - RESTRICTED AREA" stands at the approach, half-buried in snow. The station is surrounded by endless white in every direction, with no visible horizon—just the merging of snow and grey sky into a seamless void.
+Two figures in heavy, bright red polar parkas and full winter gear walk away from the station, their faces obscured by hoods and goggles. Their presence suggests a routine of survival and observation in an environment where the sub-zero temperatures are a constant threat.
 
-The environment feels crushingly isolated and claustrophobic despite the open space. The cold is oppressive and ever-present, the kind that kills in minutes if you lose your way. Faint lights glow from small windows, offering the only warmth in an otherwise lifeless landscape. The station feels like a fragile bubble of human survival in an environment that wants nothing more than to consume it.
+The landscape is an endless, featureless expanse of white under a flat, pale blue twilight sky. The horizon is barely discernible, blurred by a constant haze of blowing snow and ice crystals. There are no trees or landmarks, only the oppressive, silent scale of the tundra.
 
-Key elements: Modular prefabricated research buildings with corrugated metal walls. Guide ropes connecting structures across the snow. Prominent "STATION 2891" signage. Grey overcast sky with no visible horizon. Smoke rising from exhaust vents. Endless white Antarctic landscape in all directions.`
+The atmosphere is one of profound isolation, clinical cold, and quiet dread—a place where the environment is the primary antagonist and the small outpost is the only thin line of defense against the elements.
+
+Key elements: Arctic or Antarctic tundra setting with heavy snow. Insulated modular research buildings with visible exhaust. Restricted area signage and perimeter rope lines. Personnel in high-visibility red extreme-weather gear. Flat, hazy lighting suggesting a polar day or twilight.`
 };
 
 /**
