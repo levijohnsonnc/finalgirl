@@ -189,7 +189,7 @@ const Index = () => {
             </button>
             <button
               onClick={() => setCurrentPage('stats')}
-              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-neon-cyan transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
+              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-green-400 transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
             >
               <BarChart3 className="w-3 h-3" />
               <span className="hidden sm:inline">STATS</span>
