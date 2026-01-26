@@ -86,7 +86,10 @@ The landscape is an endless, featureless expanse of white under a flat, pale blu
 
 The atmosphere is one of profound isolation, clinical cold, and quiet dread—a place where the environment is the primary antagonist and the small outpost is the only thin line of defense against the elements.
 
-Key elements: Arctic or Antarctic tundra setting with heavy snow. Insulated modular research buildings with visible exhaust. Restricted area signage and perimeter rope lines. Personnel in high-visibility red extreme-weather gear. Flat, hazy lighting suggesting a polar day or twilight.`
+Key elements: Arctic or Antarctic tundra setting with heavy snow. Insulated modular research buildings with visible exhaust. Restricted area signage and perimeter rope lines. Personnel in high-visibility red extreme-weather gear. Flat, hazy lighting suggesting a polar day or twilight.`,
+  
+  // Once Upon a Full Moon
+  'Storybook Woods': `A dense, enchanted forest filled with landmarks pulled straight from folklore—a dark fantasy horror setting that evokes The Brothers Grimm rather than Disney. The paths are winding and treacherous, navigating past The Three Pigs' Houses, The Grandma's House, and The Beanstalk. Gnarled, ancient trees with twisted branches loom overhead, their canopy so thick that perpetual twilight blankets the forest floor. Bioluminescent fungi and eerie will-o'-the-wisps provide the only light, casting unsettling shadows. The atmosphere makes you feel like the forest itself is closing in on you—every rustle could be a creature from a cautionary tale. Cobblestone paths appear and disappear, cottages with smoking chimneys emerge from the mist, and the distant howl of something hungry echoes through the trees. This is a place where fairy tales are real, but they are the original, darker versions where happy endings are never guaranteed.`
 };
 
 /**

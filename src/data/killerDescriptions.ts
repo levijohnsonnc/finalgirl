@@ -66,7 +66,10 @@ The surface of its body appears wet and visceral, as if it has recently emerged 
 
 From its head and back, several slick, dark tentacles and fleshy, wing-like appendages protrude, writhing in the cold air. Its face is a distorted mask of agony, with wide, pale eyes and a jaw that has unhinged into a cluster of smaller, needle-like feelers. The creature wears the shredded, frozen remnants of dark blue trousers, indicating it may have once been human.
 
-The beast is hunched in a defensive yet aggressive stance amidst a blinding whiteout. Heavy snow cakes its malformed limbs and settles into the crevices of its mutated flesh. The background is a stark, desaturated blizzard that obscures all landmarks, creating an isolated and suffocating atmosphere. The overall aesthetic is one of high-concept body horror, blending visceral biological detail with a cold, unrelenting environment.`
+The beast is hunched in a defensive yet aggressive stance amidst a blinding whiteout. Heavy snow cakes its malformed limbs and settles into the crevices of its mutated flesh. The background is a stark, desaturated blizzard that obscures all landmarks, creating an isolated and suffocating atmosphere. The overall aesthetic is one of high-concept body horror, blending visceral biological detail with a cold, unrelenting environment.`,
+  
+  // Once Upon a Full Moon
+  'Big Bad Wolf': `A massive, bipedal lycanthrope-style creature that embodies the terror of being hunted. Unlike a mindless beast, the Big Bad Wolf behaves more like a calculated serial killer—he doesn't just kill; he stalks. His hulking form towers over his prey, with powerful limbs built for both speed and ambush-style attacks. His eyes gleam with predatory intelligence, and his maw is filled with razor-sharp teeth. He represents the classic "stranger danger" archetype—a wolf in sheep's clothing who knows exactly how to corner his prey. His dark fur blends with the shadows of the enchanted forest, making him nearly invisible until he strikes. The atmosphere around him suggests generations of hunter and hunted playing out in the dark Grimm Brothers-style Storybook Woods.`
 };
 
 /**
