@@ -69,7 +69,11 @@ From its head and back, several slick, dark tentacles and fleshy, wing-like appe
 The beast is hunched in a defensive yet aggressive stance amidst a blinding whiteout. Heavy snow cakes its malformed limbs and settles into the crevices of its mutated flesh. The background is a stark, desaturated blizzard that obscures all landmarks, creating an isolated and suffocating atmosphere. The overall aesthetic is one of high-concept body horror, blending visceral biological detail with a cold, unrelenting environment.`,
   
   // Once Upon a Full Moon
-  'Big Bad Wolf': `A massive, bipedal lycanthrope-style creature that embodies the terror of being hunted. Unlike a mindless beast, the Big Bad Wolf behaves more like a calculated serial killer—he doesn't just kill; he stalks. His hulking form towers over his prey, with powerful limbs built for both speed and ambush-style attacks. His eyes gleam with predatory intelligence, and his maw is filled with razor-sharp teeth. He represents the classic "stranger danger" archetype—a wolf in sheep's clothing who knows exactly how to corner his prey. His dark fur blends with the shadows of the enchanted forest, making him nearly invisible until he strikes. The atmosphere around him suggests generations of hunter and hunted playing out in the dark Grimm Brothers-style Storybook Woods.`
+  'Big Bad Wolf': `A massive, heavily muscled grey wolf with a formidable and menacing presence. Its thick, matted coat is a mix of charcoal, slate grey, and muddy brown, heavily stained with dark, viscous blood. The wolf is riddled with several wooden arrows protruding at jagged angles from its shoulders, back, and forelimbs, indicating a state of severe injury that has only fueled its ferocity.
+
+Its face is contorted into a visceral snarl, with the upper lip curled back to expose long, sharp canines and pale gums. The most striking feature is its eyes—luminous, glowing red orbs that pierce through the gloom with an unnatural, predatory intensity. The ears are pinned flat against its skull, and its brow is deeply furrowed, conveying a singular focus on its unseen assailant.
+
+The wolf is captured in a low, aggressive crouch amidst a dark, misty forest floor, its large paws firmly planted as if preparing for a final, desperate lunge. The background consists of blurred, towering tree trunks shrouded in a cold, desaturated atmosphere. The overall aesthetic is dark, cinematic, and visceral, portraying a creature that is dangerously resilient and driven by primal survival.`
 };
 
 /**

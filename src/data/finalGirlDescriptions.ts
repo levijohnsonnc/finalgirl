@@ -107,9 +107,19 @@ Her hair is jet black, straight, and slightly windswept, framing her face with s
 She is dressed for extreme utility in a heavy, burnt-orange parka with a thick, frost-dusted faux-fur hood. The clothing is functional and high-quality, built for survival rather than style. She is often accompanied by her Alaskan Malamute, Gus.`,
   
   // Once Upon a Full Moon
-  'Red': `A young woman known for always wearing her signature red hoodie—so much so that her friends call her "Red" and some don't even know her real name is Chantelle. She pulls the drawstrings tight so the hood fits snugly around her head and face without blocking her peripheral vision. She has a quick, alert demeanor—quick to engage, quick to escape. Her expression conveys determination and fierce loyalty, especially when it comes to protecting her grandmother.`,
-  
-  'Gretel': `A young woman who grew up in Storybook Village, surrounded by fairy tales made real. She has a grounded, practical appearance befitting someone who has survived encounters with witches, wolves, trolls, and evil fairies. While her brother Hansel often takes credit for their survival, Gretel's quiet tenacity is evident in her calm, observant eyes. She has an affinity for forest creatures and birds, preferring their company to the attention of townsfolk. Her clothing is practical and suited for woodland exploration.`
+  'Gretel': `A woman in her late 20s or early 30s with an olive complexion and a lean, hardened physicality. Her face is heavily weathered, smudged with dark earth and soot that highlights the sharp lines of her cheekbones and jaw. She possesses dark, piercing eyes with a steady, unblinking gaze that conveys a mixture of exhaustion and fierce, survivalist intent. Her expression is grim and guarded, suggesting a life defined by constant vigilance rather than comfort.
+
+Her dark, wavy hair is long and disheveled, appearing matted with grime. The lower lengths feature distinctive streaks of deep red and navy blue—faded remnants of color that contrast with her otherwise primitive, unkempt appearance.
+
+No makeup is visible; instead, her skin is textured with sweat and dirt. Her features are symmetrical but sharp, framed by a few loose, dark strands of hair falling across her forehead.
+
+She wears rugged, utilitarian layers, including a frayed, ochre-colored sleeveless vest made of heavy, stained fabric. This is worn over a tattered, earth-toned undershirt with visible stitching and raw, distressed edges.`,
+
+  'Red': `A woman in her mid-20s with a lithe, athletic build and a street-smart, resilient presence. Her skin is warm-toned and marked by fresh, shallow scratches across her cheeks and forehead, with traces of dried blood and dirt suggesting a recent struggle in the wild. Her face is heart-shaped with prominent cheekbones, a soft jawline, and a slender nose. She has deep brown, intelligent eyes that hold a sharp, calculating gaze and a hint of a defiant smirk.
+
+Her hair is dark, styled in tight, thin braids that reach past her shoulders, looking practical and weathered with small bits of forest debris caught in the strands. She wears no visible makeup, letting her raw features and the signs of survival define her appearance. Her expression is calm and confident, bordering on mocking, as if she has the upper hand despite the surrounding danger.
+
+She appears as a modern, gritty reimagining of a classic archetype—a seasoned traveler in a hostile wilderness. She wears a vibrant but heavily soiled red zip-up hoodie with white drawstrings, the fabric caked with mud and leaf litter. A simple dark cord necklace is visible at her throat. The overall aesthetic is grounded and cinematic, blending a striking pop of color with a harsh, survival-focused reality.`
 };
 
 /**
