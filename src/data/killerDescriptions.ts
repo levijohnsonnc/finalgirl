@@ -73,7 +73,18 @@ The beast is hunched in a defensive yet aggressive stance amidst a blinding whit
 
 Its face is contorted into a visceral snarl, with the upper lip curled back to expose long, sharp canines and pale gums. The most striking feature is its eyes—luminous, glowing red orbs that pierce through the gloom with an unnatural, predatory intensity. The ears are pinned flat against its skull, and its brow is deeply furrowed, conveying a singular focus on its unseen assailant.
 
-The wolf is captured in a low, aggressive crouch amidst a dark, misty forest floor, its large paws firmly planted as if preparing for a final, desperate lunge. The background consists of blurred, towering tree trunks shrouded in a cold, desaturated atmosphere. The overall aesthetic is dark, cinematic, and visceral, portraying a creature that is dangerously resilient and driven by primal survival.`
+The wolf is captured in a low, aggressive crouch amidst a dark, misty forest floor, its large paws firmly planted as if preparing for a final, desperate lunge. The background consists of blurred, towering tree trunks shrouded in a cold, desaturated atmosphere. The overall aesthetic is dark, cinematic, and visceral, portraying a creature that is dangerously resilient and driven by primal survival.`,
+
+  // A Knock at the Door
+  'The Intruders': `A trio of menacing figures stands in a suburban street at night, projecting a predatory and cult-like presence. The group consists of three individuals of varying builds, each concealing their identity with disturbing, makeshift masks that suggest a ritualistic or horror-themed motivation. Their skin is mostly obscured, but their physical stances are aggressive and confrontational.
+
+The central figure is a woman with long, dark, tangled hair wearing a bleached deer skull with prominent antlers as a mask. She has an athletic build and holds a large felling axe with both hands. She wears a tan tank top and has a dark sweater tied around her waist.
+
+To her left is a leaner man wearing a white, jagged-toothed "slasher" mask. He is dressed in a rugged denim jacket over a tan t-shirt and light-wash jeans, clutching a large hunting knife.
+
+To her right is a tall, broad-shouldered man wearing a burlap sack mask with crudely cut eye holes and a noose tied around the neck. He wears a heavy blue-and-tan plaid flannel shirt and dark jeans, holding a wooden club or bat.
+
+The clothing is practical and everyday—denim, flannel, and cotton—but appears worn and utilitarian. The expression of the group is unreadable due to the masks, but their collective body language is intimidating and predatory.`
 };
 
 /**
