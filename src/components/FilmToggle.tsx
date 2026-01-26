@@ -29,7 +29,9 @@ export const FilmToggle = ({ film, isOwned, onToggle, disabled = false }: FilmTo
                 alt={`${film.name} box art`}
                 className={cn(
                   "w-full h-full object-cover object-top rounded transition-all",
-                  isOwned ? "shadow-blood" : "opacity-60 grayscale-[30%]"
+                  isOwned 
+                    ? "ring-2 ring-primary/50 brightness-105" 
+                    : "opacity-60 grayscale-[30%]"
                 )}
                 onError={(e) => {
                   console.error(`Failed to load box art for ${film.id}:`, film.boxArt);
