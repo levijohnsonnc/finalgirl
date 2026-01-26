@@ -41,6 +41,9 @@ import evomorphImage from '@/assets/characters/evomorph.png';
 import kateImage from '@/assets/characters/kate.png';
 import ukiImage from '@/assets/characters/uki.png';
 import theOrganismImage from '@/assets/characters/the-organism.png';
+import gretelImage from '@/assets/characters/gretel.png';
+import redImage from '@/assets/characters/red.png';
+import bigBadWolfImage from '@/assets/characters/big-bad-wolf.png';
 import campHappyTrailsImage from '@/assets/locations/camp-happy-trails.png';
 import sunnydazeMallImage from '@/assets/locations/sunnydaze-mall.png';
 import mapleLaneImage from '@/assets/locations/maple-lane.png';
@@ -51,6 +54,8 @@ import wolfeAsylumImage from '@/assets/locations/wolfe-asylum.png';
 import shadyAcresImage from '@/assets/locations/shady-acres.png';
 import ussKonradImage from '@/assets/locations/uss-konrad.png';
 import station2891Image from '@/assets/locations/station-2891.png';
+import storybookWoodsImage from '@/assets/locations/storybook-woods.png';
+import onceUponFullMoonArt from '@/assets/box-art/once-upon-full-moon.png';
 
 export interface FeatureFilm {
   id: string;
@@ -94,6 +99,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Kate': kateImage,
   'Uki': ukiImage,
   'The Organism': theOrganismImage,
+  'Gretel': gretelImage,
+  'Red': redImage,
+  'Big Bad Wolf': bigBadWolfImage,
 };
 
 // Location-specific images (for casting room display)
@@ -108,6 +116,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Shady Acres': shadyAcresImage,
   'USS Konrad': ussKonradImage,
   'Station 2891': station2891Image,
+  'Storybook Woods': storybookWoodsImage,
 };
 
 export interface SessionLog {
@@ -139,7 +148,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's2-into-the-void', name: 'Into the Void', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'], boxArt: intoTheVoidArt },
   { id: 's2-panic-station-2891', name: 'Panic at Station 2891', season: 2, killer: 'The Organism', location: 'Station 2891', finalGirls: ['Kate', 'Uki'], boxArt: panicStation2891Art },
   { id: 's2-madness-in-dark', name: 'Madness in the Dark', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'], boxArt: madnessInDarkArt },
-  { id: 's2-once-upon-full-moon', name: 'Once Upon a Full Moon', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'] },
+  { id: 's2-once-upon-full-moon', name: 'Once Upon a Full Moon', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'], boxArt: onceUponFullMoonArt },
   { id: 's2-knock-at-door', name: 'A Knock at the Door', season: 2, killer: 'Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'] },
   
   // Season 3
