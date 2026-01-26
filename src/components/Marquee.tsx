@@ -60,7 +60,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
     <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden transition-opacity duration-500 ${isClicked ? 'opacity-0' : 'opacity-100'}`}>
       {/* Background Image with VHS Effects + Projector Pulse + Hover Response */}
       <div 
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''} ${isButtonHovered ? 'screen-hover-flicker' : ''}`}
+        className={`absolute inset-0 bg-cover bg-[center_bottom] sm:bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''} ${isButtonHovered ? 'screen-hover-flicker' : ''}`}
         style={{ 
           backgroundImage: `url(${marqueeBg})`,
         }}
@@ -88,15 +88,15 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       {/* App Header - clickable to return home */}
       <AppHeader onNavigateHome={onNavigateHome} />
       
-      {/* Content - Button positioned relative to screen in background */}
-      <div className="absolute top-1/2 left-1/2 sm:top-[52%] sm:left-[52%] -translate-x-1/2 -translate-y-1/2 sm:translate-y-0 z-10 flex flex-col items-center">
+      {/* Content - Button positioned below projector screen on mobile, centered on desktop */}
+      <div className="absolute top-[68%] left-1/2 sm:top-[52%] sm:left-[52%] -translate-x-1/2 z-10 flex flex-col items-center">
         {/* Main Button - The Ritual Action */}
         <button
           onClick={handleStart}
           onMouseEnter={() => setIsButtonHovered(true)}
           onMouseLeave={() => setIsButtonHovered(false)}
           disabled={isClicked}
-          className="vcr-tape-button group relative px-6 py-3 sm:px-8 md:px-10 md:py-4 text-base sm:text-lg md:text-xl tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-150 disabled:pointer-events-none min-h-[48px]"
+          className="vcr-tape-button group relative px-6 py-3 sm:px-8 md:px-10 md:py-4 text-base sm:text-lg md:text-xl tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-150 disabled:pointer-events-none min-h-[48px] backdrop-blur-sm bg-black/30 sm:bg-transparent sm:backdrop-blur-none rounded-sm"
           style={{ fontFamily: 'var(--font-vhs)' }}
         >
           {/* Button content */}
@@ -107,36 +107,39 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
         </button>
       </div>
       
-      {/* Bottom Links - Subtle navigation */}
-      <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-4 sm:gap-6 safe-area-bottom">
-        {onScrapbooks && (
-          <button
-            onClick={onScrapbooks}
-            className="text-xs tracking-wider uppercase text-foreground/30 hover:text-primary/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
-            style={{ fontFamily: 'var(--font-vhs)' }}
-          >
-            Scrapbooks
-          </button>
-        )}
-        {onStats && (
-          <button
-            onClick={onStats}
-            className="text-xs tracking-wider uppercase text-foreground/30 hover:text-green-400/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
-            style={{ fontFamily: 'var(--font-vhs)' }}
-          >
-            Stats
-          </button>
-        )}
+      {/* Bottom Navigation - Centered on mobile, spread on desktop */}
+      <div className="absolute bottom-4 left-0 right-0 px-4 sm:px-6 flex justify-center sm:justify-between items-center safe-area-bottom">
+        {/* Left group: Scrapbooks + Stats */}
+        <div className="flex items-center gap-3 sm:gap-6">
+          {onScrapbooks && (
+            <button
+              onClick={onScrapbooks}
+              className="text-xs tracking-wider uppercase text-foreground/30 hover:text-primary/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
+              style={{ fontFamily: 'var(--font-vhs)' }}
+            >
+              Scrapbooks
+            </button>
+          )}
+          {onStats && (
+            <button
+              onClick={onStats}
+              className="text-xs tracking-wider uppercase text-foreground/30 hover:text-green-400/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
+              style={{ fontFamily: 'var(--font-vhs)' }}
+            >
+              Stats
+            </button>
+          )}
+        </div>
+        
+        {/* Right: My Collection */}
+        <button
+          onClick={onArchive}
+          className="text-xs tracking-wider uppercase text-foreground/30 hover:text-secondary/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2 sm:px-3"
+          style={{ fontFamily: 'var(--font-vhs)' }}
+        >
+          My Collection
+        </button>
       </div>
-      
-      {/* My Collection Link - Bottom right corner */}
-      <button
-        onClick={onArchive}
-        className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xs tracking-wider uppercase text-foreground/30 hover:text-secondary/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-3 safe-area-bottom"
-        style={{ fontFamily: 'var(--font-vhs)' }}
-      >
-        My Collection
-      </button>
     </div>
   );
 };
