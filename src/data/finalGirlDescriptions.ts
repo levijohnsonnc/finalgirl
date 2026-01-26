@@ -104,7 +104,12 @@ She is wearing a heavy, olive-drab or brown canvas parka with a thick, fur-lined
 
 Her hair is jet black, straight, and slightly windswept, framing her face with stray strands caught in the falling snow. She wears no makeup, emphasizing a raw and natural appearance. Her expression is solemn and guarded, yet deeply resolute, showing no signs of distress despite the freezing conditions.
 
-She is dressed for extreme utility in a heavy, burnt-orange parka with a thick, frost-dusted faux-fur hood. The clothing is functional and high-quality, built for survival rather than style. She is often accompanied by her Alaskan Malamute, Gus.`
+She is dressed for extreme utility in a heavy, burnt-orange parka with a thick, frost-dusted faux-fur hood. The clothing is functional and high-quality, built for survival rather than style. She is often accompanied by her Alaskan Malamute, Gus.`,
+  
+  // Once Upon a Full Moon
+  'Red': `A young woman known for always wearing her signature red hoodie—so much so that her friends call her "Red" and some don't even know her real name is Chantelle. She pulls the drawstrings tight so the hood fits snugly around her head and face without blocking her peripheral vision. She has a quick, alert demeanor—quick to engage, quick to escape. Her expression conveys determination and fierce loyalty, especially when it comes to protecting her grandmother.`,
+  
+  'Gretel': `A young woman who grew up in Storybook Village, surrounded by fairy tales made real. She has a grounded, practical appearance befitting someone who has survived encounters with witches, wolves, trolls, and evil fairies. While her brother Hansel often takes credit for their survival, Gretel's quiet tenacity is evident in her calm, observant eyes. She has an affinity for forest creatures and birds, preferring their company to the attention of townsfolk. Her clothing is practical and suited for woodland exploration.`
 };
 
 /**

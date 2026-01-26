@@ -579,6 +579,45 @@ Unbeknownst to the other scientists, researchers, and staff at the station, Liss
 
 To cover as many bases as possible, Lissard recruited scientists from a variety of backgrounds, blood types, builds, genders, and ethnicities. To avoid any suspicion, he brought some parasitic worms with him and injected them with the virus. They were the perfect introduction vehicle and would do all the work by finding a human host all on their own. He only had to preserve them until they reached the warmth of the station, then release them, and wait. If the virus worked, the mutations would quickly follow and it would be quite evident if successful.`
     }
+  },
+  's2-once-upon-full-moon': {
+    filmId: 's2-once-upon-full-moon',
+    finalGirls: [
+      {
+        name: 'Red',
+        backstory: `Her friends started calling her 'Red' because she was always wearing the same red hoodie wherever she went. The nickname stuck to the point where some of her friends didn't even know her real name was Chantelle. Chantelle Gilliam to be exact.
+
+Red liked to pull the strings of her hoodie tight so the hood would fit snugly around her head and face. She didn't like it blocking her peripheral vision. Red was always quick. Quick to engage. Quick to escape. Quick to be at her Grandma's at a moment's notice. Anything for Grandma.`
+      },
+      {
+        name: 'Gretel',
+        backstory: `Gretel grew up in Storybook Village. Fairy tales are all she's ever known. She is no stranger to danger like witches, wolves, trolls, evil fairies... you name it, she's survived it.
+
+Her brother would often take credit for their survival when telling townsfolk of their exploits, so Gretel's tenacity wasn't well known amongst the residents of the village. Hansel's boasting was annoying, but he was her brother after all. And to be honest, she was happy to let him have the attention. She much preferred the attention of the birds and other animals of the forest anyway.`
+      }
+    ],
+    location: {
+      name: 'Storybook Woods',
+      description: `What if the stories you were told as a child were true? What if there did exist a place where tales and fables were a reality? Where magic and mischief were real?
+
+They are in fact real, but it isn't what you might think. It would be impossible to get you to understand this fully, but know that the following statement is true. Every world imagined by the inhabitants of Earth does in fact exist. The imagination, daydreams, nightmares, and all of the fantastic creations of the mind are actual visions of real places and times in the known and unknown universe. You don't have to believe it (and most humans don't), but that does not make it any less true.
+
+The location represents a dense, enchanted forest filled with landmarks pulled straight from folklore. You aren't just running through trees; you're navigating past The Three Pigs' Houses, The Grandma's House, and The Beanstalk.
+
+The atmosphere is "dark fantasy horror"—think The Brothers Grimm rather than Disney. The paths are winding, and the location is designed to make you feel like the forest itself is closing in on you.`,
+      setupCards: [],
+      events: []
+    },
+    killer: {
+      name: 'Big Bad Wolf',
+      description: `In the world of Final Girl, the Big Bad Wolf isn't just a large animal; he is an apex predator that embodies the terror of being hunted. He is often associated with Storybook Woods, a location that feels ripped from a dark Grimm Brothers tale.
+
+The Nature of the Beast: The Wolf is depicted as a massive, bipedal lycanthrope-style creature, but his behavior is more akin to a calculated serial killer than a mindless beast. He doesn't just kill; he stalks.
+
+The "Big Bad" Persona: He represents the classic "stranger danger" archetype. His mechanics—specifically his ability to move quickly and his "Ambush" style attacks—reflect the folklore of a wolf in sheep's clothing (or at least, a wolf that knows exactly how to corner its prey).
+
+The Connection to "Red": While the game allows any Final Girl to face him, his primary thematic rival is Gretel, a nod to the classic fairy tale protagonist. The lore suggests a cycle of hunter and hunted that has played out across the Storybook Woods for generations.`
+    }
   }
 };
 
