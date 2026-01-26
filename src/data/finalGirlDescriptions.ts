@@ -119,7 +119,20 @@ She wears rugged, utilitarian layers, including a frayed, ochre-colored sleevele
 
 Her hair is dark, styled in tight, thin braids that reach past her shoulders, looking practical and weathered with small bits of forest debris caught in the strands. She wears no visible makeup, letting her raw features and the signs of survival define her appearance. Her expression is calm and confident, bordering on mocking, as if she has the upper hand despite the surrounding danger.
 
-She appears as a modern, gritty reimagining of a classic archetype—a seasoned traveler in a hostile wilderness. She wears a vibrant but heavily soiled red zip-up hoodie with white drawstrings, the fabric caked with mud and leaf litter. A simple dark cord necklace is visible at her throat. The overall aesthetic is grounded and cinematic, blending a striking pop of color with a harsh, survival-focused reality.`
+She appears as a modern, gritty reimagining of a classic archetype—a seasoned traveler in a hostile wilderness. She wears a vibrant but heavily soiled red zip-up hoodie with white drawstrings, the fabric caked with mud and leaf litter. A simple dark cord necklace is visible at her throat. The overall aesthetic is grounded and cinematic, blending a striking pop of color with a harsh, survival-focused reality.`,
+
+  // A Knock at the Door
+  'Ginny': `A woman in her late 30s to early 40s with a rugged, battle-worn presence and a gaze of grim exhaustion. She has fair skin heavily marked by fresh abrasions, dried blood on the bridge of her nose and cheek, and layers of grime that suggest an active, desperate struggle for survival. Her face is heart-shaped with tired, hooded brown eyes that convey a mixture of trauma and hardened resolve.
+
+Her hair is medium brown, shoulder-length, and highly disheveled, appearing greasy and matted with sweat and dirt. She wears no makeup, highlighting the raw textures of her weathered skin. Her expression is flat and somber, with a tightly set mouth that suggests she is emotionally spent but remains dangerous.
+
+She is dressed in a worn, red and black buffalo-checkered flannel shirt over a stained, off-white thermal or t-shirt. The lighting is low and atmospheric, casting heavy shadows that emphasize the grit of her surroundings.`,
+
+  'Ava': `A young Black woman in her late teens or early 20s with a defiant, battle-scarred appearance. She has deep brown skin marked by significant facial scarring, including a prominent jagged scar across her right cheek and a smaller cut on the bridge of her nose. Her face is oval-shaped with dark, soulful eyes that hold a gaze of quiet intensity and weary perseverance.
+
+Her hair is a voluminous dark afro, styled with small gold beads or cuffs along braided sections on the side, adding a touch of personal identity amidst a harsh environment. She wears a single gold stud earring. Her expression is guarded and stoic, with a slight downturn to her lips that suggests she has seen too much for her age.
+
+She is wearing a faded, light blue athletic-style shirt with white stripes on the shoulders, which is heavily stained with grease and dirt.`
 };
 
 /**

@@ -9,6 +9,7 @@ import killerFromTomorrowArt from '@/assets/box-art/killer-from-tomorrow.png';
 import rottenHarvestArt from '@/assets/box-art/rotten-harvest.png';
 import intoTheVoidArt from '@/assets/box-art/into-the-void.png';
 import panicStation2891Art from '@/assets/box-art/panic-station-2891.png';
+import knockAtTheDoorArt from '@/assets/box-art/knock-at-the-door.png';
 
 // Character/location specific images
 import hansImage from '@/assets/characters/hans.png';
@@ -56,6 +57,10 @@ import ussKonradImage from '@/assets/locations/uss-konrad.png';
 import station2891Image from '@/assets/locations/station-2891.png';
 import storybookWoodsImage from '@/assets/locations/storybook-woods.png';
 import onceUponFullMoonArt from '@/assets/box-art/once-upon-full-moon.png';
+import ginnyImage from '@/assets/characters/ginny.png';
+import avaImage from '@/assets/characters/ava.png';
+import theIntrudersImage from '@/assets/characters/the-intruders.png';
+import wingardCottageImage from '@/assets/locations/wingard-cottage.png';
 
 export interface FeatureFilm {
   id: string;
@@ -102,6 +107,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Gretel': gretelImage,
   'Red': redImage,
   'Big Bad Wolf': bigBadWolfImage,
+  'Ginny': ginnyImage,
+  'Ava': avaImage,
+  'The Intruders': theIntrudersImage,
 };
 
 // Location-specific images (for casting room display)
@@ -117,6 +125,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'USS Konrad': ussKonradImage,
   'Station 2891': station2891Image,
   'Storybook Woods': storybookWoodsImage,
+  'Wingard Cottage': wingardCottageImage,
 };
 
 export interface SessionLog {
@@ -149,7 +158,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's2-panic-station-2891', name: 'Panic at Station 2891', season: 2, killer: 'The Organism', location: 'Station 2891', finalGirls: ['Kate', 'Uki'], boxArt: panicStation2891Art },
   { id: 's2-madness-in-dark', name: 'Madness in the Dark', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'], boxArt: madnessInDarkArt },
   { id: 's2-once-upon-full-moon', name: 'Once Upon a Full Moon', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'], boxArt: onceUponFullMoonArt },
-  { id: 's2-knock-at-door', name: 'A Knock at the Door', season: 2, killer: 'Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'] },
+  { id: 's2-knock-at-door', name: 'A Knock at the Door', season: 2, killer: 'The Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'], boxArt: knockAtTheDoorArt },
   
   // Season 3
   { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Butcher', location: 'Falconwood', finalGirls: ['Sookie', 'Tanya'] },

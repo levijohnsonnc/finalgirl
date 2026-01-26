@@ -99,7 +99,18 @@ A damp, uneven dirt path winds through the center of the hamlet, pockmarked with
 
 The village feels timeless and eerie, like a setting from a dark folk tale where the air is thick with the scent of damp earth and woodsmoke. It is a place of guarded seclusion and ancient secrets, where the silence is heavy and the forest seems to be watching.
 
-Key elements: Ancient forest hamlet with primitive, thatched hovels. Central two-story cottage featuring warm, interior amber light. Dense, moss-covered trees with massive, serpentine root systems. Muddy central path with puddles and crumbling stone walls. Heavy atmospheric mist and cool, overcast lighting.`
+Key elements: Ancient forest hamlet with primitive, thatched hovels. Central two-story cottage featuring warm, interior amber light. Dense, moss-covered trees with massive, serpentine root systems. Muddy central path with puddles and crumbling stone walls. Heavy atmospheric mist and cool, overcast lighting.`,
+
+  // A Knock at the Door
+  'Wingard Cottage': `A cozy, rustic stone and log cabin perched on a rocky shoreline, overlooking a glass-calm lake at dawn. The cabin is small and sturdy, featuring a prominent fieldstone chimney with a gentle wisp of white smoke trailing into the cool, overcast sky. The architecture is traditional and inviting, with cedar-shingle roofing and small, warm-lit windows that suggest a quiet life inside.
+
+In the foreground, a weathered wooden dock extends into the still water, holding an overturned aluminum rowboat that sits ready for a morning paddle. The lake's surface is perfectly reflective, marred only by a thin, ethereal layer of morning mist that clings to the waterline and the distant evergreen silhouettes.
+
+The surrounding environment is a dense, temperate coniferous forest. Ancient, moss-covered trees frame the scene, their branches draped in vibrant green lichen, highlighting the damp, fresh atmosphere of the Pacific Northwest or a similar boreal wilderness. The ground is a mix of rugged grey rock and soft forest floor, emphasizing the cabin's isolation and its harmony with the rugged landscape.
+
+The overall mood is one of profound stillness, solitude, and "hygge"—a sanctuary tucked away from the modern world, where the only sounds are the crackle of a hearth and the soft lap of water against the pier.
+
+Key elements: Isolated lakeside setting with heavy morning mist. Rustic stone and log cabin with a smoking chimney. Wooden dock with an overturned silver rowboat. Moss-draped evergreen forest framing the composition. Still, reflective water doubling the treeline and sky.`
 };
 
 /**

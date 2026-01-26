@@ -618,6 +618,37 @@ The "Big Bad" Persona: He represents the classic "stranger danger" archetype. Hi
 
 The Connection to "Red": While the game allows any Final Girl to face him, his primary thematic rival is Gretel, a nod to the classic fairy tale protagonist. The lore suggests a cycle of hunter and hunted that has played out across the Storybook Woods for generations.`
     }
+  },
+  's2-knock-at-door': {
+    filmId: 's2-knock-at-door',
+    finalGirls: [
+      {
+        name: 'Ginny',
+        backstory: `Ginny Sandin was forced to be independent from a young age. Her family had plenty of money but it came at a cost. Both parents traveled a lot and they moved frequently. With her parents barely present, Ginny spent most of her time with nannies when she was young, and later alone as she got older. She was shy, an introvert, and would spend hours at a time hiking in nearby forests. It didn't matter if it was pouring rain or during a blizzard, she'd still go. These long walks were her favorite way to pass time, alone in her thoughts and at one with nature.
+
+In her late teens, she saw an ad for a survival camp and knew she had to go. They were supposed to visit Egypt that summer and cruise the Nile, but for Ginny, that paled in comparison to spending a summer learning to survive outdoors. She excelled at the camp. At the end of the summer, students had to test their skills by surviving for a week in the bush. Most didn't stray too far from where they were dropped off, and some didn't even last the week. For Ginny, it took 3 days for them to find her after the test was done and even then, she had wanted to stay longer. It was after that summer that Ginny decided to move out and experience life on her own.`
+      },
+      {
+        name: 'Ava',
+        backstory: `Ava Tyler grew up in a rough part of town. When she wasn't helping her dad fix small appliances, she was typically mixed up in some trouble and usually a fight or two. She was opinionated, stubborn, and strong-willed, and 'compromise' was not in her vocabulary. She eventually learned to pick her battles, but it took a lot of battles to get there. If nothing else, she picked up some good fighting skills from her various scraps, and also some first aid skills from having to patch herself up.
+
+When she was with her dad, she would spend hours watching him take things apart, carefully label them, and then put them all back when it was fixed. She loved spending her time tinkering with things and as a result, she learned to make do with very little, frequently repairing things multiple times instead of throwing them away. These skills helped her land decent jobs and employers were frequently impressed by her resourcefulness. When she finally made enough to move her family out of the neighborhood, many said she was just one of the lucky ones, but she knew better... her good fortune was the direct result of having to fight for everything she had and taking nothing for granted.`
+      }
+    ],
+    location: {
+      name: 'Wingard Cottage',
+      description: `Wingard Cottage is a perfect getaway, nestled in the woods on the edge of a pristine lake. The cottage has been in the family for generations, and although it has changed over the years, it still has the same charming quality as when it was first built.
+
+Many special events and relaxing getaways have been hosted here. Unfortunately, it has also seen its share of tragedies—horrible events that have plagued the family throughout the home's history. Best not to dwell on the past though, for surely your stay will be peaceful and carefree…`,
+      setupCards: [],
+      events: []
+    },
+    killer: {
+      name: 'The Intruders',
+      description: `The news channels are all reporting the same thing: another couple has been found dead in their homes, bodies ravaged and mutilated. The channels are tying them back to the other cult killings that have occurred in the past few months. Rumors say it might even be the same killers from the last set of murders that occurred years ago. If that's true, these killers have been at large for a long-ass time.
+
+The Intruders are a "horde" type Killer consisting of three distinct slashers: Baghead, Redhood, and Zeke. Unlike other killers, their power is split between three individuals, each bringing their own brand of terror to Wingard Cottage.`
+    }
   }
 };
 
