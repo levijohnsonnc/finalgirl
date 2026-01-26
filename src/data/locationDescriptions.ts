@@ -89,7 +89,17 @@ The atmosphere is one of profound isolation, clinical cold, and quiet dread—a 
 Key elements: Arctic or Antarctic tundra setting with heavy snow. Insulated modular research buildings with visible exhaust. Restricted area signage and perimeter rope lines. Personnel in high-visibility red extreme-weather gear. Flat, hazy lighting suggesting a polar day or twilight.`,
   
   // Once Upon a Full Moon
-  'Storybook Woods': `A dense, enchanted forest filled with landmarks pulled straight from folklore—a dark fantasy horror setting that evokes The Brothers Grimm rather than Disney. The paths are winding and treacherous, navigating past The Three Pigs' Houses, The Grandma's House, and The Beanstalk. Gnarled, ancient trees with twisted branches loom overhead, their canopy so thick that perpetual twilight blankets the forest floor. Bioluminescent fungi and eerie will-o'-the-wisps provide the only light, casting unsettling shadows. The atmosphere makes you feel like the forest itself is closing in on you—every rustle could be a creature from a cautionary tale. Cobblestone paths appear and disappear, cottages with smoking chimneys emerge from the mist, and the distant howl of something hungry echoes through the trees. This is a place where fairy tales are real, but they are the original, darker versions where happy endings are never guaranteed.`
+  'Storybook Woods': `A hidden, ancient hamlet nestled deep within a primeval, moss-choked forest. The settlement is composed of several primitive, low-slung hovels with thick, shaggy thatched roofs, constructed from rough-hewn stone and weathered wattle-and-daub. These smaller structures are huddled together along a muddy, root-strewn trail, appearing almost like natural outcroppings of the forest floor itself.
+
+Dominating the background is a larger, two-story timber-framed cottage that feels like the heart of the village. It stands taller and more sturdy than the surrounding huts, with a steep thatched roof and a single window emitting a warm, flickering amber glow. This light provides the only splash of color in an otherwise monochromatic world of greys, greens, and browns, suggesting a flicker of life and safety amidst the gloom.
+
+The atmosphere is heavy and damp, with a thick, cool mist that clings to the ground and weaves through the canopy above. Massive, gnarled trees with sprawling, serpentine roots hem in the clearing, their twisted branches draped in layers of lichen and moss. The forest feels alive and suffocating, as if the trees are slowly reclaiming the space occupied by the small community.
+
+A damp, uneven dirt path winds through the center of the hamlet, pockmarked with shallow puddles and choked by protruding roots. Dilapidated stone walls and piles of dry brush line the way, suggesting a community that lives in precarious harmony with the encroaching wilderness. There are no signs of modern life—no metal, no glass, just the raw materials of the earth.
+
+The village feels timeless and eerie, like a setting from a dark folk tale where the air is thick with the scent of damp earth and woodsmoke. It is a place of guarded seclusion and ancient secrets, where the silence is heavy and the forest seems to be watching.
+
+Key elements: Ancient forest hamlet with primitive, thatched hovels. Central two-story cottage featuring warm, interior amber light. Dense, moss-covered trees with massive, serpentine root systems. Muddy central path with puddles and crumbling stone walls. Heavy atmospheric mist and cool, overcast lighting.`
 };
 
 /**
