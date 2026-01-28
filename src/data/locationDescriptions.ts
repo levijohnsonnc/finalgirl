@@ -4,6 +4,18 @@
  */
 
 export const LOCATION_DESCRIPTIONS: Record<string, string> = {
+  // Season 3 - Hell to Pay
+  'Hellscape': `Hellscape is not a place so much as a punishment that learned how to build itself.
+
+The ground is a maze of blackened steel platforms suspended over rivers of molten fire. Chains sway overhead, groaning like tired gods, while massive pistons and gears grind endlessly for no clear purpose. Every surface is hot to the touch, slick with soot, ash, or something darker that once flowed. The air itself feels hostile—thick, choking, and vibrating with the low thunder of distant machinery and unseen screams folded into the roar of flame.
+
+Light comes from below. Everything is lit from the wrong angle, casting faces upward in harsh reds and sickly oranges. Shadows stretch and writhe, never quite matching the shapes that cast them. Walkways end abruptly. Ladders descend into glare and heat, daring you to climb down without knowing where you'll land. Somewhere deep within the complex, furnaces belch and doors slam shut on their own, as if the place is rearranging itself to keep you lost.
+
+Hellscape does not care if you survive. It is indifferent in the way a storm is indifferent—destruction is simply its natural state. The true horror is not that something is hunting you here. The horror is that the environment is doing most of the work for it. Every step risks a fall, every pause invites exhaustion, and every escape route feels temporary.
+
+If there is an exit, it was never meant to be found twice.
+
+Key elements: Blackened steel platforms suspended over molten fire. Swaying chains and grinding industrial machinery. Harsh red and orange underlighting casting upward shadows. Narrow walkways that end abruptly with ladders descending into heat. Suffocating atmosphere of soot, ash, and oppressive heat.`,
   "Camp Happy Trails": `A secluded lakeside summer camp set deep in a forest, composed of small wooden cabins arranged loosely around a central dirt path and communal fire pit. The camp feels modest, old-fashioned, and slightly neglected rather than abandoned—structures are intact but weathered, with peeling wood, uneven steps, and soft yellow light glowing from cabin windows.
 
 At the heart of the camp is a large circular fire pit surrounded by rough-hewn log benches. The fire burns steadily, casting long, flickering shadows across the ground and nearby trees. The firelight creates a false sense of warmth and safety.
