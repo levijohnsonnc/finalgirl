@@ -5,7 +5,17 @@
 
 export const LOCATION_DESCRIPTIONS: Record<string, string> = {
   // Season 3 - Don't Make a Sound
-  'Utopia': `Welcome to Utopia! Jokingly called "nowhere" by the rest of the state's residents, Utopia is a desert town where the people are outnumbered by... well just about anything else you can think of. Little do the residents know, but they are about to be set upon by a brood of giant sand snakes, each as large as a tractor trailer, that were nested just below the town almost a million years before. The million year molting period has arrived, and now the sands beneath Utopia stir with ancient, hungry predators.`,
+  'Utopia': `A desolate, sun-scorched desert outpost comprised of weathered, single-story structures huddled together against the encroaching dunes. The town feels like a relic of the mid-20th century, forgotten by time and buried under layers of fine, orange sand. The buildings are modest and functional, built from wood and corrugated metal that has rusted and bleached under an unforgiving sun.
+
+In the foreground, a prominent, splintering wooden sign stands tall, bearing the ironically optimistic greeting: "WELCOME TO UTOPIA – POP. 42." Behind it, a "GENERAL STORE" serves as the town's focal point, its porch shaded by a sagging roof. A vintage, dark-red pickup truck—possibly a 1940s Chevy—sits idle and caked in dust in front of the store, looking like it hasn't moved in decades.
+
+The surrounding landscape is an endless sea of rolling sand dunes that ripple toward the horizon. To the left, a massive, ominous plume of dark smoke or sand erupts into the air, as if something gargantuan has just breached the surface. Jagged, dark monoliths—or perhaps the appendages of something far larger—protrude from the sand nearby, casting long, sharp shadows.
+
+To the right, the sky is a brilliant, fiery canvas of deep oranges and reds where the sun is making its final descent. Atop a distant dune, a lone human silhouette stands perfectly still, dwarfed by the scale of the desert and the impending chaos behind them. The contrast between the vibrant sunset and the dark, churning dust cloud creates a sense of immediate, cinematic peril.
+
+The overall atmosphere is one of profound isolation and "last-stand" desperation. It captures the exact moment before a peaceful evening turns into a fight for survival, where the heat of the day is being replaced by a cold, creeping dread. It feels like a frame from a high-stakes 1980s creature feature where the hero realizes they are very much not alone.
+
+Key elements: Arid desert setting with rolling sand dunes and a town buried in dust. Weathered wooden structures including a General Store and modest houses. Ironical "Welcome to Utopia" sign with a low population count. Vintage pickup truck and a lone silhouetted figure. Dramatic sunset sky clashing with a massive, dark eruption or dust cloud. Ominous dark shapes protruding from the desert floor.`,
 
   // Season 3 - The Marrek Murders
   'Marrek Warehouse': `A massive industrial monolith of rust and corrugated metal that looms over the landscape, appearing less like a functional storage facility and more like a graveyard for heavy industry. The exterior is a patchwork of oxidization and weathered steel, suggesting a structure that has been abandoned by time but remains standing through sheer, stubborn mass.
