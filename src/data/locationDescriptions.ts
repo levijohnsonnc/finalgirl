@@ -5,17 +5,19 @@
 
 export const LOCATION_DESCRIPTIONS: Record<string, string> = {
   // Season 3 - Hell to Pay
-  'Hellscape': `Hellscape is not a place so much as a punishment that learned how to build itself.
+  'Hellscape': `A cavernous, soot-stained industrial foundry defined by heavy iron structures, massive overhead support beams, and a floor of reinforced metal grating. The environment is thick with age and grime, feeling oppressive and sweltering—a place where the scale of the machinery dwarfs the people operating it.
 
-The ground is a maze of blackened steel platforms suspended over rivers of molten fire. Chains sway overhead, groaning like tired gods, while massive pistons and gears grind endlessly for no clear purpose. Every surface is hot to the touch, slick with soot, ash, or something darker that once flowed. The air itself feels hostile—thick, choking, and vibrating with the low thunder of distant machinery and unseen screams folded into the roar of flame.
+At the center of the scene is a pit of incandescent molten metal, radiating an intense, blinding orange glow that serves as the primary light source. Constant streams of sparks erupt from the liquid fire, swirling around massive, blackened gears and heavy industrial chains that loom over the work area.
 
-Light comes from below. Everything is lit from the wrong angle, casting faces upward in harsh reds and sickly oranges. Shadows stretch and writhe, never quite matching the shapes that cast them. Walkways end abruptly. Ladders descend into glare and heat, daring you to climb down without knowing where you'll land. Somewhere deep within the complex, furnaces belch and doors slam shut on their own, as if the place is rearranging itself to keep you lost.
+Four laborers, clad in heavy, soot-streaked work coats and dark beanies, stand along a rusted safety railing. They lean over the edge with a mix of exhaustion and wary vigilance, their forms silhouetted against the fiery light. Their presence suggests a routine that is as monotonous as it is life-threatening.
 
-Hellscape does not care if you survive. It is indifferent in the way a storm is indifferent—destruction is simply its natural state. The true horror is not that something is hunting you here. The horror is that the environment is doing most of the work for it. Every step risks a fall, every pause invites exhaustion, and every escape route feels temporary.
+The background is a murky expanse of industrial pipes and massive cylindrical machinery, partially obscured by a dense, swirling fog of grey smoke and steam. These elements create a claustrophobic sense of isolation within the vast, dark space, as if the factory extends infinitely into the shadows.
 
-If there is an exit, it was never meant to be found twice.
+The lighting is high-contrast and dramatic; the fiery brilliance of the molten iron clashes with the deep, ink-black shadows of the surrounding mill. Visibility is limited by the haze, making the environment feel unpredictable and hazardous.
 
-Key elements: Blackened steel platforms suspended over molten fire. Swaying chains and grinding industrial machinery. Harsh red and orange underlighting casting upward shadows. Narrow walkways that end abruptly with ladders descending into heat. Suffocating atmosphere of soot, ash, and oppressive heat.`,
+The atmosphere is heavy, hot, and menacing—a landscape of fire and iron where the air feels thick with the smell of sulfur and the constant, rhythmic roar of heavy industry.
+
+Key elements: Cavernous iron foundry with heavy industrial machinery. Central pit of glowing molten metal and flying sparks. Workers in soot-covered gear leaning on a metal railing. Dense haze of steam, smoke, and grime. Dramatic, high-contrast lighting from the liquid fire.`,
   "Camp Happy Trails": `A secluded lakeside summer camp set deep in a forest, composed of small wooden cabins arranged loosely around a central dirt path and communal fire pit. The camp feels modest, old-fashioned, and slightly neglected rather than abandoned—structures are intact but weathered, with peeling wood, uneven steps, and soft yellow light glowing from cabin windows.
 
 At the heart of the camp is a large circular fire pit surrounded by rough-hewn log benches. The fire burns steadily, casting long, flickering shadows across the ground and nearby trees. The firelight creates a false sense of warmth and safety.
