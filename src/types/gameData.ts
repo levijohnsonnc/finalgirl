@@ -75,7 +75,11 @@ import cassieImage from '@/assets/characters/cassie.png';
 import theTormentorImage from '@/assets/characters/the-tormentor.png';
 import marrekWarehouseImage from '@/assets/locations/marrek-warehouse.png';
 import marrekMurdersArt from '@/assets/box-art/the-marrek-murders.png';
-
+import meghanImage from '@/assets/characters/meghan.png';
+import rondaImage from '@/assets/characters/ronda.png';
+import theEyelessImage from '@/assets/characters/the-eyeless.png';
+import utopiaImage from '@/assets/locations/utopia.png';
+import dontMakeASoundArt from '@/assets/box-art/dont-make-a-sound.png';
 export interface FeatureFilm {
   id: string;
   name: string;
@@ -133,6 +137,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Mandy': mandyImage,
   'Cassie': cassieImage,
   'The Tormentor': theTormentorImage,
+  'Meghan': meghanImage,
+  'Ronda': rondaImage,
+  'The Eyeless': theEyelessImage,
 };
 
 // Location-specific images (for casting room display)
@@ -152,6 +159,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Falconwood': falconwoodImage,
   'Hellscape': hellscapeImage,
   'Marrek Warehouse': marrekWarehouseImage,
+  'Utopia': utopiaImage,
 };
 
 export interface SessionLog {
@@ -191,7 +199,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'The Hunter', location: 'Sunnydaze Mall', finalGirls: ['Kat', 'Tali'], boxArt: killerFromTomorrowArt },
   { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Razorface', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'], boxArt: hellToPayArt },
   { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'The Tormentor', location: 'Marrek Warehouse', finalGirls: ['Mandy', 'Cassie'], boxArt: marrekMurdersArt },
-  { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'The Eyeless', location: 'Utopia', finalGirls: ['Meghan', 'Ronda'] },
+  { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'The Eyeless', location: 'Utopia', finalGirls: ['Meghan', 'Ronda'], boxArt: dontMakeASoundArt },
   
   // Season 4
   { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
