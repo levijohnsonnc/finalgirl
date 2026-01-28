@@ -4,6 +4,15 @@
  */
 
 export const KILLER_DESCRIPTIONS: Record<string, string> = {
+  // Season 3 - The Marrek Murders
+  'The Tormentor': `A massive, imposing figure with a heavy, industrial presence that feels less like a man and more like a looming architectural error. He has a stocky, work-hardened build with broad shoulders and thick, powerful limbs that suggest decades of physical labor. His body language is slow, deliberate, and patient—he does not hunt with frantic energy but moves with the soul-crushing inevitability of a glacier.
+
+His face is obscured by a mask that mimics a human face with chilling indifference—expressionless, pale, and wrong in the way that mannequins are wrong. The eyes behind the mask are visible only as dark, vacant slits that seem to pin victims in place through sheer, unadulterated terror.
+
+He wears a tattered, oil-stained industrial jumpsuit, the fabric worn thin at the elbows and knees from years of grisly work. Heavy work boots crunch methodically on broken glass and concrete. His weapon—whether a massive wrench, a meat hook, or a length of heavy chain—is carried low and casually, scraping against the floor with a metallic rhythm that announces his approach.
+
+The Tormentor doesn't just strike; he deconstructs. There is a cruel, methodical precision to his violence that suggests a grisly fascination with the breaking point of the human spirit. He is the master of the closed door and the blocked exit—the final, heavy shadow that falls across the light just as you thought you had found a way out.`,
+
   // Season 3 - Hell to Pay
   'Razorface': `A man in his late 20s to mid-30s with a lean, muscular, and athletic build. He has a chilling, authoritative presence that feels ritualistic and intensely focused. His skin is a stark, sickly pale white, providing a high-contrast canvas for the metalwork. His head and face are meticulously pierced with long metal pins arranged in a precise, geometric grid pattern. He has dark, hollowed eyes with an unblinking, cold stare and sharp, angular facial features, including a defined jawline and a thin, expressionless mouth.
 

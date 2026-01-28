@@ -4,6 +4,17 @@
  */
 
 export const LOCATION_DESCRIPTIONS: Record<string, string> = {
+  // Season 3 - The Marrek Murders
+  'Marrek Warehouse': `A monolithic industrial storage facility of rust and corrugated metal that feels less like a building and more like a graveyard for heavy industry. Inside, the air is thick with the scent of hydraulic fluid and ancient dust, illuminated by the rhythmic, cold pulse of overhead fluorescent lights that have seen better decades.
+
+The scale of the place is deceptive; while the ceilings are cavernous, the floor is a suffocating grid of towering shipping crates and jagged machinery. It creates a labyrinth where every corner feels like a dead end and the shadows seem to have a weight of their own, pressing in against the flickering light.
+
+What truly defines the warehouse is its mechanical heartbeat. The constant, low-frequency hum of the conveyor belts creates an unsettling sense of motion even when you're standing still—a literal conveyor belt to your own demise that shifts the ground beneath your feet.
+
+There's a terrifying verticality to the space, with narrow, rusted gantries offering a bird's-eye view of the carnage below, though these often turn into high-altitude traps with no easy exit. The grinding gears and hissing steam vents mask the sound of approaching footsteps until it's far too late to run.
+
+Key elements: Vast industrial warehouse with towering shipping crates. Labyrinthine floor layout with heavy machinery. Active conveyor belt systems creating ambient motion. Rusted metal gantries and catwalks at multiple levels. Flickering fluorescent lighting and oppressive shadows.`,
+
   // Season 3 - Hell to Pay
   'Hellscape': `A cavernous, soot-stained industrial foundry defined by heavy iron structures, massive overhead support beams, and a floor of reinforced metal grating. The environment is thick with age and grime, feeling oppressive and sweltering—a place where the scale of the machinery dwarfs the people operating it.
 
