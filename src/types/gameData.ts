@@ -65,8 +65,8 @@ import octaviaImage from '@/assets/characters/octavia.png';
 import janelleImage from '@/assets/characters/janelle.png';
 import slayerImage from '@/assets/characters/slayer.png';
 import falconwoodImage from '@/assets/locations/falconwood.png';
-import christieImage from '@/assets/characters/christie.png';
 import kenzieImage from '@/assets/characters/kenzie.png';
+import julieImage from '@/assets/characters/julie.png';
 import razorfaceImage from '@/assets/characters/razorface.png';
 import hellscapeImage from '@/assets/locations/hellscape.png';
 import hellToPayArt from '@/assets/box-art/hell-to-pay.png';
@@ -122,8 +122,8 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Octavia': octaviaImage,
   'Janelle': janelleImage,
   'Slayer': slayerImage,
-  'Christie': christieImage,
   'Kenzie': kenzieImage,
+  'Julie': julieImage,
   'Razorface': razorfaceImage,
 };
 
@@ -180,7 +180,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   // Season 3
   { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Slayer', location: 'Falconwood', finalGirls: ['Octavia', 'Janelle'], boxArt: falconwoodFilesArt },
   { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'The Hunter', location: 'Sunnydaze Mall', finalGirls: ['Kat', 'Tali'], boxArt: killerFromTomorrowArt },
-  { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Razorface', location: 'Hellscape', finalGirls: ['Christie', 'Kenzie'], boxArt: hellToPayArt },
+  { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Razorface', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'], boxArt: hellToPayArt },
   { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'Terminus', location: 'Marrek Warehouse', finalGirls: ['Jada', 'Gia'] },
   { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'Ancient', location: 'Utopia', finalGirls: ['Agnes', 'Constance'] },
   
