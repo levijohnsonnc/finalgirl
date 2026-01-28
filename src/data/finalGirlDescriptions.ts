@@ -132,11 +132,28 @@ She is dressed in a worn, red and black buffalo-checkered flannel shirt over a s
 
 Her hair is a voluminous dark afro, styled with small gold beads or cuffs along braided sections on the side, adding a touch of personal identity amidst a harsh environment. She wears a single gold stud earring. Her expression is guarded and stoic, with a slight downturn to her lips that suggests she has seen too much for her age.
 
-She is wearing a faded, light blue athletic-style shirt with white stripes on the shoulders, which is heavily stained with grease and dirt.`
+She is wearing a faded, light blue athletic-style shirt with white stripes on the shoulders, which is heavily stained with grease and dirt.`,
+
+  // The Falconwood Files
+  'Octavia': `A woman in her late 20s to early 30s with a guarded, introspective presence and an intense, piercing gaze that suggests she is always analyzing her surroundings. She has a lean build that speaks to a life of self-reliance and constant vigilance. Her skin is warm-toned with subtle fatigue lines around her eyes, hinting at sleepless nights and the weight of hidden trauma.
+
+Her face is angular with high cheekbones and a strong jawline. Her eyes are dark brown, deep-set, and unnervingly focused—as if she's looking through you rather than at you. There's a quiet intensity in her expression, neither hostile nor welcoming, but calculating.
+
+Her hair is dark, naturally textured, and worn in loose, shoulder-length twists or locs that frame her face with a practical, low-maintenance style. She wears no makeup, and her appearance is deliberately unremarkable—someone who has learned to blend in and avoid attention.
+
+She is dressed in practical, layered clothing: a dark, worn hoodie over a simple t-shirt, paired with faded jeans and sturdy boots. The clothing is clean but well-worn, suggesting someone who moves often and travels light. She carries herself with the quiet confidence of someone who knows her mind is her most dangerous weapon.`,
+
+  'Janelle': `A woman in her early-to-mid 20s with a lean, bookish appearance that belies an underlying strength and barely contained intensity. She has fair skin with a light dusting of freckles across her nose and cheeks, and her features are soft but alert—the face of someone who observes more than she speaks.
+
+Her eyes are a striking hazel-green, sharp and intelligent, often narrowed in concentration or skepticism. Her expression shifts between nervous uncertainty and flashes of focused determination, as if she's perpetually calculating outcomes and probabilities.
+
+Her hair is medium brown, straight, and falls just past her shoulders, often tucked behind her ears or pulled back in a loose, practical ponytail. She wears rectangular, dark-framed glasses that give her an academic appearance, though they're slightly askew from recent activity.
+
+She is dressed in a simple, layered outfit: a graphic t-shirt (perhaps science or pop culture themed) under an open flannel shirt, paired with well-worn jeans and scuffed sneakers. Her clothing suggests a casual student or researcher rather than a survivor, though the tension in her posture and the way her hands occasionally clench suggest something powerful simmering beneath the surface.`
 };
 
 /**
- * Get the visual description for a final girl by name
+ * Get the visual description for a Final Girl by name
  * Returns undefined if no description exists
  */
 export function getFinalGirlDescription(name: string): string | undefined {

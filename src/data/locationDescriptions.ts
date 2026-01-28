@@ -110,7 +110,18 @@ The surrounding environment is a dense, temperate coniferous forest. Ancient, mo
 
 The overall mood is one of profound stillness, solitude, and "hygge"—a sanctuary tucked away from the modern world, where the only sounds are the crackle of a hearth and the soft lap of water against the pier.
 
-Key elements: Isolated lakeside setting with heavy morning mist. Rustic stone and log cabin with a smoking chimney. Wooden dock with an overturned silver rowboat. Moss-draped evergreen forest framing the composition. Still, reflective water doubling the treeline and sky.`
+Key elements: Isolated lakeside setting with heavy morning mist. Rustic stone and log cabin with a smoking chimney. Wooden dock with an overturned silver rowboat. Moss-draped evergreen forest framing the composition. Still, reflective water doubling the treeline and sky.`,
+
+  // The Falconwood Files
+  'Falconwood': `At first glance, Falconwood is the American dream in 35mm. Manicured lawns, a bustling mall, and quiet cul-de-sacs frame what appears to be an idyllic small town. But look closer, and the tracking starts to bleed. There's a hum coming from the woods that isn't insects, and the power lines flicker in a rhythm that feels like a warning.
+
+The town isn't just a place; it's a thin spot in reality. People here don't just leave—they're erased, leaving behind nothing but an entry in a journal that no one wants to believe is real. Falconwood is a quiet, unassuming small town where the veneer of suburban normalcy has begun to crack.
+
+For years, the town has been the site of "peculiar things"—unexplained phenomena, shadowy government experiments, and a string of disappearances that the local authorities have been unable (or unwilling) to solve. The town's history is being documented by a group of local youths in a collective journal known as The Falconwood Files. What started as a hobby to track local urban legends and "government spooks" turned into a grim reality when people began vanishing into thin air, pulled into a dark, parallel world.
+
+The architecture is a mix of 1980s suburban development and older, mysterious structures at the town's edges—an abandoned lab facility, a radio tower that broadcasts on frequencies no one can tune into, and dense woods where compasses spin uselessly. At night, streetlights flicker in unison, and shadows move independently of their sources.
+
+Key elements: Suburban American town with a sinister undercurrent. Government facility or lab on the outskirts. Dense, humming woods with unnatural sounds. Power line flickers and electronic interference. The sense of a "thin place" where reality is unstable.`
 };
 
 /**

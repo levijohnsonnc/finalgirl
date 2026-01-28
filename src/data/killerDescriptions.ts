@@ -84,7 +84,16 @@ To her left is a leaner man wearing a white, jagged-toothed "slasher" mask. He i
 
 To her right is a tall, broad-shouldered man wearing a burlap sack mask with crudely cut eye holes and a noose tied around the neck. He wears a heavy blue-and-tan plaid flannel shirt and dark jeans, holding a wooden club or bat.
 
-The clothing is practical and everyday—denim, flannel, and cotton—but appears worn and utilitarian. The expression of the group is unreadable due to the masks, but their collective body language is intimidating and predatory.`
+The clothing is practical and everyday—denim, flannel, and cotton—but appears worn and utilitarian. The expression of the group is unreadable due to the masks, but their collective body language is intimidating and predatory.`,
+
+  // The Falconwood Files
+  'Slayer': `A tall, unnaturally gaunt humanoid figure with limbs that are slightly too long, giving it a spider-like, predatory gait. It doesn't wear clothes; instead, its "skin" has a texture like wet, charred obsidian or dark, bruised muscle—slick, organic, and deeply unsettling.
+
+The creature lacks a traditional face. Where eyes and a nose should be, there is only smooth, stretched skin that ripples as if something is moving underneath. Its only visible feature is a jagged, lipless maw that opens wider than a human jaw should, filled with rows of needle-like teeth that glint in low light.
+
+Its body language is unnaturally still when at rest, but when it moves, it is swift and silent—more like a shadow given form than a physical being. The air around it seems to distort slightly, as if reality itself rejects its presence. When it appears, there is often a faint static hum and the sensation of the air growing thin and cold.
+
+The Slayer is a nightmare from the Mirror Dimension—a silent, predatory force that turns our familiar world into a cold, dark reflection. It doesn't just hunt; it tears through the fabric of reality itself. Once you hear the static and the air turns thin, it's already too late. You aren't just being hunted; you're being erased.`
 };
 
 /**
