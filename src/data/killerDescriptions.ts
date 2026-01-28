@@ -4,6 +4,9 @@
  */
 
 export const KILLER_DESCRIPTIONS: Record<string, string> = {
+  // Season 3 - Don't Make a Sound
+  'The Eyeless': `The Eyeless are pale, gaunt, and vaguely humanoid but clearly mutated or alien in origin. Their most striking feature is the total absence of eyes—the upper half of their face is often smooth, scarred, or covered in vestigial skin, leaving only a jagged, oversized maw or elongated limbs. These creatures are the brood of giant sand snakes, each as large as a tractor trailer, that were nested just below the desert town of Utopia almost a million years before. The million year molting period has awoken them, and they are hungry.`,
+
   // Season 3 - The Marrek Murders
   'The Tormentor': `A woman with a lean, athletic build and a menacing, predatory presence. Her face is obscured by a stark white, smooth mask reminiscent of a porcelain doll, featuring a single, jagged vertical bloodstain running down the left eye. Through the narrow eyeholes, her dark eyes are fixed in an intense, unwavering stare that feels cold and calculated. She wears a deep red hooded vest pulled over her head, framing the mask in shadow.
 
