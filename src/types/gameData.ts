@@ -70,6 +70,11 @@ import julieImage from '@/assets/characters/julie.png';
 import razorfaceImage from '@/assets/characters/razorface.png';
 import hellscapeImage from '@/assets/locations/hellscape.png';
 import hellToPayArt from '@/assets/box-art/hell-to-pay.png';
+import mandyImage from '@/assets/characters/mandy.png';
+import cassieImage from '@/assets/characters/cassie.png';
+import theTormentorImage from '@/assets/characters/the-tormentor.png';
+import marrekWarehouseImage from '@/assets/locations/marrek-warehouse.png';
+import marrekMurdersArt from '@/assets/box-art/the-marrek-murders.png';
 
 export interface FeatureFilm {
   id: string;
@@ -125,6 +130,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Kenzie': kenzieImage,
   'Julie': julieImage,
   'Razorface': razorfaceImage,
+  'Mandy': mandyImage,
+  'Cassie': cassieImage,
+  'The Tormentor': theTormentorImage,
 };
 
 // Location-specific images (for casting room display)
@@ -143,6 +151,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Wingard Cottage': wingardCottageImage,
   'Falconwood': falconwoodImage,
   'Hellscape': hellscapeImage,
+  'Marrek Warehouse': marrekWarehouseImage,
 };
 
 export interface SessionLog {
@@ -181,7 +190,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Slayer', location: 'Falconwood', finalGirls: ['Octavia', 'Janelle'], boxArt: falconwoodFilesArt },
   { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'The Hunter', location: 'Sunnydaze Mall', finalGirls: ['Kat', 'Tali'], boxArt: killerFromTomorrowArt },
   { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Razorface', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'], boxArt: hellToPayArt },
-  { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'The Tormentor', location: 'Marrek Warehouse', finalGirls: ['Mandy', 'Cassie'] },
+  { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'The Tormentor', location: 'Marrek Warehouse', finalGirls: ['Mandy', 'Cassie'], boxArt: marrekMurdersArt },
   { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'Ancient', location: 'Utopia', finalGirls: ['Agnes', 'Constance'] },
   
   // Season 4
