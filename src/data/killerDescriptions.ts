@@ -87,13 +87,9 @@ To her right is a tall, broad-shouldered man wearing a burlap sack mask with cru
 The clothing is practical and everyday—denim, flannel, and cotton—but appears worn and utilitarian. The expression of the group is unreadable due to the masks, but their collective body language is intimidating and predatory.`,
 
   // The Falconwood Files
-  'Slayer': `A tall, unnaturally gaunt humanoid figure with limbs that are slightly too long, giving it a spider-like, predatory gait. It doesn't wear clothes; instead, its "skin" has a texture like wet, charred obsidian or dark, bruised muscle—slick, organic, and deeply unsettling.
+  'Slayer': `A menacing, humanoid reptilian creature with a powerful, athletic build and a highly aggressive, supernatural presence. It has thick, moss-green scaly skin that appears calcified and deeply textured, resembling cracked stone or aged bark. Its face is gaunt and skull-like, with a recessed nose and a grimacing mouth that reveals sharp, predatory teeth. The most prominent feature is its large, intensely glowing neon-blue eyes that radiate a brilliant, piercing light.
 
-The creature lacks a traditional face. Where eyes and a nose should be, there is only smooth, stretched skin that ripples as if something is moving underneath. Its only visible feature is a jagged, lipless maw that opens wider than a human jaw should, filled with rows of needle-like teeth that glint in low light.
-
-Its body language is unnaturally still when at rest, but when it moves, it is swift and silent—more like a shadow given form than a physical being. The air around it seems to distort slightly, as if reality itself rejects its presence. When it appears, there is often a faint static hum and the sensation of the air growing thin and cold.
-
-The Slayer is a nightmare from the Mirror Dimension—a silent, predatory force that turns our familiar world into a cold, dark reflection. It doesn't just hunt; it tears through the fabric of reality itself. Once you hear the static and the air turns thin, it's already too late. You aren't just being hunted; you're being erased.`
+Arcs of electric-blue lightning crackle violently across its chest and down its heavily muscled arms, terminating in sharp, three-fingered claws. The creature is captured mid-movement in a low, predatory crouch, suggesting immense speed and volatility. It appears to be a fusion of a biological swamp-dwelling monster and raw, unstable electrical energy.`
 };
 
 /**
