@@ -5,17 +5,17 @@
 
 export const FINAL_GIRL_DESCRIPTIONS: Record<string, string> = {
   // Season 3 - The Marrek Murders
-  'Mandy': `A woman in her mid-20s with a muscular, athletic build and a fierce, combative presence. She has a medium complexion with visible perspiration and minor abrasions across her knuckles and forearms, suggesting she fights for a living or has been trained to do so. Her face is angular with a strong jaw, a straight nose, and dark, intense eyes that hold a focused, determined stare. Her brow is slightly furrowed, conveying readiness and controlled aggression.
+  'Mandy': `A woman in her late 20s to early 30s with a haunting and shell-shocked presence. She has medium-brown skin heavily marked with fresh, dark-red blood splatters and smears across her forehead, cheeks, and chin, suggesting a recent violent encounter. Her face has soft but defined features, a rounded jawline, and a prominent nose with a thin silver hoop in the nostril and a small septum ring. Her large, dark brown eyes are wide and glassy, gazing upward with a look of haunting realization and trauma.
 
-Her hair is dark brown to black, pulled back tightly into a practical, no-nonsense ponytail or bun that keeps it out of her face during combat. She wears no visible makeup, her features defined by the raw intensity of physical exertion and the harsh overhead lighting of a warehouse environment. Her expression is serious and unsmiling, reflecting someone who has been waiting for a fight her whole life.
+Her hair is deep black, thick, and wavy, falling past her shoulders in a slightly disheveled manner. She wears no visible makeup; the focus is entirely on the raw, visceral bloodstains and her wide-eyed, hyper-vigilant expression. Her mouth is slightly agape, and her facial muscles are tense.
 
-She is dressed in practical work clothing—a dark tank top or fitted t-shirt and industrial pants or cargo trousers, suggesting she works the line at a warehouse. Her physique is clearly defined, showcasing the discipline of MMA training.`,
+She embodies a gritty, cinematic survivor aesthetic—exhausted and bloodied but still standing. She wears a simple, functional purple hoodie that is also stained with blood.`,
 
-  'Cassie': `A woman in her late 20s with a lean, theatrical build and an unexpectedly wild, chaotic presence. She has fair skin marked by fresh scratches and a determined glint in her eyes that suggests she's treating this life-or-death situation like the ultimate escape room challenge. Her face is expressive with arched brows, a mischievous smile, and bright, alert eyes that dart around looking for clues, weapons, and exits.
+  'Cassie': `A woman in her late 20s to early 30s with a lean, athletic build and a fierce, battle-hardened presence. She has pale skin heavily splattered with visceral, dark blood and smudges of grime that suggest an immediate and violent struggle. Her face is angular with a sharp jawline, high cheekbones, and a straight nose. She has intense, piercing blue eyes with a sharp, unwavering stare and slightly furrowed brows that convey lethal focus and a primal survival instinct.
 
-Her hair is styled dramatically—perhaps in bold curls or an elaborate updo that has become disheveled through the night's events. She wears visible costume elements: leather chaps over jeans, a theatrical corset or vest, and various accessories that suggest she dressed up for an event she thought would be fun, not fatal.
+Her hair is dark, chin-length, and messy, appearing slightly damp and unstyled. She wears chipped black nail polish on her fingertips. Her expression is cold, serious, and utterly defiant, showing no sign of fear.
 
-Her expression oscillates between genuine fear and an almost giddy determination, as if part of her is thriving in the chaos. She grips an axe or hatchet with surprising comfort, her stance suggesting she's not just willing to defend herself—she's eager to go on the offensive.`,
+She appears dangerous and capable, a combatant rather than a victim. She wears a practical black mesh athletic top and her hands are bound in thick, black athletic wraps, both of which are stained with blood.`,
 
   // Season 3 - Hell to Pay
   'Kenzie': `A woman in her late 20s with a shell-shocked yet resilient presence. Her pale skin is streaked with fresh, dark blood running from her hairline down her cheeks and mouth, suggesting a recent and violent struggle. Her face features wide, dark eyes that hold a haunted, fixed stare, framed by slightly furrowed brows that convey a mix of trauma and determination.
