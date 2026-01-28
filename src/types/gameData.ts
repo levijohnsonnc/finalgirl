@@ -10,7 +10,7 @@ import rottenHarvestArt from '@/assets/box-art/rotten-harvest.png';
 import intoTheVoidArt from '@/assets/box-art/into-the-void.png';
 import panicStation2891Art from '@/assets/box-art/panic-station-2891.png';
 import knockAtTheDoorArt from '@/assets/box-art/knock-at-the-door.png';
-
+import falconwoodFilesArt from '@/assets/box-art/the-falconwood-files.png';
 // Character/location specific images
 import hansImage from '@/assets/characters/hans.png';
 import laurieImage from '@/assets/characters/laurie.png';
@@ -61,6 +61,10 @@ import ginnyImage from '@/assets/characters/ginny.png';
 import avaImage from '@/assets/characters/ava.png';
 import theIntrudersImage from '@/assets/characters/the-intruders.png';
 import wingardCottageImage from '@/assets/locations/wingard-cottage.png';
+import octaviaImage from '@/assets/characters/octavia.png';
+import janelleImage from '@/assets/characters/janelle.png';
+import slayerImage from '@/assets/characters/slayer.png';
+import falconwoodImage from '@/assets/locations/falconwood.png';
 
 export interface FeatureFilm {
   id: string;
@@ -110,6 +114,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Ginny': ginnyImage,
   'Ava': avaImage,
   'The Intruders': theIntrudersImage,
+  'Octavia': octaviaImage,
+  'Janelle': janelleImage,
+  'Slayer': slayerImage,
 };
 
 // Location-specific images (for casting room display)
@@ -126,6 +133,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Station 2891': station2891Image,
   'Storybook Woods': storybookWoodsImage,
   'Wingard Cottage': wingardCottageImage,
+  'Falconwood': falconwoodImage,
 };
 
 export interface SessionLog {
@@ -161,7 +169,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's2-knock-at-door', name: 'A Knock at the Door', season: 2, killer: 'The Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'], boxArt: knockAtTheDoorArt },
   
   // Season 3
-  { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Butcher', location: 'Falconwood', finalGirls: ['Sookie', 'Tanya'] },
+  { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Slayer', location: 'Falconwood', finalGirls: ['Octavia', 'Janelle'], boxArt: falconwoodFilesArt },
   { id: 's3-killer-from-tomorrow', name: 'The Killer from Tomorrow', season: 3, killer: 'The Hunter', location: 'Sunnydaze Mall', finalGirls: ['Kat', 'Tali'], boxArt: killerFromTomorrowArt },
   { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Hellview Killers', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'] },
   { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'Terminus', location: 'Marrek Warehouse', finalGirls: ['Jada', 'Gia'] },
