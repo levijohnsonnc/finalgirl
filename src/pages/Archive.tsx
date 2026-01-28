@@ -54,9 +54,10 @@ const Archive = () => {
     's2-panic-station-2891',
     's2-once-upon-full-moon',
     's2-knock-at-door',
-    // Season 3 - Killer from Tomorrow + The Falconwood Files
+    // Season 3 - Killer from Tomorrow + The Falconwood Files + Hell to Pay
     's3-killer-from-tomorrow',
     's3-falconwood-files',
+    's3-hell-to-pay',
     // Season 4 - A Rotten Harvest
     's4-rotten-harvest',
   ];
