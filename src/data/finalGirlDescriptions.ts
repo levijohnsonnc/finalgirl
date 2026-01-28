@@ -4,6 +4,11 @@
  */
 
 export const FINAL_GIRL_DESCRIPTIONS: Record<string, string> = {
+  // Season 3 - Don't Make a Sound
+  'Meghan': `Megan Gummot knows how to survive. She grew up in Utopia and never had anything handed to her. She learned at a young age that tackling problems head-on is usually the best approach. But the harshness of the desert and her boredom with small-town living has pushed her to a decision: It is time to leave Utopia. Under normal circumstances it would be easy to pack up and leave town, but when your parents are doomsday planners—and think the world is going to go to shit at any moment—it becomes a little tougher. And when it actually DOES go to shit, leaving town becomes basically impossible.`,
+
+  'Ronda': `Ronda Carter was sent to Utopia to do seismology studies to support her research as an archaeological student at Hammond University. She'd be in town for a month or so taking readings and studying… there wasn't much else to do after all. Ronda reveled in meeting new Utopians. They clearly hadn't seen or met someone with her "style and flair." She was met with trepidation and caution from the residents at first, but the more they got to know her, the more they accepted her as a guest. The other guests that were coming to Utopia would not be so welcomed.`,
+
   // Season 3 - The Marrek Murders
   'Mandy': `A woman in her late 20s to early 30s with a haunting and shell-shocked presence. She has medium-brown skin heavily marked with fresh, dark-red blood splatters and smears across her forehead, cheeks, and chin, suggesting a recent violent encounter. Her face has soft but defined features, a rounded jawline, and a prominent nose with a thin silver hoop in the nostril and a small septum ring. Her large, dark brown eyes are wide and glassy, gazing upward with a look of haunting realization and trauma.
 

@@ -4,6 +4,9 @@
  */
 
 export const LOCATION_DESCRIPTIONS: Record<string, string> = {
+  // Season 3 - Don't Make a Sound
+  'Utopia': `Welcome to Utopia! Jokingly called "nowhere" by the rest of the state's residents, Utopia is a desert town where the people are outnumbered by... well just about anything else you can think of. Little do the residents know, but they are about to be set upon by a brood of giant sand snakes, each as large as a tractor trailer, that were nested just below the town almost a million years before. The million year molting period has arrived, and now the sands beneath Utopia stir with ancient, hungry predators.`,
+
   // Season 3 - The Marrek Murders
   'Marrek Warehouse': `A massive industrial monolith of rust and corrugated metal that looms over the landscape, appearing less like a functional storage facility and more like a graveyard for heavy industry. The exterior is a patchwork of oxidization and weathered steel, suggesting a structure that has been abandoned by time but remains standing through sheer, stubborn mass.
 
