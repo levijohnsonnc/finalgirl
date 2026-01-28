@@ -649,6 +649,59 @@ Many special events and relaxing getaways have been hosted here. Unfortunately, 
 
 The Intruders are a "horde" type Killer consisting of three distinct slashers: Baghead, Redhood, and Zeke. Unlike other killers, their power is split between three individuals, each bringing their own brand of terror to Wingard Cottage.`
     }
+  },
+  's3-falconwood-files': {
+    filmId: 's3-falconwood-files',
+    finalGirls: [
+      {
+        name: 'Octavia',
+        backstory: `Raised by a single mom who worked hard to make ends meet, Octavia was used to making do with little. When the government lab was setting up a "sleep lab" to study kids' sleeping patterns, her mom saw it as a free summer camp and sent Octavia to spend a month there.
+
+They weren't studying sleep patterns—that was bullshit—they were trying to stimulate untapped parts of the brain. There were several kids there, and some advanced quicker than others. Octavia struggled to make anything move with her mind, and sucked at being able to read people's minds.
+
+One day, when she was describing a situation, people around her were able to see exactly what she was picturing in her mind. That's when she learned that she could plant images in people's minds… images so real that people thought it was actually happening in front of them. No one else was able to do this, so that made Octavia unique.
+
+Just before her month there was going to end, her mother had a mysterious accident and died. The lab "adopted" her and she became their prisoner. Using her abilities she was able to break out a few years later. She was only 11 but she met a kind man who brought her in and kept her hidden. He died when she was in her early teens, and she's been on her own since.
+
+Octavia's power is projection—the ability to implant vivid, realistic images directly into people's minds. Her targets experience these projections as if they're actually happening, making her a master of misdirection and psychological warfare.`
+      },
+      {
+        name: 'Janelle',
+        backstory: `Janelle's classmates considered her a nerd. She loved science and read lots of books. She tried to fit in with the cool kids, but that usually turned out badly.
+
+When she saw posters for the "sleep lab" at the nearby government facility, she begged her parents to let her go… she was hoping to spend the months with other science geeks. She didn't excel at any of the mind tests like some of the other kids. She was sometimes able to nudge something with her mind but it was rare.
+
+When the month was up, she was sent home. Some kids stayed longer and Janelle was so jealous of them. When she went back to school in September, the bullying just got worse.
+
+One day, when Janelle was at an all time low from the bullying, she erupted in anger and threw a boy across the cafeteria with her mind. Most of the kids didn't notice what had happened and no one believed those that did. But her parents believed her and kept her ability hidden.
+
+With the help of a friendly scientist that they knew, she was able to develop her telekinetic powers and more discreetly use her abilities. From that point onwards, anyone who bullied her suffered mysterious injuries from what appeared to be freak accidents.
+
+Janelle's power is telekinesis—the ability to move objects with her mind. While she struggled to develop this ability at first, intense emotional triggers unlocked its full potential, making her a formidable force when pushed to her limits.`
+      }
+    ],
+    location: {
+      name: 'Falconwood',
+      description: `At first glance, Falconwood is the American dream in 35mm. Manicured lawns, a bustling mall, and quiet cul-de-sacs. But look closer, and the tracking starts to bleed. There's a hum coming from the woods that isn't insects, and the power lines flicker in a rhythm that feels like a warning.
+
+The town isn't just a place; it's a thin spot in reality. People here don't just leave—they're erased, leaving behind nothing but an entry in a journal that no one wants to believe is real.
+
+Falconwood is a quiet, unassuming small town where the veneer of suburban normalcy has begun to crack. For years, the town has been the site of "peculiar things"—unexplained phenomena, shadowy government experiments, and a string of disappearances that the local authorities have been unable (or unwilling) to solve.
+
+The town's history is being documented by a group of local youths in a collective journal known as The Falconwood Files. What started as a hobby to track local urban legends and "government spooks" turned into a grim reality when people began vanishing into thin air, pulled into a dark, parallel world.`,
+      setupCards: [],
+      events: []
+    },
+    killer: {
+      name: 'Slayer',
+      description: `Something is rotten in the heart of Falconwood. It doesn't just stalk; it tears through the fabric of reality itself. The Slayer is a nightmare from the Mirror Dimension—a silent, predatory force that turns our familiar world into a cold, dark reflection. Once you hear the static and the air turns thin, it's already too late. You aren't just being hunted; you're being erased.
+
+The Slayer has a tall, unnaturally gaunt humanoid frame. Its limbs are slightly too long, giving it a spider-like, predatory gait. It doesn't wear clothes; instead, its "skin" has a texture like wet, charred obsidian or dark, bruised muscle.
+
+It lacks a traditional face. Where eyes and a nose should be, there is only smooth, stretched skin that ripples as if something is moving underneath. Its only feature is a jagged, lipless maw that opens wider than a human jaw should, filled with rows of needle-like teeth.
+
+The Slayer exists between dimensions, emerging from the Mirror Dimension to hunt its prey. When it appears, reality distorts—lights flicker, static fills the air, and shadows move independently of their sources.`
+    }
   }
 };
 
