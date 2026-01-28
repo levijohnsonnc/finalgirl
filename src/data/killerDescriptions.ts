@@ -4,6 +4,16 @@
  */
 
 export const KILLER_DESCRIPTIONS: Record<string, string> = {
+  // Season 3 - Hell to Pay
+  'Razorface': `Razorface was not born into Hellscape. He was finished there.
+
+His head is a brutal construction of steel and scar tissue, a welded mask of overlapping blades bolted directly into his skull. The edges are never still—some vibrate faintly, others drip with heat and sparks, as if the machinery inside him never fully powers down. Where eyes should be, there are narrow slits glowing furnace-orange, focused and merciless. When he turns his head, metal screams against metal.
+
+His body is massive, asymmetrical, built like a laborer that never clocked out. Hooks and chains hang from his shoulders, clinking softly when he moves, a sound that often comes seconds before he does. His weapon is never just a weapon: a cleaver fused to his arm, a grinding saw dragged behind him, a chain wrapped around his fist like a promise. Everything about him suggests improvisation refined into ritual.
+
+Razorface does not stalk with patience or flair. He advances. Slowly. Relentlessly. He lets the environment weaken you first—the heat, the smoke, the narrow platforms—then closes the distance when panic does the rest. He understands Hellscape instinctively, moving across collapsing walkways and sparking machinery as if the place is extending itself on his behalf.
+
+There is no rage in him, no joy. Razorface is purpose given mass. A worker who became the tool. When you hear the scrape of steel behind you, it isn't a warning. It's the sound of something inevitable finally catching up.`,
   "Hans": `A tall, broad-shouldered humanoid figure with a heavy, imposing build and an unmistakably predatory presence. The figure wears a realistic pig mask that fully obscures the human face beneath it. The mask has pale, fleshy skin texture, pronounced snout, upright ears, and glowing red eyes that feel artificial and inhuman rather than emotional. The expression of the mask is fixed and unreadable, which makes the figure more unsettling.
 
 The body language is dominant and deliberate—shoulders squared, stance grounded, movements economical and purposeful. This is not a frantic killer; it is controlled, confident, and patient.
