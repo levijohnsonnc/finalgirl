@@ -113,15 +113,17 @@ The overall mood is one of profound stillness, solitude, and "hygge"—a sanctua
 Key elements: Isolated lakeside setting with heavy morning mist. Rustic stone and log cabin with a smoking chimney. Wooden dock with an overturned silver rowboat. Moss-draped evergreen forest framing the composition. Still, reflective water doubling the treeline and sky.`,
 
   // The Falconwood Files
-  'Falconwood': `At first glance, Falconwood is the American dream in 35mm. Manicured lawns, a bustling mall, and quiet cul-de-sacs frame what appears to be an idyllic small town. But look closer, and the tracking starts to bleed. There's a hum coming from the woods that isn't insects, and the power lines flicker in a rhythm that feels like a warning.
+  'Falconwood': `A quiet, mid-century suburban cul-de-sac called Falconwood, where the architecture consists of modest two-story homes with vinyl siding, dark shutters, and neatly manicured lawns. The neighborhood feels settled and routine, frozen in a state of perpetual late-afternoon gloom under a heavy, overcast sky.
 
-The town isn't just a place; it's a thin spot in reality. People here don't just leave—they're erased, leaving behind nothing but an entry in a journal that no one wants to believe is real. Falconwood is a quiet, unassuming small town where the veneer of suburban normalcy has begun to crack.
+At the entrance of the street stands a weathered wooden sign welcoming visitors to Falconwood, established in 1952. Beside it, a towering wooden utility pole supports a single street light that glows with a harsh, flickering orange hue, casting an unnatural warmth onto the damp asphalt even though the sun hasn't fully set.
 
-For years, the town has been the site of "peculiar things"—unexplained phenomena, shadowy government experiments, and a string of disappearances that the local authorities have been unable (or unwilling) to solve. The town's history is being documented by a group of local youths in a collective journal known as The Falconwood Files. What started as a hobby to track local urban legends and "government spooks" turned into a grim reality when people began vanishing into thin air, pulled into a dark, parallel world.
+A vintage wood-paneled station wagon is parked in one of the driveways, its boxy frame and tan paint reinforcing a distinct 1980s suburban vibe. The houses are well-maintained but feel oddly vacant; porch lights are off, and the white garage doors remain tightly shut, suggesting a neighborhood where privacy is paramount and the streets are intentionally empty.
 
-The architecture is a mix of 1980s suburban development and older, mysterious structures at the town's edges—an abandoned lab facility, a radio tower that broadcasts on frequencies no one can tune into, and dense woods where compasses spin uselessly. At night, streetlights flicker in unison, and shadows move independently of their sources.
+Beyond the manicured lawns, a dense wall of lush green trees presses right up against the back of the properties, creating a sharp boundary between the civilized street and the untamed woods. A chain-link fence topped with warning signs marks a restricted area near the treeline, hinting at a hidden facility or a forgotten boundary just out of reach.
 
-Key elements: Suburban American town with a sinister undercurrent. Government facility or lab on the outskirts. Dense, humming woods with unnatural sounds. Power line flickers and electronic interference. The sense of a "thin place" where reality is unstable.`
+The atmosphere is one of suburban isolation and quiet dread—the kind of stillness that suggests everyone is indoors, watching from behind their shutters, waiting for something to break the silence.
+
+Key elements: Suburban cul-de-sac with 1980s-style homes and manicured lawns. Weathered wooden "Falconwood" entry sign. Vintage wood-paneled station wagon parked in a driveway. Glowing orange street light under a gloomy, overcast sky. Dense forest backdrop with a restricted chain-link fence.`
 };
 
 /**
