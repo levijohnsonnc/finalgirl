@@ -5,9 +5,17 @@
 
 export const FINAL_GIRL_DESCRIPTIONS: Record<string, string> = {
   // Season 3 - Don't Make a Sound
-  'Meghan': `Megan Gummot knows how to survive. She grew up in Utopia and never had anything handed to her. She learned at a young age that tackling problems head-on is usually the best approach. But the harshness of the desert and her boredom with small-town living has pushed her to a decision: It is time to leave Utopia. Under normal circumstances it would be easy to pack up and leave town, but when your parents are doomsday planners—and think the world is going to go to shit at any moment—it becomes a little tougher. And when it actually DOES go to shit, leaving town becomes basically impossible.`,
+  'Meghan': `A young Black woman in her early 20s with a lean, resilient build and an uncompromising, fierce presence. Her skin is marked by the visceral aftermath of a struggle, featuring a heavy purple bruise swelling around her right eye, a trail of fresh blood from her nose, and fine crimson spatters across her neck and chest. Her face is heart-shaped with a defiant, set jaw and a straight nose. She has dark, piercing eyes that hold a direct, unwavering stare, conveying a mix of shock and cold, mounting resolve.
 
-  'Ronda': `Ronda Carter was sent to Utopia to do seismology studies to support her research as an archaeological student at Hammond University. She'd be in town for a month or so taking readings and studying… there wasn't much else to do after all. Ronda reveled in meeting new Utopians. They clearly hadn't seen or met someone with her "style and flair." She was met with trepidation and caution from the residents at first, but the more they got to know her, the more they accepted her as a guest. The other guests that were coming to Utopia would not be so welcomed.`,
+Her hair is jet-black and highly textured, styled into two large, rounded puffs on either side of her head. She wears no makeup, leaving her natural features raw and focused. Her expression is grim and unyielding, devoid of fear or vulnerability.
+
+She appears battered but unbroken, a survivor caught in the immediate wake of a confrontation. She wears a simple, bright yellow v-neck t-shirt—now stained with blood—and a thin black ribbon choker.`,
+
+  'Ronda': `A woman in her early 30s with a sharp, defiant presence and an edgy, underground energy. She has a pale complexion with a clear but textured skin quality, accentuated by harsh, high-contrast lighting. Her face is highly angular, featuring high cheekbones, a straight nose, and a firm, well-defined jawline. Her intense, light green eyes are wide and piercing, locked in a challenging, unyielding stare with neutral, slightly heavy brows.
+
+Her hair is bleach-blonde and styled into a high, voluminous textured mohawk with closely shaved sides. She has multiple small silver stud and hoop piercings along the outer rim of her ears. Her expression is stone-faced and guarded, conveying a sense of hardened independence.
+
+She wears a heavily distressed, mustard-yellow leather biker jacket with visible wear and tear over a faded, off-white graphic t-shirt.`,
 
   // Season 3 - The Marrek Murders
   'Mandy': `A woman in her late 20s to early 30s with a haunting and shell-shocked presence. She has medium-brown skin heavily marked with fresh, dark-red blood splatters and smears across her forehead, cheeks, and chin, suggesting a recent violent encounter. Her face has soft but defined features, a rounded jawline, and a prominent nose with a thin silver hoop in the nostril and a small septum ring. Her large, dark brown eyes are wide and glassy, gazing upward with a look of haunting realization and trauma.

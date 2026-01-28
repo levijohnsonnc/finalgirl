@@ -5,7 +5,9 @@
 
 export const KILLER_DESCRIPTIONS: Record<string, string> = {
   // Season 3 - Don't Make a Sound
-  'The Eyeless': `The Eyeless are pale, gaunt, and vaguely humanoid but clearly mutated or alien in origin. Their most striking feature is the total absence of eyes—the upper half of their face is often smooth, scarred, or covered in vestigial skin, leaving only a jagged, oversized maw or elongated limbs. These creatures are the brood of giant sand snakes, each as large as a tractor trailer, that were nested just below the desert town of Utopia almost a million years before. The million year molting period has awoken them, and they are hungry.`,
+  'The Eyeless': `A humanoid creature with a pale, greyish-beige complexion and a powerful, lean muscularity. The skin is highly textured with visible veins, mottled discoloration, and a matte, leathery quality that suggests practical prosthetic makeup rather than digital effects. The most striking feature is a large, fan-like crest extending from the forehead and temples, ribbed with bony ridges and parchment-like membranes that appear both ancient and organic.
+
+The face is gaunt and monstrous, with deeply sunken, dark eyes and a wide-open, snarling mouth that reveals rows of long, needle-sharp fangs. Viscous saliva drips from the lower jaw, emphasizing a primal, predatory state. The creature's expression is one of pure, mindless aggression. It is captured in a dark, subterranean environment with warm, out-of-focus background lights, creating a gritty, high-contrast aesthetic typical of a vintage 1980s creature feature.`,
 
   // Season 3 - The Marrek Murders
   'The Tormentor': `A woman with a lean, athletic build and a menacing, predatory presence. Her face is obscured by a stark white, smooth mask reminiscent of a porcelain doll, featuring a single, jagged vertical bloodstain running down the left eye. Through the narrow eyeholes, her dark eyes are fixed in an intense, unwavering stare that feels cold and calculated. She wears a deep red hooded vest pulled over her head, framing the mask in shadow.

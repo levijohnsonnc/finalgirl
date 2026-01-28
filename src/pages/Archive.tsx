@@ -42,7 +42,7 @@ const Archive = () => {
   };
 
   // Seasons that are in development (show "In Development" badge)
-  const inDevelopmentSeasons = [3, 4];
+  const inDevelopmentSeasons = [4];
   
   // Films that have been fully configured and are available despite being in development seasons
   const availableFilmIds = [
