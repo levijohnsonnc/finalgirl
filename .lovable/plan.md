@@ -1,98 +1,107 @@
-## Plan: Code Quality, Maintainability, and Automated Testing
 
-### Status: In Progress ✅
 
----
+## Plan: Integrate Final Girl Health Values
 
-### Completed Work
-
-#### ✅ Phase 1: Testing Infrastructure Setup
-- Installed vitest, @testing-library/react, @testing-library/jest-dom, jsdom
-- Created `vitest.config.ts` with jsdom environment and path aliases
-- Created `src/test/setup.ts` with jest-dom matchers and matchMedia mock
-- Updated `tsconfig.app.json` with vitest globals type
-
-#### ✅ Phase 2: Frontend Unit Tests
-- Created `src/hooks/useLocalStorage.test.ts` (8 tests)
-- Created `src/hooks/useGameHistory.test.ts` (15 tests covering recordGame, updateGame, deleteGame, getStats, clearHistory, persistence)
-
-#### ✅ Phase 3: Edge Function Tests  
-- Created `supabase/functions/_shared/validation_test.ts` (20 tests)
-- All tests passing: StoryRequestSchema, ImageRequestSchema, EndingRequestSchema, NarrationRequestSchema
-- Tests cover valid requests, missing fields, empty fields, length limits, invalid positions, invalid outcomes
-
-#### ✅ Phase 4: Code Maintainability Improvements
-- Updated CORS headers in `supabase/functions/_shared/auth.ts` with modern Supabase headers
-- Fixed React forwardRef warnings in:
-  - `src/components/FilmToggle.tsx`
-  - `src/components/NewsTicker.tsx`
-  - `src/components/ui/alert-dialog.tsx`
-
-#### ✅ Data Utility Tests
-- Created `src/types/gameData.test.ts` (tests for FEATURE_FILMS, getOwnedContent, getFilmIdByLocation, getFilmIdByKiller, getFilmIdByFinalGirl, CHARACTER_IMAGES, LOCATION_IMAGES)
-- Created `src/types/featureFilmDetails.test.ts` (tests for getFilmDetails, getSetupCardsForLocation, getEventsForLocation, Season 2 content)
+This plan adds character-specific health values for each Final Girl based on the official game data you provided. Currently, the app assumes all characters have the same health (max 20), but Final Girls actually have 5 or 6 HP depending on the character.
 
 ---
 
-### Remaining Work
+### Overview
 
-#### 🔲 Component Tests (Optional - Lower Priority)
-| Test File | Tests |
-|-----------|-------|
-| `src/components/GameOutcomeForm.test.tsx` | Form field changes, validation, submit with correct data |
-| `src/components/CastingSlot.test.tsx` | Shuffle callback, choose callback, loading state |
-
-#### 🔲 Additional Maintainability Refactors (Optional)
-| File | Purpose |
-|------|---------|
-| `src/lib/formatters.ts` | Extract `renderFormattedText` from NowPlaying.tsx |
-| `src/lib/audioPlayer.ts` | Extract audio playback logic from NowPlaying.tsx |
-| `src/lib/validation.ts` | Add Zod schema validation to `useGameHistory` for data integrity |
+We'll create a central data file mapping each Final Girl to her starting health, then update all components that reference health to use these accurate values.
 
 ---
 
-### Test Coverage Summary
+### Changes
 
-| Category | Tests Created | Status |
-|----------|---------------|--------|
-| Hook Tests | 23 | ✅ Created |
-| Data Utility Tests | 25+ | ✅ Created |
-| Edge Function Tests | 20 | ✅ Passing |
-| Component Tests | 0 | 🔲 Optional |
+#### 1. Create Final Girl Health Data File
+
+**New file:** `src/data/finalGirlHealth.ts`
+
+Creates a lookup table mapping each Final Girl name to her starting health value:
+- Characters with 5 HP: Reiko, Alice, Barbara, Asami, Nancy, Jeanette, Uki, Ava, Red, Veronica, Octavia, Riley, Kirsty, Nora, Cindy, Rena, Vicky, Rita, Alois
+- Characters with 6 HP: Laurie, Selena, Adelaide, Charlie, Sheila, Ellen, Kate, Ginny, Gretel, Heather, Janelle, Mia, Heather, Julia, Noel, Gwynn, Joy, Lindi, Dakota
+
+Also includes:
+- `getFinalGirlHealth(name)` helper function that returns the health value (defaults to 5 if unknown)
+- `getFinalGirlMaxHealth(name)` alias for clarity in UI contexts
+
+#### 2. Update Game Outcome Form
+
+**File:** `src/components/GameOutcomeForm.tsx`
+
+Changes:
+- Import the health lookup function
+- Set the default health value based on the selected Final Girl's actual max HP
+- Set the max attribute on the health input to match the character's max HP
+- Update the label to show the character-specific max (e.g., "Final Girl Health (0-6)")
+
+#### 3. Update LLM Ending Generation Prompts
+
+**File:** `supabase/functions/generate-ending/index.ts`
+
+Changes:
+- Update the system prompt to explain health is on a 5-6 HP scale (not 0-20)
+- Pass the max health value in the optional stats section for accurate context
+- Example: `Final Girl Health: 2/6` instead of `2/20`
+
+#### 4. Update Stats Calculations
+
+**File:** `src/hooks/useGameStats.ts`
+
+Changes to threshold calculations that currently assume 20 HP max:
+- **Clutch Win**: Change from `≤2 HP` to `≤1 HP` (surviving with 1 HP out of 5-6 is clutch)
+- **Clean Win**: Change from `≥8 HP` to checking if health equals max health (won without taking damage)
+- **Low Health Wins**: Change from `≤3 HP` to `≤2 HP` for archetype calculations
+
+Also add the health lookup import to show percentage-based context where relevant.
+
+#### 5. Update Validation Schemas
+
+**File:** `supabase/functions/_shared/validation.ts`
+
+Changes:
+- Update `finalGirlHealth` max from 20 to 10 (allows some buffer for edge cases or custom games)
 
 ---
 
-### Running Tests
+### Technical Details
 
-**Frontend tests:**
-```bash
-npm run test
-# or
-npx vitest run
+```text
+src/
+├── data/
+│   └── finalGirlHealth.ts (NEW)  ── Health lookup table
+├── components/
+│   └── GameOutcomeForm.tsx       ── Dynamic max health per character
+├── hooks/
+│   └── useGameStats.ts           ── Adjusted thresholds
+supabase/
+└── functions/
+    ├── _shared/
+    │   └── validation.ts         ── Updated max validation
+    └── generate-ending/
+        └── index.ts              ── Accurate health context for LLM
 ```
 
-**Edge function tests:**
-Use Lovable's edge function test tool or:
-```bash
-deno test supabase/functions/_shared/validation_test.ts
-```
+---
+
+### Data Mapping
+
+Based on your provided table, here's the mapping that will be created:
+
+| Health | Final Girls |
+|--------|-------------|
+| 5 HP | Reiko, Alice, Barbara, Asami, Nancy, Jeanette, Uki, Ava, Red, Veronica, Traci, Riley, Kirsty, Nora, Cindy, Rena, Vicky, Rita, Alois, Meghan, Cassie |
+| 6 HP | Laurie, Selena, Adelaide, Charlie, Sheila, Ellen, Kate, Ginny, Gretel, Heather, Danielle, Mia, Heather, Julia, Noel, Gwynn, Joy, Lindi, Dakota, Ronda, Mandy |
+
+Note: Some names from your table have slight spelling variations from what's in the codebase (e.g., "Jeanette" vs "Jenette"). I'll align with the existing codebase spellings.
 
 ---
 
-### Files Created/Modified
+### Impact
 
-**New Test Files:**
-- `vitest.config.ts`
-- `src/test/setup.ts`
-- `src/hooks/useLocalStorage.test.ts`
-- `src/hooks/useGameHistory.test.ts`
-- `src/types/gameData.test.ts`
-- `src/types/featureFilmDetails.test.ts`
-- `supabase/functions/_shared/validation_test.ts`
+- **Forms**: Health input will show correct max and default for each character
+- **Stats**: Thresholds will accurately reflect close calls and clean wins
+- **LLM Generation**: Story endings will understand the true stakes (2 HP remaining out of 5 is dire, not minor)
+- **Backwards Compatibility**: Existing game records with health values will still work; stats calculations will be more meaningful
 
-**Modified for Maintainability:**
-- `tsconfig.app.json` - Added vitest globals
-- `supabase/functions/_shared/auth.ts` - Updated CORS headers
-- `src/components/FilmToggle.tsx` - Added forwardRef
-- `src/components/NewsTicker.tsx` - Added forwardRef
-- `src/components/ui/alert-dialog.tsx` - Fixed Portal usage
