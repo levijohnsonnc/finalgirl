@@ -31,6 +31,7 @@ serve(async (req) => {
       victimsKilled,
       endingSubLocation,
       gameHighlights,
+      finalGirlMaxHealth,
     } = validation.data;
 
     // Build the system prompt with refined instructions
@@ -54,7 +55,8 @@ Outcome logic:
 How to use optional details (only if present):
 - Final Horror Level (1-7 scale, 7 = maximum terror) influences intensity and atmosphere.
 - Weapon Used should appear naturally (object, weight, smell, memory).
-- Final Girl Health (0-20 scale) / Killer Health (0-20 scale) should color the physicality and pace (limping, trembling hands, ragged breath, stubborn endurance).
+- Final Girl Health is on a 5-6 HP scale depending on the character (NOT 0-20). A value like 1/6 or 2/5 is dangerously low—she's been through hell. Use this to color physicality: limping, trembling hands, ragged breath, stubborn endurance.
+- Killer Health (0-20 scale) indicates how damaged the killer is.
 - Victims Saved / Killed should shape emotional aftermath (guilt, gratitude, emptiness, survivors' statements).
 - Ending Location anchors the final scene.
 - Game Highlights are "key beats"—pick the 2-3 most dramatic and weave them in as quick flashes, consequences, or callbacks.
@@ -75,11 +77,12 @@ Return ONLY the story text. No headings, bullet points, or meta commentary.`;
       ? `Location: ${location.name}\nDescription: ${location.description}`
       : `Location: ${location.name}`;
 
-    // Build optional stats section
+    // Build optional stats section with character-specific max health
+    const maxHealth = finalGirlMaxHealth ?? 5;  // Default to 5 if not provided
     const optionalStats = [
       finalHorrorLevel !== undefined ? `Final Horror Level: ${finalHorrorLevel}/7` : null,
       weaponUsed ? `Weapon Used: ${weaponUsed}` : null,
-      finalGirlHealth !== undefined ? `Final Girl Health: ${finalGirlHealth}/20` : null,
+      finalGirlHealth !== undefined ? `Final Girl Health: ${finalGirlHealth}/${maxHealth}` : null,
       killerHealth !== undefined ? `Killer Health: ${killerHealth}/20` : null,
       victimsSaved !== undefined ? `Victims Saved: ${victimsSaved}` : null,
       victimsKilled !== undefined ? `Victims Killed: ${victimsKilled}` : null,

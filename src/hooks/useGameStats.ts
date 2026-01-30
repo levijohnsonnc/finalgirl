@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { GameResult } from './useGameHistory';
+import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
 
 export interface FinalGirlStats {
   name: string;
@@ -352,17 +353,21 @@ export const useGameStats = (
         }, null as GameResult | null)
       : null;
 
-    // Clutch Win (won with 1-2 health or at max horror)
+    // Clutch Win (won with 1 HP remaining or at max horror)
+    // With 5-6 HP characters, 1 HP is truly clutch
     const clutchWinGame = wins.find(g => 
-      (g.finalGirlHealth != null && g.finalGirlHealth <= 2) ||
+      (g.finalGirlHealth != null && g.finalGirlHealth <= 1) ||
       (g.finalHorrorLevel === 7)
     ) || null;
 
-    // Clean Win (low horror + high health)
-    const cleanWinGame = wins.find(g =>
-      (g.finalHorrorLevel != null && g.finalHorrorLevel <= 2) &&
-      (g.finalGirlHealth != null && g.finalGirlHealth >= 8)
-    ) || null;
+    // Clean Win (low horror + full or near-full health relative to character max)
+    const cleanWinGame = wins.find(g => {
+      if (g.finalHorrorLevel == null || g.finalHorrorLevel > 2) return false;
+      if (g.finalGirlHealth == null) return false;
+      const maxHealth = getFinalGirlMaxHealth(g.finalGirl);
+      // Clean win = at least 80% health remaining (5+ for 6HP chars, 4+ for 5HP chars)
+      return g.finalGirlHealth >= Math.ceil(maxHealth * 0.8);
+    }) || null;
 
     // Favorite Matchup (most played combo)
     const matchups = filteredGames.map(g => `${g.finalGirl} vs ${g.killer}`);
@@ -382,7 +387,8 @@ export const useGameStats = (
 
     if (gamesPlayed >= 5) {
       const avgVictimsSavedPerGame = gamesPlayed > 0 ? totalVictimsSaved / gamesPlayed : 0;
-      const lowHealthWins = wins.filter(g => g.finalGirlHealth != null && g.finalGirlHealth <= 3).length;
+      // Low health wins: 2 HP or less out of 5-6 max is critical
+      const lowHealthWins = wins.filter(g => g.finalGirlHealth != null && g.finalGirlHealth <= 2).length;
       const highHorrorGames = filteredGames.filter(g => g.finalHorrorLevel != null && g.finalHorrorLevel >= 5).length;
       
       // Calculate variance in horror levels
