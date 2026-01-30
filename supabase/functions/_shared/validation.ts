@@ -63,8 +63,9 @@ export const EndingRequestSchema = z.object({
   // Optional game stats
   finalHorrorLevel: z.number().min(1).max(7).optional(),
   weaponUsed: z.string().max(100).optional(),
-  finalGirlHealth: z.number().min(0).max(20).optional(),
+  finalGirlHealth: z.number().min(0).max(10).optional(),  // Max 6 in official game, buffer for custom
   killerHealth: z.number().min(0).max(20).optional(),
+  finalGirlMaxHealth: z.number().min(5).max(6).optional(),  // Character-specific max health
   victimsSaved: z.number().min(0).max(50).optional(),
   victimsKilled: z.number().min(0).max(50).optional(),
   endingSubLocation: z.string().max(200).optional(),

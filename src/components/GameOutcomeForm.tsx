@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ArrowRight, X } from 'lucide-react';
 import { GameResult } from '@/hooks/useGameHistory';
 import { EndingFormData } from '@/pages/TheEnd';
+import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
 
 interface GameOutcomeFormProps {
   result: GameResult;
@@ -18,9 +19,12 @@ export const GameOutcomeForm = ({
 }: GameOutcomeFormProps) => {
   const isWin = result.outcome === 'won';
   
-  // Local form state
+  // Get the Final Girl's max health based on character data
+  const maxFinalGirlHealth = useMemo(() => getFinalGirlMaxHealth(result.finalGirl), [result.finalGirl]);
+  
+  // Local form state - use character-specific max health for defaults
   const [finalHorrorLevel, setFinalHorrorLevel] = useState(result.finalHorrorLevel ?? 4);
-  const [finalGirlHealth, setFinalGirlHealth] = useState(result.finalGirlHealth ?? (isWin ? 5 : 0));
+  const [finalGirlHealth, setFinalGirlHealth] = useState(result.finalGirlHealth ?? (isWin ? maxFinalGirlHealth : 0));
   const [killerHealth, setKillerHealth] = useState(result.killerHealth ?? (isWin ? 0 : 5));
   const [weaponUsed, setWeaponUsed] = useState(result.weaponUsed ?? '');
   const [victimsSaved, setVictimsSaved] = useState(result.victimsSaved ?? 0);
@@ -88,14 +92,14 @@ export const GameOutcomeForm = ({
           {/* Final Girl Health */}
           <div className="space-y-1">
             <label className="font-vhs text-xs text-muted-foreground">
-              Final Girl Health
+              Final Girl Health (0-{maxFinalGirlHealth})
             </label>
             <input
               type="number"
               min="0"
-              max="20"
+              max={maxFinalGirlHealth}
               value={finalGirlHealth}
-              onChange={(e) => setFinalGirlHealth(Math.max(0, Number(e.target.value)))}
+              onChange={(e) => setFinalGirlHealth(Math.min(maxFinalGirlHealth, Math.max(0, Number(e.target.value))))}
               className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
             />
           </div>
