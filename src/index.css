@@ -1988,155 +1988,64 @@
   border-radius: inherit;
 }
 
-/* ===== Hero Stat Cards - Irregular Geometry ===== */
-.hero-stat-card {
-  @apply flex flex-col items-center justify-between p-4 sm:p-5 rounded-xl 
-    min-h-[140px] sm:min-h-[160px] transition-all duration-300;
-  background: hsl(220 15% 6% / 0.8);
-  border-width: 2px;
+/* ===== Hero Stat Cards with Background Images ===== */
+.hero-stat-card-image {
+  @apply flex items-center justify-center rounded-lg 
+    transition-all duration-300;
   position: relative;
   overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid hsl(0 0% 20% / 0.5);
+  box-shadow: 
+    0 4px 20px hsl(0 0% 0% / 0.5),
+    inset 0 0 40px hsl(0 0% 0% / 0.3);
 }
 
-/* Per-card noise texture */
-.hero-stat-card::before {
+.hero-stat-card-image:hover {
+  transform: scale(1.02);
+  box-shadow: 
+    0 6px 30px hsl(0 0% 0% / 0.6),
+    inset 0 0 40px hsl(0 0% 0% / 0.3);
+}
+
+/* Dark overlay to ensure value readability */
+.hero-stat-card-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    hsl(0 0% 0% / 0.3) 0%,
+    hsl(0 0% 0% / 0.1) 40%,
+    hsl(0 0% 0% / 0.4) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Film grain overlay */
+.hero-stat-card-image::after {
   content: '';
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.04;
+  opacity: 0.06;
   pointer-events: none;
   border-radius: inherit;
 }
 
-/* Film burn overlay per card */
-.hero-stat-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse at top-right, hsl(30 60% 50% / 0.04) 0%, transparent 45%),
-    radial-gradient(ellipse at bottom-left, hsl(30 60% 30% / 0.03) 0%, transparent 35%);
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-/* Card Variants - Desaturated Horror Colors with Asymmetric Glows */
-.hero-stat-blue {
-  border-color: hsl(200 70% 50%);
-  box-shadow: 
-    3px 5px 25px hsl(200 70% 50% / 0.2),
-    -1px -1px 10px hsl(200 70% 50% / 0.08),
-    inset 0 0 25px hsl(200 70% 50% / 0.04),
-    inset 0 0 15px rgba(0,0,0,0.4);
-}
-
-.hero-stat-yellow {
-  border-color: hsl(45 65% 45%);
-  box-shadow: 
-    3px 5px 25px hsl(45 65% 45% / 0.2),
-    -1px -1px 10px hsl(45 65% 45% / 0.08),
-    inset 0 0 25px hsl(45 65% 45% / 0.04),
-    inset 0 0 15px rgba(0,0,0,0.4);
-}
-
-.hero-stat-green {
-  /* Sickly, murky green - not celebratory */
-  border-color: hsl(145 35% 38%);
-  box-shadow: 
-    3px 5px 25px hsl(145 35% 38% / 0.2),
-    -1px -1px 10px hsl(145 35% 38% / 0.08),
-    inset 0 0 25px hsl(145 35% 38% / 0.04),
-    inset 0 0 15px rgba(0,0,0,0.4);
-}
-
-.hero-stat-red {
-  /* Deep blood red - ominous */
-  border-color: hsl(0 55% 42%);
-  box-shadow: 
-    3px 5px 25px hsl(0 55% 42% / 0.25),
-    -1px -1px 10px hsl(0 55% 42% / 0.1),
-    inset 0 0 25px hsl(0 55% 42% / 0.05),
-    inset 0 0 15px rgba(0,0,0,0.4);
-}
-
-/* Labels */
-.hero-stat-label {
-  @apply font-vhs text-xs sm:text-sm uppercase text-foreground/70;
-  letter-spacing: 0.2em;
-}
-
-/* Numbers with breathing animations */
-.hero-stat-number {
-  @apply font-display text-4xl sm:text-5xl font-bold;
-  letter-spacing: 0.02em;
+/* Stat value overlay */
+.hero-stat-value {
+  @apply font-display text-5xl sm:text-6xl font-bold text-white;
   position: relative;
   z-index: 1;
-}
-
-.hero-stat-number-blue {
-  color: hsl(200 70% 55%);
-  text-shadow: 0 0 20px hsl(200 70% 50% / 0.4), 0 0 40px hsl(200 70% 50% / 0.2);
-}
-
-.hero-stat-number-yellow {
-  color: hsl(45 65% 50%);
-  text-shadow: 0 0 20px hsl(45 65% 45% / 0.4), 0 0 40px hsl(45 65% 45% / 0.2);
-  animation: false-hope-flicker 8s ease-in-out infinite;
-}
-
-@keyframes false-hope-flicker {
-  0%, 85%, 100% { opacity: 1; }
-  86% { opacity: 0.88; }
-  87% { opacity: 0.95; }
-  88% { opacity: 0.82; }
-  89% { opacity: 1; }
-}
-
-.hero-stat-number-green {
-  /* Sickly green tone */
-  color: hsl(145 35% 42%);
-  text-shadow: 0 0 20px hsl(145 35% 38% / 0.35), 0 0 40px hsl(145 35% 38% / 0.15);
-}
-
-.hero-stat-number-red {
-  color: hsl(0 55% 50%);
-  text-shadow: 0 0 20px hsl(0 55% 42% / 0.5), 0 0 40px hsl(0 55% 42% / 0.25);
-  animation: blood-pulse 4s ease-in-out infinite;
-}
-
-@keyframes blood-pulse {
-  0%, 100% { 
-    text-shadow: 0 0 20px hsl(0 55% 42% / 0.5), 0 0 40px hsl(0 55% 42% / 0.25);
-    opacity: 1;
-  }
-  50% { 
-    text-shadow: 0 0 30px hsl(0 55% 42% / 0.7), 0 0 60px hsl(0 55% 42% / 0.4);
-    opacity: 0.95;
-  }
-}
-
-/* Icons */
-.hero-stat-icon {
-  @apply opacity-50;
-  position: relative;
-  z-index: 1;
-}
-
-.hero-stat-icon-blue {
-  color: hsl(200 70% 55%);
-}
-
-.hero-stat-icon-yellow {
-  color: hsl(45 65% 50%);
-}
-
-.hero-stat-icon-green {
-  color: hsl(145 35% 42%);
-}
-
-.hero-stat-icon-red {
-  color: hsl(0 55% 50%);
+  text-shadow: 
+    0 2px 4px hsl(0 0% 0% / 0.8),
+    0 0 30px hsl(0 0% 0% / 0.6),
+    0 0 60px hsl(0 0% 0% / 0.4);
+  letter-spacing: 0.05em;
 }
 
 /* ===== Section Titles - Archival ===== */

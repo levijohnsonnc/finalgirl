@@ -1,5 +1,8 @@
 import { ComputedStats } from '@/hooks/useGameStats';
-import { Gamepad2, Trophy, HeartHandshake, Skull } from 'lucide-react';
+import gamesBg from '@/assets/stats/games-bg.png';
+import winrateBg from '@/assets/stats/winrate-bg.png';
+import savedBg from '@/assets/stats/saved-bg.png';
+import killedBg from '@/assets/stats/killed-bg.png';
 
 interface RecordJacketProps {
   stats: ComputedStats;
@@ -7,20 +10,17 @@ interface RecordJacketProps {
 
 interface StatCardProps {
   value: string | number;
-  label: string;
-  icon: React.ReactNode;
-  variant: 'blue' | 'yellow' | 'green' | 'red';
+  backgroundImage: string;
 }
 
-const StatCard = ({ value, label, icon, variant }: StatCardProps) => {
+const StatCard = ({ value, backgroundImage }: StatCardProps) => {
   return (
-    <div className={`hero-stat-card hero-stat-${variant}`}>
-      <div className="hero-stat-label">{label}</div>
-      <div className={`hero-stat-number hero-stat-number-${variant}`}>
+    <div 
+      className="hero-stat-card-image"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="hero-stat-value">
         {value}
-      </div>
-      <div className={`hero-stat-icon hero-stat-icon-${variant}`}>
-        {icon}
       </div>
     </div>
   );
@@ -32,27 +32,19 @@ export const RecordJacket = ({ stats }: RecordJacketProps) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           value={stats.gamesPlayed}
-          label="GAMES"
-          icon={<Gamepad2 className="w-6 h-6" />}
-          variant="blue"
+          backgroundImage={gamesBg}
         />
         <StatCard
           value={`${Math.round(stats.winRate)}%`}
-          label="WIN RATE"
-          icon={<Trophy className="w-6 h-6" />}
-          variant="yellow"
+          backgroundImage={winrateBg}
         />
         <StatCard
           value={stats.totalVictimsSaved}
-          label="SAVED"
-          icon={<HeartHandshake className="w-6 h-6" />}
-          variant="green"
+          backgroundImage={savedBg}
         />
         <StatCard
           value={stats.totalVictimsKilled}
-          label="KILLED"
-          icon={<Skull className="w-6 h-6" />}
-          variant="red"
+          backgroundImage={killedBg}
         />
       </div>
     </div>
