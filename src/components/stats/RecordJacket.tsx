@@ -13,18 +13,16 @@ interface StatCardProps {
   backgroundImage: string;
 }
 
-const StatCard = ({ value, backgroundImage }: StatCardProps) => {
-  return (
-    <div 
-      className="hero-stat-card-image"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="hero-stat-value">
-        {value}
-      </div>
+const StatCard = ({ value, backgroundImage }: StatCardProps) => (
+  <div 
+    className="hero-stat-card-image"
+    style={{ backgroundImage: `url(${backgroundImage})` }}
+  >
+    <div className="hero-stat-value">
+      {value}
     </div>
-  );
-};
+  </div>
+);
 
 export const RecordJacket = ({ stats }: RecordJacketProps) => {
   return (
