@@ -1,5 +1,5 @@
 import { ComputedStats } from '@/hooks/useGameStats';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Gamepad2, Trophy, HeartHandshake, Skull } from 'lucide-react';
 
 interface RecordJacketProps {
   stats: ComputedStats;
@@ -8,31 +8,21 @@ interface RecordJacketProps {
 interface StatCardProps {
   value: string | number;
   label: string;
-  tooltip: string;
-  accent?: 'cyan' | 'blood' | 'default';
+  icon: React.ReactNode;
+  variant: 'blue' | 'yellow' | 'green' | 'red';
 }
 
-const StatCard = ({ value, label, tooltip, accent = 'default' }: StatCardProps) => {
-  const accentClasses = {
-    cyan: 'text-neon-cyan',
-    blood: 'text-blood-red',
-    default: 'text-foreground'
-  };
-
+const StatCard = ({ value, label, icon, variant }: StatCardProps) => {
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className="stat-card cursor-help">
-          <div className={`stat-number ${accentClasses[accent]}`}>
-            {value}
-          </div>
-          <div className="stat-label">{label}</div>
-        </div>
-      </TooltipTrigger>
-      <TooltipContent side="bottom" className="bg-background/95 border-border max-w-[200px] text-center">
-        <p className="text-sm">{tooltip}</p>
-      </TooltipContent>
-    </Tooltip>
+    <div className={`hero-stat-card hero-stat-${variant}`}>
+      <div className="hero-stat-label">{label}</div>
+      <div className={`hero-stat-number hero-stat-number-${variant}`}>
+        {value}
+      </div>
+      <div className={`hero-stat-icon hero-stat-icon-${variant}`}>
+        {icon}
+      </div>
+    </div>
   );
 };
 
@@ -42,27 +32,27 @@ export const RecordJacket = ({ stats }: RecordJacketProps) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           value={stats.gamesPlayed}
-          label="Games"
-          tooltip="Total number of games played"
-          accent="default"
+          label="GAMES"
+          icon={<Gamepad2 className="w-6 h-6" />}
+          variant="blue"
         />
         <StatCard
           value={`${Math.round(stats.winRate)}%`}
-          label="Win Rate"
-          tooltip="Percentage of games won"
-          accent={stats.winRate >= 50 ? 'cyan' : 'blood'}
+          label="WIN RATE"
+          icon={<Trophy className="w-6 h-6" />}
+          variant="yellow"
         />
         <StatCard
           value={stats.totalVictimsSaved}
-          label="Saved"
-          tooltip="Total victims rescued across all games"
-          accent="cyan"
+          label="SAVED"
+          icon={<HeartHandshake className="w-6 h-6" />}
+          variant="green"
         />
         <StatCard
           value={stats.totalVictimsKilled}
-          label="Killed"
-          tooltip="Total victims killed across all games"
-          accent="blood"
+          label="KILLED"
+          icon={<Skull className="w-6 h-6" />}
+          variant="red"
         />
       </div>
     </div>

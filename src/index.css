@@ -1847,25 +1847,86 @@
 
 /* Record Jacket */
 .record-jacket {
-  @apply p-4 sm:p-6 rounded-xl bg-background/40 backdrop-blur 
-    border-t-2 border-t-primary/40 border border-border
-    shadow-[inset_0_1px_0_hsl(var(--foreground)/0.05),0_4px_20px_hsl(var(--background)/0.5)];
+  @apply p-4 sm:p-6 rounded-2xl bg-background/60 backdrop-blur border border-border/50;
 }
 
-.stat-card {
-  @apply flex flex-col items-center justify-center p-4 rounded-lg 
-    bg-background/60 border border-border/50 
-    hover:border-primary/30 transition-all duration-300
-    hover:shadow-[0_0_20px_hsl(var(--primary)/0.1)];
+/* Hero Stat Cards */
+.hero-stat-card {
+  @apply flex flex-col items-center justify-between p-4 sm:p-5 rounded-xl 
+    bg-background/80 border-2 min-h-[140px] sm:min-h-[160px]
+    transition-all duration-300;
 }
 
-.stat-number {
-  @apply font-display text-3xl sm:text-4xl font-bold tracking-tight 
-    transition-all duration-300 truncate max-w-full;
+/* Card Variants */
+.hero-stat-blue {
+  border-color: hsl(200 100% 50%);
+  box-shadow: 0 0 20px hsl(200 100% 50% / 0.3), inset 0 0 20px hsl(200 100% 50% / 0.05);
 }
 
-.stat-label {
-  @apply font-vhs text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider mt-1;
+.hero-stat-yellow {
+  border-color: hsl(45 100% 50%);
+  box-shadow: 0 0 20px hsl(45 100% 50% / 0.3), inset 0 0 20px hsl(45 100% 50% / 0.05);
+}
+
+.hero-stat-green {
+  border-color: hsl(145 70% 45%);
+  box-shadow: 0 0 20px hsl(145 70% 45% / 0.3), inset 0 0 20px hsl(145 70% 45% / 0.05);
+}
+
+.hero-stat-red {
+  border-color: hsl(0 70% 50%);
+  box-shadow: 0 0 20px hsl(0 70% 50% / 0.3), inset 0 0 20px hsl(0 70% 50% / 0.05);
+}
+
+/* Labels */
+.hero-stat-label {
+  @apply font-vhs text-xs sm:text-sm uppercase tracking-widest text-foreground/80;
+}
+
+/* Numbers */
+.hero-stat-number {
+  @apply font-display text-4xl sm:text-5xl font-bold tracking-tight;
+}
+
+.hero-stat-number-blue {
+  color: hsl(200 100% 60%);
+  text-shadow: 0 0 20px hsl(200 100% 50% / 0.5);
+}
+
+.hero-stat-number-yellow {
+  color: hsl(45 100% 60%);
+  text-shadow: 0 0 20px hsl(45 100% 50% / 0.5);
+}
+
+.hero-stat-number-green {
+  color: hsl(145 70% 55%);
+  text-shadow: 0 0 20px hsl(145 70% 45% / 0.5);
+}
+
+.hero-stat-number-red {
+  color: hsl(0 70% 60%);
+  text-shadow: 0 0 20px hsl(0 70% 50% / 0.5);
+}
+
+/* Icons */
+.hero-stat-icon {
+  @apply opacity-60;
+}
+
+.hero-stat-icon-blue {
+  color: hsl(200 100% 60%);
+}
+
+.hero-stat-icon-yellow {
+  color: hsl(45 100% 60%);
+}
+
+.hero-stat-icon-green {
+  color: hsl(145 70% 55%);
+}
+
+.hero-stat-icon-red {
+  color: hsl(0 70% 60%);
 }
 
 /* Section Titles */
