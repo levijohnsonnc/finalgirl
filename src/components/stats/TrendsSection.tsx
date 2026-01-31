@@ -55,9 +55,10 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
   if (!hasEnoughData) {
     return (
       <div className="trends-section">
-        <h3 className="section-title">Story of You</h3>
+        <h3 className="section-title">// RECOVERED FOOTAGE</h3>
+        <p className="section-subtitle">STORY OF YOU</p>
         <div className="trends-empty">
-          <p className="text-muted-foreground text-center py-8">
+          <p className="text-muted-foreground text-center py-8 opacity-60">
             Play 3+ games to unlock your personal story
           </p>
         </div>
@@ -70,7 +71,8 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
 
   return (
     <div className="trends-section">
-      <h3 className="section-title">Story of You</h3>
+      <h3 className="section-title">// RECOVERED FOOTAGE</h3>
+      <p className="section-subtitle">STORY OF YOU</p>
 
       {/* Win/Loss Horizontal Bar */}
       <div className="winloss-bar-container">
