@@ -702,6 +702,77 @@ It lacks a traditional face. Where eyes and a nose should be, there is only smoo
 
 The Slayer exists between dimensions, emerging from the Mirror Dimension to hunt its prey. When it appears, reality distorts—lights flicker, static fills the air, and shadows move independently of their sources.`
     }
+  },
+  's3-marrek-murders': {
+    filmId: 's3-marrek-murders',
+    finalGirls: [
+      {
+        name: 'Mandy',
+        backstory: `Mandy Williams was supposed to be a doctor. At least that's what her parents wanted for her. Mandy never wanted to save people… she found much greater enjoyment in kicking their asses.
+
+Fighting for a living is her goal, but for now she's a line worker at Marrek Warehouse so she can pay the bills. She trains in MMA at night and is paying her dues waiting for her opportunity… her shot.
+
+She never expected that the fight of her life would happen at her place of work.`
+      },
+      {
+        name: 'Cassie',
+        backstory: `Cassie Smith is an escape room enthusiast with a penchant for roleplaying and chaos. She is well known by her friends for overdressing for the occasion and a love of axes. It was perhaps too easy to lure her to the Marrek Warehouse with a mysterious flyer that appeared in her mailbox promising "a horror escape experience you won't soon forget!"
+
+What her captor didn't expect, however, was that under the fancy dress and quirky personality lay a survivor that was almost too willing to inject a horrific level of chaos into their plans. All Cassie needed to do was find the perfect weapon to defend herself… or… chop them up into little pieces… depending on how you look at it.`
+      }
+    ],
+    location: {
+      name: 'Marrek Warehouse',
+      description: `"The locking system in Marrek Warehouse is state of the art and the first of its kind. Devised by our ingenious mechanical engineers, the system ensures precise shift changes and security." - Loctrocel Inc. spokesperson during the ribbon cutting ceremony for Marrek Warehouse.
+
+The Marrek Warehouse presents itself as a squat, anonymous industrial structure of concrete and corrugated steel, fenced off with patched chain-link and secured by heavy locks that feel more symbolic than reassuring. Inside, the air is cool and stale, carrying dust, oil, and old chemical residue soaked into the floor. Fluorescent lights buzz overhead in uneven rows, leaving pockets of dimness between them. The walls are lined with narrow service corridors and sealed doors, many chained or padlocked, their purpose long forgotten. Sound behaves strangely here—footsteps echo sharply and then vanish, swallowed by the sheer volume of the space.
+
+At the heart of the warehouse lies the central depression known as The Pit—a sunken concrete area that disrupts the otherwise flat floor plan and draws the eye no matter where you stand. A lone industrial forklift sits abandoned at its edge, forks lowered as if left mid-task, its chipped paint and dead controls suggesting it hasn't moved in years. The Pit creates a natural focal point and a constant sense of exposure; anyone crossing its edges feels visible, while anyone below feels watched. The space around it amplifies every movement, turning even cautious steps into declarations.
+
+Surrounding all of this are the stacked boxes—towering metal shelves and palletized crates rising high enough to block light and sightlines alike. Many are unmarked or mislabeled, wrapped in yellowed plastic or rotting cardboard, forming narrow aisles that twist the warehouse into a maze. These stacks provide momentary cover but also trap sound and shadow, making it impossible to tell whether the creak you heard came from shifting weight, settling steel, or something moving where it shouldn't.`,
+      setupCards: [
+        {
+          name: 'Units Per Hour',
+          description: 'The killer and the final girl are on the main floor, with the victims well spread out - the victims are all working.'
+        },
+        {
+          name: 'Unloading',
+          description: 'Victims are unloading in the loading bays.'
+        },
+        {
+          name: 'Shift Change',
+          description: 'Victims are changing shifts, most in and around the main entrance.'
+        },
+        {
+          name: 'Daily Huddle',
+          description: 'Victims are having a standup meeting in the center of the warehouse.'
+        },
+        {
+          name: "You're Fired",
+          description: 'One victim is in the midst of getting fired in the manager\'s office.'
+        }
+      ],
+      events: [
+        { name: 'The Supervisor', description: 'There\'s a supervisor on the floor now, trying to direct the workers.' },
+        { name: 'Trucks Are Here!', description: 'Lots of new victims have just arrived on the loading docks.' },
+        { name: 'Help on the Racks', description: 'Victims have been asked to help out in the rack areas of the warehouse.' },
+        { name: '"You Aren\'t Going Anywhere"', description: 'All exits in the warehouse are now locked.' },
+        { name: '"It Has Been 0 Days Since…"', description: 'Victims in the racks that panic die by horrific workplace accidents.' },
+        { name: 'Good Ole Zipp', description: 'One victim is called Zipp and he can help unlock locked doors.' },
+        { name: 'Heroic Best Friend', description: 'You have a best friend in the Warehouse, who protects you.' },
+        { name: 'Scatter!', description: 'All victims panic and scatter throughout the warehouse.' },
+        { name: 'Tumbling Boxes', description: 'There are severed heads in the warehouse boxes!' },
+        { name: 'Smarter Than They Look', description: 'Victims can now leave the warehouse on their own.' }
+      ]
+    },
+    killer: {
+      name: 'The Tormentor',
+      description: `The Tormentor is a masked figure with a feminine silhouette, though the mask remains a blank, terrifying void. She doesn't carry a machete or a chainsaw; she carries tools—wrenches, pliers, and remote triggers. Her presence is often heralded not by a scream, but by the mechanical whirring of a timer or the clicking of a lock.
+
+The Tormentor was never interested in the act of killing for its own sake. What fascinated her was process—how fear unfolds when people believe there is still time. Long before the Marrek Warehouse became a crime scene, she studied systems: locks, pressure mechanisms, failsafes, and the psychology of choice under stress. Victims weren't hunted so much as placed, arranged into scenarios that appeared solvable at a glance. A chained door that almost gives. A mechanism that should release. A countdown that suggests mercy if you act quickly enough. Survivors—if there were any—would later say the worst part wasn't the pain, but the moment they realized the rules had been written to betray them.
+
+The Tormentor exists more as an absence than a presence. She normally isn't seen at all—only felt through sprung traps, locked corridors, and victims suspended in cruel limbo. When she finally reveals herself, she is almost anticlimactic: not a towering monster, not an unstoppable force, but the calm author of everything that has already gone wrong. By the time she is confronted face to face, the Tormentor has usually done what she came to do. The question is no longer whether the killer can be stopped—but whether stopping her still means anything.`
+    }
   }
 };
 
