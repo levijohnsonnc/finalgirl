@@ -1,269 +1,151 @@
 
 
-# Plan: VHS Horror Aesthetic for Stats Page
+# Fix: Stats Hero Cards Not Displaying Background Images
 
-Transform the Stats page from a clean analytics dashboard into recovered evidence from a cursed VHS tape.
+## Problem Diagnosis
 
----
+The Stats page is displaying an **old version** of the RecordJacket component instead of the updated one with background images. 
 
-## Summary of Changes
+### Evidence:
+| What user sees | What code should render |
+|----------------|-------------------------|
+| Plain dark cards with text labels (GAMES, WIN RATE, etc.) | Atmospheric background images with labels baked in |
+| Icons (Gamepad, Trophy, Heart, Skull) | No icons - just the value number |
+| Uniform styling | Unique art per stat card |
 
-| Area | Current State | Target State |
-|------|---------------|--------------|
-| Background | Pure black void | Fog plate + CRT effects + vignette |
-| Color palette | Saturated, celebratory | Desaturated, analog, dreadful |
-| Card geometry | Perfect rectangles | Irregular glows, film burn, noise |
-| Typography | Polite, legible | Spaced, haunted, occasional flicker |
-| Charts | Clean digital | Faded, degraded, drawn-in |
-| Framing | Dashboard | Archived footage / evidence |
+### Current state of `RecordJacket.tsx`:
+The code file actually looks **correct** - it imports the 4 background images and renders `StatCard` components using the `hero-stat-card-image` class with inline `backgroundImage` styles. No icons or text labels are present in the current code.
 
----
+### Current state of images:
+The images in `src/assets/stats/` are **correct** - they show the atmospheric backgrounds with labels baked into the artwork.
 
-## Implementation Details
-
-### 1. Add Fog Background Plate
-
-**New Asset**: Copy the provided fog image to `src/assets/stats-bg.png`
-
-**Stats Page Container**: Apply background with same layering as Marquee:
-- Fog background image (cover, centered)
-- Film grain overlay (animated)
-- Scanlines overlay (drifting)
-- Vignette (asymmetric)
-- Blue-black base color instead of pure black
-
-**CSS Changes** (`src/index.css`):
-```css
-.stats-page {
-  position: relative;
-  min-height: 100vh;
-}
-
-.stats-page::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: 
-    url('@/assets/stats-bg.png') center/cover no-repeat,
-    hsl(220 15% 4%); /* Blue-black, not pure black */
-  z-index: -3;
-}
-```
-
-**Component Changes** (`Stats.tsx`):
-- Add film grain, scanlines, and vignette overlays as child elements
+### Root Cause:
+The browser is rendering a cached/stale version of the code. This could be caused by:
+1. Hot Module Replacement (HMR) not picking up the changes
+2. Browser caching the old bundle
+3. The code changes not being properly saved/deployed
 
 ---
 
-### 2. Horror Color Logic (Desaturated + Analog)
+## Fix Implementation
 
-**Update stat card color palette**:
+### Step 1: Force a clean re-render of RecordJacket.tsx
 
-| Stat | Current | New Meaning | New Color |
-|------|---------|-------------|-----------|
-| Games | Blue | Survival/Control | Keep, slight desaturation |
-| Win Rate | Yellow | False Hope | Desaturated yellow, add slow flicker |
-| Saved | Green | Sickly survival | Desaturated, murky green |
-| Killed | Red | Blood Debt | Deep red, add slow pulse |
+Re-save the component with a minor structural adjustment to ensure the changes are picked up:
 
-**CSS Changes**:
-- Desaturate all hero stat colors by ~15-20%
-- Add `@keyframes blood-pulse` for red values (slow, breathing glow)
-- Add `@keyframes false-hope-flicker` for yellow values (rare, subtle)
-- Change green to sickly tone: `hsl(145 40% 40%)` instead of `hsl(145 70% 55%)`
+**File: `src/components/stats/RecordJacket.tsx`**
+- Verify imports are correct for all 4 background images
+- Ensure `StatCard` uses `backgroundImage` style prop
+- Ensure no icons or text labels exist in the component
+- Add a key prop to force React to re-render
 
----
-
-### 3. Break Perfect Geometry
-
-**Irregular glow bleed**:
-- Asymmetric box-shadows (offset to bottom-right)
-- Subtle inner shadow suggesting film damage
-
-**Film burn corners**:
-- Add `::after` pseudo-element with radial gradients on corners
-- Low opacity, warm/orange tint
-
-**Per-card noise texture**:
-- Each card gets its own subtle noise overlay via `::before`
-- Slightly different opacity per variant
-
-**CSS Example**:
-```css
-.hero-stat-card {
-  /* Asymmetric glow - heavier on bottom-right */
-  box-shadow: 
-    3px 5px 25px hsl(200 70% 50% / 0.25),
-    -1px -1px 10px hsl(200 70% 50% / 0.1),
-    inset 0 0 20px rgba(0,0,0,0.4);
-}
-
-/* Film burn overlay */
-.hero-stat-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse at top-right, hsl(30 60% 50% / 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom-left, hsl(30 60% 30% / 0.04) 0%, transparent 40%);
-  pointer-events: none;
-  border-radius: inherit;
-}
-```
-
----
-
-### 4. Archival Framing + REC Indicator
-
-**Add persistent "REC ●" indicator**:
-- Top-right of stats page
-- Red dot with slow pulse animation
-- VHS font, low opacity
-
-**Add archival micro-copy**:
-- Below "STATS" header: change "YOUR SURVIVAL RECORD" to `SESSION DATA LOGGED`
-- Add timestamp that updates slowly (every second)
-- Section subtitles: "Story of You" becomes `// RECOVERED FOOTAGE`
-
-**Component Changes** (`Stats.tsx`):
 ```tsx
-{/* REC Indicator */}
-<div className="rec-indicator">
-  <span className="rec-dot" />
-  <span>REC</span>
-</div>
+import { ComputedStats } from '@/hooks/useGameStats';
+import gamesBg from '@/assets/stats/games-bg.png';
+import winrateBg from '@/assets/stats/winrate-bg.png';
+import savedBg from '@/assets/stats/saved-bg.png';
+import killedBg from '@/assets/stats/killed-bg.png';
 
-{/* Header with archival framing */}
-<p className="font-vhs text-xs text-muted-foreground tracking-[0.3em]">
-  SESSION DATA LOGGED • {formattedTime}
-</p>
+interface RecordJacketProps {
+  stats: ComputedStats;
+}
+
+interface StatCardProps {
+  value: string | number;
+  backgroundImage: string;
+}
+
+const StatCard = ({ value, backgroundImage }: StatCardProps) => {
+  return (
+    <div 
+      className="hero-stat-card-image"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="hero-stat-value">
+        {value}
+      </div>
+    </div>
+  );
+};
+
+export const RecordJacket = ({ stats }: RecordJacketProps) => {
+  return (
+    <div className="record-jacket">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <StatCard
+          value={stats.gamesPlayed}
+          backgroundImage={gamesBg}
+        />
+        <StatCard
+          value={`${Math.round(stats.winRate)}%`}
+          backgroundImage={winrateBg}
+        />
+        <StatCard
+          value={stats.totalVictimsSaved}
+          backgroundImage={savedBg}
+        />
+        <StatCard
+          value={stats.totalVictimsKilled}
+          backgroundImage={killedBg}
+        />
+      </div>
+    </div>
+  );
+};
 ```
 
----
+### Step 2: Verify CSS for hero-stat-card-image
 
-### 5. Typography Adjustments
+**File: `src/index.css`** (lines ~1991-2049)
 
-**Headers**:
-- Increase letter-spacing on "STATS" and section titles
-- Add `stats-title-flicker` animation (very slow, very rare)
-
-**Numbers**:
-- Add subtle text-shadow blur on stat numbers
-- Slight tracking increase
-
-**CSS**:
+Ensure the styling is present:
 ```css
-.stats-header h1 {
-  letter-spacing: 0.2em;
-  animation: stats-title-flicker 12s ease-in-out infinite;
+.hero-stat-card-image {
+  @apply flex items-center justify-center rounded-lg transition-all duration-300;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid hsl(0 0% 20% / 0.5);
+  box-shadow: 0 4px 20px hsl(0 0% 0% / 0.5), inset 0 0 40px hsl(0 0% 0% / 0.3);
 }
 
-@keyframes stats-title-flicker {
-  0%, 92%, 100% { opacity: 1; }
-  93% { opacity: 0.85; }
-  94% { opacity: 0.95; }
-  95% { opacity: 0.8; }
-  96% { opacity: 1; }
-}
-```
-
----
-
-### 6. Chart Degradation
-
-**Line chart adjustments**:
-- Reduce grid line opacity to near-invisible
-- Axis text: lower contrast, slightly blurred
-- Add animation props to recharts for slower "draw-in" effect
-- Subtle horizontal roll effect (optional, via container)
-
-**CSS for chart container**:
-```css
-.chart-container {
-  /* Aged film look */
-  filter: contrast(0.95) saturate(0.85);
-}
-
-.chart-container .recharts-cartesian-grid line {
-  opacity: 0.15;
-}
-
-.chart-container .recharts-text {
-  opacity: 0.6;
-  filter: blur(0.3px);
+.hero-stat-value {
+  @apply font-display text-5xl sm:text-6xl font-bold text-white;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px hsl(0 0% 0% / 0.8), 0 0 30px hsl(0 0% 0% / 0.6);
 }
 ```
 
----
+### Step 3: Remove any old hero-stat-card classes
 
-### 7. Container Sections (Trends, Breakdowns)
+Search for and remove any leftover CSS that defines `hero-stat-card` (without `-image`) that might be conflicting. Look for classes like:
+- `.hero-stat-card-blue`
+- `.hero-stat-card-yellow`
+- `.hero-stat-card-green`
+- `.hero-stat-card-red`
 
-**Update all section containers**:
-- Change from `bg-background/40` to use the blue-black tone
-- Add subtle noise overlay
-- Film burn on edges (same treatment as cards)
+These should be deleted if they still exist from the previous implementation.
 
 ---
 
 ## Files to Modify
 
-| File | Changes |
-|------|---------|
-| `src/assets/stats-bg.png` | New file - copy from user upload |
-| `src/pages/Stats.tsx` | Add overlays, REC indicator, archival copy, timestamp |
-| `src/components/stats/RecordJacket.tsx` | Add relative positioning for overlay pseudo-elements |
-| `src/components/stats/TrendsSection.tsx` | Update section title text, chart styling |
-| `src/components/stats/BreakdownTabs.tsx` | Minor styling adjustments |
-| `src/index.css` | Major additions for VHS effects, colors, animations |
+| File | Action |
+|------|--------|
+| `src/components/stats/RecordJacket.tsx` | Re-save to trigger rebuild (code is correct) |
+| `src/index.css` | Remove any old `hero-stat-card-*` variant classes if present |
 
 ---
 
-## New CSS Classes to Add
+## Expected Result
 
-```text
-.stats-bg-layer          - Fog background positioning
-.stats-grain-overlay     - Film grain for stats page
-.stats-scanlines         - Scanlines overlay
-.stats-vignette          - Vignette effect
-.rec-indicator           - REC ● element styling
-.rec-dot                 - Pulsing red dot
-.blood-pulse             - Animation for red values
-.false-hope-flicker      - Animation for yellow values
-.film-burn-overlay       - Corner burn effect for cards
-.card-noise              - Per-card noise texture
-.stats-title-flicker     - Rare header flicker
-.chart-degraded          - Aged chart styling
-```
-
----
-
-## Color Palette Changes
-
-| Token | Current HSL | New HSL | Notes |
-|-------|-------------|---------|-------|
-| Blue (Games) | `200 100% 60%` | `200 70% 55%` | Slightly desaturated |
-| Yellow (Win Rate) | `45 100% 60%` | `45 70% 50%` | Warmer, dimmer |
-| Green (Saved) | `145 70% 55%` | `145 40% 40%` | Sickly, murky |
-| Red (Killed) | `0 70% 60%` | `0 60% 45%` | Deeper, more ominous |
-| Background | `0 0% 4%` | `220 15% 4%` | Blue-black tone |
-
----
-
-## Animation Summary
-
-| Animation | Target | Duration | Notes |
-|-----------|--------|----------|-------|
-| `blood-pulse` | Red stat values | 4s | Slow breathing glow |
-| `false-hope-flicker` | Yellow stat values | 8s | Rare opacity dips |
-| `stats-title-flicker` | Page header | 12s | Very subtle, rare |
-| `grain-shift` | Film grain overlay | 0.5s | Existing animation |
-| `scanline-drift` | Scanlines | 10s | Existing animation |
-
----
-
-## The Guiding Principle
-
-> "Would this exist on a cursed VHS menu screen?"
-
-Every element should feel **recorded, not rendered**. The Stats page becomes evidence someone found after the fact—a diegetic artifact within the horror universe.
+After the fix, the Stats page hero section should show:
+- 4 atmospheric background images (fog scene, cabin, chapel, crime scene)
+- Labels baked into the artwork (GAMES, Win Rate, Saved, Killed)
+- Large white numerical values overlaid in the center of each card
+- No Lucide icons
+- No separate text labels
 
