@@ -102,8 +102,8 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={10}
                   tickFormatter={(value) => {
-                    const [year, month] = value.split('-');
-                    return `${month}/${year.slice(2)}`;
+                    const [year, month, day] = value.split('-');
+                    return `${month}/${day}`;
                   }}
                 />
                 <YAxis 

@@ -25,14 +25,6 @@ const Stats = () => {
         </div>
       </div>
 
-      {/* Player Archetype - Full Width */}
-      <div className="mb-8">
-        <PlayerArchetypeBadge 
-          archetype={stats.playerArchetype} 
-          reason={stats.archetypeReason}
-        />
-      </div>
-
       {/* Empty State */}
       {stats.gamesPlayed === 0 ? (
         <div className="stats-empty">
@@ -53,6 +45,14 @@ const Stats = () => {
 
           {/* Breakdowns */}
           <BreakdownTabs stats={stats} />
+
+          {/* Player Archetype - Bottom */}
+          <div className="mt-8">
+            <PlayerArchetypeBadge 
+              archetype={stats.playerArchetype} 
+              reason={stats.archetypeReason}
+            />
+          </div>
         </div>
       )}
     </div>
