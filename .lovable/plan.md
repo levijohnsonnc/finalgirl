@@ -1,107 +1,193 @@
 
 
-## Plan: Integrate Final Girl Health Values
+## Plan: Streamline Stats Dashboard
 
-This plan adds character-specific health values for each Final Girl based on the official game data you provided. Currently, the app assumes all characters have the same health (max 20), but Final Girls actually have 5 or 6 HP depending on the character.
-
----
-
-### Overview
-
-We'll create a central data file mapping each Final Girl to her starting health, then update all components that reference health to use these accurate values.
+A comprehensive overhaul of the Stats page to focus on meaningful gameplay metrics, adding narrative elements like Nemesis and Home Turf, while removing clutter.
 
 ---
 
-### Changes
+### Summary of Changes
 
-#### 1. Create Final Girl Health Data File
-
-**New file:** `src/data/finalGirlHealth.ts`
-
-Creates a lookup table mapping each Final Girl name to her starting health value:
-- Characters with 5 HP: Reiko, Alice, Barbara, Asami, Nancy, Jeanette, Uki, Ava, Red, Veronica, Octavia, Riley, Kirsty, Nora, Cindy, Rena, Vicky, Rita, Alois
-- Characters with 6 HP: Laurie, Selena, Adelaide, Charlie, Sheila, Ellen, Kate, Ginny, Gretel, Heather, Janelle, Mia, Heather, Julia, Noel, Gwynn, Joy, Lindi, Dakota
-
-Also includes:
-- `getFinalGirlHealth(name)` helper function that returns the health value (defaults to 5 if unknown)
-- `getFinalGirlMaxHealth(name)` alias for clarity in UI contexts
-
-#### 2. Update Game Outcome Form
-
-**File:** `src/components/GameOutcomeForm.tsx`
-
-Changes:
-- Import the health lookup function
-- Set the default health value based on the selected Final Girl's actual max HP
-- Set the max attribute on the health input to match the character's max HP
-- Update the label to show the character-specific max (e.g., "Final Girl Health (0-6)")
-
-#### 3. Update LLM Ending Generation Prompts
-
-**File:** `supabase/functions/generate-ending/index.ts`
-
-Changes:
-- Update the system prompt to explain health is on a 5-6 HP scale (not 0-20)
-- Pass the max health value in the optional stats section for accurate context
-- Example: `Final Girl Health: 2/6` instead of `2/20`
-
-#### 4. Update Stats Calculations
-
-**File:** `src/hooks/useGameStats.ts`
-
-Changes to threshold calculations that currently assume 20 HP max:
-- **Clutch Win**: Change from `≤2 HP` to `≤1 HP` (surviving with 1 HP out of 5-6 is clutch)
-- **Clean Win**: Change from `≥8 HP` to checking if health equals max health (won without taking damage)
-- **Low Health Wins**: Change from `≤3 HP` to `≤2 HP` for archetype calculations
-
-Also add the health lookup import to show percentage-based context where relevant.
-
-#### 5. Update Validation Schemas
-
-**File:** `supabase/functions/_shared/validation.ts`
-
-Changes:
-- Update `finalGirlHealth` max from 20 to 10 (allows some buffer for edge cases or custom games)
+| Section | Changes |
+|---------|---------|
+| Header | Remove time filter chips |
+| Hero Box | Keep: Games, Win Rate, Saved, Killed. Remove: Avg Horror, Closest Call, Signature |
+| Story of You | Replace charts, add Nemesis/Usual Suspect/Cursed Site/Home Turf, remove streaks |
+| Breakdown Tables | Remove icons from tab labels. Update columns for Final Girls and Locations |
+| Removed Sections | HighlightsReel and TrophyGrid components |
 
 ---
 
-### Technical Details
+### Changes by File
+
+#### 1. Stats Page (`src/pages/Stats.tsx`)
+
+- Remove `useState` for timeFilter
+- Remove timeFilter prop from `useGameStats` call
+- Remove time filter button group from header
+- Remove `HighlightsReel` and `TrophyGrid` imports and usage
+- Keep PlayerArchetypeBadge (personality feature)
+
+#### 2. RecordJacket (`src/components/stats/RecordJacket.tsx`)
+
+Simplify to 4 stat cards:
+- **Games** - Total games played
+- **Win Rate** - Percentage (color-coded: cyan if ≥50%, red otherwise)
+- **Saved** - Total victims saved (cyan accent)
+- **Killed** - Total victims killed (red accent)
+
+Remove: Avg Horror, Closest Call, Signature Weapon
+
+#### 3. TrendsSection (`src/components/stats/TrendsSection.tsx`)
+
+Major redesign:
+
+**Charts:**
+- **Win/Loss Bar** - Single horizontal stacked bar showing total wins (green/cyan) vs losses (red)
+- **Victims Over Time** - Line chart with two lines: Saved (cyan) and Killed (red) by month
+
+**Narrative Stats (new row of badges):**
+- **Nemesis** - Killer with most wins against you (you lost to them most)
+- **The Usual Suspect** - Killer you've beaten most often
+- **Cursed Site** - Location with most losses
+- **Home Turf** - Location with most wins
+
+**Remove:**
+- Streaks row (current, best, worst)
+- Icon from section title
+
+#### 4. BreakdownTabs (`src/components/stats/BreakdownTabs.tsx`)
+
+**Tab labels:**
+- Remove Crown, Skull, MapPin icons from TabsTrigger components
+
+**Final Girls table:**
+- Keep: Name, Plays, Wins, Win %
+- Add: Victims Saved (total), Victims Killed (total)
+- Remove: Avg Horror, Top Weapon
+
+**Killers table:**
+- Keep as-is (already has Faced, Escaped, Escape %, Avg Saved, Avg Killed)
+- Remove Nemesis lightning bolt icon (nemesis moved to Story of You)
+
+**Locations table:**
+- Keep: Name, Plays, Wins, Win %
+- Add: Victims Saved (total), Victims Killed (total)
+- Remove: Avg Horror, "Most Chaotic" skull icon
+
+#### 5. useGameStats Hook (`src/hooks/useGameStats.ts`)
+
+**Add new computed values:**
+- `usualSuspect` - Killer with most losses (you won against them most)
+- `homeTurf` - Location with most wins
+- `cursedSite` - Location with most losses
+- `victimsTrend` - Monthly saved/killed for new line chart
+
+**Update FinalGirlStats interface:**
+- Add `totalSaved` and `totalKilled`
+- Remove `avgHorror` and `topWeapon`
+
+**Update LocationStats interface:**
+- Add `totalSaved` and `totalKilled`
+- Remove `avgHorror` and `isMostChaotic`
+
+**Remove unused:**
+- `horrorTrend` calculation
+- Streak calculations
+- Highlight game calculations (mostHeroicWin, mostBrutalLoss, clutchWin, cleanWin)
+- `favoriteMatchup` calculation
+- `signatureWeapon` calculation
+- `closestCall` calculation
+- `avgHorrorLevel` calculation
+
+**Remove timeFilter parameter** - always use all games
+
+#### 6. Delete Components
+
+- `src/components/stats/HighlightsReel.tsx` - Delete file
+- `src/components/stats/TrophyGrid.tsx` - Delete file
+
+---
+
+### New Data Structures
 
 ```text
-src/
-├── data/
-│   └── finalGirlHealth.ts (NEW)  ── Health lookup table
-├── components/
-│   └── GameOutcomeForm.tsx       ── Dynamic max health per character
-├── hooks/
-│   └── useGameStats.ts           ── Adjusted thresholds
-supabase/
-└── functions/
-    ├── _shared/
-    │   └── validation.ts         ── Updated max validation
-    └── generate-ending/
-        └── index.ts              ── Accurate health context for LLM
+ComputedStats (updated):
+├── gamesPlayed
+├── winRate
+├── totalVictimsSaved
+├── totalVictimsKilled
+├── nemesis: { killer, losses }
+├── usualSuspect: { killer, wins } (NEW)
+├── homeTurf: { location, wins } (NEW)
+├── cursedSite: { location, losses } (NEW)
+├── gamesByPeriod (for win/loss bar)
+├── victimsTrend (NEW - for line chart)
+├── byFinalGirl (updated columns)
+├── byKiller (unchanged)
+├── byLocation (updated columns)
+├── playerArchetype
+└── archetypeReason
 ```
 
 ---
 
-### Data Mapping
+### Visual Layout After Changes
 
-Based on your provided table, here's the mapping that will be created:
-
-| Health | Final Girls |
-|--------|-------------|
-| 5 HP | Reiko, Alice, Barbara, Asami, Nancy, Jeanette, Uki, Ava, Red, Veronica, Traci, Riley, Kirsty, Nora, Cindy, Rena, Vicky, Rita, Alois, Meghan, Cassie |
-| 6 HP | Laurie, Selena, Adelaide, Charlie, Sheila, Ellen, Kate, Ginny, Gretel, Heather, Danielle, Mia, Heather, Julia, Noel, Gwynn, Joy, Lindi, Dakota, Ronda, Mandy |
-
-Note: Some names from your table have slight spelling variations from what's in the codebase (e.g., "Jeanette" vs "Jenette"). I'll align with the existing codebase spellings.
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ STATS                                                        │
+│ YOUR SURVIVAL RECORD                                         │
+├──────────────────────────────────────────────────────────────┤
+│ [Player Archetype Badge - The Survivor]                      │
+├──────────────────────────────────────────────────────────────┤
+│ ┌──────────┬──────────┬──────────┬──────────┐               │
+│ │  Games   │ Win Rate │  Saved   │  Killed  │               │
+│ │    24    │   62%    │    47    │    31    │               │
+│ └──────────┴──────────┴──────────┴──────────┘               │
+├──────────────────────────────────────────────────────────────┤
+│ Story of You                                                 │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ [█████████████░░░░░░] Wins 15 | Losses 9                │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Victims Over Time (line chart - saved/killed)           │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│ ┌──────────┬──────────┬──────────┬──────────┐               │
+│ │ Nemesis  │ Usual    │ Cursed   │ Home     │               │
+│ │ Dr Fright│ Suspect  │ Site     │ Turf     │               │
+│ │          │ Hans     │ Asylum   │ Camp     │               │
+│ └──────────┴──────────┴──────────┴──────────┘               │
+├──────────────────────────────────────────────────────────────┤
+│ [Final Girls] [Killers] [Locations]                          │
+│ ┌────────────────────────────────────────────────────────┐  │
+│ │ Name    │ Plays │ Wins │ Win% │ Saved │ Killed │       │  │
+│ │ Laurie  │   5   │  3   │ 60%  │  12   │   4    │       │  │
+│ │ Reiko   │   4   │  2   │ 50%  │   8   │   6    │       │  │
+│ └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-### Impact
+### Files Modified
 
-- **Forms**: Health input will show correct max and default for each character
-- **Stats**: Thresholds will accurately reflect close calls and clean wins
-- **LLM Generation**: Story endings will understand the true stakes (2 HP remaining out of 5 is dire, not minor)
-- **Backwards Compatibility**: Existing game records with health values will still work; stats calculations will be more meaningful
+| File | Action |
+|------|--------|
+| `src/pages/Stats.tsx` | Edit - remove filter, remove HighlightsReel/TrophyGrid |
+| `src/components/stats/RecordJacket.tsx` | Edit - reduce to 4 cards |
+| `src/components/stats/TrendsSection.tsx` | Edit - new charts, narrative badges |
+| `src/components/stats/BreakdownTabs.tsx` | Edit - update columns, remove icons |
+| `src/hooks/useGameStats.ts` | Edit - new stats, remove unused |
+| `src/components/stats/HighlightsReel.tsx` | Delete |
+| `src/components/stats/TrophyGrid.tsx` | Delete |
+
+---
+
+### Notes
+
+- **PlayerArchetype** is preserved as it adds personality without clutter
+- The horizontal win/loss bar is a single aggregate bar (not time-series) for quick visual understanding
+- Victims Over Time line chart replaces the Horror Trend chart
+- Narrative badges (Nemesis, Usual Suspect, etc.) provide storytelling without complex unlock mechanics
 
