@@ -35,6 +35,7 @@ export const RecordJacket = ({ stats }: RecordJacketProps) => {
         <StatCard
           value={stats.gamesPlayed}
           backgroundImage={gamesBg}
+          backgroundPosition="center 38%"
         />
         <StatCard
           value={`${Math.round(stats.winRate)}%`}
@@ -44,12 +45,12 @@ export const RecordJacket = ({ stats }: RecordJacketProps) => {
         <StatCard
           value={stats.totalVictimsSaved}
           backgroundImage={savedBg}
-          backgroundPosition="center 30%"
+          backgroundPosition="center 38%"
         />
         <StatCard
           value={stats.totalVictimsKilled}
           backgroundImage={killedBg}
-          backgroundPosition="center 30%"
+          backgroundPosition="center 38%"
         />
       </div>
     </div>
