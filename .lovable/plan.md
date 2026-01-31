@@ -1,193 +1,269 @@
 
 
-## Plan: Streamline Stats Dashboard
+# Plan: VHS Horror Aesthetic for Stats Page
 
-A comprehensive overhaul of the Stats page to focus on meaningful gameplay metrics, adding narrative elements like Nemesis and Home Turf, while removing clutter.
-
----
-
-### Summary of Changes
-
-| Section | Changes |
-|---------|---------|
-| Header | Remove time filter chips |
-| Hero Box | Keep: Games, Win Rate, Saved, Killed. Remove: Avg Horror, Closest Call, Signature |
-| Story of You | Replace charts, add Nemesis/Usual Suspect/Cursed Site/Home Turf, remove streaks |
-| Breakdown Tables | Remove icons from tab labels. Update columns for Final Girls and Locations |
-| Removed Sections | HighlightsReel and TrophyGrid components |
+Transform the Stats page from a clean analytics dashboard into recovered evidence from a cursed VHS tape.
 
 ---
 
-### Changes by File
+## Summary of Changes
 
-#### 1. Stats Page (`src/pages/Stats.tsx`)
-
-- Remove `useState` for timeFilter
-- Remove timeFilter prop from `useGameStats` call
-- Remove time filter button group from header
-- Remove `HighlightsReel` and `TrophyGrid` imports and usage
-- Keep PlayerArchetypeBadge (personality feature)
-
-#### 2. RecordJacket (`src/components/stats/RecordJacket.tsx`)
-
-Simplify to 4 stat cards:
-- **Games** - Total games played
-- **Win Rate** - Percentage (color-coded: cyan if ≥50%, red otherwise)
-- **Saved** - Total victims saved (cyan accent)
-- **Killed** - Total victims killed (red accent)
-
-Remove: Avg Horror, Closest Call, Signature Weapon
-
-#### 3. TrendsSection (`src/components/stats/TrendsSection.tsx`)
-
-Major redesign:
-
-**Charts:**
-- **Win/Loss Bar** - Single horizontal stacked bar showing total wins (green/cyan) vs losses (red)
-- **Victims Over Time** - Line chart with two lines: Saved (cyan) and Killed (red) by month
-
-**Narrative Stats (new row of badges):**
-- **Nemesis** - Killer with most wins against you (you lost to them most)
-- **The Usual Suspect** - Killer you've beaten most often
-- **Cursed Site** - Location with most losses
-- **Home Turf** - Location with most wins
-
-**Remove:**
-- Streaks row (current, best, worst)
-- Icon from section title
-
-#### 4. BreakdownTabs (`src/components/stats/BreakdownTabs.tsx`)
-
-**Tab labels:**
-- Remove Crown, Skull, MapPin icons from TabsTrigger components
-
-**Final Girls table:**
-- Keep: Name, Plays, Wins, Win %
-- Add: Victims Saved (total), Victims Killed (total)
-- Remove: Avg Horror, Top Weapon
-
-**Killers table:**
-- Keep as-is (already has Faced, Escaped, Escape %, Avg Saved, Avg Killed)
-- Remove Nemesis lightning bolt icon (nemesis moved to Story of You)
-
-**Locations table:**
-- Keep: Name, Plays, Wins, Win %
-- Add: Victims Saved (total), Victims Killed (total)
-- Remove: Avg Horror, "Most Chaotic" skull icon
-
-#### 5. useGameStats Hook (`src/hooks/useGameStats.ts`)
-
-**Add new computed values:**
-- `usualSuspect` - Killer with most losses (you won against them most)
-- `homeTurf` - Location with most wins
-- `cursedSite` - Location with most losses
-- `victimsTrend` - Monthly saved/killed for new line chart
-
-**Update FinalGirlStats interface:**
-- Add `totalSaved` and `totalKilled`
-- Remove `avgHorror` and `topWeapon`
-
-**Update LocationStats interface:**
-- Add `totalSaved` and `totalKilled`
-- Remove `avgHorror` and `isMostChaotic`
-
-**Remove unused:**
-- `horrorTrend` calculation
-- Streak calculations
-- Highlight game calculations (mostHeroicWin, mostBrutalLoss, clutchWin, cleanWin)
-- `favoriteMatchup` calculation
-- `signatureWeapon` calculation
-- `closestCall` calculation
-- `avgHorrorLevel` calculation
-
-**Remove timeFilter parameter** - always use all games
-
-#### 6. Delete Components
-
-- `src/components/stats/HighlightsReel.tsx` - Delete file
-- `src/components/stats/TrophyGrid.tsx` - Delete file
+| Area | Current State | Target State |
+|------|---------------|--------------|
+| Background | Pure black void | Fog plate + CRT effects + vignette |
+| Color palette | Saturated, celebratory | Desaturated, analog, dreadful |
+| Card geometry | Perfect rectangles | Irregular glows, film burn, noise |
+| Typography | Polite, legible | Spaced, haunted, occasional flicker |
+| Charts | Clean digital | Faded, degraded, drawn-in |
+| Framing | Dashboard | Archived footage / evidence |
 
 ---
 
-### New Data Structures
+## Implementation Details
 
-```text
-ComputedStats (updated):
-├── gamesPlayed
-├── winRate
-├── totalVictimsSaved
-├── totalVictimsKilled
-├── nemesis: { killer, losses }
-├── usualSuspect: { killer, wins } (NEW)
-├── homeTurf: { location, wins } (NEW)
-├── cursedSite: { location, losses } (NEW)
-├── gamesByPeriod (for win/loss bar)
-├── victimsTrend (NEW - for line chart)
-├── byFinalGirl (updated columns)
-├── byKiller (unchanged)
-├── byLocation (updated columns)
-├── playerArchetype
-└── archetypeReason
+### 1. Add Fog Background Plate
+
+**New Asset**: Copy the provided fog image to `src/assets/stats-bg.png`
+
+**Stats Page Container**: Apply background with same layering as Marquee:
+- Fog background image (cover, centered)
+- Film grain overlay (animated)
+- Scanlines overlay (drifting)
+- Vignette (asymmetric)
+- Blue-black base color instead of pure black
+
+**CSS Changes** (`src/index.css`):
+```css
+.stats-page {
+  position: relative;
+  min-height: 100vh;
+}
+
+.stats-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    url('@/assets/stats-bg.png') center/cover no-repeat,
+    hsl(220 15% 4%); /* Blue-black, not pure black */
+  z-index: -3;
+}
+```
+
+**Component Changes** (`Stats.tsx`):
+- Add film grain, scanlines, and vignette overlays as child elements
+
+---
+
+### 2. Horror Color Logic (Desaturated + Analog)
+
+**Update stat card color palette**:
+
+| Stat | Current | New Meaning | New Color |
+|------|---------|-------------|-----------|
+| Games | Blue | Survival/Control | Keep, slight desaturation |
+| Win Rate | Yellow | False Hope | Desaturated yellow, add slow flicker |
+| Saved | Green | Sickly survival | Desaturated, murky green |
+| Killed | Red | Blood Debt | Deep red, add slow pulse |
+
+**CSS Changes**:
+- Desaturate all hero stat colors by ~15-20%
+- Add `@keyframes blood-pulse` for red values (slow, breathing glow)
+- Add `@keyframes false-hope-flicker` for yellow values (rare, subtle)
+- Change green to sickly tone: `hsl(145 40% 40%)` instead of `hsl(145 70% 55%)`
+
+---
+
+### 3. Break Perfect Geometry
+
+**Irregular glow bleed**:
+- Asymmetric box-shadows (offset to bottom-right)
+- Subtle inner shadow suggesting film damage
+
+**Film burn corners**:
+- Add `::after` pseudo-element with radial gradients on corners
+- Low opacity, warm/orange tint
+
+**Per-card noise texture**:
+- Each card gets its own subtle noise overlay via `::before`
+- Slightly different opacity per variant
+
+**CSS Example**:
+```css
+.hero-stat-card {
+  /* Asymmetric glow - heavier on bottom-right */
+  box-shadow: 
+    3px 5px 25px hsl(200 70% 50% / 0.25),
+    -1px -1px 10px hsl(200 70% 50% / 0.1),
+    inset 0 0 20px rgba(0,0,0,0.4);
+}
+
+/* Film burn overlay */
+.hero-stat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at top-right, hsl(30 60% 50% / 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom-left, hsl(30 60% 30% / 0.04) 0%, transparent 40%);
+  pointer-events: none;
+  border-radius: inherit;
+}
 ```
 
 ---
 
-### Visual Layout After Changes
+### 4. Archival Framing + REC Indicator
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│ STATS                                                        │
-│ YOUR SURVIVAL RECORD                                         │
-├──────────────────────────────────────────────────────────────┤
-│ [Player Archetype Badge - The Survivor]                      │
-├──────────────────────────────────────────────────────────────┤
-│ ┌──────────┬──────────┬──────────┬──────────┐               │
-│ │  Games   │ Win Rate │  Saved   │  Killed  │               │
-│ │    24    │   62%    │    47    │    31    │               │
-│ └──────────┴──────────┴──────────┴──────────┘               │
-├──────────────────────────────────────────────────────────────┤
-│ Story of You                                                 │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ [█████████████░░░░░░] Wins 15 | Losses 9                │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ Victims Over Time (line chart - saved/killed)           │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│ ┌──────────┬──────────┬──────────┬──────────┐               │
-│ │ Nemesis  │ Usual    │ Cursed   │ Home     │               │
-│ │ Dr Fright│ Suspect  │ Site     │ Turf     │               │
-│ │          │ Hans     │ Asylum   │ Camp     │               │
-│ └──────────┴──────────┴──────────┴──────────┘               │
-├──────────────────────────────────────────────────────────────┤
-│ [Final Girls] [Killers] [Locations]                          │
-│ ┌────────────────────────────────────────────────────────┐  │
-│ │ Name    │ Plays │ Wins │ Win% │ Saved │ Killed │       │  │
-│ │ Laurie  │   5   │  3   │ 60%  │  12   │   4    │       │  │
-│ │ Reiko   │   4   │  2   │ 50%  │   8   │   6    │       │  │
-│ └────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────┘
+**Add persistent "REC ●" indicator**:
+- Top-right of stats page
+- Red dot with slow pulse animation
+- VHS font, low opacity
+
+**Add archival micro-copy**:
+- Below "STATS" header: change "YOUR SURVIVAL RECORD" to `SESSION DATA LOGGED`
+- Add timestamp that updates slowly (every second)
+- Section subtitles: "Story of You" becomes `// RECOVERED FOOTAGE`
+
+**Component Changes** (`Stats.tsx`):
+```tsx
+{/* REC Indicator */}
+<div className="rec-indicator">
+  <span className="rec-dot" />
+  <span>REC</span>
+</div>
+
+{/* Header with archival framing */}
+<p className="font-vhs text-xs text-muted-foreground tracking-[0.3em]">
+  SESSION DATA LOGGED • {formattedTime}
+</p>
 ```
 
 ---
 
-### Files Modified
+### 5. Typography Adjustments
 
-| File | Action |
-|------|--------|
-| `src/pages/Stats.tsx` | Edit - remove filter, remove HighlightsReel/TrophyGrid |
-| `src/components/stats/RecordJacket.tsx` | Edit - reduce to 4 cards |
-| `src/components/stats/TrendsSection.tsx` | Edit - new charts, narrative badges |
-| `src/components/stats/BreakdownTabs.tsx` | Edit - update columns, remove icons |
-| `src/hooks/useGameStats.ts` | Edit - new stats, remove unused |
-| `src/components/stats/HighlightsReel.tsx` | Delete |
-| `src/components/stats/TrophyGrid.tsx` | Delete |
+**Headers**:
+- Increase letter-spacing on "STATS" and section titles
+- Add `stats-title-flicker` animation (very slow, very rare)
+
+**Numbers**:
+- Add subtle text-shadow blur on stat numbers
+- Slight tracking increase
+
+**CSS**:
+```css
+.stats-header h1 {
+  letter-spacing: 0.2em;
+  animation: stats-title-flicker 12s ease-in-out infinite;
+}
+
+@keyframes stats-title-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.85; }
+  94% { opacity: 0.95; }
+  95% { opacity: 0.8; }
+  96% { opacity: 1; }
+}
+```
 
 ---
 
-### Notes
+### 6. Chart Degradation
 
-- **PlayerArchetype** is preserved as it adds personality without clutter
-- The horizontal win/loss bar is a single aggregate bar (not time-series) for quick visual understanding
-- Victims Over Time line chart replaces the Horror Trend chart
-- Narrative badges (Nemesis, Usual Suspect, etc.) provide storytelling without complex unlock mechanics
+**Line chart adjustments**:
+- Reduce grid line opacity to near-invisible
+- Axis text: lower contrast, slightly blurred
+- Add animation props to recharts for slower "draw-in" effect
+- Subtle horizontal roll effect (optional, via container)
+
+**CSS for chart container**:
+```css
+.chart-container {
+  /* Aged film look */
+  filter: contrast(0.95) saturate(0.85);
+}
+
+.chart-container .recharts-cartesian-grid line {
+  opacity: 0.15;
+}
+
+.chart-container .recharts-text {
+  opacity: 0.6;
+  filter: blur(0.3px);
+}
+```
+
+---
+
+### 7. Container Sections (Trends, Breakdowns)
+
+**Update all section containers**:
+- Change from `bg-background/40` to use the blue-black tone
+- Add subtle noise overlay
+- Film burn on edges (same treatment as cards)
+
+---
+
+## Files to Modify
+
+| File | Changes |
+|------|---------|
+| `src/assets/stats-bg.png` | New file - copy from user upload |
+| `src/pages/Stats.tsx` | Add overlays, REC indicator, archival copy, timestamp |
+| `src/components/stats/RecordJacket.tsx` | Add relative positioning for overlay pseudo-elements |
+| `src/components/stats/TrendsSection.tsx` | Update section title text, chart styling |
+| `src/components/stats/BreakdownTabs.tsx` | Minor styling adjustments |
+| `src/index.css` | Major additions for VHS effects, colors, animations |
+
+---
+
+## New CSS Classes to Add
+
+```text
+.stats-bg-layer          - Fog background positioning
+.stats-grain-overlay     - Film grain for stats page
+.stats-scanlines         - Scanlines overlay
+.stats-vignette          - Vignette effect
+.rec-indicator           - REC ● element styling
+.rec-dot                 - Pulsing red dot
+.blood-pulse             - Animation for red values
+.false-hope-flicker      - Animation for yellow values
+.film-burn-overlay       - Corner burn effect for cards
+.card-noise              - Per-card noise texture
+.stats-title-flicker     - Rare header flicker
+.chart-degraded          - Aged chart styling
+```
+
+---
+
+## Color Palette Changes
+
+| Token | Current HSL | New HSL | Notes |
+|-------|-------------|---------|-------|
+| Blue (Games) | `200 100% 60%` | `200 70% 55%` | Slightly desaturated |
+| Yellow (Win Rate) | `45 100% 60%` | `45 70% 50%` | Warmer, dimmer |
+| Green (Saved) | `145 70% 55%` | `145 40% 40%` | Sickly, murky |
+| Red (Killed) | `0 70% 60%` | `0 60% 45%` | Deeper, more ominous |
+| Background | `0 0% 4%` | `220 15% 4%` | Blue-black tone |
+
+---
+
+## Animation Summary
+
+| Animation | Target | Duration | Notes |
+|-----------|--------|----------|-------|
+| `blood-pulse` | Red stat values | 4s | Slow breathing glow |
+| `false-hope-flicker` | Yellow stat values | 8s | Rare opacity dips |
+| `stats-title-flicker` | Page header | 12s | Very subtle, rare |
+| `grain-shift` | Film grain overlay | 0.5s | Existing animation |
+| `scanline-drift` | Scanlines | 10s | Existing animation |
+
+---
+
+## The Guiding Principle
+
+> "Would this exist on a cursed VHS menu screen?"
+
+Every element should feel **recorded, not rendered**. The Stats page becomes evidence someone found after the fact—a diegetic artifact within the horror universe.
 
