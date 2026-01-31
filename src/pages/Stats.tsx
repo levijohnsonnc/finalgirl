@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useGameHistory } from '@/hooks/useGameHistory';
 import { useGameStats } from '@/hooks/useGameStats';
 import { RecordJacket } from '@/components/stats/RecordJacket';
@@ -9,18 +10,45 @@ import { Film } from 'lucide-react';
 const Stats = () => {
   const { gameHistory } = useGameHistory();
   const stats = useGameStats(gameHistory);
+  const [timestamp, setTimestamp] = useState('');
+
+  // Update timestamp every second for archival feel
+  useEffect(() => {
+    const updateTimestamp = () => {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      setTimestamp(`${hours}:${minutes}:${seconds}`);
+    };
+    
+    updateTimestamp();
+    const interval = setInterval(updateTimestamp, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="stats-page">
+      {/* VHS Background Layers */}
+      <div className="stats-bg-plate" />
+      <div className="stats-grain-overlay" />
+      <div className="stats-scanlines" />
+      <div className="stats-vignette" />
 
-      {/* Header */}
+      {/* REC Indicator */}
+      <div className="rec-indicator">
+        <span className="rec-dot" />
+        <span>REC</span>
+      </div>
+
+      {/* Header with Archival Framing */}
       <div className="stats-header">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-4xl sm:text-5xl text-primary blood-glow tracking-wider">
             STATS
           </h1>
-          <p className="font-vhs text-xs text-muted-foreground tracking-wider">
-            YOUR SURVIVAL RECORD
+          <p className="stats-subheader">
+            SESSION DATA LOGGED • {timestamp}
           </p>
         </div>
       </div>
@@ -40,7 +68,7 @@ const Stats = () => {
           {/* Record Jacket */}
           <RecordJacket stats={stats} />
 
-          {/* Trends */}
+          {/* Trends - with archival subtitle */}
           <TrendsSection stats={stats} />
 
           {/* Breakdowns */}
