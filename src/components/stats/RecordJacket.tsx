@@ -45,12 +45,12 @@ export const RecordJacket = ({ stats }: RecordJacketProps) => {
         <StatCard
           value={stats.totalVictimsSaved}
           backgroundImage={savedBg}
-          backgroundPosition="center 45%"
+          backgroundPosition="center 25%"
         />
         <StatCard
           value={stats.totalVictimsKilled}
           backgroundImage={killedBg}
-          backgroundPosition="center 45%"
+          backgroundPosition="center 25%"
         />
       </div>
     </div>
