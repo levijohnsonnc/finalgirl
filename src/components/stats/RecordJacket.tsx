@@ -9,14 +9,13 @@ interface StatCardProps {
   value: string | number;
   label: string;
   tooltip: string;
-  accent?: 'cyan' | 'blood' | 'yellow' | 'default';
+  accent?: 'cyan' | 'blood' | 'default';
 }
 
 const StatCard = ({ value, label, tooltip, accent = 'default' }: StatCardProps) => {
   const accentClasses = {
     cyan: 'text-neon-cyan',
     blood: 'text-blood-red',
-    yellow: 'text-vhs-yellow',
     default: 'text-foreground'
   };
 
@@ -40,7 +39,7 @@ const StatCard = ({ value, label, tooltip, accent = 'default' }: StatCardProps) 
 export const RecordJacket = ({ stats }: RecordJacketProps) => {
   return (
     <div className="record-jacket">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           value={stats.gamesPlayed}
           label="Games"
@@ -60,26 +59,10 @@ export const RecordJacket = ({ stats }: RecordJacketProps) => {
           accent="cyan"
         />
         <StatCard
-          value={stats.avgHorrorLevel !== null ? stats.avgHorrorLevel.toFixed(1) : '—'}
-          label="Avg Horror"
-          tooltip="Average final horror level (1-7 scale)"
+          value={stats.totalVictimsKilled}
+          label="Killed"
+          tooltip="Total victims killed across all games"
           accent="blood"
-        />
-        <StatCard
-          value={stats.closestCall ? stats.closestCall.health : '—'}
-          label="Closest Call"
-          tooltip={stats.closestCall 
-            ? `Lowest health in a win (${stats.closestCall.finalGirl})` 
-            : "Win a game to see your closest call"}
-          accent="yellow"
-        />
-        <StatCard
-          value={stats.signatureWeapon?.weapon || '—'}
-          label="Signature"
-          tooltip={stats.signatureWeapon 
-            ? `Most used weapon (${stats.signatureWeapon.count} times)` 
-            : "Record weapons to see your signature"}
-          accent="default"
         />
       </div>
     </div>
