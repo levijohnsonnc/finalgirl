@@ -11,12 +11,16 @@ interface RecordJacketProps {
 interface StatCardProps {
   value: string | number;
   backgroundImage: string;
+  backgroundPosition?: string;
 }
 
-const StatCard = ({ value, backgroundImage }: StatCardProps) => (
+const StatCard = ({ value, backgroundImage, backgroundPosition = 'center' }: StatCardProps) => (
   <div 
     className="hero-stat-card-image"
-    style={{ backgroundImage: `url(${backgroundImage})` }}
+    style={{ 
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundPosition 
+    }}
   >
     <div className="hero-stat-value">
       {value}
@@ -35,14 +39,17 @@ export const RecordJacket = ({ stats }: RecordJacketProps) => {
         <StatCard
           value={`${Math.round(stats.winRate)}%`}
           backgroundImage={winrateBg}
+          backgroundPosition="center 30%"
         />
         <StatCard
           value={stats.totalVictimsSaved}
           backgroundImage={savedBg}
+          backgroundPosition="center 30%"
         />
         <StatCard
           value={stats.totalVictimsKilled}
           backgroundImage={killedBg}
+          backgroundPosition="center 30%"
         />
       </div>
     </div>
