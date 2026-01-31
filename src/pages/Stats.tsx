@@ -1,20 +1,14 @@
-import { useState } from 'react';
 import { useGameHistory } from '@/hooks/useGameHistory';
 import { useGameStats } from '@/hooks/useGameStats';
 import { RecordJacket } from '@/components/stats/RecordJacket';
 import { TrendsSection } from '@/components/stats/TrendsSection';
 import { BreakdownTabs } from '@/components/stats/BreakdownTabs';
-import { HighlightsReel } from '@/components/stats/HighlightsReel';
-import { TrophyGrid } from '@/components/stats/TrophyGrid';
 import { PlayerArchetypeBadge } from '@/components/stats/PlayerArchetype';
 import { Film } from 'lucide-react';
 
-type TimeFilter = 'all' | '30' | '10';
-
 const Stats = () => {
   const { gameHistory } = useGameHistory();
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
-  const stats = useGameStats(gameHistory, timeFilter);
+  const stats = useGameStats(gameHistory);
 
   return (
     <div className="stats-page">
@@ -28,28 +22,6 @@ const Stats = () => {
           <p className="font-vhs text-xs text-muted-foreground tracking-wider">
             YOUR SURVIVAL RECORD
           </p>
-        </div>
-
-        {/* Time Filter */}
-        <div className="time-filter">
-          <button
-            onClick={() => setTimeFilter('all')}
-            className={`filter-chip ${timeFilter === 'all' ? 'filter-chip-active' : ''}`}
-          >
-            ALL
-          </button>
-          <button
-            onClick={() => setTimeFilter('30')}
-            className={`filter-chip ${timeFilter === '30' ? 'filter-chip-active' : ''}`}
-          >
-            LAST 30
-          </button>
-          <button
-            onClick={() => setTimeFilter('10')}
-            className={`filter-chip ${timeFilter === '10' ? 'filter-chip-active' : ''}`}
-          >
-            LAST 10
-          </button>
         </div>
       </div>
 
@@ -81,12 +53,6 @@ const Stats = () => {
 
           {/* Breakdowns */}
           <BreakdownTabs stats={stats} />
-
-          {/* Highlights */}
-          <HighlightsReel stats={stats} />
-
-          {/* Trophies */}
-          <TrophyGrid />
         </div>
       )}
     </div>

@@ -2,7 +2,6 @@ import { ComputedStats } from '@/hooks/useGameStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
-import { Crown, Skull, MapPin, Zap } from 'lucide-react';
 
 interface BreakdownTabsProps {
   stats: ComputedStats;
@@ -18,15 +17,12 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
       <Tabs defaultValue="finalGirls" className="w-full">
         <TabsList className="breakdown-tabs-list">
           <TabsTrigger value="finalGirls" className="breakdown-tab">
-            <Crown className="w-4 h-4 mr-1" />
             Final Girls
           </TabsTrigger>
           <TabsTrigger value="killers" className="breakdown-tab">
-            <Skull className="w-4 h-4 mr-1" />
             Killers
           </TabsTrigger>
           <TabsTrigger value="locations" className="breakdown-tab">
-            <MapPin className="w-4 h-4 mr-1" />
             Locations
           </TabsTrigger>
         </TabsList>
@@ -40,8 +36,8 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
                   <TableHead className="text-center">Plays</TableHead>
                   <TableHead className="text-center">Wins</TableHead>
                   <TableHead className="text-center">Win %</TableHead>
-                  <TableHead className="text-center hidden sm:table-cell">Avg Horror</TableHead>
-                  <TableHead className="hidden md:table-cell">Top Weapon</TableHead>
+                  <TableHead className="text-center hidden sm:table-cell">Saved</TableHead>
+                  <TableHead className="text-center hidden sm:table-cell">Killed</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -66,11 +62,11 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
                         {Math.round(fg.winRate)}%
                       </span>
                     </TableCell>
-                    <TableCell className="text-center hidden sm:table-cell text-muted-foreground">
-                      {fg.avgHorror?.toFixed(1) || '—'}
+                    <TableCell className="text-center hidden sm:table-cell text-neon-cyan">
+                      {fg.totalSaved}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell text-muted-foreground truncate max-w-[120px]">
-                      {fg.topWeapon || '—'}
+                    <TableCell className="text-center hidden sm:table-cell text-blood-red">
+                      {fg.totalKilled}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -105,9 +101,6 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
                           />
                         )}
                         <span className="truncate">{k.name}</span>
-                        {k.isNemesis && (
-                          <span title="Your Nemesis"><Zap className="w-4 h-4 text-vhs-yellow flex-shrink-0" /></span>
-                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-center">{k.plays}</TableCell>
@@ -139,7 +132,8 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
                   <TableHead className="text-center">Plays</TableHead>
                   <TableHead className="text-center">Wins</TableHead>
                   <TableHead className="text-center">Win %</TableHead>
-                  <TableHead className="text-center hidden sm:table-cell">Avg Horror</TableHead>
+                  <TableHead className="text-center hidden sm:table-cell">Saved</TableHead>
+                  <TableHead className="text-center hidden sm:table-cell">Killed</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -155,9 +149,6 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
                           />
                         )}
                         <span className="truncate">{loc.name}</span>
-                        {loc.isMostChaotic && (
-                          <span title="Most Chaotic"><Skull className="w-4 h-4 text-blood-red flex-shrink-0" /></span>
-                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-center">{loc.plays}</TableCell>
@@ -167,8 +158,11 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
                         {Math.round(loc.winRate)}%
                       </span>
                     </TableCell>
-                    <TableCell className="text-center hidden sm:table-cell text-muted-foreground">
-                      {loc.avgHorror?.toFixed(1) || '—'}
+                    <TableCell className="text-center hidden sm:table-cell text-neon-cyan">
+                      {loc.totalSaved}
+                    </TableCell>
+                    <TableCell className="text-center hidden sm:table-cell text-blood-red">
+                      {loc.totalKilled}
                     </TableCell>
                   </TableRow>
                 ))}

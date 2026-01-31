@@ -1879,27 +1879,84 @@
 }
 
 .chart-container {
-  @apply p-4 rounded-lg bg-background/50 border border-border/50;
+  @apply p-4 rounded-lg bg-background/50 border border-border/50 mt-6;
 }
 
 .chart-title {
   @apply font-vhs text-xs text-muted-foreground uppercase tracking-wider mb-4;
 }
 
-.streaks-row {
-  @apply flex flex-wrap items-center justify-center gap-4 mt-6 pt-6 border-t border-border/50;
+/* Win/Loss Bar */
+.winloss-bar-container {
+  @apply space-y-2;
 }
 
-.streak-badge {
-  @apply flex items-center gap-2 px-4 py-2 rounded-lg bg-background/50 border border-border/50;
+.winloss-bar {
+  @apply flex h-6 rounded-full overflow-hidden bg-background/50 border border-border/50;
 }
 
-.streak-value {
-  @apply font-display text-lg font-bold;
+.winloss-wins {
+  background: hsl(var(--neon-cyan));
+  transition: width 0.5s ease;
 }
 
-.streak-label {
-  @apply font-vhs text-[10px] text-muted-foreground uppercase;
+.winloss-losses {
+  background: hsl(var(--blood-red));
+  transition: width 0.5s ease;
+}
+
+.winloss-labels {
+  @apply flex justify-between font-vhs text-xs uppercase tracking-wider;
+}
+
+/* Narrative Badges Grid */
+.narrative-grid {
+  @apply grid grid-cols-2 lg:grid-cols-4 gap-3 mt-6;
+}
+
+.narrative-badge {
+  @apply flex flex-col items-center justify-center p-4 rounded-lg 
+    bg-background/50 border border-border/50 min-h-[100px]
+    transition-all duration-300 text-center;
+}
+
+.narrative-badge-locked {
+  @apply opacity-50;
+}
+
+.narrative-badge-warning {
+  border-color: hsl(var(--vhs-yellow) / 0.3);
+  box-shadow: 0 0 10px hsl(var(--vhs-yellow) / 0.1);
+}
+
+.narrative-badge-success {
+  border-color: hsl(var(--neon-cyan) / 0.3);
+  box-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.1);
+}
+
+.narrative-badge-danger {
+  border-color: hsl(var(--blood-red) / 0.3);
+  box-shadow: 0 0 10px hsl(var(--blood-red) / 0.1);
+}
+
+.narrative-badge-info {
+  @apply border-primary/30 shadow-[0_0_10px_hsl(var(--primary)/0.1)];
+}
+
+.narrative-label {
+  @apply font-vhs text-[10px] uppercase tracking-wider text-muted-foreground mb-2;
+}
+
+.narrative-value {
+  @apply flex items-center gap-2 font-title text-sm sm:text-base;
+}
+
+.narrative-subtext {
+  @apply font-vhs text-[10px] text-muted-foreground mt-1;
+}
+
+.narrative-unlock {
+  @apply font-vhs text-[9px] text-muted-foreground/60;
 }
 
 /* Breakdown Tabs */
