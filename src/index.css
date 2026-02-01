@@ -2106,77 +2106,152 @@
   opacity: 0.7;
 }
 
-/* Win/Loss Blood Tube */
+/* ===== 3D Glass Specimen Tube ===== */
 .winloss-bar-container {
-  @apply space-y-2;
+  @apply space-y-3;
+}
+
+/* Glass tube outer container - physical capsule */
+.glass-tube-container {
+  position: relative;
+  height: 48px;
+  border-radius: 24px;
+  
+  /* Glass material simulation */
+  background: linear-gradient(
+    to bottom,
+    hsl(200 10% 18% / 0.3) 0%,
+    hsl(200 10% 12% / 0.4) 15%,
+    hsl(200 10% 6% / 0.5) 50%,
+    hsl(200 10% 4% / 0.6) 85%,
+    hsl(200 10% 8% / 0.4) 100%
+  );
+  
+  /* Multi-layered glass shadows and depth */
+  box-shadow:
+    /* Deep outer shadow */
+    0 10px 40px rgba(0, 0, 0, 0.5),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    /* Rim highlight top */
+    inset 0 2px 3px rgba(255, 255, 255, 0.12),
+    /* Rim shadow bottom */
+    inset 0 -3px 8px rgba(0, 0, 0, 0.5),
+    /* Inner glow from serum */
+    inset 0 0 25px hsl(180 80% 50% / 0.08),
+    /* Inner glow from blood */
+    inset 0 0 25px hsl(0 80% 40% / 0.06);
+    
+  /* Glass border with subtle reflection */
+  border: 1px solid hsl(0 0% 30% / 0.4);
+  overflow: hidden;
+}
+
+/* Glass inner container */
+.glass-tube-inner {
+  position: absolute;
+  inset: 4px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Specular highlight strip - wet glass reflection */
+.glass-tube-highlight {
+  position: absolute;
+  top: 4px;
+  left: 8%;
+  right: 8%;
+  height: 8px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 15%,
+    rgba(255, 255, 255, 0.35) 35%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.35) 65%,
+    rgba(255, 255, 255, 0.15) 85%,
+    transparent 100%
+  );
+  border-radius: 4px;
+  filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Meniscus at fluid boundary */
+.glass-tube-meniscus {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 40px;
+  transform: translateX(-20px);
+  background-image: url('/src/assets/meniscus-blend.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.9;
 }
 
 .winloss-bar {
-  @apply flex rounded-full overflow-hidden;
-  height: 32px;
+  @apply flex;
+  height: 100%;
   position: relative;
-  background: linear-gradient(
-    to bottom,
-    hsl(220 15% 12% / 0.4) 0%,
-    hsl(220 15% 6% / 0.6) 50%,
-    hsl(220 15% 4% / 0.8) 100%
-  );
-  box-shadow:
-    /* Inner glass highlight (top) */
-    inset 0 1px 2px rgba(255, 255, 255, 0.12),
-    /* Inner shadow (bottom) */
-    inset 0 -2px 4px rgba(0, 0, 0, 0.5),
-    /* Outer ambient shadow */
-    0 4px 12px rgba(0, 0, 0, 0.4),
-    /* Subtle rim glow */
-    0 0 1px rgba(255, 255, 255, 0.1);
-  border: 1px solid hsl(0 0% 25% / 0.4);
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-/* Serum fill (Wins) - bright, glowing cyan */
+/* ===== Serum Fluid (Wins) - Bioluminescent Cyan ===== */
 .winloss-wins {
   position: relative;
-  background: linear-gradient(
-    to bottom,
-    hsl(180 85% 55% / 0.6) 0%,
-    hsl(180 90% 50% / 0.85) 50%,
-    hsl(180 85% 45% / 0.7) 100%
-  );
-  border-radius: 999px 0 0 999px;
-  transition: width 0.5s ease;
+  
+  /* Radial glowing bioluminescent base */
+  background: 
+    radial-gradient(
+      ellipse 120% 100% at 40% 60%,
+      hsl(180 95% 55% / 0.95) 0%,
+      hsl(180 90% 48% / 0.85) 35%,
+      hsl(180 85% 42% / 0.8) 60%,
+      hsl(180 80% 35% / 0.75) 100%
+    );
+  
+  border-radius: 20px 0 0 20px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Multi-layer inner glow for luminosity */
   box-shadow:
-    /* Right edge internal shadow */
-    inset -2px 0 4px rgba(0, 0, 0, 0.3),
-    /* Top highlight */
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    /* Outer glow */
-    0 0 8px rgba(0, 200, 200, 0.2);
+    inset 0 0 50px hsl(180 100% 60% / 0.5),
+    inset 0 0 80px hsl(180 90% 50% / 0.3),
+    inset 0 3px 6px rgba(255, 255, 255, 0.2),
+    inset 0 -3px 8px hsl(180 80% 30% / 0.4),
+    /* Outer glow bleeding into tube */
+    0 0 25px hsl(180 90% 50% / 0.35);
 }
 
-/* Serum texture overlay - bubbles and flow */
+/* Serum texture overlay - flowing energy */
 .winloss-wins::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: url('/src/assets/serum-texture.svg');
   background-repeat: repeat-x;
-  background-size: 150px 100%;
+  background-size: 200px 100%;
   background-position: left center;
-  opacity: 0.7;
+  opacity: 0.8;
   border-radius: inherit;
   pointer-events: none;
-  animation: serum-flow 25s linear infinite;
+  animation: serum-flow 30s linear infinite;
 }
 
-/* Serum internal reflection - top highlight only */
+/* Serum top reflection */
 .winloss-wins::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.2) 0%,
-    transparent 35%
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    transparent 40%
   );
   border-radius: inherit;
   pointer-events: none;
@@ -2184,63 +2259,92 @@
 
 @keyframes serum-flow {
   0% { background-position: 0 center; }
-  100% { background-position: -150px center; }
+  100% { background-position: -200px center; }
 }
 
-/* Blood fill (Losses) - rich, vibrant crimson */
+/* ===== Blood Fluid (Losses) - Viscous Crimson ===== */
 .winloss-losses {
   position: relative;
-  background: linear-gradient(
-    to bottom,
-    hsl(0 65% 28%) 0%,
-    hsl(0 70% 38%) 40%,
-    hsl(0 65% 32%) 70%,
-    hsl(0 60% 22%) 100%
-  );
-  border-radius: 0 999px 999px 0;
-  transition: width 0.5s ease;
+  
+  /* Deep, rich blood with density variation */
+  background: 
+    linear-gradient(
+      to bottom,
+      hsl(0 70% 20%) 0%,
+      hsl(0 80% 28%) 20%,
+      hsl(0 85% 35%) 45%,
+      hsl(0 80% 32%) 65%,
+      hsl(0 70% 25%) 85%,
+      hsl(0 60% 18%) 100%
+    );
+  
+  border-radius: 0 20px 20px 0;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Subsurface scattering and depth shadows */
   box-shadow:
-    inset 3px 0 6px rgba(0, 0, 0, 0.4),
-    inset 0 2px 3px rgba(0, 0, 0, 0.25);
+    /* Deep internal shadows */
+    inset 4px 0 12px rgba(0, 0, 0, 0.5),
+    inset 0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 -4px 10px rgba(40, 0, 0, 0.5),
+    /* Subsurface glow - light penetrating blood */
+    inset 0 0 35px hsl(0 70% 45% / 0.4),
+    inset 0 0 60px hsl(0 60% 30% / 0.25),
+    /* Outer blood glow */
+    0 0 20px hsl(0 80% 35% / 0.25);
 }
 
-/* Blood texture overlay - bubbles and waves */
+/* Blood texture overlay - turbulent organic flow */
 .winloss-losses::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: url('/src/assets/blood-texture.svg');
   background-repeat: repeat-x;
-  background-size: 200px 100%;
+  background-size: 300px 100%;
   background-position: left center;
-  opacity: 0.85;
+  opacity: 0.9;
   border-radius: inherit;
   pointer-events: none;
-  animation: blood-flow 20s linear infinite;
+  animation: blood-turbulence 25s linear infinite;
 }
 
-/* Blend zone - cyan mixing into blood at left edge */
+/* Blood top reflection and depth */
 .winloss-losses::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('/src/assets/blood-blend.svg');
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: 80px 100%;
+  background: 
+    /* Top reflection */
+    linear-gradient(
+      to bottom,
+      rgba(255, 200, 200, 0.12) 0%,
+      rgba(255, 150, 150, 0.05) 15%,
+      transparent 30%
+    );
   border-radius: inherit;
   pointer-events: none;
 }
 
-@keyframes blood-flow {
-  0% { background-position: 0 center; }
-  100% { background-position: -200px center; }
+@keyframes blood-turbulence {
+  0% { 
+    background-position: 0 center;
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(-2deg);
+  }
+  100% { 
+    background-position: -300px center;
+    filter: hue-rotate(0deg);
+  }
 }
 
 .winloss-labels {
   @apply flex justify-between font-vhs text-xs uppercase;
   letter-spacing: 0.15em;
-  opacity: 0.8;
+  opacity: 0.85;
+  padding: 0 4px;
 }
 
 /* ===== Narrative Badges Grid ===== */

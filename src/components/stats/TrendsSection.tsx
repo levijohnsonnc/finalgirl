@@ -72,17 +72,23 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
     <div className="trends-section">
       <h3 className="section-title">// RECOVERED FOOTAGE</h3>
 
-      {/* Win/Loss Horizontal Bar */}
+      {/* Win/Loss Blood Tube - 3D Glass Specimen */}
       <div className="winloss-bar-container">
-        <div className="winloss-bar">
-          <div 
-            className="winloss-wins" 
-            style={{ width: `${winPercentage}%` }}
-          />
-          <div 
-            className="winloss-losses" 
-            style={{ width: `${100 - winPercentage}%` }}
-          />
+        <div className="glass-tube-container">
+          <div className="glass-tube-inner">
+            <div className="winloss-bar">
+              <div 
+                className="winloss-wins" 
+                style={{ width: `${winPercentage}%` }}
+              />
+              <div 
+                className="winloss-losses" 
+                style={{ width: `${100 - winPercentage}%` }}
+              />
+            </div>
+          </div>
+          <div className="glass-tube-highlight" />
+          <div className="glass-tube-meniscus" style={{ left: `${winPercentage}%` }} />
         </div>
         <div className="winloss-labels">
           <span className="text-neon-cyan">Wins {stats.totalWins}</span>
