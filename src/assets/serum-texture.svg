@@ -1,54 +1,92 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 40" preserveAspectRatio="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" preserveAspectRatio="none">
   <defs>
-    <!-- Gradient for bubbles - light top, dark bottom -->
-    <radialGradient id="serumBubble1" cx="50%" cy="30%" r="50%">
-      <stop offset="0%" stop-color="#8ff" stop-opacity="0.5"/>
-      <stop offset="60%" stop-color="#0aa" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#066" stop-opacity="0.6"/>
+    <!-- Central bioluminescent glow -->
+    <radialGradient id="coreGlow1" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#00ffff" stop-opacity="0.6"/>
+      <stop offset="40%" stop-color="#00cccc" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#006666" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="serumBubble2" cx="40%" cy="25%" r="50%">
-      <stop offset="0%" stop-color="#aff" stop-opacity="0.45"/>
-      <stop offset="70%" stop-color="#088" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#044" stop-opacity="0.65"/>
+    <radialGradient id="coreGlow2" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#33ffff" stop-opacity="0.5"/>
+      <stop offset="35%" stop-color="#00aaaa" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#004444" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="serumBubble3" cx="45%" cy="20%" r="50%">
-      <stop offset="0%" stop-color="#bff" stop-opacity="0.4"/>
-      <stop offset="50%" stop-color="#0bb" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#055" stop-opacity="0.55"/>
+    
+    <!-- Ethereal bubble gradients -->
+    <radialGradient id="etherBubble1" cx="40%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="#ccffff" stop-opacity="0.6"/>
+      <stop offset="30%" stop-color="#66dddd" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#229999" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#005555" stop-opacity="0.65"/>
+    </radialGradient>
+    <radialGradient id="etherBubble2" cx="35%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#eeffff" stop-opacity="0.55"/>
+      <stop offset="40%" stop-color="#55cccc" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#003333" stop-opacity="0.6"/>
+    </radialGradient>
+    <radialGradient id="etherBubble3" cx="45%" cy="18%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="25%" stop-color="#88eeee" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#004444" stop-opacity="0.55"/>
+    </radialGradient>
+    
+    <!-- Energy particle glow -->
+    <radialGradient id="particleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#00ffff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#00aaaa" stop-opacity="0"/>
     </radialGradient>
   </defs>
   
-  <!-- Subtle wavy flow lines - organic curves in cyan tones -->
-  <path d="M0 8 Q18 4 36 10 T72 6 T108 12 T150 8" 
-        fill="none" stroke="#0aa" stroke-width="1.5" stroke-opacity="0.3"/>
-  <path d="M0 20 Q22 16 44 22 T88 18 T132 24 T150 20" 
-        fill="none" stroke="#088" stroke-width="2" stroke-opacity="0.25"/>
-  <path d="M0 32 Q15 28 30 34 T60 30 T90 36 T120 32 T150 34" 
-        fill="none" stroke="#099" stroke-width="1.2" stroke-opacity="0.22"/>
+  <!-- Bioluminescent glow zones -->
+  <ellipse cx="50" cy="30" rx="55" ry="35" fill="url(#coreGlow1)"/>
+  <ellipse cx="130" cy="35" rx="60" ry="38" fill="url(#coreGlow2)"/>
+  <ellipse cx="90" cy="25" rx="40" ry="25" fill="url(#coreGlow1)"/>
+  <ellipse cx="170" cy="28" rx="35" ry="28" fill="url(#coreGlow2)"/>
   
-  <!-- Medium bubbles with volume -->
-  <ellipse cx="20" cy="12" rx="6" ry="5" fill="url(#serumBubble1)"/>
-  <ellipse cx="55" cy="28" rx="7" ry="6" fill="url(#serumBubble2)"/>
-  <ellipse cx="95" cy="14" rx="5" ry="5" fill="url(#serumBubble3)"/>
-  <ellipse cx="125" cy="30" rx="6" ry="5" fill="url(#serumBubble1)"/>
-  <ellipse cx="140" cy="10" rx="4" ry="4" fill="url(#serumBubble2)"/>
+  <!-- Flowing energy paths -->
+  <path d="M0 12 Q25 6 50 14 T100 8 T150 16 T200 10" 
+        fill="none" stroke="#00dddd" stroke-width="2.5" stroke-opacity="0.35" stroke-linecap="round"/>
+  <path d="M0 30 Q30 24 60 32 T120 26 T180 34 T200 28" 
+        fill="none" stroke="#00bbbb" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round"/>
+  <path d="M0 48 Q20 42 40 50 T80 44 T120 52 T160 46 T200 50" 
+        fill="none" stroke="#00cccc" stroke-width="2" stroke-opacity="0.28" stroke-linecap="round"/>
   
-  <!-- Small bubbles for depth -->
-  <ellipse cx="35" cy="32" rx="3.5" ry="3" fill="url(#serumBubble3)"/>
-  <ellipse cx="75" cy="8" rx="3" ry="3" fill="url(#serumBubble1)"/>
-  <ellipse cx="110" cy="35" rx="3.5" ry="3" fill="url(#serumBubble2)"/>
+  <!-- Secondary light streams -->
+  <path d="M0 20 Q40 14 80 22 T160 18 T200 22" 
+        fill="none" stroke="#33eeee" stroke-width="1.5" stroke-opacity="0.25"/>
+  <path d="M0 40 Q25 36 50 42 T100 38 T150 44 T200 40" 
+        fill="none" stroke="#22dddd" stroke-width="1.8" stroke-opacity="0.22"/>
   
-  <!-- Tiny bubbles scattered -->
-  <circle cx="12" cy="24" r="1.5" fill="#0bb" fill-opacity="0.35"/>
-  <circle cx="45" cy="18" r="2" fill="#0aa" fill-opacity="0.3"/>
-  <circle cx="68" cy="35" r="1.5" fill="#0cc" fill-opacity="0.32"/>
-  <circle cx="85" cy="25" r="1.2" fill="#0bb" fill-opacity="0.28"/>
-  <circle cx="118" cy="18" r="1.5" fill="#0aa" fill-opacity="0.3"/>
-  <circle cx="135" cy="22" r="1.2" fill="#0cc" fill-opacity="0.25"/>
+  <!-- Medium ethereal bubbles -->
+  <ellipse cx="28" cy="18" rx="10" ry="9" fill="url(#etherBubble1)"/>
+  <ellipse cx="75" cy="42" rx="12" ry="10" fill="url(#etherBubble2)"/>
+  <ellipse cx="125" cy="16" rx="9" ry="8" fill="url(#etherBubble3)"/>
+  <ellipse cx="170" cy="45" rx="11" ry="9" fill="url(#etherBubble1)"/>
+  <ellipse cx="190" cy="20" rx="8" ry="7" fill="url(#etherBubble2)"/>
   
-  <!-- Highlight accents on top of larger bubbles -->
-  <ellipse cx="18" cy="10" rx="2.5" ry="1.5" fill="#cff" fill-opacity="0.3"/>
-  <ellipse cx="53" cy="26" rx="3" ry="1.5" fill="#dff" fill-opacity="0.25"/>
-  <ellipse cx="93" cy="12" rx="2" ry="1.2" fill="#cff" fill-opacity="0.28"/>
-  <ellipse cx="123" cy="28" rx="2.5" ry="1.2" fill="#dff" fill-opacity="0.22"/>
+  <!-- Small bubbles -->
+  <ellipse cx="50" cy="48" rx="6" ry="5" fill="url(#etherBubble3)"/>
+  <ellipse cx="100" cy="12" rx="5.5" ry="5" fill="url(#etherBubble1)"/>
+  <ellipse cx="145" cy="52" rx="6" ry="5" fill="url(#etherBubble2)"/>
+  
+  <!-- Bright particle suspension -->
+  <circle cx="18" cy="32" r="2.5" fill="url(#particleGlow)"/>
+  <circle cx="62" cy="22" r="3" fill="url(#particleGlow)"/>
+  <circle cx="95" cy="50" r="2.5" fill="url(#particleGlow)"/>
+  <circle cx="115" cy="35" r="2" fill="url(#particleGlow)"/>
+  <circle cx="155" cy="28" r="2.5" fill="url(#particleGlow)"/>
+  <circle cx="185" cy="38" r="2" fill="url(#particleGlow)"/>
+  
+  <!-- Tiny floating particles -->
+  <circle cx="35" cy="40" r="1.2" fill="#88ffff" fill-opacity="0.6"/>
+  <circle cx="85" cy="30" r="1.5" fill="#99ffff" fill-opacity="0.55"/>
+  <circle cx="135" cy="38" r="1.2" fill="#88ffff" fill-opacity="0.5"/>
+  <circle cx="165" cy="15" r="1.5" fill="#aaffff" fill-opacity="0.55"/>
+  
+  <!-- Highlight accents on bubbles -->
+  <ellipse cx="25" cy="14" rx="4" ry="2.5" fill="#ffffff" fill-opacity="0.4"/>
+  <ellipse cx="72" cy="38" rx="5" ry="2.5" fill="#ffffff" fill-opacity="0.35"/>
+  <ellipse cx="122" cy="12" rx="3.5" ry="2" fill="#ffffff" fill-opacity="0.38"/>
+  <ellipse cx="167" cy="41" rx="4.5" ry="2" fill="#ffffff" fill-opacity="0.32"/>
 </svg>
