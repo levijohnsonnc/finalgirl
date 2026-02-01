@@ -2168,27 +2168,18 @@
   animation: serum-flow 25s linear infinite;
 }
 
-/* Serum internal reflection + blend zone on right edge */
+/* Serum internal reflection - top highlight only */
 .winloss-wins::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: 
-    /* Top highlight reflection */
-    linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.2) 0%,
-      transparent 35%
-    ),
-    /* Blend zone - blood bleeding into serum at right edge */
-    url('/src/assets/blood-blend.svg');
-  background-repeat: no-repeat;
-  background-position: left top, right center;
-  background-size: 100% 100%, 80px 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 35%
+  );
   border-radius: inherit;
   pointer-events: none;
-  transform: scaleX(-1);
-  transform-origin: center;
 }
 
 @keyframes serum-flow {
