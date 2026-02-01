@@ -2175,18 +2175,27 @@
     0 0 8px rgba(0, 200, 200, 0.2);
 }
 
-/* Serum internal reflection */
+/* Serum internal reflection + blend zone on right edge */
 .winloss-wins::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.2) 0%,
-    transparent 35%
-  );
+  background: 
+    /* Top highlight reflection */
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.2) 0%,
+      transparent 35%
+    ),
+    /* Blend zone - blood bleeding into serum at right edge */
+    url('/src/assets/blood-blend.svg');
+  background-repeat: no-repeat;
+  background-position: left top, right center;
+  background-size: 100% 100%, 80px 100%;
   border-radius: inherit;
   pointer-events: none;
+  transform: scaleX(-1);
+  transform-origin: center;
 }
 
 /* Blood fill (Losses) - rich, vibrant crimson */
@@ -2194,61 +2203,49 @@
   position: relative;
   background: linear-gradient(
     to bottom,
-    hsl(0 70% 35%) 0%,
-    hsl(0 80% 45%) 30%,
-    hsl(0 75% 38%) 60%,
-    hsl(0 65% 25%) 100%
+    hsl(0 65% 28%) 0%,
+    hsl(0 70% 38%) 40%,
+    hsl(0 65% 32%) 70%,
+    hsl(0 60% 22%) 100%
   );
   border-radius: 0 999px 999px 0;
   transition: width 0.5s ease;
   box-shadow:
-    /* Left edge meniscus/shadow */
     inset 3px 0 6px rgba(0, 0, 0, 0.4),
-    /* Top internal shadow */
     inset 0 2px 3px rgba(0, 0, 0, 0.25);
-  animation: blood-drift 30s ease-in-out infinite;
-  background-size: 200% 100%;
 }
 
-/* Contamination zone + noise overlay - enhanced texture */
+/* Blood texture overlay - bubbles and waves */
 .winloss-losses::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: 
-    linear-gradient(90deg, 
-      rgba(0, 60, 60, 0.3) 0%, 
-      transparent 25px
-    ),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.15;
-  mix-blend-mode: overlay;
+  background-image: url('/src/assets/blood-texture.svg');
+  background-repeat: repeat-x;
+  background-size: 200px 100%;
+  background-position: left center;
+  opacity: 0.85;
   border-radius: inherit;
   pointer-events: none;
+  animation: blood-flow 20s linear infinite;
 }
 
-/* Micro-imperfections: clot-like streaks */
+/* Blend zone - cyan mixing into blood at left edge */
 .winloss-losses::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(60, 0, 0, 0.15) 12%,
-    transparent 18%,
-    rgba(100, 20, 20, 0.12) 45%,
-    transparent 52%,
-    rgba(80, 0, 0, 0.1) 75%,
-    transparent 82%
-  );
+  background-image: url('/src/assets/blood-blend.svg');
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 80px 100%;
   border-radius: inherit;
   pointer-events: none;
 }
 
-@keyframes blood-drift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+@keyframes blood-flow {
+  0% { background-position: 0 center; }
+  100% { background-position: -200px center; }
 }
 
 .winloss-labels {
