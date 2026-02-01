@@ -1,83 +1,80 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 60" preserveAspectRatio="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" preserveAspectRatio="none">
   <defs>
-    <!-- Curved meniscus gradient - cyan to murky to blood -->
-    <linearGradient id="meniscusGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00cccc" stop-opacity="0.9"/>
-      <stop offset="25%" stop-color="#338888" stop-opacity="0.8"/>
-      <stop offset="50%" stop-color="#554444" stop-opacity="0.85"/>
-      <stop offset="75%" stop-color="#663333" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="#881818" stop-opacity="0"/>
+    <!-- Wide curved meniscus gradient - seamless cyan to blood transition -->
+    <linearGradient id="seamlessBlend" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00bbbb" stop-opacity="0.95"/>
+      <stop offset="15%" stop-color="#22aaaa" stop-opacity="0.85"/>
+      <stop offset="30%" stop-color="#448888" stop-opacity="0.75"/>
+      <stop offset="45%" stop-color="#555555" stop-opacity="0.7"/>
+      <stop offset="60%" stop-color="#664444" stop-opacity="0.75"/>
+      <stop offset="75%" stop-color="#773333" stop-opacity="0.8"/>
+      <stop offset="90%" stop-color="#882222" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#991818" stop-opacity="0"/>
     </linearGradient>
     
-    <!-- Surface tension curve gradient - top edge -->
-    <linearGradient id="tensionTop" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#55dddd" stop-opacity="0.5"/>
-      <stop offset="40%" stop-color="#445555" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#442222" stop-opacity="0"/>
+    <!-- Vertical density variation -->
+    <linearGradient id="verticalDensity" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.1"/>
+      <stop offset="30%" stop-color="#888888" stop-opacity="0"/>
+      <stop offset="70%" stop-color="#444444" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.15"/>
     </linearGradient>
     
-    <!-- Surface tension curve gradient - bottom edge -->
-    <linearGradient id="tensionBottom" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#008888" stop-opacity="0.4"/>
-      <stop offset="50%" stop-color="#332222" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#220000" stop-opacity="0"/>
-    </linearGradient>
+    <!-- Murky mixing zone -->
+    <radialGradient id="murkyCenter" cx="40%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#556666" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#554444" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#553333" stop-opacity="0"/>
+    </radialGradient>
     
     <!-- Mixed bubble gradients -->
-    <radialGradient id="mixedBubble1" cx="40%" cy="30%" r="50%">
-      <stop offset="0%" stop-color="#77aaaa" stop-opacity="0.5"/>
-      <stop offset="50%" stop-color="#554444" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#332222" stop-opacity="0.6"/>
+    <radialGradient id="mixBubble1" cx="40%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#88aaaa" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#665555" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#443333" stop-opacity="0.55"/>
     </radialGradient>
-    <radialGradient id="mixedBubble2" cx="45%" cy="25%" r="50%">
-      <stop offset="0%" stop-color="#889999" stop-opacity="0.45"/>
-      <stop offset="60%" stop-color="#443333" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#221111" stop-opacity="0.55"/>
-    </radialGradient>
-    
-    <!-- Murky zone glow -->
-    <radialGradient id="murkyGlow" cx="50%" cy="50%" r="60%">
-      <stop offset="0%" stop-color="#446666" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#332222" stop-opacity="0"/>
+    <radialGradient id="mixBubble2" cx="45%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="#779999" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#554444" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#332222" stop-opacity="0.5"/>
     </radialGradient>
   </defs>
   
-  <!-- Main curved meniscus shape - concave on left (serum side) -->
-  <path d="M0 0 
-           Q8 5 12 15 
-           Q14 30 12 45 
-           Q8 55 0 60 
-           L40 60 
-           L40 0 
-           Z" 
-        fill="url(#meniscusGrad)"/>
+  <!-- Main seamless blend - full width gradient -->
+  <rect x="0" y="0" width="60" height="60" fill="url(#seamlessBlend)"/>
   
-  <!-- Surface tension curve at top -->
-  <path d="M0 0 Q10 3 15 8 Q20 4 28 2" 
-        fill="none" stroke="url(#tensionTop)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Vertical density overlay -->
+  <rect x="0" y="0" width="60" height="60" fill="url(#verticalDensity)"/>
   
-  <!-- Surface tension curve at bottom -->
-  <path d="M0 60 Q8 58 14 54 Q18 57 25 58" 
-        fill="none" stroke="url(#tensionBottom)" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Murky turbulent center zone -->
+  <ellipse cx="25" cy="30" rx="22" ry="35" fill="url(#murkyCenter)"/>
   
-  <!-- Murky transition zone -->
-  <ellipse cx="18" cy="30" rx="14" ry="25" fill="url(#murkyGlow)"/>
+  <!-- Organic wavy mixing patterns -->
+  <path d="M15 5 Q22 12 18 20 Q14 28 20 35 Q26 42 18 50 Q14 55 16 60" 
+        fill="none" stroke="#556666" stroke-width="4" stroke-opacity="0.3" stroke-linecap="round"/>
+  <path d="M28 0 Q35 8 30 18 Q25 28 32 38 Q38 48 30 55" 
+        fill="none" stroke="#554444" stroke-width="3" stroke-opacity="0.25" stroke-linecap="round"/>
   
-  <!-- Mixed bubbles at the interface -->
-  <ellipse cx="8" cy="18" rx="4" ry="3.5" fill="url(#mixedBubble1)"/>
-  <ellipse cx="14" cy="38" rx="5" ry="4" fill="url(#mixedBubble2)"/>
-  <ellipse cx="6" cy="48" rx="3.5" ry="3" fill="url(#mixedBubble1)"/>
-  <ellipse cx="12" cy="25" rx="3" ry="2.5" fill="url(#mixedBubble2)"/>
+  <!-- Mixed bubbles at interface -->
+  <ellipse cx="12" cy="15" rx="5" ry="4.5" fill="url(#mixBubble1)"/>
+  <ellipse cx="22" cy="35" rx="6" ry="5" fill="url(#mixBubble2)"/>
+  <ellipse cx="10" cy="48" rx="4.5" ry="4" fill="url(#mixBubble1)"/>
+  <ellipse cx="18" cy="25" rx="4" ry="3.5" fill="url(#mixBubble2)"/>
+  <ellipse cx="30" cy="52" rx="4" ry="3.5" fill="url(#mixBubble1)"/>
+  <ellipse cx="25" cy="12" rx="3.5" ry="3" fill="url(#mixBubble2)"/>
   
   <!-- Small mixed particles -->
-  <circle cx="10" cy="12" r="2" fill="#668888" fill-opacity="0.4"/>
-  <circle cx="16" cy="32" r="2.5" fill="#555555" fill-opacity="0.35"/>
-  <circle cx="8" cy="42" r="2" fill="#667777" fill-opacity="0.38"/>
-  <circle cx="18" cy="52" r="1.8" fill="#554444" fill-opacity="0.35"/>
+  <circle cx="15" cy="8" r="2.5" fill="#668888" fill-opacity="0.4"/>
+  <circle cx="24" cy="28" r="3" fill="#555555" fill-opacity="0.35"/>
+  <circle cx="12" cy="40" r="2.5" fill="#667777" fill-opacity="0.38"/>
+  <circle cx="28" cy="45" r="2" fill="#554444" fill-opacity="0.35"/>
+  <circle cx="8" cy="30" r="2" fill="#77aaaa" fill-opacity="0.4"/>
+  <circle cx="35" cy="20" r="2.5" fill="#553333" fill-opacity="0.3"/>
   
   <!-- Tiny interaction particles -->
-  <circle cx="5" cy="28" r="1.2" fill="#77aaaa" fill-opacity="0.45"/>
-  <circle cx="12" cy="55" r="1" fill="#665555" fill-opacity="0.4"/>
-  <circle cx="4" cy="8" r="1.3" fill="#55bbbb" fill-opacity="0.5"/>
-  <circle cx="20" cy="20" r="1.5" fill="#553333" fill-opacity="0.35"/>
+  <circle cx="6" cy="22" r="1.5" fill="#88bbbb" fill-opacity="0.45"/>
+  <circle cx="20" cy="55" r="1.3" fill="#665555" fill-opacity="0.4"/>
+  <circle cx="5" cy="12" r="1.5" fill="#66cccc" fill-opacity="0.5"/>
+  <circle cx="32" cy="32" r="1.8" fill="#664444" fill-opacity="0.35"/>
+  <circle cx="14" cy="58" r="1.2" fill="#778888" fill-opacity="0.4"/>
 </svg>
