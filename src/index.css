@@ -2106,25 +2106,147 @@
   opacity: 0.7;
 }
 
-/* Win/Loss Bar */
+/* Win/Loss Blood Tube */
 .winloss-bar-container {
   @apply space-y-2;
 }
 
 .winloss-bar {
-  @apply flex h-6 rounded-full overflow-hidden border;
-  background: hsl(220 15% 8% / 0.6);
-  border-color: hsl(0 0% 18% / 0.5);
+  @apply flex rounded-full overflow-hidden;
+  height: 32px;
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    hsl(220 15% 12% / 0.4) 0%,
+    hsl(220 15% 6% / 0.6) 50%,
+    hsl(220 15% 4% / 0.8) 100%
+  );
+  box-shadow:
+    /* Inner glass highlight (top) */
+    inset 0 1px 2px rgba(255, 255, 255, 0.12),
+    /* Inner shadow (bottom) */
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+    /* Outer ambient shadow */
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    /* Subtle rim glow */
+    0 0 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid hsl(0 0% 25% / 0.4);
 }
 
+/* Tube end caps */
+.winloss-bar::before,
+.winloss-bar::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    hsl(0 0% 35% / 0.5),
+    hsl(0 0% 18% / 0.6)
+  );
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.winloss-bar::before { left: 3px; }
+.winloss-bar::after { right: 3px; }
+
+/* Serum fill (Wins) - cleaner, thinner, medical */
 .winloss-wins {
-  background: hsl(var(--neon-cyan) / 0.8);
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    hsl(180 70% 45% / 0.4) 0%,
+    hsl(180 70% 50% / 0.65) 40%,
+    hsl(180 70% 45% / 0.55) 100%
+  );
+  border-radius: 999px 0 0 999px;
   transition: width 0.5s ease;
+  box-shadow:
+    /* Right edge internal shadow */
+    inset -2px 0 4px rgba(0, 0, 0, 0.3),
+    /* Top highlight */
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
 }
 
+/* Serum internal reflection */
+.winloss-wins::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 40%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Blood fill (Losses) - rich, heavy, organic */
 .winloss-losses {
-  background: hsl(var(--blood-red) / 0.8);
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    hsl(0 55% 22%) 0%,
+    hsl(0 65% 32%) 35%,
+    hsl(0 60% 25%) 70%,
+    hsl(0 45% 14%) 100%
+  );
+  border-radius: 0 999px 999px 0;
   transition: width 0.5s ease;
+  box-shadow:
+    /* Left edge meniscus/shadow */
+    inset 3px 0 6px rgba(0, 0, 0, 0.5),
+    /* Top internal shadow */
+    inset 0 2px 3px rgba(0, 0, 0, 0.3);
+  animation: blood-drift 30s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+
+/* Contamination zone + noise overlay */
+.winloss-losses::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(90deg, 
+      rgba(0, 80, 80, 0.25) 0%, 
+      transparent 20px
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Micro-imperfections: subtle streaks */
+.winloss-losses::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.12) 15%,
+    transparent 20%,
+    rgba(80, 0, 0, 0.1) 55%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.08) 85%,
+    transparent 90%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+@keyframes blood-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .winloss-labels {
