@@ -1,101 +1,188 @@
 
-# Blood Tube Enhancement & Text Removal
+
+# Blood Tube Visual Enhancements
 
 ## Overview
 
-Two changes:
-1. Remove "STORY OF YOU" subtitle from the TrendsSection
-2. Enhance the blood tube to match the reference image with brighter colors and more organic blood texture
+Three targeted changes to make the blood tube look more organic and match the reference images:
+
+1. **Soft blend at the red/blue boundary** - Replace hard edge with organic fluid mixing
+2. **Remove dark streak bars** - Delete the imperfection overlay causing visible dark bands
+3. **Add organic blood texture** - Use a blood texture image for realistic bubbles and waves
 
 ---
 
 ## Changes
 
-### 1. Remove "STORY OF YOU" Text
+### 1. Soft Blend Between Serum and Blood
 
-**File:** `src/components/stats/TrendsSection.tsx`
+**Problem:** Currently the cyan and red meet at a sharp edge with only a small teal tint overlay.
 
-Remove lines 59 and 75 that contain:
-```tsx
-<p className="section-subtitle">STORY OF YOU</p>
+**Solution:** Create an organic mixing zone where the two fluids visually blend together using gradients and overlays.
+
+**Implementation:**
+
+Add an extended blend zone on the left edge of `.winloss-losses`:
+```css
+/* Extended organic blend zone on blood side */
+.winloss-losses::before {
+  background: 
+    /* Organic blend - larger, softer transition */
+    radial-gradient(
+      ellipse 40px 100% at 0% 50%,
+      rgba(0, 180, 180, 0.4) 0%,
+      rgba(0, 120, 120, 0.25) 30%,
+      rgba(80, 40, 40, 0.15) 60%,
+      transparent 100%
+    ),
+    /* Additional mixing blobs */
+    radial-gradient(
+      circle at 15px 30%,
+      rgba(0, 150, 150, 0.3) 0%,
+      transparent 12px
+    ),
+    radial-gradient(
+      circle at 8px 70%,
+      rgba(0, 140, 140, 0.25) 0%,
+      transparent 8px
+    );
+}
+```
+
+Add matching blend on the right edge of `.winloss-wins`:
+```css
+/* Blood bleeding into serum */
+.winloss-wins::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(
+      ellipse 30px 100% at 100% 50%,
+      rgba(140, 40, 40, 0.3) 0%,
+      rgba(100, 30, 30, 0.15) 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle at calc(100% - 10px) 40%,
+      rgba(120, 30, 30, 0.2) 0%,
+      transparent 10px
+    );
+  border-radius: inherit;
+  pointer-events: none;
+}
 ```
 
 ---
 
-### 2. Enhanced Blood Tube Styling
+### 2. Remove Dark Streak Bars
 
-**File:** `src/index.css`
+**Problem:** The `.winloss-losses::after` pseudo-element creates visible dark vertical bands.
 
-#### Serum (Wins) Side - Brighter Cyan
-- Increase saturation and brightness to match the reference
-- More vivid, glowing cyan color
-- Add stronger internal glow
+**Solution:** Remove or significantly reduce the streak gradient.
 
-#### Blood (Losses) Side - Richer, Organic
-- Brighter, more saturated crimson (less dark/muddy)
-- Enhanced organic textures with visible "clots"
-- More pronounced internal depth variations
-- Stronger noise/grain texture for visceral appearance
+**Implementation:**
 
-#### Glass Tube Container
-- Slightly stronger highlights for more glass-like appearance
-- Darker inner shadows for depth
+Either remove the `::after` pseudo-element entirely, or replace it with very subtle variation:
+
+```css
+/* Remove entirely - delete this block */
+.winloss-losses::after {
+  /* REMOVED */
+}
+```
+
+Or keep extremely subtle:
+```css
+.winloss-losses::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Much more subtle - barely visible */
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(40, 0, 0, 0.05) 30%,
+    transparent 35%,
+    rgba(60, 10, 10, 0.04) 65%,
+    transparent 70%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+```
 
 ---
 
-## Technical Details
+### 3. Add Organic Blood Texture
 
-### Serum Side Updates
+**Problem:** Current fractal noise is too uniform - needs the wavy, bubble-filled look from the reference.
+
+**Solution:** Use an SVG-based texture that creates organic waves and bubble shapes.
+
+**Implementation:**
+
+Create a more organic texture using layered radial gradients and turbulence:
+
 ```css
-.winloss-wins {
-  background: linear-gradient(
-    to bottom,
-    hsl(180 85% 55% / 0.6) 0%,
-    hsl(180 90% 50% / 0.85) 50%,
-    hsl(180 85% 45% / 0.7) 100%
-  );
-  /* Add subtle glow */
-  box-shadow:
-    inset -2px 0 4px rgba(0, 0, 0, 0.3),
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 0 8px rgba(0, 200, 200, 0.2);
+.winloss-losses::before {
+  background: 
+    /* Organic blend zone (from step 1) */
+    radial-gradient(...),
+    /* Bubble/clot effect - multiple circles */
+    radial-gradient(circle at 25% 30%, rgba(60, 0, 0, 0.15) 0%, transparent 6px),
+    radial-gradient(circle at 45% 60%, rgba(80, 10, 10, 0.12) 0%, transparent 8px),
+    radial-gradient(circle at 70% 25%, rgba(50, 0, 0, 0.1) 0%, transparent 5px),
+    radial-gradient(circle at 85% 70%, rgba(70, 5, 5, 0.14) 0%, transparent 7px),
+    radial-gradient(circle at 55% 80%, rgba(40, 0, 0, 0.08) 0%, transparent 4px),
+    /* Wave pattern using repeating gradients */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 100 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 16 Q25 8 50 16 T100 16 V32 H0 Z' fill='rgba(0,0,0,0.08)'/%3E%3C/svg%3E"),
+    /* Subtle noise for depth */
+    url("data:image/svg+xml,...noise...");
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 80px 32px, 200px 200px;
+  opacity: 0.2;
 }
 ```
 
-### Blood Side Updates
+Alternative: Add a wavy highlight along the top edge for the "surface tension" look:
+
 ```css
-.winloss-losses {
+/* Surface tension / meniscus effect */
+.winloss-losses::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
   background: linear-gradient(
     to bottom,
-    hsl(0 70% 35%) 0%,
-    hsl(0 80% 45%) 30%,
-    hsl(0 75% 38%) 60%,
-    hsl(0 65% 25%) 100%
+    rgba(255, 200, 200, 0.15) 0%,
+    transparent 100%
   );
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 4 Q10 2 20 4 T40 4 T60 4 T80 4 T100 4 V8 H0 Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 50px 8px;
+  border-radius: inherit;
+  pointer-events: none;
 }
 ```
-
-### Enhanced Organic Textures
-- Increase noise opacity from 0.1 to 0.15
-- Add more pronounced streak patterns for clot-like appearance
-- Darker contamination zone at boundary
 
 ---
 
 ## Files to Modify
 
-| File | Change |
-|------|--------|
-| `src/components/stats/TrendsSection.tsx` | Remove 2 lines with "STORY OF YOU" |
-| `src/index.css` | Update winloss-bar styles for brighter colors and enhanced textures |
+| File | Changes |
+|------|---------|
+| `src/index.css` | Lines 2178-2247: Rewrite `.winloss-wins::after`, `.winloss-losses::before`, and `.winloss-losses::after` |
 
 ---
 
-## Expected Result
+## Summary of Visual Effect
 
-A blood specimen tube that:
-- Has bright, glowing cyan serum on the wins side
-- Has rich, vibrant crimson blood on the losses side
-- Shows visible organic textures and "clots" in the blood
-- Matches the reference image aesthetic
-- No longer displays "STORY OF YOU" text
+After these changes, the blood tube will have:
+- Organic mixing where cyan serum meets crimson blood (like fluids actually blending)
+- No more visible dark vertical bands
+- Subtle bubble/clot shapes floating in the blood
+- A more natural, wavy surface appearance
+- Overall effect: realistic blood specimen rather than flat UI element
+
