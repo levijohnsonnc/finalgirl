@@ -2177,19 +2177,20 @@
   z-index: 10;
 }
 
-/* Meniscus at fluid boundary */
+/* Meniscus at fluid boundary - seamless blend */
 .glass-tube-meniscus {
   position: absolute;
   top: 4px;
   bottom: 4px;
-  width: 40px;
-  transform: translateX(-20px);
+  width: 80px;
+  transform: translateX(-40px);
   background-image: url('/src/assets/meniscus-blend.svg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   pointer-events: none;
   z-index: 5;
-  opacity: 0.9;
+  opacity: 1;
+  filter: blur(0.5px);
 }
 
 .winloss-bar {
@@ -2204,8 +2205,19 @@
 .winloss-wins {
   position: relative;
   
-  /* Radial glowing bioluminescent base */
+  /* Radial glowing bioluminescent base with soft right edge */
   background: 
+    /* Soft fade on right edge for blending */
+    linear-gradient(
+      to right,
+      transparent 0%,
+      hsl(180 90% 48% / 1) 15%,
+      hsl(180 90% 48% / 1) 70%,
+      hsl(180 85% 45% / 0.85) 85%,
+      hsl(180 80% 40% / 0.5) 95%,
+      transparent 100%
+    ),
+    /* Radial core glow */
     radial-gradient(
       ellipse 120% 100% at 40% 60%,
       hsl(180 95% 55% / 0.95) 0%,
@@ -2223,6 +2235,8 @@
     inset 0 0 80px hsl(180 90% 50% / 0.3),
     inset 0 3px 6px rgba(255, 255, 255, 0.2),
     inset 0 -3px 8px hsl(180 80% 30% / 0.4),
+    /* Soft right edge shadow */
+    inset -15px 0 20px hsl(180 60% 30% / 0.4),
     /* Outer glow bleeding into tube */
     0 0 25px hsl(180 90% 50% / 0.35);
 }
@@ -2266,8 +2280,18 @@
 .winloss-losses {
   position: relative;
   
-  /* Deep, rich blood with density variation */
+  /* Deep, rich blood with soft left edge for blending */
   background: 
+    /* Soft fade on left edge for blending */
+    linear-gradient(
+      to right,
+      transparent 0%,
+      hsl(0 70% 30% / 0.5) 5%,
+      hsl(0 80% 32% / 0.85) 15%,
+      hsl(0 85% 35% / 1) 30%,
+      hsl(0 85% 35% / 1) 100%
+    ),
+    /* Vertical density variation */
     linear-gradient(
       to bottom,
       hsl(0 70% 20%) 0%,
@@ -2283,8 +2307,9 @@
   
   /* Subsurface scattering and depth shadows */
   box-shadow:
+    /* Soft left edge shadow for blending */
+    inset 20px 0 25px hsl(0 50% 20% / 0.5),
     /* Deep internal shadows */
-    inset 4px 0 12px rgba(0, 0, 0, 0.5),
     inset 0 4px 8px rgba(0, 0, 0, 0.3),
     inset 0 -4px 10px rgba(40, 0, 0, 0.5),
     /* Subsurface glow - light penetrating blood */
