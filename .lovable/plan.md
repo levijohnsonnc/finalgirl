@@ -1,151 +1,230 @@
 
+# Blood Tube Win/Loss Bar Enhancement
 
-# Fix: Stats Hero Cards Not Displaying Background Images
+## Overview
 
-## Problem Diagnosis
-
-The Stats page is displaying an **old version** of the RecordJacket component instead of the updated one with background images. 
-
-### Evidence:
-| What user sees | What code should render |
-|----------------|-------------------------|
-| Plain dark cards with text labels (GAMES, WIN RATE, etc.) | Atmospheric background images with labels baked in |
-| Icons (Gamepad, Trophy, Heart, Skull) | No icons - just the value number |
-| Uniform styling | Unique art per stat card |
-
-### Current state of `RecordJacket.tsx`:
-The code file actually looks **correct** - it imports the 4 background images and renders `StatCard` components using the `hero-stat-card-image` class with inline `backgroundImage` styles. No icons or text labels are present in the current code.
-
-### Current state of images:
-The images in `src/assets/stats/` are **correct** - they show the atmospheric backgrounds with labels baked into the artwork.
-
-### Root Cause:
-The browser is rendering a cached/stale version of the code. This could be caused by:
-1. Hot Module Replacement (HMR) not picking up the changes
-2. Browser caching the old bundle
-3. The code changes not being properly saved/deployed
+Transform the current flat Win/Loss horizontal bar into a realistic, horror-themed blood specimen tube that feels like a physical prop from a VHS-era slasher film.
 
 ---
 
-## Fix Implementation
+## Current State
 
-### Step 1: Force a clean re-render of RecordJacket.tsx
+The existing implementation uses simple CSS:
+- Flat color fills (`hsl(var(--neon-cyan))` for wins, `hsl(var(--blood-red))` for losses)
+- Basic border and rounded corners
+- No depth, texture, or physical presence
 
-Re-save the component with a minor structural adjustment to ensure the changes are picked up:
+---
 
-**File: `src/components/stats/RecordJacket.tsx`**
-- Verify imports are correct for all 4 background images
-- Ensure `StatCard` uses `backgroundImage` style prop
-- Ensure no icons or text labels exist in the component
-- Add a key prop to force React to re-render
+## Implementation Plan
 
-```tsx
-import { ComputedStats } from '@/hooks/useGameStats';
-import gamesBg from '@/assets/stats/games-bg.png';
-import winrateBg from '@/assets/stats/winrate-bg.png';
-import savedBg from '@/assets/stats/saved-bg.png';
-import killedBg from '@/assets/stats/killed-bg.png';
+### 1. Glass Tube Container
 
-interface RecordJacketProps {
-  stats: ComputedStats;
-}
+Create a realistic tube shell that suggests glass or plastic:
 
-interface StatCardProps {
-  value: string | number;
-  backgroundImage: string;
-}
+**CSS changes to `.winloss-bar`:**
+- Add **inset shadows** for inner glass edges (top highlight, bottom shadow)
+- Add **outer glow/shadow** for ambient depth
+- Increase height slightly for more presence
+- Use a subtle **translucent gradient** for the empty tube portion
 
-const StatCard = ({ value, backgroundImage }: StatCardProps) => {
-  return (
-    <div 
-      className="hero-stat-card-image"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="hero-stat-value">
-        {value}
-      </div>
-    </div>
-  );
-};
-
-export const RecordJacket = ({ stats }: RecordJacketProps) => {
-  return (
-    <div className="record-jacket">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <StatCard
-          value={stats.gamesPlayed}
-          backgroundImage={gamesBg}
-        />
-        <StatCard
-          value={`${Math.round(stats.winRate)}%`}
-          backgroundImage={winrateBg}
-        />
-        <StatCard
-          value={stats.totalVictimsSaved}
-          backgroundImage={savedBg}
-        />
-        <StatCard
-          value={stats.totalVictimsKilled}
-          backgroundImage={killedBg}
-        />
-      </div>
-    </div>
-  );
-};
-```
-
-### Step 2: Verify CSS for hero-stat-card-image
-
-**File: `src/index.css`** (lines ~1991-2049)
-
-Ensure the styling is present:
 ```css
-.hero-stat-card-image {
-  @apply flex items-center justify-center rounded-lg transition-all duration-300;
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
-  background-size: cover;
-  background-position: center;
-  border: 1px solid hsl(0 0% 20% / 0.5);
-  box-shadow: 0 4px 20px hsl(0 0% 0% / 0.5), inset 0 0 40px hsl(0 0% 0% / 0.3);
-}
-
-.hero-stat-value {
-  @apply font-display text-5xl sm:text-6xl font-bold text-white;
-  position: relative;
-  z-index: 1;
-  text-shadow: 0 2px 4px hsl(0 0% 0% / 0.8), 0 0 30px hsl(0 0% 0% / 0.6);
+.winloss-bar {
+  height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    hsl(220 15% 12% / 0.4) 0%,
+    hsl(220 15% 6% / 0.6) 50%,
+    hsl(220 15% 4% / 0.8) 100%
+  );
+  box-shadow:
+    /* Inner glass highlight (top) */
+    inset 0 1px 2px rgba(255, 255, 255, 0.12),
+    /* Inner shadow (bottom) */
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+    /* Outer ambient shadow */
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    /* Subtle rim glow */
+    0 0 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid hsl(0 0% 25% / 0.4);
 }
 ```
 
-### Step 3: Remove any old hero-stat-card classes
+---
 
-Search for and remove any leftover CSS that defines `hero-stat-card` (without `-image`) that might be conflicting. Look for classes like:
-- `.hero-stat-card-blue`
-- `.hero-stat-card-yellow`
-- `.hero-stat-card-green`
-- `.hero-stat-card-red`
+### 2. Blood Fill (Losses) - Rich, Heavy, Organic
 
-These should be deleted if they still exist from the previous implementation.
+The blood side needs to feel thick, heavy, and slightly unsettling:
+
+**CSS changes to `.winloss-losses`:**
+- **Multi-layer gradient**: darker at bottom (pooling), richer crimson in middle, slightly darker at top
+- **Noise/grain texture overlay** using SVG filter
+- **Internal shadow** at the fill edge for meniscus effect
+- Rounded edge more aggressive than container
+
+```css
+.winloss-losses {
+  background: linear-gradient(
+    to bottom,
+    hsl(0 60% 20%) 0%,        /* Top: darker, oxidized */
+    hsl(0 70% 35%) 40%,       /* Mid: rich arterial crimson */
+    hsl(0 65% 25%) 80%,       /* Lower: deeper, heavier */
+    hsl(0 50% 12%) 100%       /* Bottom: black-red pooling */
+  );
+  border-radius: 999px;
+  position: relative;
+  box-shadow:
+    /* Left edge meniscus/shadow */
+    inset 3px 0 6px rgba(0, 0, 0, 0.5),
+    /* Top internal shadow */
+    inset 0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Grain/noise overlay pseudo-element */
+.winloss-losses::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("noise-svg");
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  border-radius: inherit;
+}
+
+/* Micro-imperfections: subtle streaks */
+.winloss-losses::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 20%,
+    transparent 25%,
+    rgba(60, 0, 0, 0.08) 60%,
+    transparent 65%
+  );
+  border-radius: inherit;
+}
+```
+
+---
+
+### 3. Serum Fill (Wins) - Cleaner, Thinner, Medical
+
+The wins side should feel like clean serum - thinner, lighter, almost clinical:
+
+**CSS changes to `.winloss-wins`:**
+- **Lighter gradient**: translucent cyan with internal depth
+- **Glass-like internal reflections**
+- Slightly more transparency than blood
+
+```css
+.winloss-wins {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--neon-cyan) / 0.5) 0%,
+    hsl(var(--neon-cyan) / 0.7) 50%,
+    hsl(var(--neon-cyan) / 0.6) 100%
+  );
+  border-radius: 999px;
+  position: relative;
+  box-shadow:
+    /* Right edge internal shadow */
+    inset -2px 0 4px rgba(0, 0, 0, 0.3),
+    /* Top highlight */
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+```
+
+---
+
+### 4. Contamination Zone (Where They Meet)
+
+Add a dirty, murky transition where wins and losses meet:
+
+**Implementation approach:**
+Add a pseudo-element on `.winloss-losses` that creates a blended overlap zone on the left edge:
+
+```css
+/* Dirty transition zone */
+.winloss-losses::before {
+  /* Already used for noise, combine with this: */
+  background: 
+    linear-gradient(90deg, 
+      rgba(0, 80, 80, 0.3) 0%, 
+      transparent 20px
+    ),
+    url("noise-svg");
+}
+```
+
+This creates a slight desaturation/murkiness at the boundary where the two fluids meet.
+
+---
+
+### 5. Tube End Caps
+
+Add visual end caps to make the tube feel complete:
+
+**New pseudo-elements on `.winloss-bar`:**
+```css
+.winloss-bar::before,
+.winloss-bar::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    hsl(0 0% 30% / 0.6),
+    hsl(0 0% 15% / 0.8)
+  );
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.winloss-bar::before { left: 2px; }
+.winloss-bar::after { right: 2px; }
+```
+
+---
+
+### 6. Optional: Subtle Animation
+
+Add an almost imperceptible internal drift:
+
+```css
+@keyframes blood-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.winloss-losses {
+  animation: blood-drift 30s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+```
 
 ---
 
 ## Files to Modify
 
-| File | Action |
-|------|--------|
-| `src/components/stats/RecordJacket.tsx` | Re-save to trigger rebuild (code is correct) |
-| `src/index.css` | Remove any old `hero-stat-card-*` variant classes if present |
+| File | Changes |
+|------|---------|
+| `src/index.css` | Complete restyle of `.winloss-bar`, `.winloss-wins`, `.winloss-losses` classes (~lines 2110-2128) |
+| `src/components/stats/TrendsSection.tsx` | Minor: add `position: relative` wrapper if needed for pseudo-elements |
 
 ---
 
 ## Expected Result
 
-After the fix, the Stats page hero section should show:
-- 4 atmospheric background images (fog scene, cabin, chapel, crime scene)
-- Labels baked into the artwork (GAMES, Win Rate, Saved, Killed)
-- Large white numerical values overlaid in the center of each card
-- No Lucide icons
-- No separate text labels
-
+A blood specimen tube that:
+- Has visible "glass walls" with light catching the edges
+- Contains thick, heavy blood on the losses side with internal gradients and grain
+- Contains thinner, cleaner serum on the wins side
+- Shows a dirty transition zone where they meet
+- Feels like it belongs on a VHS-era horror movie prop table
+- Passes the test: "If this were printed on a VHS-era horror prop, would it pass?"
