@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 40" preserveAspectRatio="none">
+  <defs>
+    <!-- Cyan-to-transparent blend -->
+    <linearGradient id="cyanFade" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#0aa" stop-opacity="0.7"/>
+      <stop offset="40%" stop-color="#088" stop-opacity="0.4"/>
+      <stop offset="70%" stop-color="#355" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#433" stop-opacity="0"/>
+    </linearGradient>
+    
+    <!-- Organic blob gradients -->
+    <radialGradient id="blob1" cx="30%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#0cc" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#077" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#344" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blob2" cx="40%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0bb" stop-opacity="0.5"/>
+      <stop offset="60%" stop-color="#066" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#433" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blob3" cx="35%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#0aa" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#055" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#422" stop-opacity="0"/>
+    </radialGradient>
+    
+    <!-- Mixing bubble gradients -->
+    <radialGradient id="mixBubble1" cx="40%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#0dd" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#088" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#544" stop-opacity="0.1"/>
+    </radialGradient>
+    <radialGradient id="mixBubble2" cx="45%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="#5aa" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="#466" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#533" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Base blend wash -->
+  <rect x="0" y="0" width="80" height="40" fill="url(#cyanFade)"/>
+  
+  <!-- Large organic blob shapes -->
+  <ellipse cx="15" cy="20" rx="20" ry="18" fill="url(#blob1)"/>
+  <ellipse cx="30" cy="10" rx="18" ry="12" fill="url(#blob2)"/>
+  <ellipse cx="25" cy="32" rx="16" ry="10" fill="url(#blob3)"/>
+  
+  <!-- Organic irregular edge using path -->
+  <path d="M0 0 
+           Q8 5 12 0 
+           Q18 8 25 3 
+           Q35 10 40 5 
+           Q50 12 55 8 
+           Q65 15 70 10 
+           L80 0 L80 40 L0 40 Z" 
+        fill="url(#cyanFade)" fill-opacity="0.3"/>
+  
+  <!-- Mixing bubbles at the boundary -->
+  <ellipse cx="35" cy="15" rx="8" ry="7" fill="url(#mixBubble1)"/>
+  <ellipse cx="45" cy="28" rx="6" ry="5" fill="url(#mixBubble2)"/>
+  <ellipse cx="55" cy="12" rx="5" ry="4" fill="url(#mixBubble1)" fill-opacity="0.6"/>
+  <ellipse cx="50" cy="35" rx="4" ry="3" fill="url(#mixBubble2)" fill-opacity="0.5"/>
+  
+  <!-- Small floating particles -->
+  <circle cx="40" cy="20" r="2" fill="#0aa" fill-opacity="0.4"/>
+  <circle cx="60" cy="25" r="1.5" fill="#088" fill-opacity="0.3"/>
+  <circle cx="55" cy="8" r="2" fill="#077" fill-opacity="0.35"/>
+  <circle cx="65" cy="32" r="1.5" fill="#066" fill-opacity="0.25"/>
+  <circle cx="70" cy="18" r="1" fill="#055" fill-opacity="0.2"/>
+</svg>
