@@ -89,17 +89,34 @@ export const ImagePromptModal = ({
       ? characterContext.join('\n\n')
       : 'No detailed visual descriptions available.';
 
-    return `You are a horror film cinematographer. Based on this story, describe and then generate the SINGLE most dramatic, emotionally powerful image for this scene.
+    return `You are a horror film cinematographer.
 
-**CRITICAL RULES:**
-- Focus on ONE moment of tension, fear, or confrontation
-- You do NOT need to show all characters or the full location
-- A tight close-up of terrified eyes can be more powerful than a wide establishing shot
-- IGNORE minor NPCs or background characters mentioned in the story
-- Choose: character close-up, killer reveal, atmospheric location detail, or intense confrontation
-- Describe camera angle, framing, and emotional focus
+From the story, select ONE moment that creates the strongest emotional impact. The impact may come from dread, discovery, aftermath, transformation, or false safety—not just confrontation.
 
-**MAIN CHARACTERS** (use ONLY if they appear in your chosen moment):
+Do NOT default to a hero vs. monster composition.
+
+**COMPOSITION RULES:**
+The frame may show:
+- Only the environment
+- Only a fragment of a character
+- Only evidence of horror
+- Or a distorted/obstructed view
+
+The killer or final girl may be completely off-screen.
+Favor implication over direct display.
+Use negative space, occlusion, reflections, silhouettes, or foreground obstruction.
+The camera can be low, high, tilted, partially hidden, or from an inhuman perspective.
+
+**VARIETY RULE (important):**
+Before choosing the shot, randomly pick ONE category and base the image on it:
+- Aftermath
+- Discovery
+- Pursuit
+- Transformation
+- Dread
+- False calm
+
+**MAIN CHARACTERS** (use visual details ONLY if they appear in your chosen moment):
 ${characterSection}
 
 **STORY:**
