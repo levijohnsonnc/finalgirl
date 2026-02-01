@@ -1,54 +1,72 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" preserveAspectRatio="none">
   <defs>
-    <!-- Gradient for bubbles - light top, dark bottom -->
-    <radialGradient id="bubble1" cx="50%" cy="30%" r="50%">
-      <stop offset="0%" stop-color="#d44" stop-opacity="0.6"/>
-      <stop offset="60%" stop-color="#811" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#400" stop-opacity="0.8"/>
-    </radialGradient>
-    <radialGradient id="bubble2" cx="40%" cy="25%" r="50%">
-      <stop offset="0%" stop-color="#c33" stop-opacity="0.5"/>
-      <stop offset="70%" stop-color="#600" stop-opacity="0.6"/>
+    <!-- Enhanced gradient for bubbles - stronger contrast -->
+    <radialGradient id="bubble1" cx="50%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="#e55" stop-opacity="0.7"/>
+      <stop offset="40%" stop-color="#a22" stop-opacity="0.55"/>
       <stop offset="100%" stop-color="#300" stop-opacity="0.9"/>
     </radialGradient>
-    <radialGradient id="bubble3" cx="45%" cy="20%" r="50%">
-      <stop offset="0%" stop-color="#e55" stop-opacity="0.4"/>
-      <stop offset="50%" stop-color="#922" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#511" stop-opacity="0.7"/>
+    <radialGradient id="bubble2" cx="40%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#d44" stop-opacity="0.65"/>
+      <stop offset="50%" stop-color="#811" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#200" stop-opacity="0.85"/>
+    </radialGradient>
+    <radialGradient id="bubble3" cx="45%" cy="15%" r="50%">
+      <stop offset="0%" stop-color="#f66" stop-opacity="0.55"/>
+      <stop offset="35%" stop-color="#922" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#400" stop-opacity="0.8"/>
+    </radialGradient>
+    <!-- Dark depth patches -->
+    <radialGradient id="depthPatch" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#200" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#300" stop-opacity="0"/>
     </radialGradient>
   </defs>
   
-  <!-- Wavy flow lines - dark organic curves -->
-  <path d="M0 8 Q25 4 50 10 T100 6 T150 12 T200 8" 
-        fill="none" stroke="#400" stroke-width="2" stroke-opacity="0.4"/>
-  <path d="M0 20 Q30 16 60 22 T120 18 T180 24 T200 20" 
-        fill="none" stroke="#300" stroke-width="2.5" stroke-opacity="0.35"/>
-  <path d="M0 32 Q20 28 45 34 T90 30 T140 36 T200 32" 
-        fill="none" stroke="#500" stroke-width="1.5" stroke-opacity="0.3"/>
+  <!-- Thick flowing "vein" paths - prominent organic curves -->
+  <path d="M0 6 Q30 2 60 10 T120 4 T180 12 T200 6" 
+        fill="none" stroke="#300" stroke-width="5" stroke-opacity="0.5" stroke-linecap="round"/>
+  <path d="M0 20 Q40 14 80 24 T160 18 T200 22" 
+        fill="none" stroke="#400" stroke-width="6" stroke-opacity="0.45" stroke-linecap="round"/>
+  <path d="M0 34 Q25 28 50 36 T100 30 T150 38 T200 32" 
+        fill="none" stroke="#300" stroke-width="4" stroke-opacity="0.4" stroke-linecap="round"/>
   
-  <!-- Large bubbles with volume -->
-  <ellipse cx="25" cy="12" rx="8" ry="7" fill="url(#bubble1)"/>
-  <ellipse cx="70" cy="28" rx="10" ry="9" fill="url(#bubble2)"/>
-  <ellipse cx="120" cy="15" rx="7" ry="6" fill="url(#bubble3)"/>
-  <ellipse cx="160" cy="30" rx="9" ry="8" fill="url(#bubble1)"/>
-  <ellipse cx="185" cy="10" rx="6" ry="5" fill="url(#bubble2)"/>
+  <!-- Secondary flow lines - thinner organic curves -->
+  <path d="M0 12 Q35 8 70 16 T140 10 T200 14" 
+        fill="none" stroke="#500" stroke-width="2.5" stroke-opacity="0.35"/>
+  <path d="M0 28 Q20 24 40 30 T80 26 T120 32 T160 28 T200 30" 
+        fill="none" stroke="#400" stroke-width="2" stroke-opacity="0.3"/>
+  
+  <!-- Dark depth patches for dimension -->
+  <ellipse cx="45" cy="20" rx="18" ry="12" fill="url(#depthPatch)"/>
+  <ellipse cx="130" cy="25" rx="22" ry="14" fill="url(#depthPatch)"/>
+  
+  <!-- Large bubbles with enhanced volume -->
+  <ellipse cx="28" cy="12" rx="10" ry="9" fill="url(#bubble1)"/>
+  <ellipse cx="75" cy="30" rx="12" ry="10" fill="url(#bubble2)"/>
+  <ellipse cx="125" cy="14" rx="9" ry="8" fill="url(#bubble3)"/>
+  <ellipse cx="168" cy="32" rx="11" ry="9" fill="url(#bubble1)"/>
+  <ellipse cx="190" cy="10" rx="8" ry="7" fill="url(#bubble2)"/>
   
   <!-- Medium bubbles -->
-  <ellipse cx="45" cy="32" rx="5" ry="4" fill="url(#bubble3)"/>
-  <ellipse cx="95" cy="8" rx="4" ry="4" fill="url(#bubble1)"/>
-  <ellipse cx="140" cy="35" rx="5" ry="4" fill="url(#bubble2)"/>
+  <ellipse cx="50" cy="34" rx="6" ry="5" fill="url(#bubble3)"/>
+  <ellipse cx="100" cy="8" rx="5" ry="5" fill="url(#bubble1)"/>
+  <ellipse cx="148" cy="38" rx="6" ry="5" fill="url(#bubble2)"/>
+  <ellipse cx="15" cy="28" rx="5" ry="4" fill="url(#bubble3)"/>
   
   <!-- Small bubbles for depth -->
-  <circle cx="15" cy="25" r="2" fill="#600" fill-opacity="0.5"/>
-  <circle cx="55" cy="18" r="2.5" fill="#500" fill-opacity="0.4"/>
-  <circle cx="85" cy="35" r="2" fill="#700" fill-opacity="0.45"/>
-  <circle cx="110" cy="25" r="1.5" fill="#600" fill-opacity="0.35"/>
-  <circle cx="150" cy="18" r="2" fill="#500" fill-opacity="0.4"/>
-  <circle cx="175" cy="22" r="1.5" fill="#700" fill-opacity="0.35"/>
+  <circle cx="18" cy="22" r="2.5" fill="#500" fill-opacity="0.55"/>
+  <circle cx="60" cy="18" r="3" fill="#400" fill-opacity="0.5"/>
+  <circle cx="90" cy="36" r="2.5" fill="#600" fill-opacity="0.5"/>
+  <circle cx="115" cy="26" r="2" fill="#500" fill-opacity="0.45"/>
+  <circle cx="155" cy="18" r="2.5" fill="#400" fill-opacity="0.48"/>
+  <circle cx="180" cy="24" r="2" fill="#600" fill-opacity="0.42"/>
+  <circle cx="40" cy="8" r="2" fill="#500" fill-opacity="0.4"/>
   
-  <!-- Highlight accents on top of larger bubbles -->
-  <ellipse cx="23" cy="9" rx="3" ry="2" fill="#faa" fill-opacity="0.25"/>
-  <ellipse cx="68" cy="25" rx="4" ry="2" fill="#fbb" fill-opacity="0.2"/>
-  <ellipse cx="118" cy="12" rx="2.5" ry="1.5" fill="#faa" fill-opacity="0.22"/>
-  <ellipse cx="158" cy="27" rx="3" ry="1.5" fill="#fbb" fill-opacity="0.18"/>
+  <!-- Strong highlight accents on top of larger bubbles -->
+  <ellipse cx="25" cy="8" rx="4" ry="2.5" fill="#faa" fill-opacity="0.35"/>
+  <ellipse cx="72" cy="26" rx="5" ry="2.5" fill="#fbb" fill-opacity="0.3"/>
+  <ellipse cx="122" cy="10" rx="3.5" ry="2" fill="#faa" fill-opacity="0.32"/>
+  <ellipse cx="165" cy="28" rx="4.5" ry="2" fill="#fbb" fill-opacity="0.28"/>
+  <ellipse cx="188" cy="7" rx="3" ry="1.5" fill="#faa" fill-opacity="0.3"/>
 </svg>
