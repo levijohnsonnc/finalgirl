@@ -20,8 +20,10 @@ export interface KillerDetail {
 export interface FeatureFilmDetail {
   filmId: string;
   finalGirls: FinalGirlDetail[];
-  location: LocationDetail;
+  location?: LocationDetail; // Optional for vignettes
   killer: KillerDetail;
+  isVignette?: boolean;
+  vignetteDescription?: string; // Overall setting/scenario for vignettes without a location
 }
 
 export const FEATURE_FILM_DETAILS: Record<string, FeatureFilmDetail> = {
@@ -773,20 +775,41 @@ The Tormentor was never interested in the act of killing for its own sake. What 
 
 The Tormentor exists more as an absence than a presence. She normally isn't seen at all—only felt through sprung traps, locked corridors, and victims suspended in cruel limbo. When she finally reveals herself, she is almost anticlimactic: not a towering monster, not an unstoppable force, but the calm author of everything that has already gone wrong. By the time she is confronted face to face, the Tormentor has usually done what she came to do. The question is no longer whether the killer can be stopped—but whether stopping her still means anything.`
     }
-  }
+  },
+  // Vignette: Terror From Above (Season 1)
+  's1-terror-from-above': {
+    filmId: 's1-terror-from-above',
+    isVignette: true,
+    vignetteDescription: `A cloud hangs over you and the rest of the unsuspecting victims in the area. You soon realize it is no cloud at all and that rain would be a more preferable occurrence than what is about to take place. You watch in horror as the first bird dives and is quickly followed by what seems like a hundred more. The screams begin and you snap yourself alert trying to determine the best course of action. How will you survive this Terror From Above?`,
+    finalGirls: [
+      {
+        name: 'Melanie',
+        backstory: `Melanie Brown was an uptown girl and possessed a strong sense of style and sophistication. A business woman that relished in "winning", particularly when dealing with men. Melanie was as competitive as they come.
+
+She had a softer side at home, and did not discriminate when it came to her relationships. She found equal enjoyment in the company of both men and women, though she'd never let her business partners in on that. In fact, it would be detrimental if they knew. As such, she would travel outside of the city in her leisure time to avoid the risk of someone she knew seeing something that was none of their business. There is one town by the bay she was known to frequent, but she also greatly enjoyed wine country.
+
+Melanie experienced some abuse when she was a child. Though it is something that should never happen to anyone, it did happen and she learned from it. Specifically, she learned to fight through pain and channel it and turn it into strength. In adulthood, those that crossed the line with her ended up wishing they hadn't.`
+      }
+    ],
+    killer: {
+      name: 'Birds',
+      description: `No one knows what caused a 'storm' of birds to descend on a small bay town a few years back, but since it happened officials and scientists have been trying to determine why. Witness accounts from the few survivors indicated thousands and thousands of birds descended on the area, their activity ranged from gathering and being a general nuisance, to outright attacking and killing people.
+
+The birds attack in coordinated swarms, diving from the sky with razor-sharp beaks and talons. Crows, seagulls, ravens - all manner of winged creatures have joined this murderous flock. Their eyes seem to gleam with an unnatural intelligence, and their attacks are anything but random.`
+    }
+  },
 };
 
-// Helper to get details for a specific film
 export const getFilmDetails = (filmId: string): FeatureFilmDetail | undefined => {
   return FEATURE_FILM_DETAILS[filmId];
 };
 
 // Helper to get setup cards for a location
 export const getSetupCardsForLocation = (filmId: string): { name: string; description: string }[] => {
-  return FEATURE_FILM_DETAILS[filmId]?.location.setupCards ?? [];
+  return FEATURE_FILM_DETAILS[filmId]?.location?.setupCards ?? [];
 };
 
 // Helper to get events for a location
 export const getEventsForLocation = (filmId: string): { name: string; description: string }[] => {
-  return FEATURE_FILM_DETAILS[filmId]?.location.events ?? [];
+  return FEATURE_FILM_DETAILS[filmId]?.location?.events ?? [];
 };
