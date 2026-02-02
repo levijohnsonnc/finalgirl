@@ -85,6 +85,8 @@ import utopiaImage from '@/assets/locations/utopia.png';
 import dontMakeASoundArt from '@/assets/box-art/dont-make-a-sound.png';
 import melanieImage from '@/assets/characters/melanie.png';
 import birdsImage from '@/assets/characters/birds.png';
+import patsyImage from '@/assets/characters/patsy.png';
+import zombiesImage from '@/assets/characters/zombies.png';
 export interface FeatureFilm {
   id: string;
   name: string;
@@ -148,6 +150,8 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'The Eyeless': theEyelessImage,
   'Melanie': melanieImage,
   'Birds': birdsImage,
+  'Patsy': patsyImage,
+  'Zombies': zombiesImage,
 };
 
 // Location-specific images (for casting room display)

@@ -110,7 +110,16 @@ Arcs of electric-blue lightning crackle violently across its chest and down its 
   // Terror From Above (Vignette)
   'Birds': `A dense, chaotic swarm of dozens of black birds, primarily crows or ravens, caught in mid-flight against a turbulent, oppressive sky. The birds are scattered across the frame in a frantic, non-linear pattern, their silhouettes sharp and jagged against the clouds. Some are captured with wings fully arched in a power stroke, while others appear to be diving or banking sharply, creating a visceral sense of frantic motion and avian panic.
 
-The backdrop is a heavy, low-hanging sky dominated by thick, roiling storm clouds in shades of charcoal, deep slate, and bruised grey. A diffused, cold light source struggles to break through the center of the cloud cover, casting a pale, high-contrast glow that rim-lights the birds and adds layers of depth to the atmosphere. The overall aesthetic is gritty, ominous, and gothic—evoking the feeling of a brewing tempest or a dark, cinematic supernatural thriller.`
+The backdrop is a heavy, low-hanging sky dominated by thick, roiling storm clouds in shades of charcoal, deep slate, and bruised grey. A diffused, cold light source struggles to break through the center of the cloud cover, casting a pale, high-contrast glow that rim-lights the birds and adds layers of depth to the atmosphere. The overall aesthetic is gritty, ominous, and gothic—evoking the feeling of a brewing tempest or a dark, cinematic supernatural thriller.`,
+
+  // Season 2 - Terror From the Grave (Vignette)
+  'Zombies': `A dense horde of reanimated corpses shambling down a dark, wet city street at night. The group consists of approximately fifteen to twenty undead figures of varying ages, genders, and states of decay, all converging toward the camera with outstretched arms and slack, hungry expressions.
+
+Their skin tones range from sickly pale grey to mottled green and jaundiced yellow, with visible lacerations, exposed tissue, and dark, dried blood staining their faces and clothing. Their eyes are milky, unfocused, and devoid of humanity, while their mouths hang open in perpetual, silent moans. Several have visible bite wounds and torn flesh on their necks and arms.
+
+The zombies wear the tattered, bloodstained remnants of everyday 1980s civilian clothing—work shirts, floral dresses, jeans, and jackets—all in various states of decay and disrepair, suggesting they were ordinary people before their transformation.
+
+The setting is a deserted small-town main street at night, lit by warm, sodium-orange street lamps that cast long shadows and reflect off the rain-slicked asphalt. Vintage American automobiles from the late 1970s to early 1980s line the curbs. The atmosphere is oppressive, cinematic, and apocalyptic—a world where the living are now the minority.`
 };
 
 /**
