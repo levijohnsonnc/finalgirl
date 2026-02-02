@@ -19,8 +19,8 @@ const Scrapbooks = () => {
     setOpenBook(null);
   };
 
-  const handleDeleteGame = (id: string) => {
-    deleteGame(id);
+  const handleDeleteGame = async (id: string) => {
+    await deleteGame(id);
   };
 
   return (

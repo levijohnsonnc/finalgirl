@@ -15,7 +15,7 @@ interface ScrapbookBookProps {
   games: GameResult[];
   onClose: () => void;
   onUpdateGame: (id: string, updates: Partial<GameResult>) => void;
-  onDeleteGame: (id: string) => void;
+  onDeleteGame: (id: string) => Promise<void> | void;
 }
 
 // Resize and compress image before upload
@@ -82,9 +82,9 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
     setTimeout(onClose, 800);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedGame) {
-      onDeleteGame(selectedGame.id);
+      await onDeleteGame(selectedGame.id);
       setSelectedGame(null);
       setShowDeleteConfirm(false);
       toast.success('Record destroyed');
