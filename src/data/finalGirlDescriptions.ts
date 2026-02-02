@@ -118,6 +118,13 @@ Her hair is a dirty blonde, wavy and voluminous, falling just past her shoulders
 
 Her dark hair is shoulder-length, matted with sweat and grime, peeking out from beneath a faded, camouflage-patterned patrol cap with a frayed brim. She wears a simple, ribbed white tank top that is stained and distressed, stripped of any ornamentation. Her expression is grim and unsmiling, with a "thousand-yard stare" that suggests deep emotional and physical fatigue.`,
 
+  // Season 3 - Terror From Destiny (Vignette)
+  'Gabrielle': `A young Black woman in her late teens with a slender build and a contemplative, guarded presence. She has medium-dark skin with a smooth, youthful complexion. Her face is oval-shaped with soft features, a rounded nose, and full lips set in a neutral, slightly pensive expression. She has large, dark brown eyes with an introspective, distant gaze that suggests she's seeing something beyond the immediate moment.
+
+Her hair is vibrant purple, dyed and styled into a voluminous mass of tight, natural curls that frame her face and peek out from beneath a burgundy knit beanie pulled low on her forehead. She wears no visible makeup, emphasizing a raw, authentic look.
+
+Her expression is serious and emotionally guarded, conveying a sense of quiet unease and hyperawareness. She appears caught in a moment of stillness, as if listening for something others cannot hear. She wears grey denim overalls with silver buckles over a faded sage-green v-neck t-shirt. The overall aesthetic is grounded and contemporary, with an urban, artistic edge—reminiscent of an indie coming-of-age drama with supernatural undertones.`,
+
   "Joy": `A woman in her early 20s with a youthful but weathered and somber presence. She has fair skin heavily smudged with smears of blood and dirt, suggesting a recent violent struggle or a harsh environment. Her face is soft-featured but set in a grim, steady expression, with a straight nose and a neutral, weary mouth. She has piercing light-green eyes that hold a direct, unflinching gaze, conveying a sense of hollowed-out resilience.
 
 Her blonde hair is parted down the middle and styled into two thick, functional braided pigtails. A single stalk of wheat is held between her lips, adding to the rustic, rural setting. She wears no makeup; her appearance is entirely unrefined and practical. Her expression is serious and emotionally exhausted, looking like someone who has seen too much.

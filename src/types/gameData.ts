@@ -87,6 +87,8 @@ import melanieImage from '@/assets/characters/melanie.png';
 import birdsImage from '@/assets/characters/birds.png';
 import patsyImage from '@/assets/characters/patsy.png';
 import zombiesImage from '@/assets/characters/zombies.png';
+import gabrielleImage from '@/assets/characters/gabrielle.png';
+import destinyImage from '@/assets/characters/destiny.png';
 export interface FeatureFilm {
   id: string;
   name: string;
@@ -152,6 +154,8 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Birds': birdsImage,
   'Patsy': patsyImage,
   'Zombies': zombiesImage,
+  'Gabrielle': gabrielleImage,
+  'Destiny': destinyImage,
 };
 
 // Location-specific images (for casting room display)
