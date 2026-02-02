@@ -1,146 +1,178 @@
 
+# Plan: Complete Data Cleanup on Game Deletion
 
-# Fix Cloud Data Sync for Casting Room and Dashboard
+## Problem Summary
+When deleting game records from the Scrapbook, not all related data is being cleaned up:
+1. **Storage files remain orphaned** - Poster and scene images uploaded to storage are not deleted
+2. **Database records may persist** - Need to ensure the delete actually completes and the UI refreshes
 
-## Problem Identified
-Two pages are only reading from localStorage instead of the cloud database when a user is signed in:
-1. **CastingRoom.tsx** - Shows "No Films in Collection" because it only reads from localStorage
-2. **Dashboard.tsx** - Same issue for owned films (and session logs)
+## Current Behavior
+The `deleteGame` function in `useGameHistory.ts`:
+- Removes the record from local React state (optimistic update)
+- Sends a DELETE request to the `game_history` table
+- Does NOT delete associated files from storage
 
-## Solution Approach
-Create a dedicated hook `useOwnedFilms` that follows the same pattern used in `useGameHistory.ts` and `Archive.tsx`. This hook will:
-- Check authentication state
-- If signed in: fetch from `user_settings` table in the database
-- If not signed in: use localStorage
-- Handle migration of localStorage data on first sign-in (already handled by Archive.tsx)
+## Solution Overview
 
-This approach centralizes the owned films logic and ensures consistency across all pages.
+### Step 1: Enhance the `deleteGame` function
+Update `src/hooks/useGameHistory.ts` to:
+1. Extract the `poster_image_url` and `scene_image_url` from the game being deleted
+2. Delete the storage files BEFORE deleting the database record
+3. Parse the file paths from the public URLs to get the correct storage paths
+4. Handle errors gracefully (don't block deletion if storage cleanup fails)
 
----
+### Step 2: Handle the `clearHistory` function
+Update the `clearHistory` function to:
+1. Get all games with image URLs before clearing
+2. Delete all associated storage files
+3. Then delete all database records
 
-## Files to Create
-
-### 1. `src/hooks/useOwnedFilms.ts`
-A new hook that encapsulates the dual-state logic for owned films:
-
-**Logic:**
-- Import `useAuth` to check authentication state
-- Import `useLocalStorage` for non-authenticated users
-- Use `useState` for database-fetched data
-- Fetch from `user_settings` table when user is authenticated
-- Return `{ ownedFilms, setOwnedFilms, isLoading }`
-- Handle migration (move localStorage data to DB on first sign-in if DB is empty)
-
-**Key functions:**
-- `ownedFilms`: The current array of film IDs (from DB or localStorage depending on auth)
-- `setOwnedFilms(updater)`: Update function that persists to the correct location
-- `isLoading`: Boolean to show loading state while fetching from DB
+### Step 3: Add a helper function for storage cleanup
+Create a reusable utility function that:
+1. Extracts the file path from a Supabase public URL
+2. Deletes the file from the `posters` bucket
+3. Handles errors silently (log but don't throw)
 
 ---
 
-## Files to Modify
+## Technical Implementation Details
 
-### 2. `src/pages/CastingRoom.tsx`
-**Current (broken):**
+### File Changes
+
+**1. `src/hooks/useGameHistory.ts`**
+
+Add a helper function to extract storage path from public URL:
 ```typescript
-const [ownedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
+const extractStoragePath = (publicUrl: string | undefined): string | null => {
+  if (!publicUrl) return null;
+  // URL format: .../storage/v1/object/public/posters/game-posters/filename.jpg
+  const match = publicUrl.match(/\/posters\/(.+)$/);
+  return match ? match[1] : null;
+};
 ```
 
-**Updated:**
+Add a helper function to delete storage files:
 ```typescript
-import { useOwnedFilms } from '@/hooks/useOwnedFilms';
-// ...
-const { ownedFilms, isLoading } = useOwnedFilms();
+const deleteStorageFiles = async (game: GameResult) => {
+  const posterPath = extractStoragePath(game.posterImageUrl);
+  const scenePath = extractStoragePath(game.sceneImageUrl);
+  
+  const pathsToDelete = [posterPath, scenePath].filter(Boolean) as string[];
+  
+  if (pathsToDelete.length > 0) {
+    const { error } = await supabase.storage
+      .from('posters')
+      .remove(pathsToDelete);
+      
+    if (error) {
+      console.error('Error deleting storage files:', error);
+    }
+  }
+};
 ```
 
-- Remove `useLocalStorage` import (no longer needed here)
-- Add loading state handling to show a loading indicator while fetching from DB
-- The rest of the component logic remains unchanged since it just reads `ownedFilms`
-
-### 3. `src/pages/Dashboard.tsx`
-**Current (broken):**
+Update `deleteGame`:
 ```typescript
-const [ownedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
-const [sessionLogs, setSessionLogs] = useLocalStorage<SessionLog[]>('final-girl-session-logs', []);
+const deleteGame = useCallback(async (id: string) => {
+  // Find the game to get image URLs before deletion
+  const gameToDelete = gameHistory.find(g => g.id === id);
+  
+  if (user) {
+    // Optimistically update
+    setDbGameHistory(prev => prev.filter(game => game.id !== id));
+    
+    // Delete storage files first (best effort)
+    if (gameToDelete) {
+      await deleteStorageFiles(gameToDelete);
+    }
+    
+    // Delete from database
+    const { error } = await supabase
+      .from('game_history')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+      
+    if (error) {
+      console.error('Error deleting game:', error);
+      // Rollback optimistic update on error
+      if (gameToDelete) {
+        setDbGameHistory(prev => [...prev, gameToDelete].sort((a, b) => b.timestamp - a.timestamp));
+      }
+    }
+  } else {
+    setLocalGameHistory(prev => prev.filter(game => game.id !== id));
+  }
+}, [user, gameHistory, setLocalGameHistory]);
 ```
 
-**Updated:**
+Update `clearHistory`:
 ```typescript
-import { useOwnedFilms } from '@/hooks/useOwnedFilms';
-// ...
-const { ownedFilms, isLoading: filmsLoading } = useOwnedFilms();
+const clearHistory = useCallback(async () => {
+  if (user) {
+    const gamesToClear = [...dbGameHistory];
+    
+    // Optimistically clear
+    setDbGameHistory([]);
+    
+    // Delete all storage files (best effort, in parallel)
+    await Promise.all(gamesToClear.map(game => deleteStorageFiles(game)));
+    
+    // Delete all from database
+    const { error } = await supabase
+      .from('game_history')
+      .delete()
+      .eq('user_id', user.id);
+      
+    if (error) {
+      console.error('Error clearing history:', error);
+    }
+  } else {
+    setLocalGameHistory([]);
+  }
+}, [user, dbGameHistory, setLocalGameHistory]);
 ```
 
-- Add loading state handling
-- Note: `sessionLogs` is only used for quick session logging during testing. Since this data is not critical for persistence and is a separate feature, it can remain in localStorage for now. The primary gameplay data is already persisted through `useGameHistory`.
+**2. Update components that call `deleteGame`**
 
-### 4. `src/pages/Archive.tsx`
-**Current:** Contains inline dual-state logic that duplicates the pattern
+The `deleteGame` function will become async, but we can keep the same interface by not awaiting at the call site (fire-and-forget pattern), OR we can update the components to handle async.
 
-**Updated:** Refactor to use the new `useOwnedFilms` hook:
+For safety, I recommend making the components await the deletion to ensure UI updates correctly:
+
+**`src/pages/Scrapbooks.tsx`** - Update `handleDeleteGame`:
 ```typescript
-import { useOwnedFilms } from '@/hooks/useOwnedFilms';
-// ...
-const { ownedFilms, setOwnedFilms, isLoading } = useOwnedFilms();
+const handleDeleteGame = async (id: string) => {
+  await deleteGame(id);
+};
 ```
 
-- Remove the inline state management for `dbOwnedFilms`, `localOwnedFilms`, etc.
-- This simplifies Archive.tsx significantly and ensures consistency
+**`src/components/ScrapbookBook.tsx`** - Update `handleDeleteConfirm`:
+```typescript
+const handleDeleteConfirm = async () => {
+  if (selectedGame) {
+    await onDeleteGame(selectedGame.id);
+    setSelectedGame(null);
+    setShowDeleteConfirm(false);
+    toast.success('Record destroyed');
+  }
+};
+```
 
 ---
 
-## Implementation Details
+## Safety Considerations
 
-### Hook Structure (`useOwnedFilms.ts`)
-```text
-1. Initialize state:
-   - localOwnedFilms from useLocalStorage
-   - dbOwnedFilms from useState
-   - isDbLoading from useState
-   - hasMigrated from useState
+1. **No accidental data deletion** - We only delete files that belong to the specific game record being removed
+2. **Error handling** - Storage deletion errors are logged but don't block the main deletion
+3. **Rollback on failure** - If database deletion fails, we restore the optimistic update
+4. **Path extraction is safe** - Uses regex matching that returns null if the URL format doesn't match
 
-2. Fetch from DB when authenticated:
-   - useEffect that runs when user/authLoading changes
-   - Query user_settings table for owned_films
-   - Set dbOwnedFilms with result
-
-3. Migrate localStorage on first sign-in:
-   - useEffect that checks:
-     - User is authenticated
-     - Not already migrated
-     - LocalStorage has data
-     - DB is empty
-   - Upsert to user_settings
-   - Clear localStorage
-   - Update dbOwnedFilms
-
-4. setOwnedFilms function:
-   - If authenticated: update dbOwnedFilms + upsert to DB
-   - If not authenticated: update localStorage
-
-5. Return:
-   - ownedFilms: user ? dbOwnedFilms : localOwnedFilms
-   - setOwnedFilms
-   - isLoading: authLoading || isDbLoading
-```
-
----
-
-## Data Safety
-- No data will be lost because:
-  - If user is not signed in: localStorage continues to work as before
-  - If user is signed in with data in DB: reads from DB
-  - If user signs in for first time with localStorage data: migrates to DB, then clears localStorage
-  - The migration logic only runs when DB is empty, preventing accidental overwrites
-
----
-
-## Technical Summary
-
-| File | Change Type | Description |
-|------|-------------|-------------|
-| `src/hooks/useOwnedFilms.ts` | Create | New hook with dual-state logic (localStorage/DB) |
-| `src/pages/CastingRoom.tsx` | Modify | Use new hook, add loading state |
-| `src/pages/Dashboard.tsx` | Modify | Use new hook for ownedFilms |
-| `src/pages/Archive.tsx` | Modify | Refactor to use new hook (remove inline logic) |
-
+## Testing Checklist
+- Delete a single game from scrapbook and verify:
+  - Record is removed from Stats page
+  - Poster image is removed from storage
+  - Scene image is removed from storage
+- Use "Reset My Plays" and verify:
+  - All records are cleared
+  - All storage files are deleted
+  - Stats page shows empty state
