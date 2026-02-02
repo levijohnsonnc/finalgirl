@@ -2177,20 +2177,23 @@
   z-index: 10;
 }
 
-/* Meniscus at fluid boundary - seamless blend */
+/* Meniscus at fluid boundary - organic mixing zone */
 .glass-tube-meniscus {
   position: absolute;
   top: 4px;
   bottom: 4px;
-  width: 80px;
-  transform: translateX(-40px);
+  width: 100px;
+  transform: translateX(-50px);
   background-image: url('/src/assets/meniscus-blend.svg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   pointer-events: none;
   z-index: 5;
-  opacity: 1;
-  filter: blur(0.5px);
+  opacity: 0.95;
+  filter: blur(1px);
+  /* Additional gradient overlay for seamless color mixing */
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 30%, transparent 100%);
 }
 
 .winloss-bar {
@@ -2205,43 +2208,59 @@
 .winloss-wins {
   position: relative;
   
-  /* Radial glowing bioluminescent base with soft right edge */
+  /* Bright bioluminescent core with edge fade for mixing zone */
   background: 
-    /* Soft fade on right edge for blending */
+    /* Horizontal fade for seamless blending into blood */
     linear-gradient(
       to right,
-      transparent 0%,
-      hsl(180 90% 48% / 1) 15%,
-      hsl(180 90% 48% / 1) 70%,
-      hsl(180 85% 45% / 0.85) 85%,
-      hsl(180 80% 40% / 0.5) 95%,
+      hsl(180 95% 50% / 1) 0%,
+      hsl(180 95% 52% / 1) 60%,
+      hsl(180 90% 48% / 0.9) 80%,
+      hsl(200 70% 40% / 0.6) 92%,
+      hsl(280 50% 35% / 0.3) 97%,
       transparent 100%
     ),
-    /* Radial core glow */
+    /* Vertical gradient: darker edges, bright center (suspended liquid feel) */
+    linear-gradient(
+      to bottom,
+      hsl(180 80% 35% / 0.9) 0%,
+      hsl(180 90% 45% / 0.95) 15%,
+      hsl(180 100% 55%) 45%,
+      hsl(180 100% 55%) 55%,
+      hsl(180 90% 45% / 0.95) 85%,
+      hsl(180 80% 35% / 0.9) 100%
+    ),
+    /* Radial core glow - bioluminescent center */
     radial-gradient(
-      ellipse 120% 100% at 40% 60%,
-      hsl(180 95% 55% / 0.95) 0%,
-      hsl(180 90% 48% / 0.85) 35%,
-      hsl(180 85% 42% / 0.8) 60%,
-      hsl(180 80% 35% / 0.75) 100%
+      ellipse 80% 70% at 35% 50%,
+      hsl(180 100% 65% / 0.9) 0%,
+      hsl(180 95% 55% / 0.7) 40%,
+      hsl(180 90% 48% / 0.5) 70%,
+      transparent 100%
     );
   
   border-radius: 20px 0 0 20px;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* Multi-layer inner glow for luminosity */
+  /* Multi-layer glow: Gaussian blur simulation for bioluminescence */
   box-shadow:
-    inset 0 0 50px hsl(180 100% 60% / 0.5),
-    inset 0 0 80px hsl(180 90% 50% / 0.3),
-    inset 0 3px 6px rgba(255, 255, 255, 0.2),
-    inset 0 -3px 8px hsl(180 80% 30% / 0.4),
-    /* Soft right edge shadow */
-    inset -15px 0 20px hsl(180 60% 30% / 0.4),
-    /* Outer glow bleeding into tube */
-    0 0 25px hsl(180 90% 50% / 0.35);
+    /* Core luminosity - bright center */
+    inset 0 0 60px hsl(180 100% 65% / 0.6),
+    inset 0 0 100px hsl(180 95% 55% / 0.35),
+    /* Top/bottom edge shadows for suspended liquid */
+    inset 0 6px 15px hsl(180 70% 25% / 0.5),
+    inset 0 -6px 15px hsl(180 70% 25% / 0.5),
+    /* Soft right edge for mixing zone */
+    inset -25px 0 35px hsl(260 50% 30% / 0.5),
+    /* Outer glow - light emission */
+    0 0 35px hsl(180 95% 55% / 0.45),
+    0 0 60px hsl(180 90% 50% / 0.2);
+    
+  /* Slight blur for soft luminous edges */
+  filter: drop-shadow(0 0 8px hsl(180 100% 60% / 0.4));
 }
 
-/* Serum texture overlay - flowing energy */
+/* Serum texture overlay - flowing energy particles */
 .winloss-wins::before {
   content: '';
   position: absolute;
@@ -2250,25 +2269,39 @@
   background-repeat: repeat-x;
   background-size: 200px 100%;
   background-position: left center;
-  opacity: 0.8;
+  opacity: 0.75;
   border-radius: inherit;
   pointer-events: none;
-  animation: serum-flow 30s linear infinite;
+  animation: serum-flow 25s linear infinite;
+  /* Mask to fade out at mixing zone */
+  mask-image: linear-gradient(to right, black 0%, black 75%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 75%, transparent 100%);
 }
 
-/* Serum top reflection */
+/* Serum top reflection - wet glass caustic */
 .winloss-wins::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.1) 20%,
-    transparent 40%
-  );
+  background: 
+    /* Bright top caustic */
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(200, 255, 255, 0.15) 15%,
+      transparent 35%
+    ),
+    /* Subtle bottom reflection */
+    linear-gradient(
+      to top,
+      rgba(150, 220, 220, 0.1) 0%,
+      transparent 20%
+    );
   border-radius: inherit;
   pointer-events: none;
+  /* Fade out at mixing zone */
+  mask-image: linear-gradient(to right, black 0%, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 70%, transparent 100%);
 }
 
 @keyframes serum-flow {
@@ -2280,43 +2313,53 @@
 .winloss-losses {
   position: relative;
   
-  /* Deep, rich blood with soft left edge for blending */
+  /* Vertical gradient: dark maroon edges, bright crimson center (viscous density) */
   background: 
-    /* Soft fade on left edge for blending */
+    /* Horizontal fade for seamless blending from serum */
     linear-gradient(
       to right,
       transparent 0%,
-      hsl(0 70% 30% / 0.5) 5%,
-      hsl(0 80% 32% / 0.85) 15%,
-      hsl(0 85% 35% / 1) 30%,
-      hsl(0 85% 35% / 1) 100%
+      hsl(300 40% 30% / 0.3) 3%,
+      hsl(340 60% 35% / 0.6) 8%,
+      hsl(0 75% 38% / 0.9) 15%,
+      hsl(0 85% 40% / 1) 25%,
+      hsl(0 85% 40% / 1) 100%
     ),
-    /* Vertical density variation */
+    /* Vertical density: dark edges (maroon), bright center (crimson) */
     linear-gradient(
       to bottom,
-      hsl(0 70% 20%) 0%,
-      hsl(0 80% 28%) 20%,
-      hsl(0 85% 35%) 45%,
-      hsl(0 80% 32%) 65%,
-      hsl(0 70% 25%) 85%,
-      hsl(0 60% 18%) 100%
+      hsl(0 60% 15%) 0%,
+      hsl(0 70% 22%) 10%,
+      hsl(0 80% 32%) 25%,
+      hsl(0 90% 42%) 45%,
+      hsl(0 90% 42%) 55%,
+      hsl(0 80% 32%) 75%,
+      hsl(0 70% 22%) 90%,
+      hsl(0 60% 15%) 100%
+    ),
+    /* Radial subsurface glow - light penetrating suspended blood */
+    radial-gradient(
+      ellipse 90% 60% at 60% 50%,
+      hsl(0 85% 45% / 0.5) 0%,
+      hsl(0 80% 38% / 0.3) 50%,
+      transparent 100%
     );
   
   border-radius: 0 20px 20px 0;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* Subsurface scattering and depth shadows */
+  /* Subsurface scattering simulation - inner glow for suspended look */
   box-shadow:
-    /* Soft left edge shadow for blending */
-    inset 20px 0 25px hsl(0 50% 20% / 0.5),
-    /* Deep internal shadows */
-    inset 0 4px 8px rgba(0, 0, 0, 0.3),
-    inset 0 -4px 10px rgba(40, 0, 0, 0.5),
-    /* Subsurface glow - light penetrating blood */
-    inset 0 0 35px hsl(0 70% 45% / 0.4),
-    inset 0 0 60px hsl(0 60% 30% / 0.25),
-    /* Outer blood glow */
-    0 0 20px hsl(0 80% 35% / 0.25);
+    /* Left edge shadow for mixing zone */
+    inset 35px 0 45px hsl(300 40% 20% / 0.6),
+    /* Top/bottom density shadows */
+    inset 0 8px 20px hsl(0 50% 10% / 0.6),
+    inset 0 -8px 20px hsl(0 50% 10% / 0.6),
+    /* Core subsurface glow - faint inner light */
+    inset 0 0 45px hsl(0 75% 50% / 0.35),
+    inset 0 0 80px hsl(0 65% 40% / 0.2),
+    /* Outer blood aura */
+    0 0 25px hsl(0 80% 40% / 0.3);
 }
 
 /* Blood texture overlay - turbulent organic flow */
@@ -2328,27 +2371,39 @@
   background-repeat: repeat-x;
   background-size: 300px 100%;
   background-position: left center;
-  opacity: 0.9;
+  opacity: 0.85;
   border-radius: inherit;
   pointer-events: none;
-  animation: blood-turbulence 25s linear infinite;
+  animation: blood-turbulence 22s linear infinite;
+  /* Mask to fade in from mixing zone */
+  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
 }
 
-/* Blood top reflection and depth */
+/* Blood top/bottom reflections - wet viscous surface */
 .winloss-losses::after {
   content: '';
   position: absolute;
   inset: 0;
   background: 
-    /* Top reflection */
+    /* Top caustic reflection */
     linear-gradient(
       to bottom,
-      rgba(255, 200, 200, 0.12) 0%,
-      rgba(255, 150, 150, 0.05) 15%,
-      transparent 30%
+      rgba(255, 180, 180, 0.18) 0%,
+      rgba(255, 120, 120, 0.08) 12%,
+      transparent 28%
+    ),
+    /* Bottom depth shadow */
+    linear-gradient(
+      to top,
+      rgba(60, 0, 0, 0.25) 0%,
+      transparent 20%
     );
   border-radius: inherit;
   pointer-events: none;
+  /* Fade in from mixing zone */
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%);
 }
 
 @keyframes blood-turbulence {
@@ -2357,7 +2412,7 @@
     filter: hue-rotate(0deg);
   }
   50% {
-    filter: hue-rotate(-2deg);
+    filter: hue-rotate(-3deg);
   }
   100% { 
     background-position: -300px center;
