@@ -120,11 +120,11 @@ Their hair is matted, stringy, and disheveled, caked with grime and the remnants
 They appear as a weathered, decaying tide of humanity, functioning as a singular, overwhelming force rather than individuals. They wear soiled, tattered, and distressed clothing—ranging from business suits to casual denim—that looks genuinely worn and abandoned. The overall aesthetic is gritty, grounded, and cinematic, reminiscent of mid-century creature horror.`,
 
   // Season 3 - Terror From Destiny (Vignette)
-  'Destiny': `Not a creature, not a person, but an abstract force of fate visualized through symbolic imagery. The visual representation is a cracked and blood-splattered antique clock face lying on wet asphalt at night. The clock's glass is shattered in a starburst pattern, with dark crimson blood pooling in the cracks and seeping across its ivory surface. The hands are frozen at a specific, ominous time.
+  'Destiny': `Ultra-realistic 1980s film photograph, shot on 35mm with natural grain and slight color fade. Nighttime or late dusk. Practical lighting only (streetlights, lamps, headlights), creating deep shadows and warm highlights. Scene suggests a strange accident or near-miss, but the cause is unclear. Everyday objects slightly out of place—a fallen ladder, spilled groceries, a swinging door, a flickering light, a stopped clock, rain on pavement reflecting light. No visible attacker. No supernatural glow. Just eerie coincidence.
 
-In the blurred background, emergency lights cast red and amber reflections across rain-slicked pavement. The silhouettes of an ambulance and first responders are visible, along with the shape of a covered body on the ground. Police tape creates a barrier between the accident scene and the foreground.
+Composition feels candid, like a photojournalist arrived moments after something went wrong. Shallow depth of field, imperfect focus, mild motion blur, and natural lens falloff. Muted, realistic color palette. Subtle tension rather than spectacle. The mood should imply fate, bad luck, or a chain reaction about to happen. Nothing stylized, nothing digital-looking—it should feel like a real photograph from the 1980s found in a shoebox.
 
-The overall aesthetic is gritty, noir-influenced, and deeply unsettling—a visual poem about inevitability, borrowed time, and the cold precision of fate. The image conveys that death is not hunting, but waiting, and that some debts cannot remain unpaid. The horror lies not in a monster, but in the certainty that the clock is always ticking.`
+Emotional tone: quiet dread, inevitability, "this could happen to anyone."`
 };
 
 /**
