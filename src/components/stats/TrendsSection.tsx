@@ -84,7 +84,17 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
               <div 
                 className="winloss-losses" 
                 style={{ width: `${100 - winPercentage}%` }}
-              />
+              >
+                {/* Animated blood cells/bubbles */}
+                <div className="blood-bubble blood-bubble-1" />
+                <div className="blood-bubble blood-bubble-2" />
+                <div className="blood-bubble blood-bubble-3" />
+                <div className="blood-bubble blood-bubble-4" />
+                <div className="blood-bubble blood-bubble-5" />
+                <div className="blood-bubble blood-bubble-6" />
+                <div className="blood-bubble blood-bubble-7" />
+                <div className="blood-bubble blood-bubble-8" />
+              </div>
             </div>
           </div>
           <div className="glass-tube-highlight" />
