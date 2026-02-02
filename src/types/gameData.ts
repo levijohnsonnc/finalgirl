@@ -83,6 +83,8 @@ import rondaImage from '@/assets/characters/ronda.png';
 import theEyelessImage from '@/assets/characters/the-eyeless.png';
 import utopiaImage from '@/assets/locations/utopia.png';
 import dontMakeASoundArt from '@/assets/box-art/dont-make-a-sound.png';
+import melanieImage from '@/assets/characters/melanie.png';
+import birdsImage from '@/assets/characters/birds.png';
 export interface FeatureFilm {
   id: string;
   name: string;
@@ -144,6 +146,8 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Meghan': meghanImage,
   'Ronda': rondaImage,
   'The Eyeless': theEyelessImage,
+  'Melanie': melanieImage,
+  'Birds': birdsImage,
 };
 
 // Location-specific images (for casting room display)
