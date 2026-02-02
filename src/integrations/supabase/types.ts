@@ -14,7 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      game_history: {
+        Row: {
+          created_at: string
+          ending_narration: string | null
+          ending_sub_location: string | null
+          final_girl: string
+          final_girl_health: number | null
+          final_horror_level: number | null
+          game_highlights: string | null
+          id: string
+          intro_story: string | null
+          killer: string
+          killer_health: number | null
+          location: string
+          outcome: string
+          poster_image_url: string | null
+          scene_image_url: string | null
+          setup_scenario: string | null
+          starting_event: string | null
+          timestamp: number
+          user_id: string
+          victims_killed: number | null
+          victims_saved: number | null
+          weapon_used: string | null
+        }
+        Insert: {
+          created_at?: string
+          ending_narration?: string | null
+          ending_sub_location?: string | null
+          final_girl: string
+          final_girl_health?: number | null
+          final_horror_level?: number | null
+          game_highlights?: string | null
+          id?: string
+          intro_story?: string | null
+          killer: string
+          killer_health?: number | null
+          location: string
+          outcome: string
+          poster_image_url?: string | null
+          scene_image_url?: string | null
+          setup_scenario?: string | null
+          starting_event?: string | null
+          timestamp: number
+          user_id: string
+          victims_killed?: number | null
+          victims_saved?: number | null
+          weapon_used?: string | null
+        }
+        Update: {
+          created_at?: string
+          ending_narration?: string | null
+          ending_sub_location?: string | null
+          final_girl?: string
+          final_girl_health?: number | null
+          final_horror_level?: number | null
+          game_highlights?: string | null
+          id?: string
+          intro_story?: string | null
+          killer?: string
+          killer_health?: number | null
+          location?: string
+          outcome?: string
+          poster_image_url?: string | null
+          scene_image_url?: string | null
+          setup_scenario?: string | null
+          starting_event?: string | null
+          timestamp?: number
+          user_id?: string
+          victims_killed?: number | null
+          victims_saved?: number | null
+          weapon_used?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          created_at: string
+          id: string
+          owned_films: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owned_films?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owned_films?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
