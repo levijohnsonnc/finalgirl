@@ -5,11 +5,11 @@
 
 export const FINAL_GIRL_DESCRIPTIONS: Record<string, string> = {
   // Season 2 - Terror From the Grave (Vignette)
-  'Patsy': `A woman in her early 20s with a slender, softly athletic build and a quiet, observant presence. She has fair, freckled skin with a warm, natural complexion and no visible makeup. Her face is oval-shaped with soft features, a straight nose, and a neutral, slightly guarded expression. Her dark hazel-green eyes hold a steady, contemplative gaze that suggests inner strength and quiet determination rather than overt aggression.
+  'Patsy': `A woman in her early 20s with a slim, lithe build and a wary, observant presence. She has fair, pale skin densely dusted with natural freckles across her bridge of her nose and cheeks. Her face is delicate but sharp, featuring a narrow nose, high forehead, and a thin, set mouth. She has green eyes with a suspicious, sidelong glance, her gaze fixed on something just out of frame, conveying a mix of anxiety and quiet alertness.
 
-Her hair is a striking copper-red, cut into a short, tousled shag with feathered layers that frame her face. The style has a natural, slightly windswept quality that feels effortless and era-appropriate.
+Her hair is a vibrant, natural copper-red, cut into a short, textured pixie style with soft, messy bangs that look air-dried rather than styled. She wears no visible makeup, emphasizing a raw, naturalistic look. Her expression is guarded and unsmiling, reflecting a sense of mounting unease.
 
-She wears a classic mid-wash denim jacket with visible copper buttons, layered over what appears to be a simple top. The setting behind her features warm, wood-paneled walls, suggesting a domestic or rural interior. The overall aesthetic is grounded, naturalistic, and evocative of 1980s American heartland—a portrait of an ordinary young woman on the cusp of extraordinary circumstances.`,
+She appears caught in a tense, claustrophobic moment, appearing vulnerable yet vigilant. She is dressed in a classic, medium-wash denim jacket with a popped collar, buttoned high for utility. The overall aesthetic is cinematic and retro, reminiscent of a gritty late-70s or early-80s suspense film.`,
 
   // Season 3 - Don't Make a Sound
   'Meghan': `A young Black woman in her early 20s with a lean, resilient build and an uncompromising, fierce presence. Her skin is marked by the visceral aftermath of a struggle, featuring a heavy purple bruise swelling around her right eye, a trail of fresh blood from her nose, and fine crimson spatters across her neck and chest. Her face is heart-shaped with a defiant, set jaw and a straight nose. She has dark, piercing eyes that hold a direct, unwavering stare, conveying a mix of shock and cold, mounting resolve.

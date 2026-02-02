@@ -113,13 +113,11 @@ Arcs of electric-blue lightning crackle violently across its chest and down its 
 The backdrop is a heavy, low-hanging sky dominated by thick, roiling storm clouds in shades of charcoal, deep slate, and bruised grey. A diffused, cold light source struggles to break through the center of the cloud cover, casting a pale, high-contrast glow that rim-lights the birds and adds layers of depth to the atmosphere. The overall aesthetic is gritty, ominous, and gothic—evoking the feeling of a brewing tempest or a dark, cinematic supernatural thriller.`,
 
   // Season 2 - Terror From the Grave (Vignette)
-  'Zombies': `A dense horde of reanimated corpses shambling down a dark, wet city street at night. The group consists of approximately fifteen to twenty undead figures of varying ages, genders, and states of decay, all converging toward the camera with outstretched arms and slack, hungry expressions.
+  'Zombies': `A dense collective of shambling undead, featuring a variety of ages and builds, moving with a heavy, rhythmic, and relentless presence. Their skin is a pallid, necrotic grey, marked by dirt, bruising, and the visible hollows of decomposition rather than stylized gore. Faces are gaunt with sunken cheekbones and slack jaws; their eyes are clouded and vacant, staring ahead with a mindless, predatory focus that suggests a total loss of individual identity.
 
-Their skin tones range from sickly pale grey to mottled green and jaundiced yellow, with visible lacerations, exposed tissue, and dark, dried blood staining their faces and clothing. Their eyes are milky, unfocused, and devoid of humanity, while their mouths hang open in perpetual, silent moans. Several have visible bite wounds and torn flesh on their necks and arms.
+Their hair is matted, stringy, and disheveled, caked with grime and the remnants of their former lives. There is no makeup or sense of grooming, only the raw, weathered look of the elements and decay. Their expressions are vacant and unsmiling, fixed in a state of permanent, guttural hunger that is emotionally hollow and deeply unsettling.
 
-The zombies wear the tattered, bloodstained remnants of everyday 1980s civilian clothing—work shirts, floral dresses, jeans, and jackets—all in various states of decay and disrepair, suggesting they were ordinary people before their transformation.
-
-The setting is a deserted small-town main street at night, lit by warm, sodium-orange street lamps that cast long shadows and reflect off the rain-slicked asphalt. Vintage American automobiles from the late 1970s to early 1980s line the curbs. The atmosphere is oppressive, cinematic, and apocalyptic—a world where the living are now the minority.`
+They appear as a weathered, decaying tide of humanity, functioning as a singular, overwhelming force rather than individuals. They wear soiled, tattered, and distressed clothing—ranging from business suits to casual denim—that looks genuinely worn and abandoned. The overall aesthetic is gritty, grounded, and cinematic, reminiscent of mid-century creature horror.`
 };
 
 /**
