@@ -824,6 +824,32 @@ Patsy would have her innocence stolen, not by the living, but by the dead. And o
 Boarding up and staying put only works for so long. The old world is gone. We, the living, now coexist with the dead. Not by choice, but by necessity. Kill if and when you must, but never believe you are safe. For there are always more.`
     }
   },
+  // Vignette: Terror From Destiny (Season 3)
+  's3-terror-from-destiny': {
+    filmId: 's3-terror-from-destiny',
+    isVignette: true,
+    vignetteDescription: `The five close friends should have died in the horrifying and bloody accident. Only because of a freakish premonition did they manage to avoid the accident and escape the reaper's blade. But now they are dying one by one in increasingly bizarre accidents, and it has become clear that some power from beyond the grave—call it death, fate, or Destiny—is taking the lives that were stolen from it.
+
+Can you solve the puzzle of who is fated to die next and get to them in time before the long arm of Destiny claims yet another victim? If you can't, then there's no hope that you will survive this Terror From Destiny.
+
+Destiny doesn't represent a traditional physical killer. There is no masked murderer stalking the board, no single body to fight. Instead, the "killer" is an invisible force: fate, death, inevitability. The theme is that death was cheated, and now it is correcting the ledger. The threat comes from chains of events, unlucky combinations, and puzzle-like prediction rather than pursuit. Victims don't just get attacked—they fall into situations. Something tips, something fails, something goes wrong at exactly the wrong time. The horror is inevitability, not brutality.`,
+    finalGirls: [
+      {
+        name: 'Gabrielle',
+        backstory: `Gabrielle always had an overactive imagination. Her parents had her professionally tested multiple times, thinking she was gifted or neurodivergent or "special" in some way. The tests always came back negative, the doctors insisting her daydreams and "visions" were normal for her age.
+
+And then one day Gabby's visions saved her life and the life of her friends. Or so she thought.`
+      }
+    ],
+    killer: {
+      name: 'Destiny',
+      description: `Destiny is not a creature, not a person, not something that can be fought in any traditional sense. It is the invisible hand of fate itself, reaching out to correct a cosmic imbalance. When the five friends cheated death through Gabrielle's premonition, they created a debt that must be paid.
+
+Now death is collecting. One by one, in increasingly elaborate and seemingly accidental ways, the survivors are being claimed. A loose bolt here, a faulty wire there, a chain of unfortunate coincidences that all lead to the same inevitable conclusion. You cannot outrun Destiny. You cannot hide from it. You can only hope to predict its design and intervene before the next victim falls.
+
+The horror lies not in a monster lurking in the shadows, but in the realization that the universe itself has turned against you. Every creak, every flicker, every minor malfunction could be the beginning of a carefully orchestrated demise. Destiny is patient, methodical, and absolutely certain.`
+    }
+  },
 };
 
 export const getFilmDetails = (filmId: string): FeatureFilmDetail | undefined => {
