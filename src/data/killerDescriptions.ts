@@ -105,7 +105,14 @@ The clothing is practical and everyday—denim, flannel, and cotton—but appear
   // The Falconwood Files
   'Slayer': `A menacing, humanoid reptilian creature with a powerful, athletic build and a highly aggressive, supernatural presence. It has thick, moss-green scaly skin that appears calcified and deeply textured, resembling cracked stone or aged bark. Its face is gaunt and skull-like, with a recessed nose and a grimacing mouth that reveals sharp, predatory teeth. The most prominent feature is its large, intensely glowing neon-blue eyes that radiate a brilliant, piercing light.
 
-Arcs of electric-blue lightning crackle violently across its chest and down its heavily muscled arms, terminating in sharp, three-fingered claws. The creature is captured mid-movement in a low, predatory crouch, suggesting immense speed and volatility. It appears to be a fusion of a biological swamp-dwelling monster and raw, unstable electrical energy.`
+Arcs of electric-blue lightning crackle violently across its chest and down its heavily muscled arms, terminating in sharp, three-fingered claws. The creature is captured mid-movement in a low, predatory crouch, suggesting immense speed and volatility. It appears to be a fusion of a biological swamp-dwelling monster and raw, unstable electrical energy.`,
+
+  // Terror From Above (Vignette)
+  'Birds': `A massive, churning cloud of birds darkening the sky—thousands upon thousands of winged creatures descending in a coordinated, terrifying storm. Crows, seagulls, ravens, and blackbirds swarm together in an unnatural flock, their silhouettes blotting out the sun and casting the world below into an ominous twilight.
+
+The birds attack with razor-sharp beaks and talons, diving from above in waves that seem almost choreographed. Their eyes gleam with an unnatural, collective intelligence—this is no random murmuration but a deliberate assault. The swarm moves as one entity, banking and diving in perfect synchronization, creating a living cyclone of feathers and fury.
+
+Against an overcast sky, the flock appears as a dark, roiling mass that seems to consume everything in its path. The aesthetic is Hitchcockian—nature turned hostile, the familiar made terrifying, everyday creatures transformed into an overwhelming force of destruction.`
 };
 
 /**
