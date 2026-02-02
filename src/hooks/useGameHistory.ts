@@ -3,6 +3,32 @@ import { useLocalStorage } from './useLocalStorage';
 import { useAuth } from './useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
+// Extract storage path from public URL for cleanup
+const extractStoragePath = (publicUrl: string | undefined): string | null => {
+  if (!publicUrl) return null;
+  // URL format: .../storage/v1/object/public/posters/game-posters/filename.jpg
+  const match = publicUrl.match(/\/posters\/(.+)$/);
+  return match ? match[1] : null;
+};
+
+// Delete storage files associated with a game record
+const deleteStorageFiles = async (game: { posterImageUrl?: string; sceneImageUrl?: string }) => {
+  const posterPath = extractStoragePath(game.posterImageUrl);
+  const scenePath = extractStoragePath(game.sceneImageUrl);
+  
+  const pathsToDelete = [posterPath, scenePath].filter(Boolean) as string[];
+  
+  if (pathsToDelete.length > 0) {
+    const { error } = await supabase.storage
+      .from('posters')
+      .remove(pathsToDelete);
+      
+    if (error) {
+      console.error('Error deleting storage files:', error);
+    }
+  }
+};
+
 export interface GameResult {
   id: string;
   timestamp: number;
@@ -296,46 +322,61 @@ export const useGameHistory = () => {
     };
   }, [gameHistory]);
 
-  const deleteGame = useCallback((id: string) => {
+  const deleteGame = useCallback(async (id: string) => {
+    // Find the game to get image URLs before deletion
+    const gameToDelete = gameHistory.find(g => g.id === id);
+    
     if (user) {
       // Optimistically update
       setDbGameHistory(prev => prev.filter(game => game.id !== id));
       
-      // Delete from database in background
-      supabase
+      // Delete storage files first (best effort)
+      if (gameToDelete) {
+        await deleteStorageFiles(gameToDelete);
+      }
+      
+      // Delete from database
+      const { error } = await supabase
         .from('game_history')
         .delete()
         .eq('id', id)
-        .eq('user_id', user.id)
-        .then(({ error }) => {
-          if (error) {
-            console.error('Error deleting game:', error);
-          }
-        });
+        .eq('user_id', user.id);
+        
+      if (error) {
+        console.error('Error deleting game:', error);
+        // Rollback optimistic update on error
+        if (gameToDelete) {
+          setDbGameHistory(prev => [...prev, gameToDelete].sort((a, b) => b.timestamp - a.timestamp));
+        }
+      }
     } else {
       setLocalGameHistory(prev => prev.filter(game => game.id !== id));
     }
-  }, [user, setLocalGameHistory]);
+  }, [user, gameHistory, setLocalGameHistory]);
 
-  const clearHistory = useCallback(() => {
+  const clearHistory = useCallback(async () => {
     if (user) {
+      const gamesToClear = [...dbGameHistory];
+      
       // Optimistically clear
       setDbGameHistory([]);
       
-      // Delete all from database in background
-      supabase
+      // Delete all storage files (best effort, in parallel)
+      await Promise.all(gamesToClear.map(game => deleteStorageFiles(game)));
+      
+      // Delete all from database
+      const { error } = await supabase
         .from('game_history')
         .delete()
-        .eq('user_id', user.id)
-        .then(({ error }) => {
-          if (error) {
-            console.error('Error clearing history:', error);
-          }
-        });
+        .eq('user_id', user.id);
+        
+      if (error) {
+        console.error('Error clearing history:', error);
+      }
     } else {
       setLocalGameHistory([]);
     }
-  }, [user, setLocalGameHistory]);
+  }, [user, dbGameHistory, setLocalGameHistory]);
 
   return {
     gameHistory,
