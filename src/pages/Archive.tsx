@@ -147,20 +147,23 @@ const Archive = () => {
   
   // Films that have been fully configured and are available despite being in development seasons
   const availableFilmIds = [
-    // Season 1 - all available
+    // Season 1 - all available (including vignette)
     's1-camp-happy-trails', 's1-creech-manor', 's1-sacred-groves', 's1-carnival-of-blood', 's1-maple-lane',
-    // Season 2 - all available
+    's1-terror-from-above',
+    // Season 2 - all available (including vignette)
     's2-into-the-void',
     's2-madness-in-dark',
     's2-panic-station-2891',
     's2-once-upon-full-moon',
     's2-knock-at-door',
-    // Season 3 - Killer from Tomorrow + The Falconwood Files + Hell to Pay + The Marrek Murders + Don't Make a Sound
+    's2-terror-from-grave',
+    // Season 3 - all available (including vignette)
     's3-killer-from-tomorrow',
     's3-falconwood-files',
     's3-hell-to-pay',
     's3-marrek-murders',
     's3-dont-make-sound',
+    's3-terror-from-destiny',
     // Season 4 - A Rotten Harvest
     's4-rotten-harvest',
   ];

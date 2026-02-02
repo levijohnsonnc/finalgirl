@@ -11,6 +11,9 @@ import intoTheVoidArt from '@/assets/box-art/into-the-void.png';
 import panicStation2891Art from '@/assets/box-art/panic-station-2891.png';
 import knockAtTheDoorArt from '@/assets/box-art/knock-at-the-door.png';
 import falconwoodFilesArt from '@/assets/box-art/the-falconwood-files.png';
+import terrorFromAboveArt from '@/assets/box-art/terror-from-above.png';
+import terrorFromGraveArt from '@/assets/box-art/terror-from-the-grave.png';
+import terrorFromDestinyArt from '@/assets/box-art/terror-from-destiny.png';
 // Character/location specific images
 import hansImage from '@/assets/characters/hans.png';
 import laurieImage from '@/assets/characters/laurie.png';
@@ -86,8 +89,9 @@ export interface FeatureFilm {
   season: number;
   killer: string;
   location: string;
-  finalGirls: [string, string];
+  finalGirls: [string, string] | [string]; // Vignettes have single final girl
   boxArt?: string;
+  isVignette?: boolean; // Vignettes have no location
 }
 
 // Character-specific images (for casting room display)
@@ -186,6 +190,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's1-sacred-groves', name: 'Slaughter in the Groves', season: 1, killer: 'Inkanyamba', location: 'Sacred Groves', finalGirls: ['Adelaide', 'Barbara'], boxArt: slaughterGrovesArt },
   { id: 's1-carnival-of-blood', name: 'Carnage at the Carnival', season: 1, killer: 'Geppetto', location: 'Carnival of Blood', finalGirls: ['Asami', 'Charlie'], boxArt: carnageCarnivalArt },
   { id: 's1-maple-lane', name: 'Frightmare on Maple Lane', season: 1, killer: 'Dr. Fright', location: 'Maple Lane', finalGirls: ['Sheila', 'Nancy'], boxArt: frightmareMapleArt },
+  { id: 's1-terror-from-above', name: 'Terror From Above', season: 1, killer: 'Birds', location: '', finalGirls: ['Melanie'], boxArt: terrorFromAboveArt, isVignette: true },
   
   // Season 2
   { id: 's2-into-the-void', name: 'Into the Void', season: 2, killer: 'Evomorph', location: 'USS Konrad', finalGirls: ['Jenette', 'Ellen'], boxArt: intoTheVoidArt },
@@ -193,6 +198,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's2-madness-in-dark', name: 'Madness in the Dark', season: 2, killer: 'Ratchet Lady', location: 'Wolfe Asylum', finalGirls: ['Heather', 'Veronica'], boxArt: madnessInDarkArt },
   { id: 's2-once-upon-full-moon', name: 'Once Upon a Full Moon', season: 2, killer: 'Big Bad Wolf', location: 'Storybook Woods', finalGirls: ['Gretel', 'Red'], boxArt: onceUponFullMoonArt },
   { id: 's2-knock-at-door', name: 'A Knock at the Door', season: 2, killer: 'The Intruders', location: 'Wingard Cottage', finalGirls: ['Ginny', 'Ava'], boxArt: knockAtTheDoorArt },
+  { id: 's2-terror-from-grave', name: 'Terror From the Grave', season: 2, killer: 'Zombies', location: '', finalGirls: ['Patsy'], boxArt: terrorFromGraveArt, isVignette: true },
   
   // Season 3
   { id: 's3-falconwood-files', name: 'The Falconwood Files', season: 3, killer: 'Slayer', location: 'Falconwood', finalGirls: ['Octavia', 'Janelle'], boxArt: falconwoodFilesArt },
@@ -200,6 +206,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's3-hell-to-pay', name: 'Hell to Pay', season: 3, killer: 'Razorface', location: 'Hellscape', finalGirls: ['Kenzie', 'Julie'], boxArt: hellToPayArt },
   { id: 's3-marrek-murders', name: 'The Marrek Murders', season: 3, killer: 'The Tormentor', location: 'Marrek Warehouse', finalGirls: ['Mandy', 'Cassie'], boxArt: marrekMurdersArt },
   { id: 's3-dont-make-sound', name: "Don't Make a Sound", season: 3, killer: 'The Eyeless', location: 'Utopia', finalGirls: ['Meghan', 'Ronda'], boxArt: dontMakeASoundArt },
+  { id: 's3-terror-from-destiny', name: 'Terror From Destiny', season: 3, killer: 'Destiny', location: '', finalGirls: ['Gabrielle'], boxArt: terrorFromDestinyArt, isVignette: true },
   
   // Season 4
   { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
