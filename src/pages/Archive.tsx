@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Trash2 } from 'lucide-react';
 import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useGameHistory } from '@/hooks/useGameHistory';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,9 +19,81 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const Archive = () => {
-  const [ownedFilms, setOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
+  const { user, isLoading: authLoading } = useAuth();
+  const [localOwnedFilms, setLocalOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
+  const [dbOwnedFilms, setDbOwnedFilms] = useState<string[]>([]);
+  const [isDbLoading, setIsDbLoading] = useState(false);
+  const [hasMigrated, setHasMigrated] = useState(false);
   const { clearHistory } = useGameHistory();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Determine which films to use
+  const ownedFilms = user ? dbOwnedFilms : localOwnedFilms;
+
+  // Fetch from database when authenticated
+  useEffect(() => {
+    if (!user || authLoading) return;
+
+    const fetchFromDb = async () => {
+      setIsDbLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('user_settings')
+          .select('owned_films')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error('Error fetching user settings:', error);
+          return;
+        }
+
+        if (data?.owned_films) {
+          setDbOwnedFilms(data.owned_films as string[]);
+        }
+      } finally {
+        setIsDbLoading(false);
+      }
+    };
+
+    fetchFromDb();
+  }, [user, authLoading]);
+
+  // Migrate localStorage data on first sign-in
+  useEffect(() => {
+    if (!user || authLoading || hasMigrated || isDbLoading) return;
+    if (localOwnedFilms.length === 0) return;
+    if (dbOwnedFilms.length > 0) return; // Already has data in DB
+
+    const migrateData = async () => {
+      setHasMigrated(true);
+      
+      try {
+        // Upsert user settings
+        const { error } = await supabase
+          .from('user_settings')
+          .upsert({
+            user_id: user.id,
+            owned_films: localOwnedFilms,
+          }, {
+            onConflict: 'user_id',
+          });
+
+        if (error) {
+          console.error('Error migrating user settings:', error);
+          return;
+        }
+
+        // Clear localStorage after successful migration
+        setLocalOwnedFilms([]);
+        setDbOwnedFilms(localOwnedFilms);
+      } catch (err) {
+        console.error('Migration error:', err);
+      }
+    };
+
+    migrateData();
+  }, [user, authLoading, localOwnedFilms, dbOwnedFilms, hasMigrated, isDbLoading, setLocalOwnedFilms]);
 
   // Group films by season - no memoization needed, FEATURE_FILMS is static
   const filmsBySeason = FEATURE_FILMS.reduce((acc, film) => {
@@ -27,6 +101,33 @@ const Archive = () => {
     acc[film.season].push(film);
     return acc;
   }, {} as Record<number, typeof FEATURE_FILMS>);
+
+  const setOwnedFilms = useCallback((updater: (prev: string[]) => string[]) => {
+    if (user) {
+      setDbOwnedFilms(prev => {
+        const newFilms = updater(prev);
+        
+        // Save to database in background
+        supabase
+          .from('user_settings')
+          .upsert({
+            user_id: user.id,
+            owned_films: newFilms,
+          }, {
+            onConflict: 'user_id',
+          })
+          .then(({ error }) => {
+            if (error) {
+              console.error('Error saving user settings:', error);
+            }
+          });
+        
+        return newFilms;
+      });
+    } else {
+      setLocalOwnedFilms(updater);
+    }
+  }, [user, setLocalOwnedFilms]);
 
   const handleToggleFilm = (filmId: string) => {
     setOwnedFilms(prev => 

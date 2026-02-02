@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Marquee } from '@/components/Marquee';
 import { AppHeader } from '@/components/AppHeader';
 import CastingRoom from './CastingRoom';
@@ -8,10 +9,11 @@ import GameOutcome from './GameOutcome';
 import TheEnd, { EndingFormData } from './TheEnd';
 import Scrapbooks from './Scrapbooks';
 import Stats from './Stats';
-import { Library, BookOpen, BarChart3, ArrowLeft } from 'lucide-react';
+import { Library, BookOpen, BarChart3, ArrowLeft, User } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
 import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
 import { NewsTicker } from '@/components/NewsTicker';
+import { useAuth } from '@/hooks/useAuth';
 
 interface GameSelection {
   killer: string;
@@ -24,6 +26,8 @@ interface GameSelection {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { user, isLoading: authLoading } = useAuth();
   const [hasStarted, setHasStarted] = useState(false);
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'ending' | 'scrapbooks' | 'stats'>('dashboard');
   const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
@@ -267,6 +271,16 @@ const Index = () => {
               <BookOpen className="w-3 h-3" />
               <span className="hidden sm:inline">SCRAPBOOKS</span>
             </button>
+            {/* Auth link */}
+            {!authLoading && (
+              <button
+                onClick={() => navigate('/auth')}
+                className="font-vhs text-[10px] sm:text-xs text-muted-foreground/50 hover:text-foreground/70 transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
+              >
+                <User className="w-3 h-3" />
+                <span className="hidden sm:inline">{user ? 'ACCOUNT' : 'SIGN IN'}</span>
+              </button>
+            )}
             <span className="font-vhs text-[10px] sm:text-xs text-secondary neon-text">
               {time.toLocaleTimeString('en-US', { hour12: false })}
             </span>

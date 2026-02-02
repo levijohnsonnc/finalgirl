@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import marqueeBg from '@/assets/marquee-bg.png';
 import { AppHeader } from './AppHeader';
+import { useAuth } from '@/hooks/useAuth';
 
 interface MarqueeProps {
   onStart: () => void;
@@ -12,6 +14,8 @@ interface MarqueeProps {
 }
 
 export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
+  const navigate = useNavigate();
+  const { user, isLoading: authLoading } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
   const [showFlicker, setShowFlicker] = useState(false);
   const [showFrameJump, setShowFrameJump] = useState(false);
@@ -54,6 +58,10 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
     setTimeout(() => {
       onStart();
     }, 600);
+  };
+
+  const handleAuthClick = () => {
+    navigate('/auth');
   };
 
   return (
@@ -109,7 +117,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       
       {/* Bottom Navigation - Centered on mobile, spread on desktop */}
       <div className="absolute bottom-4 left-0 right-0 px-4 sm:px-6 flex justify-center sm:justify-between items-center safe-area-bottom">
-        {/* Left group: Scrapbooks + Stats */}
+        {/* Left group: Scrapbooks + Stats + Auth */}
         <div className="flex items-center gap-3 sm:gap-6">
           {onScrapbooks && (
             <button
@@ -127,6 +135,16 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
               style={{ fontFamily: 'var(--font-vhs)' }}
             >
               Stats
+            </button>
+          )}
+          {/* Auth link - subtle */}
+          {!authLoading && (
+            <button
+              onClick={handleAuthClick}
+              className="text-xs tracking-wider uppercase text-foreground/20 hover:text-foreground/50 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
+              style={{ fontFamily: 'var(--font-vhs)' }}
+            >
+              {user ? 'Sign Out' : 'Sign In'}
             </button>
           )}
         </div>
