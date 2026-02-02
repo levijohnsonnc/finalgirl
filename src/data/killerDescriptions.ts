@@ -117,7 +117,14 @@ The backdrop is a heavy, low-hanging sky dominated by thick, roiling storm cloud
 
 Their hair is matted, stringy, and disheveled, caked with grime and the remnants of their former lives. There is no makeup or sense of grooming, only the raw, weathered look of the elements and decay. Their expressions are vacant and unsmiling, fixed in a state of permanent, guttural hunger that is emotionally hollow and deeply unsettling.
 
-They appear as a weathered, decaying tide of humanity, functioning as a singular, overwhelming force rather than individuals. They wear soiled, tattered, and distressed clothing—ranging from business suits to casual denim—that looks genuinely worn and abandoned. The overall aesthetic is gritty, grounded, and cinematic, reminiscent of mid-century creature horror.`
+They appear as a weathered, decaying tide of humanity, functioning as a singular, overwhelming force rather than individuals. They wear soiled, tattered, and distressed clothing—ranging from business suits to casual denim—that looks genuinely worn and abandoned. The overall aesthetic is gritty, grounded, and cinematic, reminiscent of mid-century creature horror.`,
+
+  // Season 3 - Terror From Destiny (Vignette)
+  'Destiny': `Not a creature, not a person, but an abstract force of fate visualized through symbolic imagery. The visual representation is a cracked and blood-splattered antique clock face lying on wet asphalt at night. The clock's glass is shattered in a starburst pattern, with dark crimson blood pooling in the cracks and seeping across its ivory surface. The hands are frozen at a specific, ominous time.
+
+In the blurred background, emergency lights cast red and amber reflections across rain-slicked pavement. The silhouettes of an ambulance and first responders are visible, along with the shape of a covered body on the ground. Police tape creates a barrier between the accident scene and the foreground.
+
+The overall aesthetic is gritty, noir-influenced, and deeply unsettling—a visual poem about inevitability, borrowed time, and the cold precision of fate. The image conveys that death is not hunting, but waiting, and that some debts cannot remain unpaid. The horror lies not in a monster, but in the certainty that the clock is always ticking.`
 };
 
 /**
