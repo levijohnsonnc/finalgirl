@@ -798,6 +798,32 @@ Melanie experienced some abuse when she was a child. Though it is something that
 The birds attack in coordinated swarms, diving from the sky with razor-sharp beaks and talons. Crows, seagulls, ravens - all manner of winged creatures have joined this murderous flock. Their eyes seem to gleam with an unnatural intelligence, and their attacks are anything but random.`
     }
   },
+  // Vignette: Terror From the Grave (Season 2)
+  's2-terror-from-grave': {
+    filmId: 's2-terror-from-grave',
+    isVignette: true,
+    vignetteDescription: `The dead have risen. Everyone wants to know why, how it happened. But we have no answers. The only thing we can do is survive. Take each day, hour, minute, and second, one at a time. Protect ourselves and the ones we love.
+
+It shouldn't have happened like it did. They are slow. They are easy to kill. But their sheer numbers, their collective resiliency, their ability to multiply by killing the living, it is something that we are struggling to contain.
+
+Hordes of them now walk the land. Boarding up and staying put only works for so long. If you can find a secluded place their taint has not yet touched, you might be able to live in peace for a few days or weeks. We are living on hope. And it is running out. We are tired. The old world is gone. We, the living, now coexist with the dead. Not by choice, but by necessity.
+
+Kill if and when you must, but never believe you are safe. For there are always more.`,
+    finalGirls: [
+      {
+        name: 'Patsy',
+        backstory: `Patsy had never had a violent interaction in her whole life. There was an aggressive survival instinct laying dormant inside of her that would be awoken one day when the dead started rising from their graves.
+
+Patsy would have her innocence stolen, not by the living, but by the dead. And oh it would awaken a rage inside of her. She just found out she was expecting her first child. She had to survive. THEY had to survive.`
+      }
+    ],
+    killer: {
+      name: 'Zombies',
+      description: `The dead have risen. Hordes of shambling corpses now walk the land, their numbers growing with every victim they claim. They are slow. They are easy to kill. But their sheer numbers, their collective resiliency, their ability to multiply by killing the living—it is something that we are struggling to contain.
+
+Boarding up and staying put only works for so long. The old world is gone. We, the living, now coexist with the dead. Not by choice, but by necessity. Kill if and when you must, but never believe you are safe. For there are always more.`
+    }
+  },
 };
 
 export const getFilmDetails = (filmId: string): FeatureFilmDetail | undefined => {
