@@ -1,196 +1,198 @@
 
 
-# Blood Tube 3D Glass Visualization Overhaul
+# Optional Authentication System with Google Sign-In
 
 ## Overview
-
-Transform the flat progress bar into a photorealistic glass specimen tube with viscous blood and glowing serum fluids. This requires a complete architectural change: wrapping the bar in a glass container element and creating dramatically enhanced fluid SVGs with subsurface scattering, meniscus effects, and dramatic lighting.
-
----
-
-## Visual Target
-
-A cylindrical glass capsule containing two distinct liquids:
-- **Left side**: Glowing cyan serum with inner luminosity
-- **Right side**: Deep, viscous blood with density variations
-- **Center**: A realistic curved meniscus where the fluids meet
-- **Container**: Glass tube with specular highlights, inner shadows, and dramatic lighting
+Add an optional sign-in system that allows users to persist their game data (scrapbooks, stats, collection settings) to the cloud. Users can continue using the app without signing in, but logged-in users get their data synced across devices. Includes both email/password and Google OAuth sign-in options.
 
 ---
 
-## Implementation Strategy
+## Database Schema
 
-### 1. Add Glass Container Wrapper
+### Tables to Create
 
-Update `TrendsSection.tsx` to add a parent wrapper element that represents the physical glass tube:
+**1. `profiles` table**
+- `id` (uuid, primary key, references auth.users)
+- `created_at` (timestamp)
+- `updated_at` (timestamp)
 
-```tsx
-<div className="winloss-bar-container">
-  <div className="glass-tube-container">
-    <div className="glass-tube-inner">
-      <div className="winloss-bar">
-        <div className="winloss-wins" style={{ width: `${winPercentage}%` }} />
-        <div className="winloss-losses" style={{ width: `${100 - winPercentage}%` }} />
-      </div>
-    </div>
-    <div className="glass-tube-highlight" />
-    <div className="glass-tube-meniscus" />
-  </div>
-  <div className="winloss-labels">...</div>
-</div>
-```
+**2. `game_history` table**
+- `id` (uuid, primary key)
+- `user_id` (uuid, references auth.users)
+- `timestamp` (bigint)
+- `outcome` (text: 'won' | 'lost')
+- `killer` (text)
+- `location` (text)
+- `final_girl` (text)
+- `setup_scenario` (text, nullable)
+- `starting_event` (text, nullable)
+- `intro_story` (text, nullable)
+- `ending_narration` (text, nullable)
+- `game_highlights` (text, nullable)
+- `final_horror_level` (integer, nullable)
+- `final_girl_health` (integer, nullable)
+- `killer_health` (integer, nullable)
+- `weapon_used` (text, nullable)
+- `ending_sub_location` (text, nullable)
+- `victims_saved` (integer, nullable)
+- `victims_killed` (integer, nullable)
+- `poster_image_url` (text, nullable)
+- `scene_image_url` (text, nullable)
+- `created_at` (timestamp)
 
-### 2. Create Enhanced Blood Texture SVG
+**3. `user_settings` table**
+- `id` (uuid, primary key)
+- `user_id` (uuid, references auth.users, unique)
+- `owned_films` (jsonb - array of film IDs)
+- `created_at` (timestamp)
+- `updated_at` (timestamp)
 
-Replace `blood-texture.svg` with a dramatically more realistic version featuring:
+### RLS Policies
+All tables will have Row-Level Security enabled:
+- Users can only read/write their own data
+- Policies use `auth.uid()` to verify ownership
 
-- **Deep color gradients**: Multiple overlapping dark-to-light crimson washes
-- **Subsurface scattering simulation**: Areas where light appears to penetrate and glow from within
-- **Organic turbulence**: Large, irregular wavy shapes suggesting viscous flow
-- **Layered density**: Darker patches suggesting thick clots, lighter areas suggesting plasma
-- **Realistic bubbles**: Different sizes at different "depths" with proper light refraction
-- **Flowing veins**: Thick, organic curve patterns
+---
 
-### 3. Create Enhanced Serum Texture SVG
+## Authentication Configuration
 
-Replace `serum-texture.svg` with a glowing, bioluminescent liquid effect:
+### Email Settings
+- **Auto-confirm email signups: ENABLED** - Users can sign in immediately without email verification
 
-- **Inner glow effect**: Radial gradients suggesting luminosity from within
-- **Lighter, more ethereal bubbles**: Translucent with bright cores
-- **Flowing light patterns**: Wavy lines that suggest energy coursing through
-- **Subtle particle suspension**: Tiny floating specs
+### Google OAuth
+- Uses Lovable Cloud's managed Google OAuth (no API keys needed)
+- Implemented via `lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin })`
+- Will use the `supabase--configure-social-auth` tool to generate the required integration module
 
-### 4. Create Meniscus SVG
+---
 
-New file `meniscus-blend.svg` to create the curved liquid interface:
+## New Components
 
-- **Concave curve shape**: Where blood meets serum
-- **Color blending at boundary**: Murky transition zone
-- **Surface tension simulation**: Slight curve at the top and bottom edges
-- **Mixed bubbles**: Particles from both fluids at the interface
+### 1. Auth Page (`/auth`)
+**File:** `src/pages/Auth.tsx`
 
-### 5. Overhaul CSS Styling
+- Full-screen page with the provided cabin/dock horror image as background
+- Applies same VHS effects as Marquee:
+  - `projector-pulse` animation
+  - `film-grain` overlay
+  - `scanlines-overlay`
+  - `vignette`
+  - `frame-jump` (random)
+  - `screen-flicker` (random)
+- Form positioned to the right side of the screen
+- **Sign-in options:**
+  - Email/password form (login or signup toggle)
+  - "Sign in with Google" button
+- Conditional rendering based on auth state:
+  - **Not logged in:** Show login/signup forms + Google button
+  - **Logged in:** Show user email + logout button
+- Styled with VHS aesthetic (`font-vhs`, muted colors, blood-red accents)
 
-Complete rewrite of `.winloss-*` classes for photorealistic glass tube effect:
+### 2. Auth Context/Hook
+**File:** `src/hooks/useAuth.ts`
 
-**Glass Container:**
-```css
-.glass-tube-container {
-  position: relative;
-  height: 48px; /* Taller for more visual impact */
-  border-radius: 24px; /* Pill/capsule shape */
-  
-  /* Glass material simulation */
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.02) 20%,
-    rgba(0, 0, 0, 0.1) 80%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
-  
-  /* Glass shadows and depth */
-  box-shadow:
-    /* Outer ambient shadow */
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    /* Rim highlight top */
-    inset 0 2px 4px rgba(255, 255, 255, 0.15),
-    /* Rim shadow bottom */
-    inset 0 -3px 6px rgba(0, 0, 0, 0.4),
-    /* Subtle inner glow from contents */
-    inset 0 0 20px rgba(100, 200, 200, 0.1);
-    
-  /* Glass border */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-}
-```
+- Uses `supabase.auth.onAuthStateChange` for session management
+- Provides: `user`, `session`, `isLoading`, `signIn`, `signUp`, `signOut`, `signInWithGoogle`
+- Handles both email/password and Google OAuth
 
-**Specular Highlight Strip:**
-```css
-.glass-tube-highlight {
-  position: absolute;
-  top: 3px;
-  left: 10%;
-  right: 10%;
-  height: 6px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.3) 20%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0.3) 80%,
-    transparent 100%
-  );
-  border-radius: 3px;
-  filter: blur(1px);
-  pointer-events: none;
-}
-```
+---
 
-**Blood Fluid:**
-```css
-.winloss-losses {
-  position: relative;
-  
-  /* Deep, rich blood base with density variation */
-  background: 
-    /* Top-to-bottom density gradient */
-    linear-gradient(
-      to bottom,
-      hsl(0 75% 22%) 0%,
-      hsl(0 80% 35%) 30%,
-      hsl(0 85% 40%) 50%,
-      hsl(0 75% 30%) 70%,
-      hsl(0 65% 18%) 100%
-    );
-    
-  /* Subsurface scattering glow */
-  box-shadow:
-    inset 0 0 30px rgba(180, 40, 40, 0.4),
-    inset 0 -10px 20px rgba(80, 0, 0, 0.5),
-    inset 0 10px 15px rgba(255, 100, 100, 0.15);
-}
-```
+## Data Synchronization Strategy
 
-**Serum Fluid:**
-```css
-.winloss-wins {
-  position: relative;
-  
-  /* Glowing bioluminescent base */
-  background: 
-    radial-gradient(
-      ellipse at 50% 70%,
-      hsl(180 90% 55% / 0.9) 0%,
-      hsl(180 85% 45% / 0.8) 40%,
-      hsl(180 80% 35% / 0.7) 100%
-    );
-    
-  /* Inner glow effect */
-  box-shadow:
-    inset 0 0 40px rgba(0, 220, 220, 0.5),
-    inset 0 0 60px rgba(0, 180, 180, 0.3),
-    /* Outer glow bleeding into glass */
-    0 0 20px rgba(0, 200, 200, 0.3);
-}
-```
+### On First Sign-Up/Sign-In (Migration)
+When a user signs up or signs in for the first time:
+1. Check if user already has data in the database
+2. If not, read all existing localStorage data
+3. Upload to database tables
+4. Clear localStorage (data now lives in cloud)
 
-**Meniscus at Fluid Boundary:**
-```css
-.winloss-losses::after {
-  /* Curved meniscus effect at left edge */
-  content: '';
-  position: absolute;
-  left: -15px;
-  top: 0;
-  bottom: 0;
-  width: 30px;
-  background: url('/src/assets/meniscus-blend.svg');
-  background-size: 100% 100%;
-  pointer-events: none;
-}
-```
+### Ongoing Sync (Logged-In Users)
+- `useGameHistory` hook will check auth state
+- If logged in: Read/write to database
+- If not logged in: Continue using localStorage
+
+### Hook Modifications
+**`src/hooks/useGameHistory.ts`**
+- Add auth state check
+- If authenticated: Use database queries via React Query
+- If not authenticated: Use existing localStorage logic
+
+**`src/pages/Archive.tsx`**
+- Add auth state check for `owned_films`
+- If authenticated: Read/write to `user_settings` table
+- If not authenticated: Use existing localStorage
+
+---
+
+## Footer Navigation Updates
+
+### Marquee Page (`src/components/Marquee.tsx`)
+Add subtle "Sign In" / "Sign Out" link to footer navigation:
+- Position: Integrated with existing nav links
+- Style: Same as other footer links (`text-foreground/30`, hover color)
+- Text changes based on auth state
+
+### Main App Footer (`src/pages/Index.tsx`)
+Add same subtle auth link to the fixed footer
+
+---
+
+## Routing Changes
+
+**`src/App.tsx`**
+- Add `/auth` route pointing to new Auth page
+
+---
+
+## Implementation Sequence
+
+1. **Database Setup**
+   - Create migration with `profiles`, `game_history`, and `user_settings` tables
+   - Enable RLS with appropriate policies
+   - Configure auto-confirm email signups
+
+2. **Google OAuth Setup**
+   - Use `supabase--configure-social-auth` tool to configure Google provider
+   - This generates `src/integrations/lovable/` module automatically
+
+3. **Auth Infrastructure**
+   - Create `useAuth` hook with session management (email + Google)
+   - Create Auth page with VHS styling and both sign-in methods
+   - Add `/auth` route
+
+4. **Footer Integration**
+   - Add auth link to Marquee footer
+   - Add auth link to main app footer
+
+5. **Data Layer Updates**
+   - Modify `useGameHistory` to support both localStorage and database
+   - Create sync logic for first sign-up migration
+   - Update Archive page for `owned_films` sync
+
+6. **Image Asset**
+   - Copy uploaded cabin image to `src/assets/auth-bg.png`
+
+---
+
+## Technical Details
+
+### VHS Effects to Reuse
+The Auth page will import and apply these existing CSS classes:
+- `projector-pulse` - slow brightness animation on background
+- `film-grain` - animated noise overlay
+- `scanlines-overlay` - horizontal CRT lines
+- `vignette` - darkened corners
+- Random `frame-jump` and `screen-flicker` effects (same logic as Marquee)
+
+### Form Styling
+- Background: Semi-transparent dark (`bg-black/60 backdrop-blur`)
+- Font: `font-vhs` for labels and buttons
+- Inputs: Dark background, muted borders, VHS-style focus states
+- Email/Password Button: Blood-red accent, subtle glow on hover
+- Google Button: White background with Google branding
+
+### Data Types
+The `GameResult` interface will remain the same, but database columns use snake_case. A mapping utility will convert between camelCase (frontend) and snake_case (database).
 
 ---
 
@@ -198,81 +200,25 @@ Complete rewrite of `.winloss-*` classes for photorealistic glass tube effect:
 
 | File | Purpose |
 |------|---------|
-| `src/assets/meniscus-blend.svg` | New curved interface between fluids with surface tension effect |
+| `src/pages/Auth.tsx` | Authentication page with VHS styling, email/password + Google sign-in |
+| `src/hooks/useAuth.ts` | Auth state management hook |
+| `src/assets/auth-bg.png` | Background image (cabin/dock horror scene) |
 
 ## Files to Modify
 
 | File | Changes |
 |------|---------|
-| `src/assets/blood-texture.svg` | Complete rewrite with subsurface scattering, turbulence, density layers |
-| `src/assets/serum-texture.svg` | Enhance with bioluminescent glow, light patterns, ethereal particles |
-| `src/components/stats/TrendsSection.tsx` | Add glass container wrapper elements and highlight layer |
-| `src/index.css` | Complete overhaul of `.winloss-*` classes for 3D glass tube effect |
+| `src/App.tsx` | Add `/auth` route |
+| `src/components/Marquee.tsx` | Add Sign In/Out link to footer |
+| `src/pages/Index.tsx` | Add Sign In/Out link to footer |
+| `src/hooks/useGameHistory.ts` | Add database sync for authenticated users |
+| `src/pages/Archive.tsx` | Add database sync for owned_films |
 
----
+## Tools to Use
 
-## SVG Details
-
-### Blood Texture (Enhanced)
-- ViewBox: 300x60 (larger for more detail)
-- Multiple overlapping dark patches for density
-- Bright red "glow cores" for subsurface scattering
-- Thick, organic flowing paths with varying opacity
-- Bubbles at multiple depth layers (size indicates depth)
-- Some bubbles with bright highlight cores
-
-### Serum Texture (Enhanced)
-- ViewBox: 200x60
-- Central bright glow regions
-- Flowing energy/light paths
-- Ethereal, translucent bubbles
-- Particle suspension (tiny bright dots)
-
-### Meniscus Blend (New)
-- ViewBox: 40x60
-- Curved boundary shape (concave on serum side)
-- Color transition from cyan to murky purple to red
-- Small mixed bubbles at interface
-- Surface tension curves at top and bottom
-
----
-
-## Animation Enhancements
-
-```css
-@keyframes blood-turbulence {
-  0% { 
-    background-position: 0 0; 
-    filter: hue-rotate(0deg);
-  }
-  50% { 
-    filter: hue-rotate(-3deg);
-  }
-  100% { 
-    background-position: -300px 0; 
-    filter: hue-rotate(0deg);
-  }
-}
-
-@keyframes serum-pulse {
-  0%, 100% { 
-    box-shadow: inset 0 0 40px rgba(0, 220, 220, 0.5);
-  }
-  50% { 
-    box-shadow: inset 0 0 50px rgba(0, 240, 240, 0.6);
-  }
-}
-```
-
----
-
-## Expected Result
-
-A blood tube that:
-- Looks like an actual 3D glass capsule with reflections and depth
-- Contains thick, viscous blood with visible density and light penetration
-- Has glowing cyan serum that appears to emit light from within
-- Shows a realistic curved meniscus where the two fluids meet
-- Uses dramatic lighting to emphasize the wet, physical nature of the contents
-- Feels like a genuine horror movie prop or laboratory specimen
+| Tool | Purpose |
+|------|---------|
+| Database migration tool | Create tables with RLS policies |
+| Configure auth tool | Enable auto-confirm email signups |
+| Configure social auth tool | Set up Google OAuth integration |
 
