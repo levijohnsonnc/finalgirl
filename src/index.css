@@ -2177,7 +2177,7 @@
   z-index: 10;
 }
 
-/* Meniscus at fluid boundary - organic mixing zone */
+/* Meniscus at fluid boundary - organic mixing zone with surface tension */
 .glass-tube-meniscus {
   position: absolute;
   top: 4px;
@@ -2194,6 +2194,26 @@
   /* Additional gradient overlay for seamless color mixing */
   mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 30%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 30%, transparent 100%);
+  /* Surface tension animation - subtle wave motion */
+  animation: surface-tension 6s ease-in-out infinite;
+}
+
+@keyframes surface-tension {
+  0% {
+    transform: translateX(-50px) scaleX(1) skewY(0deg);
+  }
+  25% {
+    transform: translateX(-48px) scaleX(1.05) skewY(0.5deg);
+  }
+  50% {
+    transform: translateX(-52px) scaleX(0.95) skewY(-0.5deg);
+  }
+  75% {
+    transform: translateX(-49px) scaleX(1.03) skewY(0.3deg);
+  }
+  100% {
+    transform: translateX(-50px) scaleX(1) skewY(0deg);
+  }
 }
 
 .winloss-bar {
@@ -2417,6 +2437,131 @@
   100% { 
     background-position: -300px center;
     filter: hue-rotate(0deg);
+  }
+}
+
+/* ===== Blood Bubbles - Floating Cells ===== */
+.blood-bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    hsl(0 70% 55% / 0.9) 0%,
+    hsl(0 80% 40% / 0.85) 40%,
+    hsl(0 75% 30% / 0.8) 70%,
+    hsl(0 60% 22% / 0.75) 100%
+  );
+  border: 1px solid hsl(0 50% 20% / 0.6);
+  box-shadow:
+    /* Inner highlight */
+    inset 2px 2px 4px hsl(0 60% 60% / 0.4),
+    /* Outer shadow for depth */
+    0 1px 3px hsl(0 40% 15% / 0.5);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  animation: bubble-rise 8s ease-in-out infinite;
+}
+
+/* Varied bubble sizes and positions */
+.blood-bubble-1 {
+  width: 8px;
+  height: 8px;
+  left: 15%;
+  animation-duration: 7s;
+  animation-delay: 0s;
+}
+
+.blood-bubble-2 {
+  width: 5px;
+  height: 5px;
+  left: 35%;
+  animation-duration: 9s;
+  animation-delay: 1.2s;
+}
+
+.blood-bubble-3 {
+  width: 10px;
+  height: 10px;
+  left: 55%;
+  animation-duration: 8s;
+  animation-delay: 2.5s;
+}
+
+.blood-bubble-4 {
+  width: 6px;
+  height: 6px;
+  left: 75%;
+  animation-duration: 10s;
+  animation-delay: 0.8s;
+}
+
+.blood-bubble-5 {
+  width: 4px;
+  height: 4px;
+  left: 25%;
+  animation-duration: 6s;
+  animation-delay: 3.5s;
+}
+
+.blood-bubble-6 {
+  width: 7px;
+  height: 7px;
+  left: 65%;
+  animation-duration: 11s;
+  animation-delay: 1.8s;
+}
+
+.blood-bubble-7 {
+  width: 5px;
+  height: 5px;
+  left: 85%;
+  animation-duration: 7.5s;
+  animation-delay: 4.2s;
+}
+
+.blood-bubble-8 {
+  width: 9px;
+  height: 9px;
+  left: 45%;
+  animation-duration: 9.5s;
+  animation-delay: 2s;
+}
+
+@keyframes bubble-rise {
+  0% {
+    bottom: -10%;
+    opacity: 0;
+    transform: translateX(0) scale(0.8);
+  }
+  10% {
+    opacity: 0.7;
+    transform: translateX(2px) scale(0.9);
+  }
+  25% {
+    transform: translateX(-3px) scale(1);
+  }
+  40% {
+    opacity: 0.85;
+    transform: translateX(4px) scale(1.05);
+  }
+  55% {
+    transform: translateX(-2px) scale(1);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translateX(3px) scale(0.95);
+  }
+  85% {
+    transform: translateX(-1px) scale(0.9);
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    bottom: 105%;
+    opacity: 0;
+    transform: translateX(0) scale(0.8);
   }
 }
 
