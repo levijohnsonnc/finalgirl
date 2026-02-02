@@ -67,18 +67,20 @@ export const FilmToggle = React.forwardRef<HTMLDivElement, FilmToggleProps>(
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <MapPin className={cn(
-                    "w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0",
-                    isOwned ? "text-secondary" : "text-muted-foreground"
-                  )} />
-                  <span className={cn(
-                    "font-vhs truncate",
-                    isOwned ? "text-foreground" : "text-muted-foreground"
-                  )}>
-                    {film.location}
-                  </span>
-                </div>
+                {film.location && (
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <MapPin className={cn(
+                      "w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0",
+                      isOwned ? "text-secondary" : "text-muted-foreground"
+                    )} />
+                    <span className={cn(
+                      "font-vhs truncate",
+                      isOwned ? "text-foreground" : "text-muted-foreground"
+                    )}>
+                      {film.location}
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <User className={cn(
