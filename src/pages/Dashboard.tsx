@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { Skull, Trophy } from 'lucide-react';
+import { Skull, Trophy, Loader2 } from 'lucide-react';
 import randomizeAllButton from '@/assets/randomize-all-button.png';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -11,10 +11,11 @@ import { GameIcon } from '@/components/GameIcon';
 import { GameSelection, SessionLog, getOwnedContent, getFilmIdByLocation } from '@/types/gameData';
 import { getEventsForLocation, getSetupCardsForLocation } from '@/types/featureFilmDetails';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useOwnedFilms } from '@/hooks/useOwnedFilms';
 import { v4 as uuidv4 } from 'uuid';
 
 const Dashboard = () => {
-  const [ownedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
+  const { ownedFilms, isLoading: filmsLoading } = useOwnedFilms();
   const [sessionLogs, setSessionLogs] = useLocalStorage<SessionLog[]>('final-girl-session-logs', []);
   
   const [selection, setSelection] = useState<GameSelection>({
@@ -130,6 +131,25 @@ const Dashboard = () => {
   const hasSelection = selection.killer && selection.location && selection.finalGirl;
   const hasOwnedContent = ownedFilms.length > 0;
   const hasDetailedData = availableEvents.length > 0 || availableSetupCards.length > 0;
+
+  if (filmsLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center space-y-2">
+          <h1 className="font-display text-5xl text-primary blood-glow tracking-wider">
+            PROJECTION ROOM
+          </h1>
+          <p className="font-vhs text-muted-foreground">
+            SELECT YOUR TERROR • FACE YOUR FATE
+          </p>
+        </div>
+        <div className="flex flex-col items-center justify-center py-16">
+          <Loader2 className="w-16 h-16 mb-6 opacity-40 animate-spin text-primary" />
+          <h2 className="font-display text-2xl text-foreground tracking-wider">LOADING COLLECTION...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

@@ -1,11 +1,11 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Play } from 'lucide-react';
+import { Play, Loader2 } from 'lucide-react';
 import { CastingSlot } from '@/components/CastingSlot';
 import { CastingPicker } from '@/components/CastingPicker';
 import { ScenarioDropdowns } from '@/components/ScenarioDropdowns';
 import { GameIcon } from '@/components/GameIcon';
 import { getOwnedContent } from '@/types/gameData';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useOwnedFilms } from '@/hooks/useOwnedFilms';
 import castingRoomBg from '@/assets/casting-room-bg.png';
 
 interface CastingSelection {
@@ -26,7 +26,7 @@ interface CastingRoomProps {
 }
 
 const CastingRoom = ({ onStartGame, onGoToArchive }: CastingRoomProps) => {
-  const [ownedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
+  const { ownedFilms, isLoading } = useOwnedFilms();
   
   const [selection, setSelection] = useState<CastingSelection>({
     killer: null,
@@ -95,6 +95,15 @@ const CastingRoom = ({ onStartGame, onGoToArchive }: CastingRoomProps) => {
       startingEvent: selectedEvent,
     });
   }, [isComplete, selection, selectedSetup, selectedEvent, onStartGame]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <Loader2 className="w-16 h-16 mb-6 opacity-40 animate-spin text-primary" />
+        <h2 className="font-display text-2xl text-foreground mb-3 tracking-wider">LOADING COLLECTION...</h2>
+      </div>
+    );
+  }
 
   if (!hasOwnedContent) {
     return (
