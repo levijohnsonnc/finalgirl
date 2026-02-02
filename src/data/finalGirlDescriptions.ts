@@ -176,11 +176,11 @@ Her hair is a voluminous dark afro, styled with small gold beads or cuffs along 
 She is wearing a faded, light blue athletic-style shirt with white stripes on the shoulders, which is heavily stained with grease and dirt.`,
 
   // Terror From Above (Vignette)
-  'Melanie': `A woman in her early-to-mid 30s with a refined, sophisticated presence now hardened by survival. She has fair skin marked by fresh scratches and blood splatters across her face, suggesting a recent violent encounter with something airborne. Her face is classically beautiful with high cheekbones, a straight nose, and a firm, determined jaw. She has piercing blue eyes that convey both intelligence and a steely resolve—the look of someone who learned long ago to channel pain into strength.
+  'Melanie': `A woman in her early-to-mid 30s with a lean, athletic build and a stoic, battle-hardened presence. She has pale skin marked by fresh scratches, dried blood, and smudges of dirt that suggest she has just emerged from a violent struggle. Her face is angular with high cheekbones and a sharp jawline. She has piercing light-blue eyes with a steady, unblinking gaze that conveys a mixture of cold calculation and resilient defiance.
 
-Her hair is a warm honey-blonde, styled in an elegant upswept arrangement that has become disheveled from the chaos. She wears pearl earrings and a simple gold choker—remnants of her uptown sophistication now incongruous against the blood and grime. Her expression is focused and calculating rather than panicked, with a hint of the competitive fire that made her successful in business.
+Her hair is honey-blonde, styled in a short, textured crop that is swept back from her face, appearing slightly messy but intentional. She wears classic pearl stud earrings and a thick, polished gold choker, creating a stark contrast with her bloodied features. Her expression is grim and emotionally guarded, showing no signs of panic despite her injuries.
 
-She wears a torn olive-green military-style jacket over a blood-stained white top—practical clothing that contrasts with her refined accessories. The overall aesthetic captures a woman of wealth and status stripped of her usual armor, revealing the survivor forged by childhood hardship beneath the polished exterior.`,
+She wears a tattered olive-green field jacket over a simple white tank top. The jacket is visibly worn, with a large tear at the shoulder and layers of grime on the fabric.`,
 
 };
 
