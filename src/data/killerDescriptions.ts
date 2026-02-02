@@ -108,11 +108,9 @@ The clothing is practical and everyday—denim, flannel, and cotton—but appear
 Arcs of electric-blue lightning crackle violently across its chest and down its heavily muscled arms, terminating in sharp, three-fingered claws. The creature is captured mid-movement in a low, predatory crouch, suggesting immense speed and volatility. It appears to be a fusion of a biological swamp-dwelling monster and raw, unstable electrical energy.`,
 
   // Terror From Above (Vignette)
-  'Birds': `A massive, churning cloud of birds darkening the sky—thousands upon thousands of winged creatures descending in a coordinated, terrifying storm. Crows, seagulls, ravens, and blackbirds swarm together in an unnatural flock, their silhouettes blotting out the sun and casting the world below into an ominous twilight.
+  'Birds': `A dense, chaotic swarm of dozens of black birds, primarily crows or ravens, caught in mid-flight against a turbulent, oppressive sky. The birds are scattered across the frame in a frantic, non-linear pattern, their silhouettes sharp and jagged against the clouds. Some are captured with wings fully arched in a power stroke, while others appear to be diving or banking sharply, creating a visceral sense of frantic motion and avian panic.
 
-The birds attack with razor-sharp beaks and talons, diving from above in waves that seem almost choreographed. Their eyes gleam with an unnatural, collective intelligence—this is no random murmuration but a deliberate assault. The swarm moves as one entity, banking and diving in perfect synchronization, creating a living cyclone of feathers and fury.
-
-Against an overcast sky, the flock appears as a dark, roiling mass that seems to consume everything in its path. The aesthetic is Hitchcockian—nature turned hostile, the familiar made terrifying, everyday creatures transformed into an overwhelming force of destruction.`
+The backdrop is a heavy, low-hanging sky dominated by thick, roiling storm clouds in shades of charcoal, deep slate, and bruised grey. A diffused, cold light source struggles to break through the center of the cloud cover, casting a pale, high-contrast glow that rim-lights the birds and adds layers of depth to the atmosphere. The overall aesthetic is gritty, ominous, and gothic—evoking the feeling of a brewing tempest or a dark, cinematic supernatural thriller.`
 };
 
 /**
