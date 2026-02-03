@@ -69,7 +69,7 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col overflow-y-auto pt-16 sm:pt-28 lg:pt-32">
         {/* Sticky Header - positioned below app header */}
-        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-primary/20 px-4 py-3 sm:py-4">
+        <div className="sticky top-0 z-20 bg-background/60 backdrop-blur-md border-b border-primary/20 px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-3 max-w-5xl mx-auto">
             <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-muted-foreground tracking-wider">
               {PICKER_TITLES[type]}
