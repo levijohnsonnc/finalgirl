@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { X, Shuffle } from 'lucide-react';
+import { X } from 'lucide-react';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 
 interface CastingPickerProps {
@@ -55,11 +55,6 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
     };
   }, [handleKeyDown]);
 
-  const handleRandomPick = () => {
-    const randomIdx = Math.floor(Math.random() * options.length);
-    onSelect(options[randomIdx]);
-  };
-
   return (
     <div className="fixed inset-0 z-50 picker-overlay">
       {/* Backdrop */}
@@ -72,35 +67,26 @@ export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPicke
       <div className="absolute inset-0 scanlines-overlay pointer-events-none opacity-30" />
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col overflow-y-auto">
-        {/* Sticky Header */}
-        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-primary/20 px-4 py-3 sm:py-4 safe-area-top">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 max-w-5xl mx-auto">
-            <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-muted-foreground tracking-wider text-center sm:text-left">
+      <div className="relative z-10 h-full flex flex-col overflow-y-auto pt-16 sm:pt-14">
+        {/* Sticky Header - positioned below app header */}
+        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-primary/20 px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-3 max-w-5xl mx-auto">
+            <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-muted-foreground tracking-wider">
               {PICKER_TITLES[type]}
             </h2>
-            <div className="flex items-center justify-center sm:justify-end gap-3">
-              {/* Random pick button */}
-              <button
-                onClick={handleRandomPick}
-                className="vcr-button px-4 py-2 min-h-[44px] flex items-center gap-2 font-display text-sm uppercase text-muted-foreground hover:text-foreground"
-              >
-                <Shuffle className="w-4 h-4" />
-                Random
-              </button>
-              {/* Close button */}
-              <button
-                onClick={onClose}
-                className="vcr-button p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="vcr-button p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
         {/* Grid of options - different layout for locations */}
-        <div className="flex-1 px-3 sm:px-4 py-6 sm:py-8">
+        {/* Extra bottom padding to account for ticker (bottom-16) + nav footer */}
+        <div className="flex-1 px-3 sm:px-4 py-6 sm:py-8 pb-32 sm:pb-28">
           <div className={`grid gap-3 sm:gap-4 md:gap-6 w-full max-w-5xl mx-auto ${
             type === 'location' 
               ? 'grid-cols-1 sm:grid-cols-2' 
