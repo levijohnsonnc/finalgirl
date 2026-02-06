@@ -1,178 +1,87 @@
 
-# Plan: Complete Data Cleanup on Game Deletion
 
-## Problem Summary
-When deleting game records from the Scrapbook, not all related data is being cleaned up:
-1. **Storage files remain orphaned** - Poster and scene images uploaded to storage are not deleted
-2. **Database records may persist** - Need to ensure the delete actually completes and the UI refreshes
+# Improve Player Archetype System
 
-## Current Behavior
-The `deleteGame` function in `useGameHistory.ts`:
-- Removes the record from local React state (optimistic update)
-- Sends a DELETE request to the `game_history` table
-- Does NOT delete associated files from storage
+## Overview
+Replace the current "first match wins" cascade with a **scoring-based system** where each archetype gets a score from 0-100 based on how strongly the player's data matches that playstyle. The highest score wins. This prevents one archetype (like Protector) from always dominating, and lets the system reflect what truly defines a player's style.
 
-## Solution Overview
+## What Changes
 
-### Step 1: Enhance the `deleteGame` function
-Update `src/hooks/useGameHistory.ts` to:
-1. Extract the `poster_image_url` and `scene_image_url` from the game being deleted
-2. Delete the storage files BEFORE deleting the database record
-3. Parse the file paths from the public URLs to get the correct storage paths
-4. Handle errors gracefully (don't block deletion if storage cleanup fails)
+### 1. Lower the game gate from 5 to 3
+Players will see a real archetype sooner instead of "Newcomer" for their first 4 games.
 
-### Step 2: Handle the `clearHistory` function
-Update the `clearHistory` function to:
-1. Get all games with image URLs before clearing
-2. Delete all associated storage files
-3. Then delete all database records
+### 2. Use HP-relative thresholds for Survivor
+Instead of a flat "2 HP or less" check, the system will use each Final Girl's actual max HP (from the existing health data file) to determine what counts as a "clutch win." A win at 1/6 HP is more dramatic than 2/5 HP -- the system will reflect that by calculating health as a percentage of max.
 
-### Step 3: Add a helper function for storage cleanup
-Create a reusable utility function that:
-1. Extracts the file path from a Supabase public URL
-2. Deletes the file from the `posters` bucket
-3. Handles errors silently (log but don't throw)
+### 3. Replace cascade with independent scoring
 
----
+Each archetype gets a score (0-100) computed independently:
 
-## Technical Implementation Details
+- **Protector** -- How much does the player prioritize rescuing victims?
+  - Based on the *save ratio*: victims saved / total victims (saved + killed)
+  - A 60%+ save ratio scores high; below 30% scores near zero
+  - Also weighted by raw avg victims saved per game
 
-### File Changes
+- **Survivor** -- Does the player win by the skin of their teeth?
+  - Based on percentage of wins where Final Girl health ended at 33% or less of her character-specific max HP
+  - A player where 50%+ of wins are "clutch" scores high
 
-**1. `src/hooks/useGameHistory.ts`**
+- **Duelist** -- Is the player efficient and controlled?
+  - Based on high win rate combined with consistently low horror levels on wins
+  - A 70%+ win rate with average horror under 3 on wins scores highest
 
-Add a helper function to extract storage path from public URL:
-```typescript
-const extractStoragePath = (publicUrl: string | undefined): string | null => {
-  if (!publicUrl) return null;
-  // URL format: .../storage/v1/object/public/posters/game-posters/filename.jpg
-  const match = publicUrl.match(/\/posters\/(.+)$/);
-  return match ? match[1] : null;
-};
+- **Gambler** -- Are the player's games wildly unpredictable?
+  - Based on variance/standard deviation of horror levels across all games
+  - Also factors in mix of blowout wins and devastating losses
+
+The highest scoring archetype wins. Ties go to the more "dramatic" archetype.
+
+### 4. More flavorful reason text
+The reason text will incorporate actual numbers from the player's data, e.g., "You've clawed your way to victory at 1 HP twice" instead of generic descriptions.
+
+## Technical Details
+
+### File: `src/hooks/useGameStats.ts`
+- Import `getFinalGirlHealth` from `@/data/finalGirlHealth`
+- Replace the archetype cascade block (lines 200-230) with a scoring function
+- Each archetype gets a `computeScore(games, wins, ...)` helper that returns 0-100
+- Add a `generateReason(archetype, games)` helper for data-driven reason text
+- No changes to the `ComputedStats` interface or `PlayerArchetype` type -- the rest of the app remains untouched
+
+### Scoring logic (pseudocode):
+
+```text
+protectorScore:
+  saveRatio = totalSaved / (totalSaved + totalKilled)
+  avgSaved = totalSaved / gamesPlayed
+  score = (saveRatio * 60) + min(avgSaved / 8, 1) * 40
+
+survivorScore:
+  clutchWins = wins where (health / maxHP) <= 0.33
+  clutchRatio = clutchWins / totalWins
+  score = clutchRatio * 100
+
+duelistScore:
+  winFactor = min(winRate / 80, 1) * 50
+  horrorOnWins = avg horror level across wins only
+  controlFactor = max(0, 1 - horrorOnWins / 7) * 50
+  score = winFactor + controlFactor
+
+gamblerScore:
+  stdDev of horror levels across all games
+  score = min(stdDev / 2.5, 1) * 70
+  + (has both a game at horror 1-2 AND a game at horror 6-7 ? 30 : 0)
 ```
 
-Add a helper function to delete storage files:
-```typescript
-const deleteStorageFiles = async (game: GameResult) => {
-  const posterPath = extractStoragePath(game.posterImageUrl);
-  const scenePath = extractStoragePath(game.sceneImageUrl);
-  
-  const pathsToDelete = [posterPath, scenePath].filter(Boolean) as string[];
-  
-  if (pathsToDelete.length > 0) {
-    const { error } = await supabase.storage
-      .from('posters')
-      .remove(pathsToDelete);
-      
-    if (error) {
-      console.error('Error deleting storage files:', error);
-    }
-  }
-};
-```
+### File: `src/components/stats/PlayerArchetype.tsx`
+- No structural changes needed -- it already receives `archetype` and `reason` as props
 
-Update `deleteGame`:
-```typescript
-const deleteGame = useCallback(async (id: string) => {
-  // Find the game to get image URLs before deletion
-  const gameToDelete = gameHistory.find(g => g.id === id);
-  
-  if (user) {
-    // Optimistically update
-    setDbGameHistory(prev => prev.filter(game => game.id !== id));
-    
-    // Delete storage files first (best effort)
-    if (gameToDelete) {
-      await deleteStorageFiles(gameToDelete);
-    }
-    
-    // Delete from database
-    const { error } = await supabase
-      .from('game_history')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', user.id);
-      
-    if (error) {
-      console.error('Error deleting game:', error);
-      // Rollback optimistic update on error
-      if (gameToDelete) {
-        setDbGameHistory(prev => [...prev, gameToDelete].sort((a, b) => b.timestamp - a.timestamp));
-      }
-    }
-  } else {
-    setLocalGameHistory(prev => prev.filter(game => game.id !== id));
-  }
-}, [user, gameHistory, setLocalGameHistory]);
-```
+### Calibration against real data
+The user's 9 games produce:
+- Save ratio: 39/93 = 42% with avg 4.33/game --> moderate Protector score (~55)
+- Clutch wins: 2 of 6 wins at <=33% max HP --> moderate Survivor score (~33)
+- Win rate 67%, avg horror on wins 1.67 --> strong Duelist score (~75)
+- Horror std dev ~2.13, has games at horror 1 and 7 --> moderate Gambler score (~60)
 
-Update `clearHistory`:
-```typescript
-const clearHistory = useCallback(async () => {
-  if (user) {
-    const gamesToClear = [...dbGameHistory];
-    
-    // Optimistically clear
-    setDbGameHistory([]);
-    
-    // Delete all storage files (best effort, in parallel)
-    await Promise.all(gamesToClear.map(game => deleteStorageFiles(game)));
-    
-    // Delete all from database
-    const { error } = await supabase
-      .from('game_history')
-      .delete()
-      .eq('user_id', user.id);
-      
-    if (error) {
-      console.error('Error clearing history:', error);
-    }
-  } else {
-    setLocalGameHistory([]);
-  }
-}, [user, dbGameHistory, setLocalGameHistory]);
-```
+Result: **Duelist** wins -- which better reflects a player with a 67% win rate who keeps horror consistently low on wins. This is a much more accurate and meaningful classification than the current "Protector" label that triggers just because the save count is above 3.
 
-**2. Update components that call `deleteGame`**
-
-The `deleteGame` function will become async, but we can keep the same interface by not awaiting at the call site (fire-and-forget pattern), OR we can update the components to handle async.
-
-For safety, I recommend making the components await the deletion to ensure UI updates correctly:
-
-**`src/pages/Scrapbooks.tsx`** - Update `handleDeleteGame`:
-```typescript
-const handleDeleteGame = async (id: string) => {
-  await deleteGame(id);
-};
-```
-
-**`src/components/ScrapbookBook.tsx`** - Update `handleDeleteConfirm`:
-```typescript
-const handleDeleteConfirm = async () => {
-  if (selectedGame) {
-    await onDeleteGame(selectedGame.id);
-    setSelectedGame(null);
-    setShowDeleteConfirm(false);
-    toast.success('Record destroyed');
-  }
-};
-```
-
----
-
-## Safety Considerations
-
-1. **No accidental data deletion** - We only delete files that belong to the specific game record being removed
-2. **Error handling** - Storage deletion errors are logged but don't block the main deletion
-3. **Rollback on failure** - If database deletion fails, we restore the optimistic update
-4. **Path extraction is safe** - Uses regex matching that returns null if the URL format doesn't match
-
-## Testing Checklist
-- Delete a single game from scrapbook and verify:
-  - Record is removed from Stats page
-  - Poster image is removed from storage
-  - Scene image is removed from storage
-- Use "Reset My Plays" and verify:
-  - All records are cleared
-  - All storage files are deleted
-  - Stats page shows empty state
