@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { GameResult } from './useGameHistory';
+import { computeArchetype } from './useArchetypeScoring';
 
 export interface FinalGirlStats {
   name: string;
@@ -197,37 +198,14 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
       };
     }).sort((a, b) => b.plays - a.plays);
 
-    // Player Archetype
-    let playerArchetype: PlayerArchetype = 'newcomer';
-    let archetypeReason = 'Play more games to discover your style';
-
-    if (gamesPlayed >= 5) {
-      const avgVictimsSavedPerGame = gamesPlayed > 0 ? totalVictimsSaved / gamesPlayed : 0;
-      const gamesWithHorror = filteredGames.filter(g => g.finalHorrorLevel != null);
-      // Low health wins: 2 HP or less out of 5-6 max is critical
-      const lowHealthWins = wins.filter(g => g.finalGirlHealth != null && g.finalGirlHealth <= 2).length;
-      
-      // Calculate variance in horror levels
-      const horrorLevels = gamesWithHorror.map(g => g.finalHorrorLevel || 0);
-      const avgHorror = horrorLevels.length > 0 ? horrorLevels.reduce((a, b) => a + b, 0) / horrorLevels.length : 0;
-      const variance = horrorLevels.length > 0
-        ? horrorLevels.reduce((sum, h) => sum + Math.pow(h - avgHorror, 2), 0) / horrorLevels.length
-        : 0;
-
-      if (avgVictimsSavedPerGame >= 3) {
-        playerArchetype = 'protector';
-        archetypeReason = 'You prioritize saving victims above all else';
-      } else if (lowHealthWins >= wins.length * 0.4 && wins.length >= 2) {
-        playerArchetype = 'survivor';
-        archetypeReason = 'You win against all odds, often by the skin of your teeth';
-      } else if (variance >= 3) {
-        playerArchetype = 'gambler';
-        archetypeReason = 'Your games are unpredictable, swinging between calm and chaos';
-      } else if (winRate >= 60 && avgHorror <= 4) {
-        playerArchetype = 'duelist';
-        archetypeReason = 'You keep cool under pressure and dispatch killers efficiently';
-      }
-    }
+    // Player Archetype (scoring-based)
+    const { archetype: playerArchetype, reason: archetypeReason } = computeArchetype(
+      filteredGames,
+      wins,
+      winRate,
+      totalVictimsSaved,
+      totalVictimsKilled,
+    );
 
     return {
       gamesPlayed,
