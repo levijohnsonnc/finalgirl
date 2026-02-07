@@ -11,10 +11,11 @@ interface NarrativeBadgeProps {
   value: string | null;
   subtext: string;
   image?: string;
+  type?: 'killer' | 'location';
   variant: 'warning' | 'success' | 'danger' | 'info';
 }
 
-const NarrativeBadge = ({ label, value, subtext, image, variant }: NarrativeBadgeProps) => {
+const NarrativeBadge = ({ label, value, subtext, image, type = 'killer', variant }: NarrativeBadgeProps) => {
   const variantClasses = {
     warning: 'narrative-badge-warning',
     success: 'narrative-badge-success',
@@ -33,18 +34,23 @@ const NarrativeBadge = ({ label, value, subtext, image, variant }: NarrativeBadg
 
   return (
     <div className={`narrative-badge ${variantClasses[variant]}`}>
-      <div className="narrative-label">{label}</div>
-      <div className="narrative-value">
-        {image && (
+      {image && (
+        <>
           <img 
             src={image} 
             alt={value}
-            className="w-8 h-8 rounded-full object-cover border border-border/50"
+            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : 'object-center'}`}
           />
-        )}
-        <span className="truncate">{value}</span>
+          <div className={`absolute inset-0 ${type === 'location' ? 'bg-gradient-to-t from-black/95 via-black/60 to-black/20' : 'bg-gradient-to-t from-black/90 via-black/40 to-black/15'}`} />
+        </>
+      )}
+      <div className="relative z-10 flex flex-col justify-between h-full w-full">
+        <div className="narrative-label">{label}</div>
+        <div className="mt-auto">
+          <div className="narrative-value">{value}</div>
+          <div className="narrative-subtext">{subtext}</div>
+        </div>
       </div>
-      <div className="narrative-subtext">{subtext}</div>
     </div>
   );
 };
@@ -148,6 +154,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           value={stats.nemesis?.killer || null}
           subtext={stats.nemesis ? `${stats.nemesis.losses} defeats` : ''}
           image={stats.nemesis ? CHARACTER_IMAGES[stats.nemesis.killer] : undefined}
+          type="killer"
           variant="danger"
         />
         <NarrativeBadge
@@ -155,6 +162,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           value={stats.usualSuspect?.killer || null}
           subtext={stats.usualSuspect ? `${stats.usualSuspect.wins} wins` : ''}
           image={stats.usualSuspect ? CHARACTER_IMAGES[stats.usualSuspect.killer] : undefined}
+          type="killer"
           variant="success"
         />
         <NarrativeBadge
@@ -162,6 +170,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           value={stats.cursedSite?.location || null}
           subtext={stats.cursedSite ? `${stats.cursedSite.losses} losses` : ''}
           image={stats.cursedSite ? LOCATION_IMAGES[stats.cursedSite.location] : undefined}
+          type="location"
           variant="warning"
         />
         <NarrativeBadge
@@ -169,6 +178,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           value={stats.homeTurf?.location || null}
           subtext={stats.homeTurf ? `${stats.homeTurf.wins} wins` : ''}
           image={stats.homeTurf ? LOCATION_IMAGES[stats.homeTurf.location] : undefined}
+          type="location"
           variant="info"
         />
       </div>
