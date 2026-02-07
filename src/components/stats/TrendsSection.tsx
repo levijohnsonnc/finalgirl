@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { ComputedStats } from '@/hooks/useGameStats';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 import { CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
+
+type ChartView = 'victims' | 'games' | 'winloss';
 
 interface TrendsSectionProps {
   stats: ComputedStats;
@@ -55,6 +58,80 @@ const NarrativeBadge = ({ label, value, subtext, image, type = 'killer', variant
   );
 };
 
+const CHART_OPTIONS: { key: ChartView; label: string }[] = [
+  { key: 'victims', label: 'Victims' },
+  { key: 'games', label: 'Games' },
+  { key: 'winloss', label: 'W / L' },
+];
+
+const formatTick = (value: string) => {
+  const [, month, day] = value.split('-');
+  return `${month}/${day}`;
+};
+
+const tooltipStyle = {
+  backgroundColor: 'hsl(var(--background))',
+  border: '1px solid hsl(var(--border))',
+  borderRadius: '8px',
+  fontSize: '12px'
+};
+
+const ChartWithToggle = ({ stats }: { stats: ComputedStats }) => {
+  const [activeChart, setActiveChart] = useState<ChartView>('victims');
+
+  return (
+    <div className="chart-container">
+      <div className="chart-header">
+        <h4 className="chart-title">
+          {activeChart === 'victims' && 'Victims Over Time'}
+          {activeChart === 'games' && 'Games Played Over Time'}
+          {activeChart === 'winloss' && 'Wins / Losses Over Time'}
+        </h4>
+        <div className="chart-toggle">
+          {CHART_OPTIONS.map(opt => (
+            <button
+              key={opt.key}
+              className={`chart-toggle-btn ${activeChart === opt.key ? 'chart-toggle-btn-active' : ''}`}
+              onClick={() => setActiveChart(opt.key)}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="h-[200px]">
+        <ResponsiveContainer width="100%" height="100%">
+          {activeChart === 'victims' ? (
+            <LineChart data={stats.victimsTrend}>
+              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Line type="monotone" dataKey="saved" stroke="hsl(var(--neon-cyan))" strokeWidth={2} dot={{ fill: 'hsl(var(--neon-cyan))', strokeWidth: 0 }} name="Saved" />
+              <Line type="monotone" dataKey="killed" stroke="hsl(var(--blood-red))" strokeWidth={2} dot={{ fill: 'hsl(var(--blood-red))', strokeWidth: 0 }} name="Killed" />
+            </LineChart>
+          ) : activeChart === 'games' ? (
+            <LineChart data={stats.gamesTrend}>
+              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Line type="monotone" dataKey="games" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: 'hsl(var(--primary))', strokeWidth: 0 }} name="Games" />
+            </LineChart>
+          ) : (
+            <LineChart data={stats.winLossTrend}>
+              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Line type="monotone" dataKey="wins" stroke="hsl(var(--neon-cyan))" strokeWidth={2} dot={{ fill: 'hsl(var(--neon-cyan))', strokeWidth: 0 }} name="Wins" />
+              <Line type="monotone" dataKey="losses" stroke="hsl(var(--blood-red))" strokeWidth={2} dot={{ fill: 'hsl(var(--blood-red))', strokeWidth: 0 }} name="Losses" />
+            </LineChart>
+          )}
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
 export const TrendsSection = ({ stats }: TrendsSectionProps) => {
   const hasEnoughData = stats.gamesPlayed >= 3;
 
@@ -96,55 +173,9 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
         </div>
       </div>
 
-      {/* Victims Over Time Chart */}
+      {/* Chart Section with Toggle */}
       {stats.victimsTrend.length > 0 && (
-        <div className="chart-container">
-          <h4 className="chart-title">Victims Over Time</h4>
-          <div className="h-[200px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={stats.victimsTrend}>
-                <XAxis 
-                  dataKey="date" 
-                  stroke="hsl(var(--muted-foreground))"
-                  fontSize={10}
-                  tickFormatter={(value) => {
-                    const [year, month, day] = value.split('-');
-                    return `${month}/${day}`;
-                  }}
-                />
-                <YAxis 
-                  stroke="hsl(var(--muted-foreground))"
-                  fontSize={10}
-                  allowDecimals={false}
-                />
-                <Tooltip 
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--background))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    fontSize: '12px'
-                  }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="saved" 
-                  stroke="hsl(var(--neon-cyan))" 
-                  strokeWidth={2}
-                  dot={{ fill: 'hsl(var(--neon-cyan))', strokeWidth: 0 }}
-                  name="Saved"
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="killed" 
-                  stroke="hsl(var(--blood-red))" 
-                  strokeWidth={2}
-                  dot={{ fill: 'hsl(var(--blood-red))', strokeWidth: 0 }}
-                  name="Killed"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        <ChartWithToggle stats={stats} />
       )}
 
       {/* Narrative Badges */}
