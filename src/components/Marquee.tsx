@@ -116,7 +116,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       </div>
       
       {/* Bottom Navigation - Centered on mobile, spread on desktop */}
-      <div className="absolute bottom-10 left-0 right-0 px-4 sm:px-6 flex justify-center sm:justify-between items-center safe-area-bottom">
+      <div className="absolute bottom-5 left-0 right-0 px-4 sm:px-6 flex justify-center sm:justify-between items-center safe-area-bottom">
         {/* Left group: Scrapbooks + Stats + Auth */}
         <div className="flex items-center gap-3 sm:gap-6">
           {onScrapbooks && (
