@@ -42,6 +42,8 @@ export interface ComputedStats {
   totalWins: number;
   totalLosses: number;
   victimsTrend: { date: string; saved: number; killed: number }[];
+  gamesTrend: { date: string; games: number }[];
+  winLossTrend: { date: string; wins: number; losses: number }[];
   
   // Narrative Stats
   nemesis: { killer: string; losses: number } | null;
@@ -78,18 +80,22 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
     const totalVictimsSaved = filteredGames.reduce((sum, g) => sum + (g.victimsSaved || 0), 0);
     const totalVictimsKilled = filteredGames.reduce((sum, g) => sum + (g.victimsKilled || 0), 0);
 
-    // Victims Trend (by month)
-    const victimsByMonth = new Map<string, { saved: number; killed: number }>();
+    // Trends (by day)
+    const dailyData = new Map<string, { saved: number; killed: number; games: number; wins: number; losses: number }>();
     filteredGames.forEach(g => {
       const key = formatDateKey(g.timestamp);
-      const existing = victimsByMonth.get(key) || { saved: 0, killed: 0 };
+      const existing = dailyData.get(key) || { saved: 0, killed: 0, games: 0, wins: 0, losses: 0 };
       existing.saved += g.victimsSaved || 0;
       existing.killed += g.victimsKilled || 0;
-      victimsByMonth.set(key, existing);
+      existing.games += 1;
+      if (g.outcome === 'won') existing.wins += 1;
+      if (g.outcome === 'lost') existing.losses += 1;
+      dailyData.set(key, existing);
     });
-    const victimsTrend = Array.from(victimsByMonth.entries())
-      .map(([date, data]) => ({ date, ...data }))
-      .sort((a, b) => a.date.localeCompare(b.date));
+    const sortedDays = Array.from(dailyData.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+    const victimsTrend = sortedDays.map(([date, d]) => ({ date, saved: d.saved, killed: d.killed }));
+    const gamesTrend = sortedDays.map(([date, d]) => ({ date, games: d.games }));
+    const winLossTrend = sortedDays.map(([date, d]) => ({ date, wins: d.wins, losses: d.losses }));
 
     // By Killer - for nemesis and usual suspect
     const killerMap = new Map<string, GameResult[]>();
@@ -215,6 +221,8 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
       totalWins: wins.length,
       totalLosses: losses.length,
       victimsTrend,
+      gamesTrend,
+      winLossTrend,
       nemesis: nemesisKiller && nemesisLosses >= 2 ? { killer: nemesisKiller, losses: nemesisLosses } : null,
       usualSuspect: usualSuspectKiller && usualSuspectWins >= 2 ? { killer: usualSuspectKiller, wins: usualSuspectWins } : null,
       cursedSite: cursedSiteLocation && cursedSiteLosses >= 2 ? { location: cursedSiteLocation, losses: cursedSiteLosses } : null,
