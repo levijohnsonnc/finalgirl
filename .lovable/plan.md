@@ -1,87 +1,64 @@
 
 
-# Improve Player Archetype System
+# Fix Narration Playback on iPhone
 
-## Overview
-Replace the current "first match wins" cascade with a **scoring-based system** where each archetype gets a score from 0-100 based on how strongly the player's data matches that playstyle. The highest score wins. This prevents one archetype (like Protector) from always dominating, and lets the system reflect what truly defines a player's style.
+## The Problem
+iOS Safari enforces two restrictions that break the current narration flow:
 
-## What Changes
+1. **User gesture expiration** -- `audio.play()` must happen in direct response to a user tap. The current code awaits a network fetch (several seconds) between the tap and the play call, so iOS considers the gesture "stale" and silently refuses to play.
+2. **Data URI size limits** -- iOS Safari caps data URIs at roughly 2MB. A narrated story encoded as `data:audio/mpeg;base64,...` can exceed this, causing silent failure even if the gesture issue were solved.
 
-### 1. Lower the game gate from 5 to 3
-Players will see a real archetype sooner instead of "Newcomer" for their first 4 games.
+## The Fix
 
-### 2. Use HP-relative thresholds for Survivor
-Instead of a flat "2 HP or less" check, the system will use each Final Girl's actual max HP (from the existing health data file) to determine what counts as a "clutch win." A win at 1/6 HP is more dramatic than 2/5 HP -- the system will reflect that by calculating health as a percentage of max.
+Two changes, applied identically in both `NowPlaying.tsx` and `TheEnd.tsx`:
 
-### 3. Replace cascade with independent scoring
+### 1. Prime the Audio element on tap
+Create and "unlock" an `Audio` element immediately when the user taps "Narrate" -- before any async work. This satisfies iOS's gesture requirement. The element plays a tiny silent buffer to mark itself as user-activated, then we load the real audio into it after the fetch completes.
 
-Each archetype gets a score (0-100) computed independently:
-
-- **Protector** -- How much does the player prioritize rescuing victims?
-  - Based on the *save ratio*: victims saved / total victims (saved + killed)
-  - A 60%+ save ratio scores high; below 30% scores near zero
-  - Also weighted by raw avg victims saved per game
-
-- **Survivor** -- Does the player win by the skin of their teeth?
-  - Based on percentage of wins where Final Girl health ended at 33% or less of her character-specific max HP
-  - A player where 50%+ of wins are "clutch" scores high
-
-- **Duelist** -- Is the player efficient and controlled?
-  - Based on high win rate combined with consistently low horror levels on wins
-  - A 70%+ win rate with average horror under 3 on wins scores highest
-
-- **Gambler** -- Are the player's games wildly unpredictable?
-  - Based on variance/standard deviation of horror levels across all games
-  - Also factors in mix of blowout wins and devastating losses
-
-The highest scoring archetype wins. Ties go to the more "dramatic" archetype.
-
-### 4. More flavorful reason text
-The reason text will incorporate actual numbers from the player's data, e.g., "You've clawed your way to victory at 1 HP twice" instead of generic descriptions.
+### 2. Use Blob URLs instead of data URIs
+Convert the base64 response to a `Blob`, create an object URL with `URL.createObjectURL()`, and assign that to the audio element's `src`. This avoids the data URI size cap entirely and is more memory-efficient on all platforms.
 
 ## Technical Details
 
-### File: `src/hooks/useGameStats.ts`
-- Import `getFinalGirlHealth` from `@/data/finalGirlHealth`
-- Replace the archetype cascade block (lines 200-230) with a scoring function
-- Each archetype gets a `computeScore(games, wins, ...)` helper that returns 0-100
-- Add a `generateReason(archetype, games)` helper for data-driven reason text
-- No changes to the `ComputedStats` interface or `PlayerArchetype` type -- the rest of the app remains untouched
+### Files changed
 
-### Scoring logic (pseudocode):
+**`src/pages/NowPlaying.tsx`** and **`src/pages/TheEnd.tsx`** -- both have nearly identical `handleNarrate` functions that need the same update.
+
+### New flow (pseudocode)
 
 ```text
-protectorScore:
-  saveRatio = totalSaved / (totalSaved + totalKilled)
-  avgSaved = totalSaved / gamesPlayed
-  score = (saveRatio * 60) + min(avgSaved / 8, 1) * 40
-
-survivorScore:
-  clutchWins = wins where (health / maxHP) <= 0.33
-  clutchRatio = clutchWins / totalWins
-  score = clutchRatio * 100
-
-duelistScore:
-  winFactor = min(winRate / 80, 1) * 50
-  horrorOnWins = avg horror level across wins only
-  controlFactor = max(0, 1 - horrorOnWins / 7) * 50
-  score = winFactor + controlFactor
-
-gamblerScore:
-  stdDev of horror levels across all games
-  score = min(stdDev / 2.5, 1) * 70
-  + (has both a game at horror 1-2 AND a game at horror 6-7 ? 30 : 0)
+handleNarrate():
+  1. Create Audio element immediately (in tap handler)
+  2. Play a tiny silent WAV to "unlock" it on iOS
+  3. await fetch narrate-story endpoint
+  4. Decode base64 response to Uint8Array
+  5. Create Blob from binary data (type: audio/mpeg)
+  6. Create object URL from Blob
+  7. Set audio.src = objectURL
+  8. await audio.play()
+  9. On ended/error, revoke the object URL to free memory
 ```
 
-### File: `src/components/stats/PlayerArchetype.tsx`
-- No structural changes needed -- it already receives `archetype` and `reason` as props
+### Helper function
+A small shared utility will be created to convert base64 strings to Blobs, keeping the two page files clean:
 
-### Calibration against real data
-The user's 9 games produce:
-- Save ratio: 39/93 = 42% with avg 4.33/game --> moderate Protector score (~55)
-- Clutch wins: 2 of 6 wins at <=33% max HP --> moderate Survivor score (~33)
-- Win rate 67%, avg horror on wins 1.67 --> strong Duelist score (~75)
-- Horror std dev ~2.13, has games at horror 1 and 7 --> moderate Gambler score (~60)
+**`src/lib/audioUtils.ts`** (new file)
+- `base64ToBlob(base64: string, mimeType: string): Blob` -- decodes base64 to binary and wraps in a Blob
+- `createSilentAudio(): HTMLAudioElement` -- creates and primes an Audio element with a tiny silent WAV data URI (44 bytes, well under any size limit) so iOS marks it as user-gesture-activated
 
-Result: **Duelist** wins -- which better reflects a player with a 67% win rate who keeps horror consistently low on wins. This is a much more accurate and meaningful classification than the current "Protector" label that triggers just because the save count is above 3.
+### Changes to handleNarrate in both files
+- At the very top of the function (before any await), call `createSilentAudio()` to get a primed audio element
+- After the fetch, use `base64ToBlob()` to convert the response
+- Set `audio.src = URL.createObjectURL(blob)` on the primed element
+- Add cleanup in `onended` and `onerror` to call `URL.revokeObjectURL()`
+- Remove the old `data:audio/mpeg;base64,...` data URI approach
+
+### Why this works on iOS
+- The Audio element is created and `.play()` is called synchronously within the tap handler (satisfying the gesture policy)
+- The silent audio is tiny enough to always work as a data URI
+- The real audio uses a Blob URL which has no size restriction
+- When the real src is assigned and played, iOS allows it because the element was already "unlocked"
+
+### No backend changes needed
+The edge function returns the same base64 audio content. Only the client-side playback mechanism changes.
 
