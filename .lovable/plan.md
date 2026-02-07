@@ -1,56 +1,67 @@
 
 
-# Make Narrative Badge Images Cinematic
+# Trademark Compliance Changes
 
-## Overview
-Replace the tiny 32px circle images in the Nemesis / Usual Suspect / Cursed Site / Home Turf badges with **large, atmospheric background images** that fill the entire badge card. The character or location art becomes the badge itself, with text overlaid on a darkened gradient -- similar to the cinematic treatment already used for locations in the breakdown table.
+## Summary
+Three requirements to address, with minimal visual impact:
 
-## What Changes
+1. **Remove the word "companion"** from all app-facing text
+2. **Add a trademark disclaimer** wherever the "Final Girl" brand is used
+3. **Add "UNOFFICIAL" conspicuously on the landing page**
 
-### 1. Badge layout becomes image-backed
-When a badge has data (not locked), the character or location image fills the entire card as an absolute-positioned background. A gradient overlay darkens it enough for the label, name, and subtext to remain legible. The result: each badge feels like a "wanted poster" or "crime scene photo" rather than a card with a small thumbnail.
+---
 
-### 2. Different image treatments for Killers vs Locations
-- **Killer badges** (Nemesis, Usual Suspect): Portrait character art fills the card. Uses `object-top` positioning so the face/head is visible. Gradient goes from bottom-to-top (dark at the bottom where the text sits).
-- **Location badges** (Cursed Site, Home Turf): Landscape location art fills the card. Uses `object-center` for scenic framing. Gradient goes from bottom-to-top with a slightly stronger opacity since location images tend to be busier.
+## Change 1: Replace "Companion" everywhere
 
-### 3. Increased card height
-The `min-h-[100px]` increases to `min-h-[140px]` (or similar) to give the images room to breathe. Text is anchored to the bottom of the card over the gradient.
+The word "Companion" appears in 4 code locations referring to this app. Each will be changed to **"Slasher Manager"** (or a similar neutral term). One occurrence in character lore (Uki's backstory) is not about the app and will be left alone.
 
-### 4. Locked badges stay as-is
-Badges that show "Play more to unlock" keep their current minimal dark-card appearance -- no image to show anyway.
+| File | Current Text | New Text |
+|---|---|---|
+| `index.html` (title) | "Final Girl Slasher Companion" | "Final Girl Slasher Manager" |
+| `index.html` (meta description) | "A horror board game companion app for Final Girl" | "An unofficial fan-made slasher manager for Final Girl" |
+| `index.html` (og:title, twitter:title) | "Final Girl Slasher Companion" | "Final Girl Slasher Manager" |
+| `index.html` (og:description, twitter:description) | "A horror board game companion app for Final Girl" | "An unofficial fan-made slasher manager for Final Girl" |
+| `AppHeader.tsx` | "Slasher Companion" | "Slasher Manager" |
+| `Index.tsx` footer | "FINAL GIRL (TM) SLASHER COMPANION" | "FINAL GIRL (TM) SLASHER MANAGER" |
+| `VCRNavigation.tsx` | "SLASHER COMPANION" | "SLASHER MANAGER" |
 
-## Visual Result
-Each unlocked badge becomes a mini movie poster: atmospheric art filling the card, with the label (e.g., "NEMESIS") at the top in small VHS-style text, the name in bold over a gradient, and the stat count below. The colored border glow (red for Nemesis, cyan for Usual Suspect, amber for Cursed Site) remains and now tints the edge of the image card for extra atmosphere.
+---
 
-## Technical Details
+## Change 2: Add "UNOFFICIAL" to the landing page
 
-### File: `src/components/stats/TrendsSection.tsx`
-Restructure the `NarrativeBadge` component:
+On the Marquee (landing/splash screen), add the word **"UNOFFICIAL"** in a visible position above the subtitle. It will be styled in the VHS font, small but clearly legible, with a slightly different color (e.g., `text-primary/50` for a subtle red tint) so it reads as intentional branding rather than an afterthought.
 
-- When `value` is present and `image` exists:
-  - Render the image as `absolute inset-0 w-full h-full object-cover` inside the badge container
-  - Add a gradient overlay div: `absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30`
-  - Position all text as `relative z-10` so it sits above the image
-  - Move label to the top, name + subtext to the bottom using `justify-between`
-  - Use `object-top` for killer images, `object-center` for location images (differentiated via a new `type` prop: `'killer' | 'location'`)
+Placement: directly above or next to the "Slasher Manager" subtitle in the `AppHeader`, so when the Marquee loads, the user sees:
 
-- When `value` is present but no `image`:
-  - Fall back to the current dark card with just text (no image)
+```
+FINAL GIRL
+UNOFFICIAL Slasher Manager
+```
 
-- When locked:
-  - No change from current behavior
+The word "UNOFFICIAL" will also appear in the footer bar on inner pages in the same spot.
 
-### New prop on NarrativeBadge
-Add `type?: 'killer' | 'location'` to control image positioning. Passed from the four badge instances in `TrendsSection`.
+---
 
-### File: `src/index.css`
-- Update `.narrative-badge` min-height from `100px` to `140px`
-- Add `overflow: hidden` to `.narrative-badge` so the absolute image doesn't bleed out of the rounded corners
-- Adjust `.narrative-value` to remove the `gap-2` and `flex items-center` layout that was designed for the inline circle thumbnail -- now it's just the name text
+## Change 3: Add trademark disclaimer
 
-### No changes to
-- `useGameStats.ts` -- data layer stays the same
-- `Stats.tsx` -- parent page stays the same
-- Any other components
+A small disclaimer line will be added in two places:
+
+1. **Marquee landing page** -- at the very bottom of the screen, below the navigation links, in very small muted text. Styled to match the VHS aesthetic (small, low-opacity, tracking-wider). The full text:
+   > "This is an unofficial fan-made application that is not endorsed by or affiliated with Van Ryder Games who is the registered trademark owner of Final Girl and all associated intellectual property rights."
+
+2. **Footer bar on inner pages** (`Index.tsx` footer) -- a tooltip or always-visible micro-text. Given the footer is already compact, the cleanest approach is to make the "FINAL GIRL(TM)" text in the footer clickable/hoverable, showing the full disclaimer in a small tooltip. Alternatively, a small static line above the footer.
+
+The disclaimer will also be included in the HTML `<meta name="description">` tags for search engine visibility.
+
+---
+
+## Files Modified
+
+- **`index.html`** -- Update title, description, and social meta tags
+- **`src/components/AppHeader.tsx`** -- Change "Slasher Companion" to "UNOFFICIAL Slasher Manager"
+- **`src/components/Marquee.tsx`** -- Add disclaimer text at the bottom of the landing page
+- **`src/pages/Index.tsx`** -- Update footer text, add disclaimer (tooltip on trademark text)
+- **`src/components/VCRNavigation.tsx`** -- Change "SLASHER COMPANION" to "SLASHER MANAGER"
+
+No changes to game logic, data files, styling framework, or backend.
 
