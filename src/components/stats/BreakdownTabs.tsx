@@ -139,16 +139,21 @@ export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
               <TableBody>
                 {stats.byLocation.map((loc) => (
                   <TableRow key={loc.name} className="breakdown-table-row">
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
+                    <TableCell className="font-medium p-0">
+                      <div className="relative h-12 min-w-[180px] overflow-hidden rounded-sm">
                         {LOCATION_IMAGES[loc.name] && (
                           <img 
                             src={LOCATION_IMAGES[loc.name]} 
                             alt={loc.name}
-                            className="w-8 h-8 rounded object-cover border border-border"
+                            className="absolute inset-0 w-full h-full object-cover"
                           />
                         )}
-                        <span className="truncate">{loc.name}</span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                        <div className="relative h-full flex items-center px-3">
+                          <span className="text-foreground font-display text-sm tracking-wide drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] truncate">
+                            {loc.name}
+                          </span>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell className="text-center">{loc.plays}</TableCell>
