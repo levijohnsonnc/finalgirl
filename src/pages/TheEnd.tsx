@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
 import projectorSound from '@/assets/sounds/projector-start.mp3';
 import { PosterPromptModal } from '@/components/PosterPromptModal';
@@ -180,6 +181,11 @@ const TheEnd = ({
       return;
     }
 
+    // Prime an Audio element immediately (synchronously in the tap handler)
+    // so iOS Safari marks it as user-gesture-activated.
+    const audio = createPrimedAudio();
+    audioRef.current = audio;
+
     setIsNarrating(true);
     try {
       const response = await fetch(
@@ -205,17 +211,19 @@ const TheEnd = ({
         throw new Error(data.error);
       }
 
-      // Use data URI for audio playback
-      const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
+      // Convert base64 to a Blob URL (avoids iOS data-URI size limits)
+      const blob = base64ToBlob(data.audioContent, 'audio/mpeg');
+      const blobUrl = URL.createObjectURL(blob);
+      audio.src = blobUrl;
       
       audio.onended = () => {
         setIsPlaying(false);
+        URL.revokeObjectURL(blobUrl);
       };
       
       audio.onerror = () => {
         setIsPlaying(false);
+        URL.revokeObjectURL(blobUrl);
         toast.error('Audio playback failed');
       };
 
