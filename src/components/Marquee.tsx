@@ -116,7 +116,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       </div>
       
       {/* Bottom Navigation - Centered on mobile, spread on desktop */}
-      <div className="absolute bottom-4 left-0 right-0 px-4 sm:px-6 flex justify-center sm:justify-between items-center safe-area-bottom">
+      <div className="absolute bottom-10 left-0 right-0 px-4 sm:px-6 flex justify-center sm:justify-between items-center safe-area-bottom">
         {/* Left group: Scrapbooks + Stats + Auth */}
         <div className="flex items-center gap-3 sm:gap-6">
           {onScrapbooks && (
@@ -157,6 +157,16 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
         >
           My Collection
         </button>
+      </div>
+
+      {/* Trademark Disclaimer */}
+      <div className="absolute bottom-2 left-0 right-0 px-4 sm:px-6 text-center safe-area-bottom">
+        <p 
+          className="text-[8px] sm:text-[9px] text-foreground/15 leading-relaxed max-w-[600px] mx-auto"
+          style={{ fontFamily: 'var(--font-vhs)' }}
+        >
+          This is an unofficial fan-made application that is not endorsed by or affiliated with Van Ryder Games who is the registered trademark owner of Final Girl and all associated intellectual property rights.
+        </p>
       </div>
     </div>
   );

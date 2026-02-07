@@ -243,9 +243,12 @@ const Index = () => {
           )}
           
           {/* Center: Title - simplified on mobile */}
-          <div className="font-vhs text-[10px] sm:text-xs text-muted-foreground truncate">
+          <div className="font-vhs text-[10px] sm:text-xs text-muted-foreground truncate group relative">
             <span className="sm:hidden">FINAL GIRL™</span>
-            <span className="hidden sm:inline">FINAL GIRL™ SLASHER COMPANION • {time.toLocaleDateString()}</span>
+            <span className="hidden sm:inline">FINAL GIRL™ UNOFFICIAL SLASHER MANAGER • {time.toLocaleDateString()}</span>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-background/95 border border-border rounded text-[9px] text-muted-foreground/60 leading-relaxed max-w-[320px] text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-normal">
+              This is an unofficial fan-made application that is not endorsed by or affiliated with Van Ryder Games who is the registered trademark owner of Final Girl and all associated intellectual property rights.
+            </div>
           </div>
           
           {/* Right: Collection + Stats + Scrapbooks + Time */}
