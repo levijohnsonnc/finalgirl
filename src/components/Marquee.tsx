@@ -160,12 +160,12 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       </div>
 
       {/* Trademark Disclaimer */}
-      <div className="absolute bottom-2 left-0 right-0 px-4 sm:px-6 text-center safe-area-bottom">
+      <div className="absolute bottom-1.5 left-0 right-0 px-2 text-center safe-area-bottom">
         <p 
-          className="text-[8px] sm:text-[9px] text-foreground/15 leading-relaxed max-w-[600px] mx-auto"
+          className="text-[6px] sm:text-[7px] text-foreground/15 leading-none whitespace-nowrap"
           style={{ fontFamily: 'var(--font-vhs)' }}
         >
-          This is an unofficial fan-made application that is not endorsed by or affiliated with Van Ryder Games who is the registered trademark owner of Final Girl and all associated intellectual property rights.
+          Unofficial fan-made app — not endorsed by or affiliated with Van Ryder Games, registered trademark owner of Final Girl and all associated intellectual property rights.
         </p>
       </div>
     </div>
