@@ -22,7 +22,7 @@ export const VCRNavigation = ({ currentPage, onNavigate }: VCRNavigationProps) =
                 FINAL GIRL
               </span>
               <span className="font-vhs text-xs text-muted-foreground -mt-1">
-                SLASHER COMPANION
+                SLASHER MANAGER
               </span>
             </div>
           </div>
