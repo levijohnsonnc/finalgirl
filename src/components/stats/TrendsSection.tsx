@@ -14,7 +14,7 @@ interface NarrativeBadgeProps {
   value: string | null;
   subtext: string;
   image?: string;
-  type?: 'killer' | 'location';
+  type?: 'killer' | 'location' | 'finalGirl';
   variant: 'warning' | 'success' | 'danger' | 'info';
 }
 
@@ -42,7 +42,7 @@ const NarrativeBadge = ({ label, value, subtext, image, type = 'killer', variant
           <img 
             src={image} 
             alt={value}
-            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : 'object-center'}`}
+            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : type === 'finalGirl' ? 'object-top' : 'object-center'}`}
           />
           <div className={`absolute inset-0 ${type === 'location' ? 'bg-gradient-to-t from-black/95 via-black/60 to-black/20' : 'bg-gradient-to-t from-black/90 via-black/40 to-black/15'}`} />
         </>
@@ -211,6 +211,42 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           image={stats.homeTurf ? LOCATION_IMAGES[stats.homeTurf.location] : undefined}
           type="location"
           variant="info"
+        />
+      </div>
+
+      {/* Final Girl Narrative Badges */}
+      <div className="narrative-grid">
+        <NarrativeBadge
+          label="Comfort Zone"
+          value={stats.comfortZone?.finalGirl || null}
+          subtext={stats.comfortZone ? `${stats.comfortZone.wins} wins` : ''}
+          image={stats.comfortZone ? CHARACTER_IMAGES[stats.comfortZone.finalGirl] : undefined}
+          type="finalGirl"
+          variant="success"
+        />
+        <NarrativeBadge
+          label="Cursed Pick"
+          value={stats.cursedPick?.finalGirl || null}
+          subtext={stats.cursedPick ? `${stats.cursedPick.losses} losses` : ''}
+          image={stats.cursedPick ? CHARACTER_IMAGES[stats.cursedPick.finalGirl] : undefined}
+          type="finalGirl"
+          variant="danger"
+        />
+        <NarrativeBadge
+          label="Grinder"
+          value={stats.grinder?.finalGirl || null}
+          subtext={stats.grinder ? `${stats.grinder.plays} games` : ''}
+          image={stats.grinder ? CHARACTER_IMAGES[stats.grinder.finalGirl] : undefined}
+          type="finalGirl"
+          variant="info"
+        />
+        <NarrativeBadge
+          label="Lost Cause"
+          value={stats.lostCause?.finalGirl || null}
+          subtext={stats.lostCause ? `${Math.round(stats.lostCause.winRate)}% win rate` : ''}
+          image={stats.lostCause ? CHARACTER_IMAGES[stats.lostCause.finalGirl] : undefined}
+          type="finalGirl"
+          variant="warning"
         />
       </div>
     </div>

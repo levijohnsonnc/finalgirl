@@ -45,11 +45,17 @@ export interface ComputedStats {
   gamesTrend: { date: string; games: number }[];
   winLossTrend: { date: string; wins: number; losses: number }[];
   
-  // Narrative Stats
+  // Narrative Stats - Killers & Locations
   nemesis: { killer: string; losses: number } | null;
   usualSuspect: { killer: string; wins: number } | null;
   cursedSite: { location: string; losses: number } | null;
   homeTurf: { location: string; wins: number } | null;
+  
+  // Narrative Stats - Final Girls
+  comfortZone: { finalGirl: string; wins: number } | null;
+  cursedPick: { finalGirl: string; losses: number } | null;
+  grinder: { finalGirl: string; plays: number } | null;
+  lostCause: { finalGirl: string; winRate: number; plays: number } | null;
   
   // Breakdowns
   byFinalGirl: FinalGirlStats[];
@@ -204,6 +210,42 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
       };
     }).sort((a, b) => b.plays - a.plays);
 
+    // Final Girl narrative stats
+    let comfortZoneGirl: string | null = null;
+    let comfortZoneWins = 0;
+    let cursedPickGirl: string | null = null;
+    let cursedPickLosses = 0;
+    let grinderGirl: string | null = null;
+    let grinderPlays = 0;
+    let lostCauseGirl: string | null = null;
+    let lostCauseWinRate = Infinity;
+    let lostCausePlays = 0;
+
+    finalGirlMap.forEach((games, girl) => {
+      const girlWins = games.filter(g => g.outcome === 'won').length;
+      const girlLosses = games.filter(g => g.outcome === 'lost').length;
+      const girlPlays = games.length;
+      const girlWinRate = girlPlays > 0 ? (girlWins / girlPlays) * 100 : 0;
+
+      if (girlWins > comfortZoneWins) {
+        comfortZoneWins = girlWins;
+        comfortZoneGirl = girl;
+      }
+      if (girlLosses > cursedPickLosses) {
+        cursedPickLosses = girlLosses;
+        cursedPickGirl = girl;
+      }
+      if (girlPlays > grinderPlays) {
+        grinderPlays = girlPlays;
+        grinderGirl = girl;
+      }
+      if (girlPlays >= 3 && girlWinRate < lostCauseWinRate) {
+        lostCauseWinRate = girlWinRate;
+        lostCausePlays = girlPlays;
+        lostCauseGirl = girl;
+      }
+    });
+
     // Player Archetype (scoring-based)
     const { archetype: playerArchetype, reason: archetypeReason } = computeArchetype(
       filteredGames,
@@ -227,6 +269,10 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
       usualSuspect: usualSuspectKiller && usualSuspectWins >= 2 ? { killer: usualSuspectKiller, wins: usualSuspectWins } : null,
       cursedSite: cursedSiteLocation && cursedSiteLosses >= 2 ? { location: cursedSiteLocation, losses: cursedSiteLosses } : null,
       homeTurf: homeTurfLocation && homeTurfWins >= 2 ? { location: homeTurfLocation, wins: homeTurfWins } : null,
+      comfortZone: comfortZoneGirl && comfortZoneWins >= 2 ? { finalGirl: comfortZoneGirl, wins: comfortZoneWins } : null,
+      cursedPick: cursedPickGirl && cursedPickLosses >= 2 ? { finalGirl: cursedPickGirl, losses: cursedPickLosses } : null,
+      grinder: grinderGirl && grinderPlays >= 2 ? { finalGirl: grinderGirl, plays: grinderPlays } : null,
+      lostCause: lostCauseGirl ? { finalGirl: lostCauseGirl, winRate: lostCauseWinRate, plays: lostCausePlays } : null,
       byFinalGirl,
       byKiller,
       byLocation,
