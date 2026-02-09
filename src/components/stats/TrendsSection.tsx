@@ -107,23 +107,23 @@ const ChartWithToggle = ({ stats }: { stats: ComputedStats }) => {
               <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Line type="monotone" dataKey="saved" stroke="hsl(var(--neon-cyan))" strokeWidth={2} dot={{ fill: 'hsl(var(--neon-cyan))', strokeWidth: 0 }} name="Saved" />
-              <Line type="monotone" dataKey="killed" stroke="hsl(var(--blood-red))" strokeWidth={2} dot={{ fill: 'hsl(var(--blood-red))', strokeWidth: 0 }} name="Killed" />
+              <Line type="monotone" dataKey="saved" stroke="hsl(var(--neon-cyan))" strokeWidth={3} dot={false} name="Saved" />
+              <Line type="monotone" dataKey="killed" stroke="hsl(var(--blood-red))" strokeWidth={3} dot={false} name="Killed" />
             </LineChart>
           ) : activeChart === 'games' ? (
             <LineChart data={stats.gamesTrend}>
               <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Line type="monotone" dataKey="games" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: 'hsl(var(--primary))', strokeWidth: 0 }} name="Games" />
+              <Line type="monotone" dataKey="games" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} name="Games" />
             </LineChart>
           ) : (
             <LineChart data={stats.winLossTrend}>
               <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Line type="monotone" dataKey="wins" stroke="hsl(var(--neon-cyan))" strokeWidth={2} dot={{ fill: 'hsl(var(--neon-cyan))', strokeWidth: 0 }} name="Wins" />
-              <Line type="monotone" dataKey="losses" stroke="hsl(var(--blood-red))" strokeWidth={2} dot={{ fill: 'hsl(var(--blood-red))', strokeWidth: 0 }} name="Losses" />
+              <Line type="monotone" dataKey="wins" stroke="hsl(var(--neon-cyan))" strokeWidth={3} dot={false} name="Wins" />
+              <Line type="monotone" dataKey="losses" stroke="hsl(var(--blood-red))" strokeWidth={3} dot={false} name="Losses" />
             </LineChart>
           )}
         </ResponsiveContainer>
