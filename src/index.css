@@ -990,9 +990,93 @@
 
   @media (max-width: 640px) {
     .scrapbook-container {
-      width: 95vw;
-      height: 80vh;
+      width: 100vw;
+      height: auto;
+      min-height: 80vh;
+      min-height: 80dvh;
       max-height: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      transform-style: flat;
+      perspective: none !important;
+    }
+
+    .scrapbook-book {
+      transform-style: flat;
+      height: auto;
+      min-height: 80vh;
+      min-height: 80dvh;
+    }
+
+    /* Hide spine on mobile */
+    .scrapbook-book::before {
+      display: none;
+    }
+
+    /* Hide cover flip on mobile */
+    .scrapbook-cover {
+      display: none;
+    }
+
+    /* Stack pages vertically */
+    .scrapbook-pages {
+      position: relative;
+      flex-direction: column;
+      height: auto;
+      overflow: visible;
+    }
+
+    /* Full-width single column pages */
+    .scrapbook-page {
+      width: 100%;
+      height: auto;
+      min-height: auto;
+      overflow: visible;
+    }
+
+    .scrapbook-page-left {
+      transform: none;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .scrapbook-page-left::before,
+    .scrapbook-page-left::after {
+      display: none;
+    }
+
+    .scrapbook-page-right {
+      transform: none;
+      border-radius: 0 0 4px 4px;
+    }
+
+    .scrapbook-page-right::before,
+    .scrapbook-page-right::after {
+      display: none;
+    }
+
+    .page-content {
+      position: relative;
+      top: auto;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      padding: 16px;
+      min-height: 300px;
+    }
+
+    /* Back cover hidden on mobile */
+    .scrapbook-back {
+      display: none;
+    }
+
+    .poster-display {
+      padding: 8px;
+      min-height: 200px;
+    }
+
+    .poster-display img {
+      max-height: 250px;
     }
   }
 

@@ -196,25 +196,25 @@ export const GameOutcomeForm = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 border-t border-border/30">
-        <button
-          onClick={onDiscard}
-          className="outcome-btn outcome-btn-lost group relative w-full sm:w-auto min-w-[200px] h-12 overflow-hidden rounded-sm transition-all duration-200 flex items-center justify-center gap-2"
-        >
-          <X className="relative z-10 w-4 h-4 text-muted-foreground" />
-          <span className="relative z-10 font-display text-base tracking-[0.15em] uppercase text-muted-foreground drop-shadow-lg">
-            Discard
-          </span>
-        </button>
-        
+      <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 justify-center pt-4 border-t border-border/30">
         <button
           onClick={handleContinue}
-          className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative w-full sm:w-auto min-w-[200px] h-12 overflow-hidden rounded-sm transition-all duration-200 flex items-center justify-center gap-2`}
+          className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative w-full sm:w-auto min-w-[200px] h-12 overflow-hidden rounded-sm transition-all duration-200 flex items-center justify-center gap-2 order-first`}
         >
           <span className={`relative z-10 font-display text-base tracking-[0.15em] uppercase ${isWin ? 'text-secondary' : 'text-primary'} drop-shadow-lg`}>
             Continue
           </span>
           <ArrowRight className={`relative z-10 w-4 h-4 ${isWin ? 'text-secondary' : 'text-primary'}`} />
+        </button>
+        
+        <button
+          onClick={onDiscard}
+          className="outcome-btn outcome-btn-lost group relative w-full sm:w-auto min-w-[200px] h-10 sm:h-12 overflow-hidden rounded-sm transition-all duration-200 flex items-center justify-center gap-2 order-last"
+        >
+          <X className="relative z-10 w-4 h-4 text-muted-foreground" />
+          <span className="relative z-10 font-display text-sm sm:text-base tracking-[0.15em] uppercase text-muted-foreground drop-shadow-lg">
+            Discard
+          </span>
         </button>
       </div>
     </div>
