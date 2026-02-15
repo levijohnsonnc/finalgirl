@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ComputedStats } from '@/hooks/useGameStats';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 import { CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
+import { NarrativeBadgeModal } from './NarrativeBadgeModal';
 
 type ChartView = 'victims' | 'games' | 'winloss';
 
@@ -19,6 +20,8 @@ interface NarrativeBadgeProps {
 }
 
 const NarrativeBadge = ({ label, value, subtext, image, type = 'killer', variant }: NarrativeBadgeProps) => {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const variantClasses = {
     warning: 'narrative-badge-warning',
     success: 'narrative-badge-success',
@@ -36,25 +39,39 @@ const NarrativeBadge = ({ label, value, subtext, image, type = 'killer', variant
   }
 
   return (
-    <div className={`narrative-badge ${variantClasses[variant]}`}>
-      {image && (
-        <>
-          <img 
-            src={image} 
-            alt={value}
-            className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : type === 'finalGirl' ? 'object-top' : 'object-center'}`}
-          />
-          <div className={`absolute inset-0 ${type === 'location' ? 'bg-gradient-to-t from-black/95 via-black/60 to-black/20' : 'bg-gradient-to-t from-black/90 via-black/40 to-black/15'}`} />
-        </>
-      )}
-      <div className="relative z-10 flex flex-col justify-between h-full w-full">
-        <div className="narrative-label">{label}</div>
-        <div className="mt-auto">
-          <div className="narrative-value">{value}</div>
-          <div className="narrative-subtext">{subtext}</div>
+    <>
+      <div
+        className={`narrative-badge ${variantClasses[variant]} cursor-pointer transition-transform hover:scale-[1.03] active:scale-[0.98]`}
+        onClick={() => setModalOpen(true)}
+      >
+        {image && (
+          <>
+            <img 
+              src={image} 
+              alt={value}
+              className={`absolute inset-0 w-full h-full object-cover ${type === 'killer' ? 'object-top' : type === 'finalGirl' ? 'object-top' : 'object-center'}`}
+            />
+            <div className={`absolute inset-0 ${type === 'location' ? 'bg-gradient-to-t from-black/95 via-black/60 to-black/20' : 'bg-gradient-to-t from-black/90 via-black/40 to-black/15'}`} />
+          </>
+        )}
+        <div className="relative z-10 flex flex-col justify-between h-full w-full">
+          <div className="narrative-label">{label}</div>
+          <div className="mt-auto">
+            <div className="narrative-value">{value}</div>
+            <div className="narrative-subtext">{subtext}</div>
+          </div>
         </div>
       </div>
-    </div>
+      <NarrativeBadgeModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        label={label}
+        value={value}
+        subtext={subtext}
+        image={image}
+        type={type}
+      />
+    </>
   );
 };
 
