@@ -40,72 +40,46 @@ export const PosterPromptModal: React.FC<PosterPromptModalProps> = ({
 
     const isVictory = outcome === 'won';
 
-    // Build outcome-specific composition guidance
-    const outcomeComposition = isVictory
-      ? `OUTCOME: SURVIVED
-The Final Girl defeated ${killer} and lived. Show survival with a cost—exhaustion, injury, smoke, emergency lights, a dawn that doesn't feel safe. The Killer is stopped implicitly (discarded mask, dropped weapon, police tape in background, looming silhouette fading). Relief should taste temporary. Use a sickly dawn/amber accent to signal hard-won survival.`
-      : `OUTCOME: FALLEN
-${killer} prevailed. The Final Girl's fate is implied, never shown explicitly. Center the dread and aftermath—absence, a dropped weapon, a final flashlight beam, a reflection, a witness seeing too late, an empty space where she stood. Use cool pallor/blue accent to signal loss. The Killer should dominate the composition, victorious but still threatening.`;
+    // Randomized composition seed for variety
+    const compositions = [
+      'Close-up portrait: the Final Girl\'s face fills the frame, the killer\'s presence suggested only by a shadow or reflection.',
+      'Wide establishing shot: the location dominates, with small figures dwarfed by the environment. The horror is in the scale.',
+      'Over-the-shoulder: we see what the Final Girl sees—or what\'s behind her. One figure in focus, threat in bokeh.',
+      'Extreme low angle: looking up at the dominant figure (winner of the encounter), architecture or trees looming overhead.',
+      'Reflection or mirror: the scene is shown through a reflective surface—a window, puddle, broken mirror, TV screen, knife blade.',
+      'Split composition: the poster is divided diagonally or vertically, one half showing the killer\'s world, the other the Final Girl\'s.',
+    ];
+    const compositionSeed = compositions[Math.floor(Math.random() * compositions.length)];
 
-    return `You are an award-winning horror key art designer creating a print-ready movie poster for a fictional 1980s-style slasher film based on a completed game.
+    // Outcome mood (no clichés, multiple options so the AI picks one)
+    const outcomeMood = isVictory
+      ? `${finalGirl} survived. Convey this through ONE of these (pick the most cinematic for the story): exhaustion in her posture, a weapon held loosely at her side, smoke or dust still settling, the quiet stillness after violence ends, a first hint of dawn light that feels more eerie than hopeful. The killer's defeat should be implied—never show police tape, chalk outlines, or explicit crime scene imagery.`
+      : `${killer} prevailed. Convey this through ONE of these (pick the most cinematic for the story): the killer's silhouette filling the frame with nothing left to oppose them, an empty space where someone used to stand, a flickering light illuminating absence, a personal item left behind on the ground, a door hanging open to darkness. The Final Girl's fate is implied, never shown.`;
 
-=== STORY CONTEXT (CANON) ===
+    return `Generate a painted 1980s horror movie poster image. Vertical 2:3 aspect ratio, high resolution.
 
-OPENING STORY:
-${introStory || '[Opening story not available]'}
+SCENE — based on this story:
+${introStory || '[No opening story available]'}
 
-ENDING STORY:
-${endingNarration || '[Ending story not generated yet - generate it first for best results]'}
+${endingNarration || '[No ending story — use the opening story and characters to infer a dramatic conclusion]'}
 
-=== CHARACTER & LOCATION REFERENCES ===
+CHARACTERS:
+• ${finalGirl}: ${finalGirlDesc || 'A resourceful survivor. Use story context for appearance.'}
+• ${killer}: ${killerDesc || 'A terrifying antagonist. Use story context for appearance.'}
 
-FINAL GIRL — ${finalGirl}:
-${finalGirlDesc || `A survivor named ${finalGirl}. Use contextual details from the stories above.`}
+LOCATION: ${location} — ${locationDesc || 'Use story context for setting details.'}
 
-KILLER — ${killer}:
-${killerDesc || `A terrifying killer known as ${killer}. Use contextual details from the stories above.`}
+OUTCOME: ${outcomeMood}
 
-LOCATION — ${location}:
-${locationDesc || `A dangerous place called ${location}. Use contextual details from the stories above.`}
+COMPOSITION: ${compositionSeed}
 
-=== ${outcomeComposition} ===
+STYLE: Painterly realism in the tradition of 1980s VHS box art and horror paperback covers. Dramatic chiaroscuro lighting, visible brushwork, subtle film grain and paper texture. NOT photorealistic, NOT digital/glossy, NOT cartoonish. PG-13: imply threat through atmosphere, posture, and shadow — no explicit gore.
 
-=== POSTER REQUIREMENTS ===
+PALETTE: Draw colors from the location's natural atmosphere (neon for malls, moonlight for woods, sodium lamps for streets, fluorescent for institutions). Let the mood shift based on outcome — warmer if survived, cooler if fallen — but don't force a single accent color.
 
-FORMAT: Vertical one-sheet, 2:3 aspect ratio, high resolution print-ready.
+TYPOGRAPHY (painted into the image, not floating): Invent a punchy 1–3 word horror movie title inspired by the story. Add one tagline (max 10 words) reflecting the outcome. Small billing block at the bottom.
 
-STYLE: Classic 1980s paperback/VHS horror key art. Painted or painterly realism with dramatic lighting, subtle film grain, and paper texture. NOT photorealistic, NOT cartoony, NOT glossy modern superhero style.
-
-CONTENT RATING: PG-13. No explicit gore, dismemberment, or sexual content. Imply threat and aftermath through shadows, posture, stains, torn fabric, broken props, smoke, rain, warning lights.
-
-VISUAL FOCUS: Extract ONE powerful moment from the ending story. Do NOT create a mash-up of everything. A single striking image is more powerful than a cluttered collage.
-
-ICONOGRAPHY: Include 2–4 symbolic elements tied to the run (the weapon used, a specific prop or location detail, a saved victim token like a bracelet or ID badge, a distinctive killer signature). Don't overstuff.
-
-COMPOSITION: Big central subject + secondary ominous shape. Clear focal point with strong silhouette readability from across a room. The Final Girl must feel like a person the viewer worries about.
-
-LIGHTING & PALETTE: Match lighting to the location atmosphere. Limited palette with one accent color that signals the outcome. Examples:
-- Mall: neon glow, flickering store signs
-- Streets: sodium streetlights, wet asphalt reflections  
-- Woods: moonlight through branches, campfire embers
-- Asylum: harsh fluorescent, clinical green tint
-- Carnival: spinning ride lights, red/yellow strobes
-
-TYPOGRAPHY (integrated into the poster, not floating):
-- TITLE: Invent a punchy 1–3 word horror movie title inspired by the location and story (don't just use the raw location name)
-- TAGLINE: Invent ONE line (max 10 words) that reflects the outcome and ending story
-- BILLING BLOCK: Small generic text at bottom (unreadable fine print is fine)
-
-=== YOUR TASK ===
-
-1. Extract the single most poster-worthy moment from the ending story
-2. Identify the key threat established in the opening story
-3. Design the poster around that moment using cinematic composition and 80s horror key art visual language
-4. Output a single cohesive image generation prompt
-
-=== OUTPUT ===
-
-Return ONLY the final image prompt as one cohesive paragraph. No headings, no bullet points, no analysis. End with: "Vertical 2:3 aspect ratio, high resolution, 1980s painted horror poster style with film grain texture."`;
+Extract the single most powerful visual moment from the ending story and build the entire poster around that one image. Less is more.`;
   };
 
   const handleCopy = async () => {
