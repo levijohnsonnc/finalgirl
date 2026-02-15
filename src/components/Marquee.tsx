@@ -68,7 +68,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
     <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden transition-opacity duration-500 ${isClicked ? 'opacity-0' : 'opacity-100'}`}>
       {/* Background Image with VHS Effects + Projector Pulse + Hover Response */}
       <div 
-        className={`absolute inset-0 bg-cover bg-[center_bottom] sm:bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''} ${isButtonHovered ? 'screen-hover-flicker' : ''}`}
+        className={`absolute inset-0 bg-cover bg-[center_60%] sm:bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''} ${isButtonHovered ? 'screen-hover-flicker' : ''}`}
         style={{ 
           backgroundImage: `url(${marqueeBg})`,
         }}
@@ -97,7 +97,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       <AppHeader onNavigateHome={onNavigateHome} />
       
       {/* Content - Button positioned below projector screen on mobile, centered on desktop */}
-      <div className="absolute top-[68%] left-1/2 sm:top-[52%] sm:left-[52%] -translate-x-1/2 z-10 flex flex-col items-center">
+      <div className="absolute top-[62%] left-1/2 sm:top-[52%] sm:left-[52%] -translate-x-1/2 z-10 flex flex-col items-center">
         {/* Main Button - The Ritual Action */}
         <button
           onClick={handleStart}

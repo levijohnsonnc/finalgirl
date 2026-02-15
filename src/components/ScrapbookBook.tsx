@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { X, Upload, Loader2 } from 'lucide-react';
+import { X, Upload, Loader2, ArrowLeft } from 'lucide-react';
 import { GameResult } from '@/hooks/useGameHistory';
 import { ScrapbookGrid } from './ScrapbookGrid';
 import { ScrapbookStoryPage } from './ScrapbookStoryPage';
@@ -7,6 +7,7 @@ import { ScrapbookPolaroid } from './ScrapbookPolaroid';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';
 
@@ -70,6 +71,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   // Trigger open animation after mount
   useEffect(() => {
@@ -154,10 +156,10 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
         onClick={handleClose}
       />
 
-      {/* Book Container - 3D perspective */}
+      {/* Book Container */}
       <div 
         className={`scrapbook-container ${themeClass} ${isOpen ? 'book-open' : ''}`}
-        style={{ perspective: '2000px' }}
+        style={isMobile ? undefined : { perspective: '2000px' }}
       >
         {/* Close Button */}
         <button
@@ -169,7 +171,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
 
         {/* Book */}
         <div className="scrapbook-book">
-          {/* Front Cover (flips open) */}
+          {/* Front Cover (flips open) - hidden on mobile via CSS */}
           <div className={`scrapbook-cover ${isOpen ? 'cover-open' : ''}`}>
             <img
               src={coverImage}
@@ -178,101 +180,191 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
             />
           </div>
 
-          {/* Inside Pages (revealed when open) */}
+          {/* Inside Pages */}
           <div className={`scrapbook-pages ${isOpen ? 'pages-visible' : ''}`}>
-            {/* Polaroid Scene Image - Only when story selected and has scene image */}
-            {selectedGame?.sceneImageUrl && (
+            {/* Polaroid - only on desktop */}
+            {!isMobile && selectedGame?.sceneImageUrl && (
               <ScrapbookPolaroid sceneImageUrl={selectedGame.sceneImageUrl} />
             )}
 
-            {/* Left Page - Poster Display */}
-            <div className="scrapbook-page scrapbook-page-left">
-              <div className="page-content">
-                {selectedGame ? (
-                  <div className="poster-display">
-                    {selectedGame.posterImageUrl ? (
-                      <img
-                        src={selectedGame.posterImageUrl}
-                        alt="Game Poster"
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={isUploading}
-                        className="no-poster clickable-poster"
-                      >
-                        {isUploading ? (
-                          <Loader2 className="w-8 h-8 text-muted-foreground/40 animate-spin" />
-                        ) : (
-                          <Upload className="w-8 h-8 text-muted-foreground/40 mb-2" />
-                        )}
-                        <span className="font-display text-sm text-muted-foreground/50">
-                          {isUploading ? 'Uploading...' : 'Click to Upload Poster'}
-                        </span>
-                      </button>
-                    )}
-                    {/* Hidden file input */}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileInputChange}
-                      className="hidden"
-                    />
-                    <div className="poster-info">
-                      <p className="font-vhs text-xs">{selectedGame.finalGirl}</p>
-                      <p className="font-vhs text-[10px] text-muted-foreground">
-                        vs {selectedGame.killer}
-                      </p>
-                      <p className="font-vhs text-[10px] text-muted-foreground">
-                        {selectedGame.location}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="empty-page">
-                    <p className="font-vhs text-sm text-muted-foreground text-center px-4">
-                      Select a story from the grid to view its poster
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+            {isMobile ? (
+              /* ===== MOBILE: Single column layout ===== */
+              <div className="scrapbook-page scrapbook-page-right w-full">
+                <div className="page-content">
+                  {selectedGame ? (
+                    <div className="story-display">
+                      {/* Back + Delete row */}
+                      <div className="flex justify-between items-center mb-3">
+                        <button
+                          onClick={() => setSelectedGame(null)}
+                          className="back-to-grid flex items-center gap-1"
+                        >
+                          <ArrowLeft className="w-3 h-3" />
+                          Back to Grid
+                        </button>
+                        <button
+                          onClick={() => setShowDeleteConfirm(true)}
+                          className="delete-entry-btn"
+                        >
+                          Delete
+                        </button>
+                      </div>
 
-            {/* Right Page - Grid or Story */}
-            <div className="scrapbook-page scrapbook-page-right">
-              <div className="page-content">
-                {selectedGame ? (
-                  <div className="story-display">
-                    {/* Action buttons row */}
-                    <div className="flex justify-between items-center mb-2">
-                      <button
-                        onClick={() => setSelectedGame(null)}
-                        className="back-to-grid"
-                      >
-                        ← Back to Grid
-                      </button>
-                      <button
-                        onClick={() => setShowDeleteConfirm(true)}
-                        className="delete-entry-btn"
-                      >
-                        Delete
-                      </button>
+                      {/* Poster above story on mobile */}
+                      {selectedGame.posterImageUrl ? (
+                        <div className="mb-4 flex justify-center">
+                          <img
+                            src={selectedGame.posterImageUrl}
+                            alt="Game Poster"
+                            className="max-h-[200px] w-auto object-contain border-4 border-[hsl(30_20%_25%)] shadow-lg"
+                          />
+                        </div>
+                      ) : (
+                        <div className="mb-4">
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploading}
+                            className="no-poster clickable-poster w-full h-[120px]"
+                          >
+                            {isUploading ? (
+                              <Loader2 className="w-6 h-6 text-muted-foreground/40 animate-spin" />
+                            ) : (
+                              <Upload className="w-6 h-6 text-muted-foreground/40 mb-1" />
+                            )}
+                            <span className="font-display text-xs text-muted-foreground/50">
+                              {isUploading ? 'Uploading...' : 'Upload Poster'}
+                            </span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Scene image on mobile */}
+                      {selectedGame.sceneImageUrl && (
+                        <div className="mb-4 flex justify-center">
+                          <img
+                            src={selectedGame.sceneImageUrl}
+                            alt="Scene"
+                            className="max-h-[180px] w-auto object-contain rounded-sm shadow-md"
+                          />
+                        </div>
+                      )}
+
+                      <ScrapbookStoryPage game={selectedGame} type={type} />
                     </div>
-                    <ScrapbookStoryPage game={selectedGame} type={type} />
-                  </div>
-                ) : (
-                  <ScrapbookGrid
-                    games={games}
-                    selectedGameId={null}
-                    onSelectGame={setSelectedGame}
-                    type={type}
-                  />
-                )}
+                  ) : (
+                    <ScrapbookGrid
+                      games={games}
+                      selectedGameId={null}
+                      onSelectGame={setSelectedGame}
+                      type={type}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
+            ) : (
+              /* ===== DESKTOP: Two-page spread ===== */
+              <>
+                {/* Left Page - Poster Display */}
+                <div className="scrapbook-page scrapbook-page-left">
+                  <div className="page-content">
+                    {selectedGame ? (
+                      <div className="poster-display">
+                        {selectedGame.posterImageUrl ? (
+                          <img
+                            src={selectedGame.posterImageUrl}
+                            alt="Game Poster"
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploading}
+                            className="no-poster clickable-poster"
+                          >
+                            {isUploading ? (
+                              <Loader2 className="w-8 h-8 text-muted-foreground/40 animate-spin" />
+                            ) : (
+                              <Upload className="w-8 h-8 text-muted-foreground/40 mb-2" />
+                            )}
+                            <span className="font-display text-sm text-muted-foreground/50">
+                              {isUploading ? 'Uploading...' : 'Click to Upload Poster'}
+                            </span>
+                          </button>
+                        )}
+                        {/* Hidden file input */}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileInputChange}
+                          className="hidden"
+                        />
+                        <div className="poster-info">
+                          <p className="font-vhs text-xs">{selectedGame.finalGirl}</p>
+                          <p className="font-vhs text-[10px] text-muted-foreground">
+                            vs {selectedGame.killer}
+                          </p>
+                          <p className="font-vhs text-[10px] text-muted-foreground">
+                            {selectedGame.location}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="empty-page">
+                        <p className="font-vhs text-sm text-muted-foreground text-center px-4">
+                          Select a story from the grid to view its poster
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Page - Grid or Story */}
+                <div className="scrapbook-page scrapbook-page-right">
+                  <div className="page-content">
+                    {selectedGame ? (
+                      <div className="story-display">
+                        {/* Action buttons row */}
+                        <div className="flex justify-between items-center mb-2">
+                          <button
+                            onClick={() => setSelectedGame(null)}
+                            className="back-to-grid"
+                          >
+                            ← Back to Grid
+                          </button>
+                          <button
+                            onClick={() => setShowDeleteConfirm(true)}
+                            className="delete-entry-btn"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                        <ScrapbookStoryPage game={selectedGame} type={type} />
+                      </div>
+                    ) : (
+                      <ScrapbookGrid
+                        games={games}
+                        selectedGameId={null}
+                        onSelectGame={setSelectedGame}
+                        type={type}
+                      />
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
+
+          {/* Hidden file input for mobile */}
+          {isMobile && (
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileInputChange}
+              className="hidden"
+            />
+          )}
 
           {/* Back Cover (static) */}
           <div className="scrapbook-back" />
