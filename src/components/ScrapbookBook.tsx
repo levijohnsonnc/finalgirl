@@ -197,20 +197,14 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                 <div className="page-content">
                   {selectedGame ? (
                     <div className="story-display">
-                      {/* Back + Delete row */}
-                      <div className="flex justify-between items-center mb-3">
+                      {/* Back button row */}
+                      <div className="flex items-center mb-3">
                         <button
                           onClick={() => setSelectedGame(null)}
                           className="back-to-grid flex items-center gap-1"
                         >
                           <ArrowLeft className="w-3 h-3" />
                           Back to Grid
-                        </button>
-                        <button
-                          onClick={() => setShowDeleteConfirm(true)}
-                          className="delete-entry-btn"
-                        >
-                          Delete
                         </button>
                       </div>
 
@@ -254,6 +248,16 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                       )}
 
                       <ScrapbookStoryPage game={selectedGame} type={type} />
+
+                      {/* Delete at bottom */}
+                      <div className="mt-6 flex justify-center">
+                        <button
+                          onClick={() => setShowDeleteConfirm(true)}
+                          className="delete-entry-btn"
+                        >
+                          Delete Entry
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <ScrapbookGrid
