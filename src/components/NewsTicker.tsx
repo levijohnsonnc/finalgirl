@@ -23,7 +23,7 @@ export const NewsTicker = React.forwardRef<HTMLDivElement>(
     return (
       <div 
         ref={ref}
-        className="fixed bottom-16 sm:bottom-14 left-0 right-0 z-40 bg-black/95 border-t border-b border-primary/30 overflow-hidden"
+        className="fixed bottom-11 sm:bottom-14 left-0 right-0 z-40 bg-black/95 border-t border-b border-primary/30 overflow-hidden"
       >
         <div className="relative h-7 sm:h-8 flex items-center">
           {/* Breaking news badge */}
