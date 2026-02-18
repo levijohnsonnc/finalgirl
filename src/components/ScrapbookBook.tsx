@@ -147,10 +147,10 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
   const themeClass = type === 'finalGirl' ? 'scrapbook-theme-survivor' : 'scrapbook-theme-killer';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className={`fixed inset-0 z-50 ${isMobile ? 'overflow-y-auto' : 'flex items-center justify-center'}`}>
       {/* Backdrop */}
       <div 
-        className={`absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity duration-500 ${
+        className={`${isMobile ? 'fixed inset-0' : 'absolute inset-0'} bg-black/90 backdrop-blur-sm transition-opacity duration-500 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={handleClose}
@@ -158,7 +158,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
 
       {/* Book Container */}
       <div 
-        className={`scrapbook-container ${themeClass} ${isOpen ? 'book-open' : ''}`}
+        className={`scrapbook-container ${themeClass} ${isOpen ? 'book-open' : ''} ${isMobile ? 'relative z-10' : ''}`}
         style={isMobile ? undefined : { perspective: '2000px' }}
       >
         {/* Close Button */}
@@ -181,7 +181,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
           </div>
 
           {/* Inside Pages */}
-          <div className={`scrapbook-pages ${isOpen ? 'pages-visible' : ''}`}>
+          <div className={`scrapbook-pages ${isOpen || isMobile ? 'pages-visible' : ''}`}>
             {/* Polaroid - only on desktop */}
             {!isMobile && selectedGame?.sceneImageUrl && (
               <ScrapbookPolaroid sceneImageUrl={selectedGame.sceneImageUrl} />
