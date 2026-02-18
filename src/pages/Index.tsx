@@ -210,10 +210,14 @@ const Index = () => {
     }
   };
 
+  const isScrapbookOpen = currentPage === 'scrapbooks';
+
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Shared App Header */}
-      <AppHeader onNavigateHome={handleNavigateHome} />
+      {/* Shared App Header — hidden on mobile when scrapbook is open */}
+      <div className={isScrapbookOpen ? 'hidden sm:block' : ''}>
+        <AppHeader onNavigateHome={handleNavigateHome} />
+      </div>
       
       {/* Main Content */}
       <main className="container mx-auto px-3 sm:px-4 pt-24 sm:pt-32 pb-28 relative z-10">

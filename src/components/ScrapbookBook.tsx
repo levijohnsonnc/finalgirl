@@ -161,12 +161,16 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
         className={`scrapbook-container ${themeClass} ${isOpen ? 'book-open' : ''} ${isMobile ? 'relative z-10' : ''}`}
         style={isMobile ? undefined : { perspective: '2000px' }}
       >
-        {/* Close Button */}
+        {/* Close Button — desktop: floats outside book; mobile: fixed top-right corner */}
         <button
           onClick={handleClose}
-          className="absolute -top-12 right-0 sm:top-4 sm:-right-12 z-50 p-2 text-muted-foreground hover:text-foreground transition-colors"
+          className={
+            isMobile
+              ? 'fixed top-4 right-4 z-[60] p-2 rounded-full bg-background/80 backdrop-blur border border-border text-foreground shadow-lg'
+              : 'absolute -top-12 right-0 sm:top-4 sm:-right-12 z-50 p-2 text-muted-foreground hover:text-foreground transition-colors'
+          }
         >
-          <X className="w-8 h-8" />
+          <X className="w-6 h-6" />
         </button>
 
         {/* Book */}
