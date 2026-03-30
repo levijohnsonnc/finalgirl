@@ -459,7 +459,7 @@
     height: 100%;
     object-fit: cover;
     transition: opacity 3s ease-in-out;
-    filter: brightness(0.82) saturate(0.78) contrast(1.08) sepia(0.08);
+    filter: brightness(0.9) saturate(0.7) contrast(1.05) sepia(0.06);
   }
 
   .projector-warmth {
