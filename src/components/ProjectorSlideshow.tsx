@@ -31,7 +31,7 @@ export const ProjectorSlideshow = ({ images }: ProjectorSlideshowProps) => {
 
   useEffect(() => {
     if (shuffled.length < 2) return;
-    const interval = setInterval(advance, 5000);
+    const interval = setInterval(advance, 8000);
     return () => clearInterval(interval);
   }, [advance, shuffled.length]);
 
