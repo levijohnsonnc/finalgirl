@@ -1,44 +1,61 @@
 
 
-# Poster Prompt Overhaul
+# Upgrade Archetype Readout to Rich Player Profile
 
-## What's Changing
+## What changes
 
-The prompt in `PosterPromptModal.tsx` will be rewritten to directly generate an image (not a meta-prompt), reduce repetitive visual cues, and increase variety across runs.
+Replace the single-sentence archetype reason with a multi-paragraph, data-driven player profile that weaves together the archetype identity with the player's actual stats — nemesis, comfort zone, victim ratios, horror trends, and more.
 
----
+## Approach
 
-## Key Improvements
+Generate the extended profile **client-side** in `useArchetypeScoring.ts` — no AI call needed. The scoring functions already have access to all the raw data; we just need to compose a richer narrative from it.
 
-### 1. Direct Image Generation
-Remove the "YOUR TASK" and "OUTPUT" sections that tell the LLM to return a text prompt. Instead, the prompt will be a direct instruction to generate/paint a poster image. Users paste it into ChatGPT and get an image back immediately -- no extra step.
+### 1. Expand `computeArchetype` return value
 
-### 2. Remove Police Tape and Crime Scene Clichés
-Replace the explicit "police tape in background" and "dropped weapon" cues with a broader palette of outcome signals. For wins: exhaustion, dawn light, a weapon held loosely, smoke clearing, the quiet after violence. For losses: the killer's silhouette filling the frame, an empty hallway, a flickering light with no one under it. The prompt will list 4-5 options and tell the AI to pick ONE, forcing variety.
+**File: `src/hooks/useArchetypeScoring.ts`**
 
-### 3. Shorter, Less Constrained Prompt
-Cut from ~800 words to ~400 words. Remove the multi-section structure (STORY CONTEXT / REQUIREMENTS / TASK / OUTPUT) and merge into a single flowing instruction. Fewer hard constraints means more creative latitude for the image model.
+- Add a new `profile` string field to the return type (alongside existing `reason`)
+- After determining the winning archetype, build a 2-3 paragraph profile by combining:
+  - **Paragraph 1 — Archetype identity**: The core playstyle description, expanded from the current one-liner. Each archetype gets a thematic opening that references specific numbers (win rate, save ratio, clutch wins, horror variance)
+  - **Paragraph 2 — Cross-archetype color**: Reference the runner-up archetype score to add nuance (e.g., "You're a Gambler at heart, but your 68% save ratio hints at a Protector's instinct"). Pull in secondary stats like most-played final girl, nemesis killer, or game count for texture
+  - **Paragraph 3 (conditional)**: Only if there's a strong secondary trait (runner-up score within 15 points), add a sentence about the tension between the two styles
 
-### 4. Randomized Composition Seed
-Similar to the "Now Playing" image prompt's variety rule, add a random composition category that's selected each time the prompt is built. Categories like: "Close-up portrait," "Wide establishing shot," "Over-the-shoulder," "Extreme low angle," "Reflection/mirror." This prevents every poster from defaulting to the same "big figure center, threat looming behind" layout.
+- Pass additional context into the function: the full `ComputedStats` narrative fields (nemesis, comfort zone, grinder, etc.) so the profile can reference them by name
 
-### 5. Flexible Palette
-Instead of hardcoding amber/blue per outcome, tie the palette to the location atmosphere (which already has good suggestions in the current prompt) and let the outcome influence mood/tone rather than dictating a specific accent color.
+### 2. Wire the profile through `useGameStats`
 
----
+**File: `src/hooks/useGameStats.ts`**
 
-## Technical Details
+- Add `archetypeProfile: string` to `ComputedStats`
+- Pass narrative stats into `computeArchetype` so the profile text can mention specific killers/girls/locations by name
+- Store the returned `profile` as `archetypeProfile`
 
-### File: `src/components/PosterPromptModal.tsx`
+### 3. Update the badge component
 
-**Changes to `buildPrompt()` function (lines 36-108):**
+**File: `src/components/stats/PlayerArchetype.tsx`**
 
-- Rewrite the prompt text to be a direct "Generate this image" instruction
-- Remove lines 99-108 (the "YOUR TASK" and "OUTPUT" sections that ask for a text prompt)
-- Replace the `outcomeComposition` variable (lines 44-48) with broader, non-repetitive outcome descriptions that avoid "police tape," "dropped weapon," and other clichéd terms
-- Add a randomized composition style picker (array of 6 styles, randomly selected via `Math.random()`) injected into the prompt
-- Trim the POSTER REQUIREMENTS section to essentials: format, style, content rating, and typography -- remove the over-specific iconography and composition rules
-- Keep the character descriptions and story context (these are valuable), but reduce their framing text
+- Accept new `profile` prop alongside existing `reason`
+- Keep the archetype name as the title
+- Replace the single `reason` line with the multi-paragraph `profile` text
+- Style each paragraph with the existing `archetype-reason` class but add spacing between paragraphs
+- The tone follows the lore style notes: pulp VHS horror, lean, atmospheric, data-grounded — no invented lore
 
-No other files need to change. The modal UI, copy button, and integration with TheEnd.tsx all stay the same.
+### 4. Pass it from the Stats page
+
+**File: `src/pages/Stats.tsx`**
+
+- Pass `stats.archetypeProfile` to `PlayerArchetypeBadge`
+
+## Example output (The Gambler)
+
+> **The Gambler**
+>
+> Your games are a study in chaos. Horror levels swing from 1 to 7 across your 12 sessions — calm, controlled outings one night, full-blown carnage the next. With a standard deviation of 2.4, no two games feel the same. You don't play for consistency; you play to see what happens.
+>
+> That said, your 58% save ratio suggests the chaos isn't entirely reckless. When the dust settles, more victims walk out alive than don't. Your 5 losses to Hans have made him your nemesis, but you keep coming back — a Gambler through and through.
+
+## What stays the same
+- Archetype scoring logic unchanged
+- No AI/edge function calls — purely deterministic text
+- Existing tests remain valid (they check `archetype` and `reason`, both still returned)
 
