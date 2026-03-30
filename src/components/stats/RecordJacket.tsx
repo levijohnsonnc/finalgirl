@@ -9,12 +9,13 @@ interface RecordJacketProps {
 }
 
 interface StatCardProps {
+  label: string;
   value: string | number;
   backgroundImage: string;
   backgroundPosition?: string;
 }
 
-const StatCard = ({ value, backgroundImage, backgroundPosition = 'center' }: StatCardProps) => (
+const StatCard = ({ label, value, backgroundImage, backgroundPosition = 'center' }: StatCardProps) => (
   <div 
     className="hero-stat-card-image"
     style={{ 
@@ -22,8 +23,9 @@ const StatCard = ({ value, backgroundImage, backgroundPosition = 'center' }: Sta
       backgroundPosition 
     }}
   >
-    <div className="hero-stat-value">
-      {value}
+    <div className="hero-stat-card-content">
+      <div className="hero-stat-label">{label}</div>
+      <div className="hero-stat-value">{value}</div>
     </div>
   </div>
 );
