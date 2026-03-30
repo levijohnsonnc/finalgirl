@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { supabase } from '@/integrations/supabase/client';
@@ -97,6 +98,7 @@ export const useOwnedFilms = (): UseOwnedFilmsReturn => {
           .then(({ error }) => {
             if (error) {
               console.error('Error saving user settings:', error);
+              toast.error('Failed to save collection', { description: 'Your film collection changes were not saved to the cloud.' });
             }
           });
         

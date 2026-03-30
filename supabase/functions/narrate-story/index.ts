@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { decode as base64Decode, encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
-import { corsHeaders } from "../_shared/auth.ts";
+import { getCorsHeaders } from "../_shared/auth.ts";
 import { NarrationRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 const MAX_CHUNK_SIZE = 1900; // Inworld limit is 2000, leave margin for safety
@@ -66,9 +66,11 @@ function concatenateBase64Audio(base64Chunks: string[]): string {
 }
 
 serve(async (req) => {
+  const cors = getCorsHeaders(req.headers.get('origin'));
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: cors });
   }
 
   try {
@@ -87,7 +89,7 @@ serve(async (req) => {
       console.error('INWORLD_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'Narration service not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -124,13 +126,13 @@ serve(async (req) => {
         if (response.status === 429) {
           return new Response(
             JSON.stringify({ error: 'Too many requests. Please wait a moment.' }),
-            { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            { status: 429, headers: { ...cors, 'Content-Type': 'application/json' } }
           );
         }
         
         return new Response(
           JSON.stringify({ error: 'Failed to generate narration. Please try again.' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } }
         );
       }
 
@@ -147,13 +149,13 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ audioContent: combinedAudio }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...cors, 'Content-Type': 'application/json' } }
     );
   } catch (error: unknown) {
     console.error('Error generating narration:', error);
     return new Response(
       JSON.stringify({ error: 'Failed to generate narration. Please try again.' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } }
     );
   }
 });

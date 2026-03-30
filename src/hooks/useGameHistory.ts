@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
 import { useAuth } from './useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -213,6 +214,7 @@ export const useGameHistory = () => {
         .then(({ error }) => {
           if (error) {
             console.error('Error recording game:', error);
+            toast.error('Failed to save game', { description: 'Your game was not saved to the cloud. Please try again.' });
             // Rollback on error
             setDbGameHistory(prev => prev.filter(g => g.id !== newResult.id));
           }
@@ -258,6 +260,7 @@ export const useGameHistory = () => {
         .then(({ error }) => {
           if (error) {
             console.error('Error updating game:', error);
+            toast.error('Failed to update game', { description: 'Your changes were not saved to the cloud.' });
           }
         });
     } else {

@@ -1,12 +1,14 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { corsHeaders } from "../_shared/auth.ts";
+import { getCorsHeaders } from "../_shared/auth.ts";
 import { ImageRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 serve(async (req) => {
+  const cors = getCorsHeaders(req.headers.get('origin'));
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: cors });
   }
 
   try {
@@ -150,7 +152,7 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
 
     return new Response(
       JSON.stringify({ imageUrl, position, visualDescription }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...cors, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
@@ -159,7 +161,7 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
       JSON.stringify({ error: 'Failed to generate image. Please try again.' }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...cors, 'Content-Type': 'application/json' }
       }
     );
   }
