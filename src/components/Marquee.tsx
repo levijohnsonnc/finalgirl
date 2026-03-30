@@ -19,9 +19,18 @@ interface MarqueeProps {
 export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
+  const { gameHistory } = useGameHistory();
   const [isClicked, setIsClicked] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const { showFlicker, showFrameJump } = useScreenEffects();
+
+  // Extract all available images from game history
+  const projectorImages = useMemo(() => 
+    gameHistory
+      .flatMap(g => [g.sceneImageUrl, g.posterImageUrl])
+      .filter((url): url is string => !!url),
+    [gameHistory]
+  );
 
   const handleStart = () => {
     setIsClicked(true);
