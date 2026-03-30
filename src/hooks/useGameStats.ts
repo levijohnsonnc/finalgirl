@@ -248,12 +248,21 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
     });
 
     // Player Archetype (scoring-based)
-    const { archetype: playerArchetype, reason: archetypeReason } = computeArchetype(
+    const narrativeCtx = {
+      nemesis: nemesisKiller && nemesisLosses >= 2 ? { killer: nemesisKiller, losses: nemesisLosses } : null,
+      usualSuspect: usualSuspectKiller && usualSuspectWins >= 2 ? { killer: usualSuspectKiller, wins: usualSuspectWins } : null,
+      cursedSite: cursedSiteLocation && cursedSiteLosses >= 2 ? { location: cursedSiteLocation, losses: cursedSiteLosses } : null,
+      homeTurf: homeTurfLocation && homeTurfWins >= 2 ? { location: homeTurfLocation, wins: homeTurfWins } : null,
+      comfortZone: comfortZoneGirl && comfortZoneWins >= 2 ? { finalGirl: comfortZoneGirl, wins: comfortZoneWins } : null,
+      grinder: grinderGirl && grinderPlays >= 2 ? { finalGirl: grinderGirl, plays: grinderPlays } : null,
+    };
+    const { archetype: playerArchetype, reason: archetypeReason, profile: archetypeProfile } = computeArchetype(
       filteredGames,
       wins,
       winRate,
       totalVictimsSaved,
       totalVictimsKilled,
+      narrativeCtx,
     );
 
     return {
