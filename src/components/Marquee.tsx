@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import marqueeBg from '@/assets/marquee-bg.png';
@@ -16,13 +16,38 @@ interface MarqueeProps {
   onStats?: () => void;
 }
 
+const MARQUEE_IMAGE_SIZE = {
+  width: 1536,
+  height: 1024,
+} as const;
+
+const MARQUEE_SCREEN_RECT = {
+  x: 324,
+  y: 231,
+  width: 804,
+  height: 400,
+} as const;
+
 export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const { gameHistory } = useGameHistory();
   const [isClicked, setIsClicked] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const [viewportSize, setViewportSize] = useState(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  }));
   const { showFlicker, showFrameJump } = useScreenEffects();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Extract all available images from game history
   const projectorImages = useMemo(() => 
@@ -31,6 +56,30 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       .filter((url): url is string => !!url),
     [gameHistory]
   );
+
+  const projectorStyle = useMemo(() => {
+    const { width: viewportWidth, height: viewportHeight } = viewportSize;
+    const isMobile = viewportWidth < 640;
+    const bgPositionY = isMobile ? 0.6 : 0.5;
+
+    const scale = Math.max(
+      viewportWidth / MARQUEE_IMAGE_SIZE.width,
+      viewportHeight / MARQUEE_IMAGE_SIZE.height,
+    );
+
+    const renderedWidth = MARQUEE_IMAGE_SIZE.width * scale;
+    const renderedHeight = MARQUEE_IMAGE_SIZE.height * scale;
+
+    const offsetX = (viewportWidth - renderedWidth) * 0.5;
+    const offsetY = (viewportHeight - renderedHeight) * bgPositionY;
+
+    return {
+      left: `${offsetX + MARQUEE_SCREEN_RECT.x * scale}px`,
+      top: `${offsetY + MARQUEE_SCREEN_RECT.y * scale}px`,
+      width: `${MARQUEE_SCREEN_RECT.width * scale}px`,
+      height: `${MARQUEE_SCREEN_RECT.height * scale}px`,
+    };
+  }, [viewportSize]);
 
   const handleStart = () => {
     setIsClicked(true);
@@ -56,7 +105,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       
       {/* Projector Slideshow — projected onto the outdoor screen */}
       {projectorImages.length > 0 && (
-        <ProjectorSlideshow images={projectorImages} />
+        <ProjectorSlideshow images={projectorImages} style={projectorStyle} />
       )}
 
       {/* Screen Flicker Overlay */}
