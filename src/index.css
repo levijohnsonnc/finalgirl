@@ -443,21 +443,24 @@
   /* Projector slideshow — positioned on the outdoor screen */
   .projector-slideshow {
     position: absolute;
-    top: 17%;
-    left: 24%;
-    width: 51%;
-    height: 25%;
+    /* Precisely aligned to the screen in marquee-bg.png */
+    top: 21%;
+    left: 23.5%;
+    width: 52%;
+    height: 26%;
     overflow: hidden;
     pointer-events: none;
-    border-radius: 2px;
-    mix-blend-mode: screen;
+    border-radius: 1px;
+    mix-blend-mode: multiply;
+    z-index: 1;
   }
 
   @media (max-width: 639px) {
     .projector-slideshow {
-      top: 28%;
+      /* Mobile: bg-[center_60%] shifts image down */
+      top: 30%;
       left: 18%;
-      width: 52%;
+      width: 54%;
       height: 18%;
     }
   }
@@ -469,7 +472,7 @@
     height: 100%;
     object-fit: cover;
     transition: opacity 2s ease-in-out;
-    filter: blur(0.5px) saturate(0.8) sepia(0.15);
+    filter: saturate(0.7) contrast(1.1) sepia(0.1);
   }
 
   .projector-warmth {
@@ -477,8 +480,8 @@
     inset: 0;
     background: linear-gradient(
       135deg,
-      hsla(35, 80%, 60%, 0.08) 0%,
-      hsla(25, 60%, 50%, 0.04) 100%
+      hsla(35, 80%, 60%, 0.06) 0%,
+      hsla(25, 60%, 50%, 0.03) 100%
     );
     z-index: 1;
     pointer-events: none;
