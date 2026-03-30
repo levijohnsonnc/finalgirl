@@ -8,7 +8,7 @@ import { PlayerArchetypeBadge } from '@/components/stats/PlayerArchetype';
 import { Film } from 'lucide-react';
 
 const Stats = () => {
-  const { gameHistory } = useGameHistory();
+  const { gameHistory, isLoading } = useGameHistory();
   const stats = useGameStats(gameHistory);
   const [timestamp, setTimestamp] = useState('');
 
@@ -53,8 +53,32 @@ const Stats = () => {
         </div>
       </div>
 
-      {/* Empty State */}
-      {stats.gamesPlayed === 0 ? (
+      {/* Loading State */}
+      {isLoading ? (
+        <div className="stats-content">
+          <p className="text-muted-foreground font-vhs text-sm tracking-widest animate-pulse text-center mb-6">
+            RETRIEVING SESSION DATA...
+          </p>
+          {/* Skeleton Record Jacket */}
+          <div className="record-jacket">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="hero-stat-card-image animate-pulse bg-muted/20" style={{ minHeight: '140px' }} />
+              ))}
+            </div>
+          </div>
+          {/* Skeleton Trends */}
+          <div className="mt-8 space-y-4">
+            <div className="h-5 w-48 bg-muted/20 rounded animate-pulse" />
+            <div className="h-32 bg-muted/10 rounded animate-pulse" />
+          </div>
+          {/* Skeleton Breakdowns */}
+          <div className="mt-8 space-y-3">
+            <div className="h-5 w-36 bg-muted/20 rounded animate-pulse" />
+            <div className="h-24 bg-muted/10 rounded animate-pulse" />
+          </div>
+        </div>
+      ) : stats.gamesPlayed === 0 ? (
         <div className="stats-empty">
           <Film className="w-16 h-16 text-muted-foreground/30 mb-4" />
           <h2 className="font-title text-xl mb-2">No Games Recorded</h2>
