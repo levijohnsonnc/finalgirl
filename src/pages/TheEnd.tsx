@@ -11,6 +11,8 @@ import { GameResult } from '@/hooks/useGameHistory';
 import { getKillerDescription } from '@/data/killerDescriptions';
 import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
 import { getLocationDescription } from '@/data/locationDescriptions';
+import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
+import { getKillerSpecialRules } from '@/data/killerSpecialRules';
 import { renderFormattedText } from '@/lib/textFormatting';
 
 export interface EndingFormData {
@@ -73,6 +75,8 @@ const TheEnd = ({
       const killerDescription = getKillerDescription(result.killer);
       const finalGirlBackstory = getFinalGirlDescription(result.finalGirl);
       const locationDescription = getLocationDescription(result.location);
+      const killerRules = getKillerSpecialRules(result.killer);
+      const finalGirlMaxHealth = getFinalGirlMaxHealth(result.finalGirl);
 
       const payload = {
         introStory,
@@ -80,6 +84,7 @@ const TheEnd = ({
         killer: {
           name: result.killer,
           description: killerDescription,
+          ...(killerRules?.narrativeNote && { specialRules: killerRules.narrativeNote }),
         },
         location: {
           name: result.location,
@@ -89,6 +94,8 @@ const TheEnd = ({
           name: result.finalGirl,
           backstory: finalGirlBackstory,
         },
+        // Character-specific max health so the AI can contextualise HP fractions
+        finalGirlMaxHealth,
         // Game stats from form
         ...(formData.finalHorrorLevel && { finalHorrorLevel: formData.finalHorrorLevel }),
         ...(formData.weaponUsed && { weaponUsed: formData.weaponUsed }),

@@ -5,7 +5,8 @@ import { corsHeaders } from './auth.ts';
 export const StoryRequestSchema = z.object({
   killer: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(5000).optional()
+    description: z.string().max(5000).optional(),
+    specialRules: z.string().max(1000).optional()
   }),
   location: z.object({
     name: z.string().min(1).max(100),
@@ -50,7 +51,8 @@ export const EndingRequestSchema = z.object({
   outcome: z.enum(['won', 'lost']),
   killer: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(3000).optional()
+    description: z.string().max(3000).optional(),
+    specialRules: z.string().max(1000).optional()
   }),
   location: z.object({
     name: z.string().min(1).max(100),

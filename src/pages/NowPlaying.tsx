@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
+import { getKillerSpecialRules } from '@/data/killerSpecialRules';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
 import projectorSound from '@/assets/sounds/projector-start.mp3';
@@ -68,11 +69,14 @@ const NowPlaying = ({
       const locationDetails = locationFilmDetails?.location;
       const finalGirlDetails = finalGirlFilmDetails?.finalGirls?.find(fg => fg.name === finalGirl);
 
+      const killerRules = getKillerSpecialRules(killer);
+
       // Build payload with complete objects matching the edge function's StoryRequest interface
       const payload = {
         killer: {
           name: killer,
-          description: killerDetails?.description || `A terrifying killer known as ${killer}.`
+          description: killerDetails?.description || `A terrifying killer known as ${killer}.`,
+          ...(killerRules?.narrativeNote && { specialRules: killerRules.narrativeNote }),
         },
         location: {
           name: location,

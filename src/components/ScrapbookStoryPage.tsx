@@ -1,6 +1,7 @@
 import React from 'react';
 import { GameResult } from '@/hooks/useGameHistory';
 import { format } from 'date-fns';
+import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
 
 // Render markdown-style bold/italic as React elements (XSS-safe)
 const renderFormattedInline = (text: string): React.ReactNode[] => {
@@ -60,12 +61,23 @@ interface ScrapbookStoryPageProps {
 }
 
 export const ScrapbookStoryPage = ({ game, type }: ScrapbookStoryPageProps) => {
+  const maxFinalGirlHealth = getFinalGirlMaxHealth(game.finalGirl);
+  const isWin = game.outcome === 'won';
 
   return (
     <div className="story-page-content">
-      {/* Date Header */}
-      <div className="story-date">
-        {format(new Date(game.timestamp), 'MMMM d, yyyy')}
+      {/* Date + Outcome Header */}
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <div className="story-date" style={{ marginBottom: 0 }}>
+          {format(new Date(game.timestamp), 'MMMM d, yyyy')}
+        </div>
+        <span className={`font-display text-xs tracking-[0.15em] uppercase px-2 py-0.5 rounded-sm border ${
+          isWin
+            ? 'text-secondary border-secondary/50 bg-secondary/10'
+            : 'text-primary border-primary/50 bg-primary/10'
+        }`}>
+          {isWin ? 'SURVIVED' : 'LOST'}
+        </span>
       </div>
 
       {/* Intro Story Section */}
@@ -117,11 +129,75 @@ export const ScrapbookStoryPage = ({ game, type }: ScrapbookStoryPageProps) => {
           <span className="detail-label">Killer:</span>
           <span className="detail-value">{game.killer}</span>
         </div>
-        <div className="footer-detail">
-          <span className="detail-label">Location:</span>
-          <span className="detail-value">{game.location}</span>
-        </div>
+        {game.location && (
+          <div className="footer-detail">
+            <span className="detail-label">Location:</span>
+            <span className="detail-value">{game.location}</span>
+          </div>
+        )}
+        {game.setupScenario && (
+          <div className="footer-detail">
+            <span className="detail-label">Setup:</span>
+            <span className="detail-value">{game.setupScenario}</span>
+          </div>
+        )}
+        {game.startingEvent && (
+          <div className="footer-detail">
+            <span className="detail-label">Event:</span>
+            <span className="detail-value">{game.startingEvent}</span>
+          </div>
+        )}
       </div>
+
+      {/* Game Stats — shown when any stat was recorded */}
+      {(game.finalHorrorLevel !== undefined ||
+        game.finalGirlHealth !== undefined ||
+        game.killerHealth !== undefined ||
+        game.weaponUsed ||
+        game.victimsSaved !== undefined ||
+        game.victimsKilled !== undefined ||
+        game.endingSubLocation) && (
+        <div className="story-footer" style={{ marginTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem' }}>
+          {game.finalHorrorLevel !== undefined && (
+            <div className="footer-detail">
+              <span className="detail-label">Horror:</span>
+              <span className="detail-value">{game.finalHorrorLevel}/7</span>
+            </div>
+          )}
+          {game.finalGirlHealth !== undefined && (
+            <div className="footer-detail">
+              <span className="detail-label">HP:</span>
+              <span className="detail-value">{game.finalGirlHealth}/{maxFinalGirlHealth}</span>
+            </div>
+          )}
+          {game.killerHealth !== undefined && game.killerHealth > 0 && (
+            <div className="footer-detail">
+              <span className="detail-label">Killer HP:</span>
+              <span className="detail-value">{game.killerHealth}</span>
+            </div>
+          )}
+          {game.weaponUsed && (
+            <div className="footer-detail">
+              <span className="detail-label">Weapon:</span>
+              <span className="detail-value">{game.weaponUsed}</span>
+            </div>
+          )}
+          {(game.victimsSaved !== undefined || game.victimsKilled !== undefined) && (
+            <div className="footer-detail">
+              <span className="detail-label">Victims:</span>
+              <span className="detail-value">
+                {game.victimsSaved ?? 0} saved / {game.victimsKilled ?? 0} lost
+              </span>
+            </div>
+          )}
+          {game.endingSubLocation && (
+            <div className="footer-detail">
+              <span className="detail-label">Final scene:</span>
+              <span className="detail-value">{game.endingSubLocation}</span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

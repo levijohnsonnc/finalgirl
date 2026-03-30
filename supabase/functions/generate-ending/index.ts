@@ -67,9 +67,13 @@ Output Rules:
 Return ONLY the story text. No headings, bullet points, or meta commentary.`;
 
     // Build character context strings
-    const killerContext = killer.description 
-      ? `Killer: ${killer.name}\nDescription: ${killer.description}`
-      : `Killer: ${killer.name}`;
+    const killerContext = [
+      `Killer: ${killer.name}`,
+      killer.description ? `Description: ${killer.description}` : null,
+      killer.specialRules
+        ? `IMPORTANT — Killer-specific rules (respect these in the narrative):\n${killer.specialRules}`
+        : null,
+    ].filter(Boolean).join('\n');
     
     const finalGirlContext = finalGirl.backstory
       ? `Final Girl: ${finalGirl.name}\nBackstory: ${finalGirl.backstory}`

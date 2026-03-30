@@ -23,15 +23,20 @@ serve(async (req) => {
     const { killer, location, finalGirl, startingEvent, startingSetup } = validation.data;
 
 
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("Story generation service not configured");
     }
 
     // Build the scenario context
-    const killerInfo = killer.description 
+    const killerInfo = killer.description
       ? `${killer.name}: ${killer.description}`
       : `A mysterious killer known as ${killer.name}`;
+
+    const killerSpecialRulesInfo = killer.specialRules
+      ? `IMPORTANT — Killer-specific gameplay rules (respect these in the narrative):\n${killer.specialRules}`
+      : null;
     
     const locationInfo = location.description
       ? `${location.name}: ${location.description}`
@@ -78,7 +83,7 @@ Return only the story text. No headings, bullet points, or meta commentary.`;
 
 Killer Info:
 ${killerInfo}
-
+${killerSpecialRulesInfo ? `\n${killerSpecialRulesInfo}\n` : ''}
 Final Girl Info:
 ${finalGirlInfo}
 
