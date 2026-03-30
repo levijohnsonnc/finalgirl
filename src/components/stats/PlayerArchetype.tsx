@@ -3,6 +3,7 @@ import { PlayerArchetype as ArchetypeType } from '@/hooks/useGameStats';
 interface PlayerArchetypeProps {
   archetype: ArchetypeType;
   reason: string;
+  profile: string;
 }
 
 const archetypeConfig: Record<ArchetypeType, {
@@ -37,8 +38,10 @@ const archetypeConfig: Record<ArchetypeType, {
   }
 };
 
-export const PlayerArchetypeBadge = ({ archetype, reason }: PlayerArchetypeProps) => {
+export const PlayerArchetypeBadge = ({ archetype, profile }: PlayerArchetypeProps) => {
   const config = archetypeConfig[archetype];
+
+  const paragraphs = profile.split('\n\n').filter(Boolean);
 
   return (
     <div className={`archetype-badge ${config.bgClass}`}>
@@ -46,8 +49,12 @@ export const PlayerArchetypeBadge = ({ archetype, reason }: PlayerArchetypeProps
         <div className={`archetype-name ${config.color}`}>
           {config.name}
         </div>
-        <div className="archetype-reason">
-          {reason}
+        <div className="archetype-profile">
+          {paragraphs.map((p, i) => (
+            <p key={i} className="archetype-reason">
+              {p}
+            </p>
+          ))}
         </div>
       </div>
     </div>

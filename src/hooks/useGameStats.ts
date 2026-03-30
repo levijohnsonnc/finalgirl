@@ -277,7 +277,8 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
       byKiller,
       byLocation,
       playerArchetype,
-      archetypeReason
+      archetypeReason,
+      archetypeProfile,
     };
   }, [gameHistory]);
 };
