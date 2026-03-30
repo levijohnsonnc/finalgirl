@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import marqueeBg from '@/assets/marquee-bg.png';
 import { AppHeader } from './AppHeader';
 import { useAuth } from '@/hooks/useAuth';
 import { useScreenEffects } from '@/hooks/useScreenEffects';
+import { useGameHistory } from '@/hooks/useGameHistory';
+import { ProjectorSlideshow } from './ProjectorSlideshow';
 
 interface MarqueeProps {
   onStart: () => void;
