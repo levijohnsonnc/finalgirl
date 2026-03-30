@@ -444,10 +444,10 @@
   .projector-slideshow {
     position: absolute;
     /* Desktop: aligned to the screen area in marquee-bg */
-    top: 16%;
-    left: 27%;
-    width: 30%;
-    height: 38%;
+    top: 20%;
+    left: 32%;
+    width: 38%;
+    height: 30%;
     overflow: hidden;
     pointer-events: none;
     border-radius: 2px;
@@ -456,11 +456,10 @@
 
   @media (max-width: 639px) {
     .projector-slideshow {
-      /* Mobile: background shifts to center_60%, adjust accordingly */
-      top: 22%;
-      left: 20%;
-      width: 42%;
-      height: 28%;
+      top: 25%;
+      left: 24%;
+      width: 48%;
+      height: 22%;
     }
   }
 
