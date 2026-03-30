@@ -446,7 +446,7 @@
     overflow: hidden;
     pointer-events: none;
     border-radius: 2px;
-    mix-blend-mode: lighten;
+    mix-blend-mode: screen;
     z-index: 1;
     mask-image: radial-gradient(ellipse 92% 90% at center, black 60%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 92% 90% at center, black 60%, transparent 100%);
@@ -458,8 +458,9 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 20%;
     transition: opacity 3s ease-in-out;
-    filter: brightness(0.9) saturate(0.7) contrast(1.05) sepia(0.06);
+    filter: brightness(1.1) saturate(0.85) contrast(1.1) sepia(0.04);
   }
 
   .projector-warmth {
