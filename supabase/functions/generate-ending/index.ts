@@ -105,12 +105,6 @@ Outcome: ${outcome.toUpperCase()}
 
 ${optionalStats ? `Optional Details:\n${optionalStats}` : ''}`.trim();
 
-    console.log("Generating ending narration for:", {
-      killer: killer.name,
-      finalGirl: finalGirl.name,
-      location: location.name,
-      outcome,
-    });
 
     // Call Lovable AI Gateway
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -172,7 +166,6 @@ ${optionalStats ? `Optional Details:\n${optionalStats}` : ''}`.trim();
       );
     }
 
-    console.log("Successfully generated ending narration");
 
     return new Response(
       JSON.stringify({ ending }),

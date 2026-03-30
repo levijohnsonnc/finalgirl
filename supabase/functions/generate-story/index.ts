@@ -22,13 +22,6 @@ serve(async (req) => {
 
     const { killer, location, finalGirl, startingEvent, startingSetup } = validation.data;
 
-    console.log('Generating story for:', { 
-      killer: killer.name, 
-      location: location.name, 
-      finalGirl: finalGirl.name,
-      startingEvent: startingEvent?.name,
-      startingSetup: startingSetup?.name
-    });
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -98,7 +91,6 @@ ${startingEventInfo}
 Starting Setup Info:
 ${startingSetupInfo}`;
 
-    console.log('Calling Lovable AI Gateway...');
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -150,7 +142,6 @@ ${startingSetupInfo}`;
       );
     }
 
-    console.log('Story generated successfully, length:', story.length);
 
     return new Response(
       JSON.stringify({ story }),

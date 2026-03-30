@@ -11,47 +11,7 @@ import { GameResult } from '@/hooks/useGameHistory';
 import { getKillerDescription } from '@/data/killerDescriptions';
 import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
 import { getLocationDescription } from '@/data/locationDescriptions';
-
-// Helper to render markdown-style text formatting
-const renderFormattedText = (text: string) => {
-  const parts: React.ReactNode[] = [];
-  let remaining = text;
-  let key = 0;
-
-  while (remaining.length > 0) {
-    // Match **bold** or *italic*
-    const boldMatch = remaining.match(/\*\*(.+?)\*\*/);
-    const italicMatch = remaining.match(/\*([^*]+?)\*/);
-
-    // Find which comes first
-    const boldIndex = boldMatch ? remaining.indexOf(boldMatch[0]) : Infinity;
-    const italicIndex = italicMatch ? remaining.indexOf(italicMatch[0]) : Infinity;
-
-    if (boldIndex === Infinity && italicIndex === Infinity) {
-      // No more formatting
-      parts.push(remaining);
-      break;
-    }
-
-    if (boldIndex <= italicIndex && boldMatch) {
-      // Bold comes first
-      if (boldIndex > 0) {
-        parts.push(remaining.slice(0, boldIndex));
-      }
-      parts.push(<strong key={key++} className="font-bold text-foreground">{boldMatch[1]}</strong>);
-      remaining = remaining.slice(boldIndex + boldMatch[0].length);
-    } else if (italicMatch) {
-      // Italic comes first
-      if (italicIndex > 0) {
-        parts.push(remaining.slice(0, italicIndex));
-      }
-      parts.push(<em key={key++} className="italic text-foreground/90">{italicMatch[1]}</em>);
-      remaining = remaining.slice(italicIndex + italicMatch[0].length);
-    }
-  }
-
-  return parts;
-};
+import { renderFormattedText } from '@/lib/textFormatting';
 
 export interface EndingFormData {
   finalHorrorLevel: number;
@@ -140,7 +100,6 @@ const TheEnd = ({
         ...(formData.gameHighlights && { gameHighlights: formData.gameHighlights }),
       };
 
-      console.log('Generating ending with payload:', payload);
 
       const { data, error: fnError } = await supabase.functions.invoke('generate-ending', {
         body: payload,

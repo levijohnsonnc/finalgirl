@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import marqueeBg from '@/assets/marquee-bg.png';
 import { AppHeader } from './AppHeader';
 import { useAuth } from '@/hooks/useAuth';
+import { useScreenEffects } from '@/hooks/useScreenEffects';
 
 interface MarqueeProps {
   onStart: () => void;
@@ -17,40 +18,8 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
-  const [showFlicker, setShowFlicker] = useState(false);
-  const [showFrameJump, setShowFrameJump] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
-
-  // Random analog imperfection effects
-  useEffect(() => {
-    // Flicker effect - random interval between 15-30 seconds
-    const scheduleFlicker = () => {
-      const delay = Math.random() * 15000 + 15000; // 15-30 seconds
-      return setTimeout(() => {
-        setShowFlicker(true);
-        setTimeout(() => setShowFlicker(false), 150);
-        scheduleFlicker();
-      }, delay);
-    };
-
-    // Frame jump effect - random interval between 40-60 seconds
-    const scheduleFrameJump = () => {
-      const delay = Math.random() * 20000 + 40000; // 40-60 seconds
-      return setTimeout(() => {
-        setShowFrameJump(true);
-        setTimeout(() => setShowFrameJump(false), 120);
-        scheduleFrameJump();
-      }, delay);
-    };
-
-    const flickerTimeout = scheduleFlicker();
-    const frameJumpTimeout = scheduleFrameJump();
-
-    return () => {
-      clearTimeout(flickerTimeout);
-      clearTimeout(frameJumpTimeout);
-    };
-  }, []);
+  const { showFlicker, showFrameJump } = useScreenEffects();
 
   const handleStart = () => {
     setIsClicked(true);

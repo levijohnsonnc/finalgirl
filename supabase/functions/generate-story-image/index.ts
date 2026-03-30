@@ -32,8 +32,6 @@ serve(async (req) => {
       locationDescription 
     } = validation.data;
 
-    console.log(`Generating image for position ${position}, story length: ${fullStory.length}`);
-    console.log(`Context - Killer: ${killer}, Final Girl: ${finalGirl}, Location: ${location}`);
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -96,7 +94,6 @@ OUTPUT: One vivid sentence describing a powerful cinematic shot. Focus on DRAMA 
     const visualDescription = extractData.choices?.[0]?.message?.content?.trim() || 
       'Atmospheric vintage scene with dramatic lighting';
 
-    console.log(`Extracted visual for position ${position}:`, visualDescription);
 
     // Dramatic image prompt that avoids poster-style compositions
     const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}
@@ -106,7 +103,6 @@ DO NOT create a movie poster, group portrait, or composite image.
 Focus on this single dramatic moment with authentic vintage analog film quality.
 Muted, desaturated color palette. Widescreen composition. No text or titles.`;
 
-    console.log(`Image prompt for position ${position}:`, imagePrompt);
 
     const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
     if (!GOOGLE_API_KEY) {
@@ -136,7 +132,6 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
     }
 
     const data = await response.json();
-    console.log('Google image response received for position', position);
 
     // Extract the base64 image from Google's response format
     const candidates = data.candidates;

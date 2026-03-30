@@ -95,13 +95,11 @@ serve(async (req) => {
 
     // Split text into chunks if needed
     const chunks = splitTextIntoChunks(text, MAX_CHUNK_SIZE);
-    console.log(`Generating narration for ${text.length} characters (${chunks.length} chunk(s)) using Inworld voice Blake`);
 
     const audioChunks: string[] = [];
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
-      console.log(`Processing chunk ${i + 1}/${chunks.length} (${chunk.length} chars)`);
 
       const response = await fetch(
         'https://api.inworld.ai/tts/v1/voice',
@@ -145,7 +143,6 @@ serve(async (req) => {
       ? audioChunks[0] 
       : concatenateBase64Audio(audioChunks);
     
-    console.log('Narration generated successfully via Inworld');
 
     return new Response(
       JSON.stringify({ audioContent: combinedAudio }),
