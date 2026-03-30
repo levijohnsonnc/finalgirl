@@ -134,7 +134,7 @@ const Index = () => {
     setLastGameResult(null);
     setIntroStory(undefined);
     setEndingFormData(null);
-    setCurrentPage('scrapbooks');
+    setCurrentPage('stats');
   };
 
   const handleDiscardEnding = () => {
