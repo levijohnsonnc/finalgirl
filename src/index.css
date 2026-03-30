@@ -443,11 +443,10 @@
   /* Projector slideshow — positioned on the outdoor screen */
   .projector-slideshow {
     position: absolute;
-    /* Desktop: aligned to the screen area in marquee-bg */
-    top: 20%;
-    left: 32%;
-    width: 38%;
-    height: 30%;
+    top: 17%;
+    left: 24%;
+    width: 51%;
+    height: 25%;
     overflow: hidden;
     pointer-events: none;
     border-radius: 2px;
@@ -456,10 +455,10 @@
 
   @media (max-width: 639px) {
     .projector-slideshow {
-      top: 25%;
-      left: 24%;
-      width: 48%;
-      height: 22%;
+      top: 28%;
+      left: 18%;
+      width: 52%;
+      height: 18%;
     }
   }
 
