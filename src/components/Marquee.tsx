@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import marqueeBg from '@/assets/marquee-bg.png';
 import { AppHeader } from './AppHeader';
 import { useAuth } from '@/hooks/useAuth';
 import { useScreenEffects } from '@/hooks/useScreenEffects';
+import { useGameHistory } from '@/hooks/useGameHistory';
+import { ProjectorSlideshow } from './ProjectorSlideshow';
 
 interface MarqueeProps {
   onStart: () => void;
@@ -17,9 +19,18 @@ interface MarqueeProps {
 export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
+  const { gameHistory } = useGameHistory();
   const [isClicked, setIsClicked] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const { showFlicker, showFrameJump } = useScreenEffects();
+
+  // Extract all available images from game history
+  const projectorImages = useMemo(() => 
+    gameHistory
+      .flatMap(g => [g.sceneImageUrl, g.posterImageUrl])
+      .filter((url): url is string => !!url),
+    [gameHistory]
+  );
 
   const handleStart = () => {
     setIsClicked(true);
@@ -43,6 +54,11 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
         }}
       />
       
+      {/* Projector Slideshow — projected onto the outdoor screen */}
+      {projectorImages.length > 0 && (
+        <ProjectorSlideshow images={projectorImages} />
+      )}
+
       {/* Screen Flicker Overlay */}
       {showFlicker && (
         <div className="absolute inset-0 bg-white/10 screen-flicker pointer-events-none z-10" />
