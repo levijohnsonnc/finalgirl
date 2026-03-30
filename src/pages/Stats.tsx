@@ -103,6 +103,7 @@ const Stats = () => {
             <PlayerArchetypeBadge 
               archetype={stats.playerArchetype} 
               reason={stats.archetypeReason}
+              profile={stats.archetypeProfile}
             />
           </div>
         </div>

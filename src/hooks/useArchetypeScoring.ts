@@ -8,6 +8,16 @@ interface ArchetypeScore {
   reason: string;
 }
 
+/** Narrative context passed in from useGameStats for profile generation */
+export interface NarrativeContext {
+  nemesis: { killer: string; losses: number } | null;
+  usualSuspect: { killer: string; wins: number } | null;
+  cursedSite: { location: string; losses: number } | null;
+  homeTurf: { location: string; wins: number } | null;
+  comfortZone: { finalGirl: string; wins: number } | null;
+  grinder: { finalGirl: string; plays: number } | null;
+}
+
 // --- Individual scoring functions (0–100) ---
 
 function scoreProtector(
@@ -19,7 +29,6 @@ function scoreProtector(
   const saveRatio = totalVictims > 0 ? totalSaved / totalVictims : 0;
   const avgSaved = gamesPlayed > 0 ? totalSaved / gamesPlayed : 0;
 
-  // 60% weight on save ratio, 40% on raw volume (capped at 8 avg)
   const ratioComponent = saveRatio * 60;
   const volumeComponent = Math.min(avgSaved / 8, 1) * 40;
   const score = ratioComponent + volumeComponent;
@@ -47,7 +56,6 @@ function scoreSurvivor(wins: GameResult[]): ArchetypeScore {
   const clutchRatio = clutchWins.length / wins.length;
   const score = clutchRatio * 100;
 
-  // Build flavorful reason
   const oneHPWins = clutchWins.filter((g) => g.finalGirlHealth === 1).length;
   let reason: string;
   if (oneHPWins >= 2) {
@@ -68,15 +76,13 @@ function scoreDuelist(
   winRate: number,
   wins: GameResult[],
 ): ArchetypeScore {
-  // Win-rate component: maxes out at 80% win rate
   const winFactor = Math.min(winRate / 80, 1) * 50;
 
-  // Control component: low horror on wins means tight play
   const winsWithHorror = wins.filter((g) => g.finalHorrorLevel != null);
   const avgHorrorOnWins =
     winsWithHorror.length > 0
       ? winsWithHorror.reduce((s, g) => s + (g.finalHorrorLevel || 0), 0) / winsWithHorror.length
-      : 4; // neutral default
+      : 4;
   const controlFactor = Math.max(0, 1 - avgHorrorOnWins / 7) * 50;
 
   const score = winFactor + controlFactor;
@@ -106,10 +112,8 @@ function scoreGambler(games: GameResult[]): ArchetypeScore {
     horrorLevels.reduce((sum, h) => sum + (h - mean) ** 2, 0) / horrorLevels.length,
   );
 
-  // Variance component (capped at stdDev 3.0 — requires truly wild swings)
   const varianceScore = Math.min(stdDev / 3, 1) * 80;
 
-  // Extremes bonus: has both a calm game (1-2) and a chaotic game (6-7)
   const hasCalm = horrorLevels.some((h) => h <= 2);
   const hasChaos = horrorLevels.some((h) => h >= 6);
   const extremesBonus = hasCalm && hasChaos ? 20 : 0;
@@ -131,6 +135,143 @@ function scoreGambler(games: GameResult[]): ArchetypeScore {
 // --- Tie-breaking order (most "dramatic" wins ties) ---
 const TIEBREAK_ORDER: PlayerArchetype[] = ['survivor', 'gambler', 'duelist', 'protector'];
 
+// --- Profile generation ---
+
+const ARCHETYPE_INTROS: Record<Exclude<PlayerArchetype, 'newcomer'>, (ctx: ProfileBuildContext) => string> = {
+  protector: (ctx) => {
+    const totalVictims = ctx.totalSaved + ctx.totalKilled;
+    const saveRatio = totalVictims > 0 ? Math.round((ctx.totalSaved / totalVictims) * 100) : 0;
+    const avgSaved = ctx.gamesPlayed > 0 ? (ctx.totalSaved / ctx.gamesPlayed).toFixed(1) : '0';
+    return `The body count matters to you — but not the way it does for most. Across ${ctx.gamesPlayed} sessions, ${saveRatio}% of all victims have walked away alive, averaging ${avgSaved} rescues per game. You don't just fight the killer; you fight the clock, the board, and the odds to drag one more survivor out of the dark. Every victim lost is personal.`;
+  },
+  survivor: (ctx) => {
+    const clutchWins = ctx.wins.filter((g) => {
+      if (g.finalGirlHealth == null) return false;
+      const maxHP = getFinalGirlHealth(g.finalGirl);
+      return g.finalGirlHealth / maxHP <= 0.33;
+    });
+    const oneHPWins = clutchWins.filter((g) => g.finalGirlHealth === 1).length;
+    if (oneHPWins >= 2) {
+      return `You don't win clean — you win bloody. ${oneHPWins} of your victories came at 1 HP, the kind of wins that shouldn't exist. Across ${ctx.gamesPlayed} games, you've turned certain death into a habit. The killer had you cornered, the horror was climbing, and somehow you crawled out the other side. That's not luck. That's instinct.`;
+    }
+    if (clutchWins.length >= 2) {
+      return `${clutchWins.length} of your ${ctx.wins.length} wins came at a sliver of health — the kind where one more hit would've ended it. Over ${ctx.gamesPlayed} sessions, you've developed a pattern: let the situation get dire, then find a way out. You play best with your back against the wall, and the walls are usually covered in blood.`;
+    }
+    return `You have a knack for surviving what shouldn't be survivable. Across ${ctx.gamesPlayed} games with a ${Math.round(ctx.winRate)}% win rate, your victories tend to come down to the wire. You don't dominate — you endure, outlast, and walk away when the killer can't.`;
+  },
+  duelist: (ctx) => {
+    const winsWithHorror = ctx.wins.filter((g) => g.finalHorrorLevel != null);
+    const avgHorror = winsWithHorror.length > 0
+      ? (winsWithHorror.reduce((s, g) => s + (g.finalHorrorLevel || 0), 0) / winsWithHorror.length).toFixed(1)
+      : '—';
+    return `Precision runs through every session. A ${Math.round(ctx.winRate)}% win rate across ${ctx.gamesPlayed} games, with an average horror level of just ${avgHorror} on your victories. You don't scramble — you execute. The board is a problem to be solved, and you solve it with methodical, clinical efficiency. Killers don't scare you; they're just obstacles with a health bar.`;
+  },
+  gambler: (ctx) => {
+    const gamesWithHorror = ctx.games.filter((g) => g.finalHorrorLevel != null);
+    const horrorLevels = gamesWithHorror.map((g) => g.finalHorrorLevel!);
+    const minH = horrorLevels.length > 0 ? Math.min(...horrorLevels) : 0;
+    const maxH = horrorLevels.length > 0 ? Math.max(...horrorLevels) : 0;
+    const mean = horrorLevels.length > 0 ? horrorLevels.reduce((a, b) => a + b, 0) / horrorLevels.length : 0;
+    const stdDev = horrorLevels.length > 0
+      ? Math.sqrt(horrorLevels.reduce((sum, h) => sum + (h - mean) ** 2, 0) / horrorLevels.length).toFixed(1)
+      : '0';
+    return `Your games are a study in chaos. Horror levels swing from ${minH} to ${maxH} across ${ctx.gamesPlayed} sessions — calm, controlled outings one night, full-blown carnage the next. With a standard deviation of ${stdDev}, no two games feel the same. You don't play for consistency; you play to see what happens.`;
+  },
+};
+
+interface ProfileBuildContext {
+  games: GameResult[];
+  wins: GameResult[];
+  winRate: number;
+  gamesPlayed: number;
+  totalSaved: number;
+  totalKilled: number;
+  narrative: NarrativeContext;
+  scores: ArchetypeScore[];
+}
+
+function buildRunnerUpSentence(winner: ArchetypeScore, runnerUp: ArchetypeScore, ctx: ProfileBuildContext): string {
+  const gap = winner.score - runnerUp.score;
+  const names: Record<string, string> = {
+    protector: 'Protector',
+    survivor: 'Survivor',
+    duelist: 'Duelist',
+    gambler: 'Gambler',
+  };
+  const winnerName = names[winner.archetype] || winner.archetype;
+  const runnerName = names[runnerUp.archetype] || runnerUp.archetype;
+
+  if (gap <= 15) {
+    // Close — highlight the tension
+    const bridges: Record<string, string> = {
+      protector: `your ${Math.round((ctx.totalSaved / Math.max(ctx.totalSaved + ctx.totalKilled, 1)) * 100)}% save ratio hints at a Protector's instinct`,
+      survivor: `your clutch-win tendencies suggest a Survivor lurking underneath`,
+      duelist: `your ${Math.round(ctx.winRate)}% win rate carries a Duelist's edge`,
+      gambler: `the volatility in your horror levels betrays a Gambler's restlessness`,
+    };
+    return `You're a ${winnerName} at heart, but ${bridges[runnerUp.archetype] || `there's a strong ${runnerName} streak in your data`}. The line between the two is razor-thin — ${gap < 5 ? 'almost indistinguishable' : 'close enough to shift with a few more games'}.`;
+  }
+  // Moderate gap — brief nod
+  const nods: Record<string, string> = {
+    protector: `a quiet dedication to keeping victims alive`,
+    survivor: `an ability to pull through when it counts`,
+    duelist: `a competitive streak that keeps the win rate climbing`,
+    gambler: `an appetite for unpredictability`,
+  };
+  return `There's also ${nods[runnerUp.archetype] || `a trace of the ${runnerName}`} in your play — not dominant, but present enough to notice.`;
+}
+
+function buildNarrativeCloser(ctx: ProfileBuildContext): string {
+  const parts: string[] = [];
+
+  if (ctx.narrative.nemesis) {
+    parts.push(`${ctx.narrative.nemesis.killer} has beaten you ${ctx.narrative.nemesis.losses} times — a nemesis that keeps dragging you back`);
+  }
+  if (ctx.narrative.comfortZone) {
+    parts.push(`${ctx.narrative.comfortZone.finalGirl} is your go-to with ${ctx.narrative.comfortZone.wins} wins`);
+  }
+  if (ctx.narrative.homeTurf) {
+    parts.push(`${ctx.narrative.homeTurf.location} is where you fight best`);
+  }
+
+  if (parts.length === 0) return '';
+  if (parts.length === 1) return parts[0] + '.';
+  if (parts.length === 2) return parts[0] + ', and ' + parts[1] + '.';
+  return parts[0] + '. ' + parts.slice(1).map((p, i) => i === parts.length - 2 ? p : p).join(', and ') + '.';
+}
+
+function buildProfile(
+  winner: ArchetypeScore,
+  scores: ArchetypeScore[],
+  ctx: ProfileBuildContext,
+): string {
+  const archetype = winner.archetype as Exclude<PlayerArchetype, 'newcomer'>;
+  const paragraphs: string[] = [];
+
+  // Paragraph 1 — Archetype identity
+  paragraphs.push(ARCHETYPE_INTROS[archetype](ctx));
+
+  // Paragraph 2 — Cross-archetype color + narrative stats
+  const otherScores = scores.filter((s) => s.archetype !== winner.archetype && s.score > 0);
+  const runnerUp = otherScores.length > 0 ? otherScores[0] : null;
+
+  let p2Parts: string[] = [];
+  if (runnerUp) {
+    p2Parts.push(buildRunnerUpSentence(winner, runnerUp, ctx));
+  }
+
+  const closer = buildNarrativeCloser(ctx);
+  if (closer) {
+    p2Parts.push(closer);
+  }
+
+  if (p2Parts.length > 0) {
+    paragraphs.push(p2Parts.join(' '));
+  }
+
+  return paragraphs.join('\n\n');
+}
+
 /**
  * Compute the player's archetype using independent scoring.
  * Returns the archetype with the highest score (ties broken by drama).
@@ -141,9 +282,10 @@ export function computeArchetype(
   winRate: number,
   totalSaved: number,
   totalKilled: number,
-): { archetype: PlayerArchetype; reason: string } {
+  narrative?: NarrativeContext,
+): { archetype: PlayerArchetype; reason: string; profile: string } {
   if (games.length < 3) {
-    return { archetype: 'newcomer', reason: 'Play more games to discover your style' };
+    return { archetype: 'newcomer', reason: 'Play more games to discover your style', profile: 'Play more games to discover your style.' };
   }
 
   const scores: ArchetypeScore[] = [
@@ -160,5 +302,26 @@ export function computeArchetype(
   });
 
   const winner = scores[0];
-  return { archetype: winner.archetype, reason: winner.reason };
+
+  const ctx: ProfileBuildContext = {
+    games,
+    wins,
+    winRate,
+    gamesPlayed: games.length,
+    totalSaved,
+    totalKilled,
+    narrative: narrative || {
+      nemesis: null,
+      usualSuspect: null,
+      cursedSite: null,
+      homeTurf: null,
+      comfortZone: null,
+      grinder: null,
+    },
+    scores,
+  };
+
+  const profile = buildProfile(winner, scores, ctx);
+
+  return { archetype: winner.archetype, reason: winner.reason, profile };
 }
