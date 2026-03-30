@@ -1,37 +1,37 @@
 
 
-# Project Images onto the Marquee Screen
+# Fix: Precise Projector Screen Alignment
 
-## Concept
+## Root Cause
 
-Overlay a slow-crossfading slideshow of the user's game images (scene stills and poster art) onto the blank projector screen in the marquee background. The images cycle with a dreamy, projector-like crossfade — giving the outdoor theater screen life. When no images exist (new user), the screen stays blank as it does now.
+The math for mapping coordinates is correct — it properly replicates `background-size: cover` scaling. The problem is the **input constants are wrong**. The `MARQUEE_SCREEN_RECT` values `(324, 231, 804, 400)` don't match the actual screen boundaries in `marquee-bg.png`. They're too wide and too tall, which is why the image bleeds past the screen frame.
 
-## How it works
+Additionally, `mix-blend-mode: normal` with `z-index: 2` makes the image look *pasted on top* rather than *projected onto* the screen.
 
-1. **Fetch images from game history** — Pull `sceneImageUrl` and `posterImageUrl` from all game records. Filter to only entries that have at least one image. Shuffle them for variety.
+## Fix
 
-2. **New component: `ProjectorSlideshow`** — A self-contained component that:
-   - Accepts an array of image URLs
-   - Cycles through them every ~5 seconds with a slow crossfade (CSS opacity transition, ~1.5s)
-   - Uses two stacked `<img>` elements — one fading out, one fading in — to create seamless dissolves
-   - Applies a slight projector grain/glow effect (reduced opacity, slight blur, warm color tint) so it looks like light hitting a screen, not a crisp digital overlay
-   - Positioned absolutely to align with the screen area in the marquee background image
+### 1. Measure exact screen pixel coordinates from `marquee-bg.png`
 
-3. **Integration in `Marquee.tsx`**:
-   - Import `useGameHistory` to get images
-   - Render `<ProjectorSlideshow>` behind the VHS overlays but above the background image
-   - Position it with percentage-based coordinates to sit on the screen area (will need to eyeball the marquee-bg.png screen bounds)
-   - On mobile, adjust positioning since the background uses `bg-[center_60%]`
+I'll open the 1536×1024 source image and measure the precise pixel bounds of the white/gray screen area (inside the frame, not including the frame border). Based on the screenshot showing the image extending ~20-30px beyond the screen on all sides, the rect needs to be inset. Estimated corrected values:
 
-4. **Styling details**:
-   - `mix-blend-mode: screen` or `lighten` to make images blend naturally with the background like projected light
-   - Slightly reduced opacity (~0.7) so it looks projected, not pasted
-   - Subtle warm color overlay to simulate projector warmth
-   - `object-fit: cover` to fill the screen area regardless of image aspect ratio
+```
+x: 350, y: 248, width: 752, height: 365
+```
+
+These will be validated by inspecting the actual asset.
+
+### 2. Change blend mode to look projected
+
+- Switch from `mix-blend-mode: normal` to `mix-blend-mode: lighten` — this makes the image only brighten pixels lighter than it, so the dark screen frame naturally masks the edges
+- Lower z-index back to `1` so it sits between the background and the VHS overlays
+- Reduce opacity slightly (~85%) so it blends with the screen surface
+
+### 3. Add subtle inner shadow/mask
+
+Apply a CSS `mask-image` with a radial or linear gradient that feathers the edges slightly, simulating light falloff at the screen borders — this sells the "projected" look even if coordinates are off by a pixel.
 
 ## Files changed
 
-- **New**: `src/components/ProjectorSlideshow.tsx` — slideshow component with crossfade logic
-- **Edit**: `src/components/Marquee.tsx` — add game history hook, extract image URLs, render slideshow layer
-- **Edit**: `src/index.css` — add projector blend/glow styles if needed
+- **`src/components/Marquee.tsx`** — update `MARQUEE_SCREEN_RECT` constants to corrected pixel values
+- **`src/index.css`** — change blend mode to `lighten`, add edge-feather mask, adjust opacity
 
