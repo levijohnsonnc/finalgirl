@@ -1,61 +1,37 @@
 
 
-# Upgrade Archetype Readout to Rich Player Profile
+# Project Images onto the Marquee Screen
 
-## What changes
+## Concept
 
-Replace the single-sentence archetype reason with a multi-paragraph, data-driven player profile that weaves together the archetype identity with the player's actual stats — nemesis, comfort zone, victim ratios, horror trends, and more.
+Overlay a slow-crossfading slideshow of the user's game images (scene stills and poster art) onto the blank projector screen in the marquee background. The images cycle with a dreamy, projector-like crossfade — giving the outdoor theater screen life. When no images exist (new user), the screen stays blank as it does now.
 
-## Approach
+## How it works
 
-Generate the extended profile **client-side** in `useArchetypeScoring.ts` — no AI call needed. The scoring functions already have access to all the raw data; we just need to compose a richer narrative from it.
+1. **Fetch images from game history** — Pull `sceneImageUrl` and `posterImageUrl` from all game records. Filter to only entries that have at least one image. Shuffle them for variety.
 
-### 1. Expand `computeArchetype` return value
+2. **New component: `ProjectorSlideshow`** — A self-contained component that:
+   - Accepts an array of image URLs
+   - Cycles through them every ~5 seconds with a slow crossfade (CSS opacity transition, ~1.5s)
+   - Uses two stacked `<img>` elements — one fading out, one fading in — to create seamless dissolves
+   - Applies a slight projector grain/glow effect (reduced opacity, slight blur, warm color tint) so it looks like light hitting a screen, not a crisp digital overlay
+   - Positioned absolutely to align with the screen area in the marquee background image
 
-**File: `src/hooks/useArchetypeScoring.ts`**
+3. **Integration in `Marquee.tsx`**:
+   - Import `useGameHistory` to get images
+   - Render `<ProjectorSlideshow>` behind the VHS overlays but above the background image
+   - Position it with percentage-based coordinates to sit on the screen area (will need to eyeball the marquee-bg.png screen bounds)
+   - On mobile, adjust positioning since the background uses `bg-[center_60%]`
 
-- Add a new `profile` string field to the return type (alongside existing `reason`)
-- After determining the winning archetype, build a 2-3 paragraph profile by combining:
-  - **Paragraph 1 — Archetype identity**: The core playstyle description, expanded from the current one-liner. Each archetype gets a thematic opening that references specific numbers (win rate, save ratio, clutch wins, horror variance)
-  - **Paragraph 2 — Cross-archetype color**: Reference the runner-up archetype score to add nuance (e.g., "You're a Gambler at heart, but your 68% save ratio hints at a Protector's instinct"). Pull in secondary stats like most-played final girl, nemesis killer, or game count for texture
-  - **Paragraph 3 (conditional)**: Only if there's a strong secondary trait (runner-up score within 15 points), add a sentence about the tension between the two styles
+4. **Styling details**:
+   - `mix-blend-mode: screen` or `lighten` to make images blend naturally with the background like projected light
+   - Slightly reduced opacity (~0.7) so it looks projected, not pasted
+   - Subtle warm color overlay to simulate projector warmth
+   - `object-fit: cover` to fill the screen area regardless of image aspect ratio
 
-- Pass additional context into the function: the full `ComputedStats` narrative fields (nemesis, comfort zone, grinder, etc.) so the profile can reference them by name
+## Files changed
 
-### 2. Wire the profile through `useGameStats`
-
-**File: `src/hooks/useGameStats.ts`**
-
-- Add `archetypeProfile: string` to `ComputedStats`
-- Pass narrative stats into `computeArchetype` so the profile text can mention specific killers/girls/locations by name
-- Store the returned `profile` as `archetypeProfile`
-
-### 3. Update the badge component
-
-**File: `src/components/stats/PlayerArchetype.tsx`**
-
-- Accept new `profile` prop alongside existing `reason`
-- Keep the archetype name as the title
-- Replace the single `reason` line with the multi-paragraph `profile` text
-- Style each paragraph with the existing `archetype-reason` class but add spacing between paragraphs
-- The tone follows the lore style notes: pulp VHS horror, lean, atmospheric, data-grounded — no invented lore
-
-### 4. Pass it from the Stats page
-
-**File: `src/pages/Stats.tsx`**
-
-- Pass `stats.archetypeProfile` to `PlayerArchetypeBadge`
-
-## Example output (The Gambler)
-
-> **The Gambler**
->
-> Your games are a study in chaos. Horror levels swing from 1 to 7 across your 12 sessions — calm, controlled outings one night, full-blown carnage the next. With a standard deviation of 2.4, no two games feel the same. You don't play for consistency; you play to see what happens.
->
-> That said, your 58% save ratio suggests the chaos isn't entirely reckless. When the dust settles, more victims walk out alive than don't. Your 5 losses to Hans have made him your nemesis, but you keep coming back — a Gambler through and through.
-
-## What stays the same
-- Archetype scoring logic unchanged
-- No AI/edge function calls — purely deterministic text
-- Existing tests remain valid (they check `archetype` and `reason`, both still returned)
+- **New**: `src/components/ProjectorSlideshow.tsx` — slideshow component with crossfade logic
+- **Edit**: `src/components/Marquee.tsx` — add game history hook, extract image URLs, render slideshow layer
+- **Edit**: `src/index.css` — add projector blend/glow styles if needed
 
