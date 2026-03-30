@@ -443,25 +443,13 @@
   /* Projector slideshow — positioned on the outdoor screen */
   .projector-slideshow {
     position: absolute;
-    /* Fallback only; runtime computes exact cover-mapped coordinates */
-    top: 22.56%;
-    left: 21.09%;
-    width: 52.34%;
-    height: 39.06%;
     overflow: hidden;
     pointer-events: none;
-    border-radius: 1px;
-    mix-blend-mode: normal;
-    z-index: 2;
-  }
-
-  @media (max-width: 639px) {
-    .projector-slideshow {
-      top: 22.56%;
-      left: 21.09%;
-      width: 52.34%;
-      height: 39.06%;
-    }
+    border-radius: 2px;
+    mix-blend-mode: lighten;
+    z-index: 1;
+    mask-image: radial-gradient(ellipse 92% 90% at center, black 60%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 92% 90% at center, black 60%, transparent 100%);
   }
 
   .projector-slide {
@@ -471,7 +459,7 @@
     height: 100%;
     object-fit: cover;
     transition: opacity 3s ease-in-out;
-    filter: brightness(0.82) saturate(0.78) contrast(1.08) sepia(0.08);
+    filter: brightness(0.9) saturate(0.7) contrast(1.05) sepia(0.06);
   }
 
   .projector-warmth {

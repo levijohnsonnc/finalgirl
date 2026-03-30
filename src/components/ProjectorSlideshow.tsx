@@ -47,7 +47,7 @@ export const ProjectorSlideshow = ({ images, style }: ProjectorSlideshowProps) =
       <img
         src={shuffled[currentIndex]}
         alt=""
-        className={`projector-slide ${isTransitioning ? 'opacity-0' : 'opacity-95'}`}
+        className={`projector-slide ${isTransitioning ? 'opacity-0' : 'opacity-[0.85]'}`}
         draggable={false}
       />
 
@@ -56,7 +56,7 @@ export const ProjectorSlideshow = ({ images, style }: ProjectorSlideshowProps) =
         <img
           src={shuffled[nextIndex]}
           alt=""
-          className={`projector-slide ${isTransitioning ? 'opacity-95' : 'opacity-0'}`}
+          className={`projector-slide ${isTransitioning ? 'opacity-[0.85]' : 'opacity-0'}`}
           draggable={false}
         />
       )}
