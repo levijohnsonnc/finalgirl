@@ -27,7 +27,7 @@ export const ProjectorSlideshow = ({ images, style }: ProjectorSlideshowProps) =
       setCurrentIndex(prev => (prev + 1) % shuffled.length);
       setNextIndex(prev => (prev + 1) % shuffled.length);
       setIsTransitioning(false);
-    }, 3000); // match CSS transition duration
+    }, 4000); // match CSS transition duration
   }, [shuffled.length]);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export const ProjectorSlideshow = ({ images, style }: ProjectorSlideshowProps) =
       <img
         src={shuffled[currentIndex]}
         alt=""
-        className={`projector-slide ${isTransitioning ? 'opacity-0' : 'opacity-95'}`}
+        className={`projector-slide ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
         draggable={false}
       />
 
@@ -56,7 +56,7 @@ export const ProjectorSlideshow = ({ images, style }: ProjectorSlideshowProps) =
         <img
           src={shuffled[nextIndex]}
           alt=""
-          className={`projector-slide ${isTransitioning ? 'opacity-95' : 'opacity-0'}`}
+          className={`projector-slide ${isTransitioning ? 'opacity-100' : 'opacity-0'}`}
           draggable={false}
         />
       )}

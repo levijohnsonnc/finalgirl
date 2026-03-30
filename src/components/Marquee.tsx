@@ -50,9 +50,9 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
   }, []);
 
   // Extract all available images from game history
-  const projectorImages = useMemo(() => 
+  const projectorImages = useMemo(() =>
     gameHistory
-      .flatMap(g => [g.sceneImageUrl, g.posterImageUrl])
+      .map(g => g.sceneImageUrl)
       .filter((url): url is string => !!url),
     [gameHistory]
   );
