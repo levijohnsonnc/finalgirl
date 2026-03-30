@@ -26,12 +26,12 @@ export const ProjectorSlideshow = ({ images }: ProjectorSlideshowProps) => {
       setCurrentIndex(prev => (prev + 1) % shuffled.length);
       setNextIndex(prev => (prev + 1) % shuffled.length);
       setIsTransitioning(false);
-    }, 1500); // match CSS transition duration
+    }, 2000); // match CSS transition duration
   }, [shuffled.length]);
 
   useEffect(() => {
     if (shuffled.length < 2) return;
-    const interval = setInterval(advance, 5000);
+    const interval = setInterval(advance, 8000);
     return () => clearInterval(interval);
   }, [advance, shuffled.length]);
 
