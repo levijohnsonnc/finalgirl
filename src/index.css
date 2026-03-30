@@ -2616,8 +2616,12 @@
   letter-spacing: 0.1em;
 }
 
+.archetype-profile {
+  @apply flex flex-col gap-3;
+}
+
 .archetype-reason {
-  @apply font-vhs text-[10px] sm:text-xs text-muted-foreground;
-  letter-spacing: 0.15em;
-  opacity: 0.7;
+  @apply font-vhs text-[10px] sm:text-xs text-muted-foreground leading-relaxed;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
 }
