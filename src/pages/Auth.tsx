@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useScreenEffects } from '@/hooks/useScreenEffects';
 import authBg from '@/assets/auth-bg.png';
 
 // Validation schemas
@@ -21,37 +22,7 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showFlicker, setShowFlicker] = useState(false);
-  const [showFrameJump, setShowFrameJump] = useState(false);
-
-  // Random analog imperfection effects (same as Marquee)
-  useEffect(() => {
-    const scheduleFlicker = () => {
-      const delay = Math.random() * 15000 + 15000;
-      return setTimeout(() => {
-        setShowFlicker(true);
-        setTimeout(() => setShowFlicker(false), 150);
-        scheduleFlicker();
-      }, delay);
-    };
-
-    const scheduleFrameJump = () => {
-      const delay = Math.random() * 20000 + 40000;
-      return setTimeout(() => {
-        setShowFrameJump(true);
-        setTimeout(() => setShowFrameJump(false), 120);
-        scheduleFrameJump();
-      }, delay);
-    };
-
-    const flickerTimeout = scheduleFlicker();
-    const frameJumpTimeout = scheduleFrameJump();
-
-    return () => {
-      clearTimeout(flickerTimeout);
-      clearTimeout(frameJumpTimeout);
-    };
-  }, []);
+  const { showFlicker, showFrameJump } = useScreenEffects();
 
   // Redirect if already logged in
   useEffect(() => {

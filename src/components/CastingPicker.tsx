@@ -32,7 +32,7 @@ const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: stri
   const film = FEATURE_FILMS.find(f => {
     if (type === 'killer') return f.killer === value;
     if (type === 'location') return f.location === value;
-    if (type === 'finalGirl') return f.finalGirls.includes(value as any);
+    if (type === 'finalGirl') return f.finalGirls.some(fg => fg === value);
     return false;
   });
   

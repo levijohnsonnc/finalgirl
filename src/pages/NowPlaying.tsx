@@ -4,52 +4,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
+import { getKillerSpecialRules } from '@/data/killerSpecialRules';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
 import projectorSound from '@/assets/sounds/projector-start.mp3';
 import { ImagePromptModal } from '@/components/ImagePromptModal';
 import { ImageUploadSlot } from '@/components/ImageUploadSlot';
-
-// Helper to render markdown-style text formatting
-const renderFormattedText = (text: string) => {
-  const parts: React.ReactNode[] = [];
-  let remaining = text;
-  let key = 0;
-
-  while (remaining.length > 0) {
-    // Match **bold** or *italic*
-    const boldMatch = remaining.match(/\*\*(.+?)\*\*/);
-    const italicMatch = remaining.match(/\*([^*]+?)\*/);
-
-    // Find which comes first
-    const boldIndex = boldMatch ? remaining.indexOf(boldMatch[0]) : Infinity;
-    const italicIndex = italicMatch ? remaining.indexOf(italicMatch[0]) : Infinity;
-
-    if (boldIndex === Infinity && italicIndex === Infinity) {
-      // No more formatting
-      parts.push(remaining);
-      break;
-    }
-
-    if (boldIndex <= italicIndex && boldMatch) {
-      // Bold comes first
-      if (boldIndex > 0) {
-        parts.push(remaining.slice(0, boldIndex));
-      }
-      parts.push(<strong key={key++} className="font-bold text-foreground">{boldMatch[1]}</strong>);
-      remaining = remaining.slice(boldIndex + boldMatch[0].length);
-    } else if (italicMatch) {
-      // Italic comes first
-      if (italicIndex > 0) {
-        parts.push(remaining.slice(0, italicIndex));
-      }
-      parts.push(<em key={key++} className="italic text-foreground/90">{italicMatch[1]}</em>);
-      remaining = remaining.slice(italicIndex + italicMatch[0].length);
-    }
-  }
-
-  return parts;
-};
+import { renderFormattedText } from '@/lib/textFormatting';
 
 interface NowPlayingProps {
   killer: string;
@@ -108,11 +69,14 @@ const NowPlaying = ({
       const locationDetails = locationFilmDetails?.location;
       const finalGirlDetails = finalGirlFilmDetails?.finalGirls?.find(fg => fg.name === finalGirl);
 
+      const killerRules = getKillerSpecialRules(killer);
+
       // Build payload with complete objects matching the edge function's StoryRequest interface
       const payload = {
         killer: {
           name: killer,
-          description: killerDetails?.description || `A terrifying killer known as ${killer}.`
+          description: killerDetails?.description || `A terrifying killer known as ${killer}.`,
+          ...(killerRules?.narrativeNote && { specialRules: killerRules.narrativeNote }),
         },
         location: {
           name: location,
@@ -132,7 +96,6 @@ const NowPlaying = ({
         } : undefined
       };
 
-      console.log('Generating story with payload:', payload);
 
       const { data, error: fnError } = await supabase.functions.invoke('generate-story', {
         body: payload,

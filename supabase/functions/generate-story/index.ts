@@ -1,11 +1,13 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { corsHeaders } from "../_shared/auth.ts";
+import { getCorsHeaders } from "../_shared/auth.ts";
 import { StoryRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 serve(async (req) => {
+  const cors = getCorsHeaders(req.headers.get('origin'));
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: cors });
   }
 
   try {
@@ -20,13 +22,7 @@ serve(async (req) => {
 
     const { killer, location, finalGirl, startingEvent, startingSetup } = validation.data;
 
-    console.log('Generating story for:', { 
-      killer: killer.name, 
-      location: location.name, 
-      finalGirl: finalGirl.name,
-      startingEvent: startingEvent?.name,
-      startingSetup: startingSetup?.name
-    });
+
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -34,9 +30,13 @@ serve(async (req) => {
     }
 
     // Build the scenario context
-    const killerInfo = killer.description 
+    const killerInfo = killer.description
       ? `${killer.name}: ${killer.description}`
       : `A mysterious killer known as ${killer.name}`;
+
+    const killerSpecialRulesInfo = killer.specialRules
+      ? `IMPORTANT — Killer-specific gameplay rules (respect these in the narrative):\n${killer.specialRules}`
+      : null;
     
     const locationInfo = location.description
       ? `${location.name}: ${location.description}`
@@ -83,7 +83,7 @@ Return only the story text. No headings, bullet points, or meta commentary.`;
 
 Killer Info:
 ${killerInfo}
-
+${killerSpecialRulesInfo ? `\n${killerSpecialRulesInfo}\n` : ''}
 Final Girl Info:
 ${finalGirlInfo}
 
@@ -96,7 +96,6 @@ ${startingEventInfo}
 Starting Setup Info:
 ${startingSetupInfo}`;
 
-    console.log('Calling Lovable AI Gateway...');
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -121,19 +120,19 @@ ${startingSetupInfo}`;
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }),
-          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 429, headers: { ...cors, "Content-Type": "application/json" } }
         );
       }
       if (response.status === 402) {
         return new Response(
           JSON.stringify({ error: "AI credits depleted. Please add credits to continue." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 402, headers: { ...cors, "Content-Type": "application/json" } }
         );
       }
       
       return new Response(
         JSON.stringify({ error: "Failed to generate story. Please try again." }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 500, headers: { ...cors, "Content-Type": "application/json" } }
       );
     }
 
@@ -144,21 +143,20 @@ ${startingSetupInfo}`;
       console.error("No story content in response:", data);
       return new Response(
         JSON.stringify({ error: "No story was generated. Please try again." }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 500, headers: { ...cors, "Content-Type": "application/json" } }
       );
     }
 
-    console.log('Story generated successfully, length:', story.length);
 
     return new Response(
       JSON.stringify({ story }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...cors, "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("generate-story error:", error);
     return new Response(
       JSON.stringify({ error: "Failed to generate story. Please try again." }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...cors, "Content-Type": "application/json" } }
     );
   }
 });

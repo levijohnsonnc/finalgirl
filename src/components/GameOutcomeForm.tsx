@@ -3,6 +3,7 @@ import { ArrowRight, X } from 'lucide-react';
 import { GameResult } from '@/hooks/useGameHistory';
 import { EndingFormData } from '@/pages/TheEnd';
 import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
+import { getKillerMaxHealth, isKillerUnkillable } from '@/data/killerHealth';
 
 interface GameOutcomeFormProps {
   result: GameResult;
@@ -21,27 +22,53 @@ export const GameOutcomeForm = ({
   
   // Get the Final Girl's max health based on character data
   const maxFinalGirlHealth = useMemo(() => getFinalGirlMaxHealth(result.finalGirl), [result.finalGirl]);
+  // Get killer-specific HP and flags
+  const maxKillerHealth = useMemo(() => getKillerMaxHealth(result.killer), [result.killer]);
+  const killerIsUnkillable = useMemo(() => isKillerUnkillable(result.killer), [result.killer]);
+  const isPoltergeist = result.killer === 'Poltergeist';
+  const isOrganism = result.killer === 'The Organism';
   
   // Local form state - use character-specific max health for defaults
   const [finalHorrorLevel, setFinalHorrorLevel] = useState(result.finalHorrorLevel ?? 4);
   const [finalGirlHealth, setFinalGirlHealth] = useState(result.finalGirlHealth ?? (isWin ? maxFinalGirlHealth : 0));
-  const [killerHealth, setKillerHealth] = useState(result.killerHealth ?? (isWin ? 0 : 5));
+  const [killerHealth, setKillerHealth] = useState(result.killerHealth ?? (isWin ? 0 : Math.ceil(maxKillerHealth / 2)));
   const [weaponUsed, setWeaponUsed] = useState(result.weaponUsed ?? '');
   const [victimsSaved, setVictimsSaved] = useState(result.victimsSaved ?? 0);
   const [victimsKilled, setVictimsKilled] = useState(result.victimsKilled ?? 0);
   const [endingSubLocation, setEndingSubLocation] = useState(result.endingSubLocation ?? '');
   const [gameHighlights, setGameHighlights] = useState(result.gameHighlights ?? '');
+  // Poltergeist-specific win condition fields
+  const [foundCarolyn, setFoundCarolyn] = useState(false);
+  const [foundMrFloppy, setFoundMrFloppy] = useState(false);
+  // Organism-specific loss type
+  const [organismLossType, setOrganismLossType] = useState<'caught' | 'assimilated'>('caught');
 
   const handleContinue = () => {
+    // Augment gameHighlights with killer-specific conditions so the LLM gets full context
+    let highlights = gameHighlights || '';
+    if (isPoltergeist && isWin) {
+      const parts = [];
+      if (foundCarolyn) parts.push('Found Carolyn');
+      if (foundMrFloppy) parts.push('Recovered Mr. Floppy');
+      if (parts.length > 0) {
+        highlights = highlights ? `${highlights}. Win condition: ${parts.join(', ')}` : `Win condition: ${parts.join(', ')}`;
+      }
+    }
+    if (isOrganism && !isWin && organismLossType === 'assimilated') {
+      highlights = highlights
+        ? `${highlights}. Loss type: Assimilation (Horror Track exceeded 6 — Final Girl was absorbed into the Organism)`
+        : 'Loss type: Assimilation (Horror Track exceeded 6 — Final Girl was absorbed into the Organism)';
+    }
+
     const formData: EndingFormData = {
       finalHorrorLevel,
       finalGirlHealth,
-      killerHealth,
+      killerHealth: killerIsUnkillable ? 0 : killerHealth,
       weaponUsed: weaponUsed || '',
       victimsSaved,
       victimsKilled,
       endingSubLocation: endingSubLocation || '',
-      gameHighlights: gameHighlights || '',
+      gameHighlights: highlights,
     };
     onContinue(formData);
   };
@@ -104,20 +131,22 @@ export const GameOutcomeForm = ({
             />
           </div>
 
-          {/* Killer Health */}
-          <div className="space-y-1">
-            <label className="font-vhs text-xs text-muted-foreground">
-              Killer Health
-            </label>
-            <input
-              type="number"
-              min="0"
-              max="20"
-              value={killerHealth}
-              onChange={(e) => setKillerHealth(Math.max(0, Number(e.target.value)))}
-              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
-            />
-          </div>
+          {/* Killer Health — hidden for unkillable killers */}
+          {!killerIsUnkillable && (
+            <div className="space-y-1">
+              <label className="font-vhs text-xs text-muted-foreground">
+                Killer Health (0-{maxKillerHealth})
+              </label>
+              <input
+                type="number"
+                min="0"
+                max={maxKillerHealth}
+                value={killerHealth}
+                onChange={(e) => setKillerHealth(Math.min(maxKillerHealth, Math.max(0, Number(e.target.value))))}
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -159,6 +188,68 @@ export const GameOutcomeForm = ({
           </div>
         </div>
       </div>
+
+      {/* Section: Poltergeist win conditions */}
+      {isPoltergeist && isWin && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Poltergeist Win Condition
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={foundCarolyn}
+                onChange={(e) => setFoundCarolyn(e.target.checked)}
+                className="w-4 h-4 accent-secondary"
+              />
+              <span className="font-vhs text-sm text-foreground">Found Carolyn</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={foundMrFloppy}
+                onChange={(e) => setFoundMrFloppy(e.target.checked)}
+                className="w-4 h-4 accent-secondary"
+              />
+              <span className="font-vhs text-sm text-foreground">Found Mr. Floppy</span>
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* Section: Organism loss type */}
+      {isOrganism && !isWin && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            How Did You Lose?
+          </h3>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="organismLoss"
+                value="caught"
+                checked={organismLossType === 'caught'}
+                onChange={() => setOrganismLossType('caught')}
+                className="accent-primary"
+              />
+              <span className="font-vhs text-sm text-foreground">Caught by the Organism</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="organismLoss"
+                value="assimilated"
+                checked={organismLossType === 'assimilated'}
+                onChange={() => setOrganismLossType('assimilated')}
+                className="accent-primary"
+              />
+              <span className="font-vhs text-sm text-foreground">Assimilated (Horror &gt; 6)</span>
+            </label>
+          </div>
+        </div>
+      )}
 
       {/* Section: Narrative */}
       <div className="space-y-3">

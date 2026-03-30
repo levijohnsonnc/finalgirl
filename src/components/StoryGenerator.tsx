@@ -70,7 +70,6 @@ export const StoryGenerator = ({
         } : null,
       };
 
-      console.log('Generating story with payload:', payload);
 
       const { data, error: fnError } = await supabase.functions.invoke('generate-story', {
         body: payload,

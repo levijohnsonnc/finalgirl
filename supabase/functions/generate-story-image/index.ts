@@ -1,12 +1,14 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { corsHeaders } from "../_shared/auth.ts";
+import { getCorsHeaders } from "../_shared/auth.ts";
 import { ImageRequestSchema, validateRequest } from "../_shared/validation.ts";
 
 serve(async (req) => {
+  const cors = getCorsHeaders(req.headers.get('origin'));
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: cors });
   }
 
   try {
@@ -30,8 +32,6 @@ serve(async (req) => {
       locationDescription 
     } = validation.data;
 
-    console.log(`Generating image for position ${position}, story length: ${fullStory.length}`);
-    console.log(`Context - Killer: ${killer}, Final Girl: ${finalGirl}, Location: ${location}`);
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -94,7 +94,6 @@ OUTPUT: One vivid sentence describing a powerful cinematic shot. Focus on DRAMA 
     const visualDescription = extractData.choices?.[0]?.message?.content?.trim() || 
       'Atmospheric vintage scene with dramatic lighting';
 
-    console.log(`Extracted visual for position ${position}:`, visualDescription);
 
     // Dramatic image prompt that avoids poster-style compositions
     const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}
@@ -104,7 +103,6 @@ DO NOT create a movie poster, group portrait, or composite image.
 Focus on this single dramatic moment with authentic vintage analog film quality.
 Muted, desaturated color palette. Widescreen composition. No text or titles.`;
 
-    console.log(`Image prompt for position ${position}:`, imagePrompt);
 
     const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
     if (!GOOGLE_API_KEY) {
@@ -134,7 +132,6 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
     }
 
     const data = await response.json();
-    console.log('Google image response received for position', position);
 
     // Extract the base64 image from Google's response format
     const candidates = data.candidates;
@@ -150,7 +147,7 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
 
     return new Response(
       JSON.stringify({ imageUrl, position, visualDescription }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...cors, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
@@ -159,7 +156,7 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
       JSON.stringify({ error: 'Failed to generate image. Please try again.' }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...cors, 'Content-Type': 'application/json' }
       }
     );
   }
