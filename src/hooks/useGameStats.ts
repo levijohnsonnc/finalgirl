@@ -65,6 +65,7 @@ export interface ComputedStats {
   // Archetype
   playerArchetype: PlayerArchetype;
   archetypeReason: string;
+  archetypeProfile: string;
 }
 
 // Format date for grouping (daily)
