@@ -22,10 +22,10 @@ const MARQUEE_IMAGE_SIZE = {
 } as const;
 
 const MARQUEE_SCREEN_RECT = {
-  x: 324,
-  y: 231,
-  width: 804,
-  height: 400,
+  x: 530,
+  y: 238,
+  width: 590,
+  height: 252,
 } as const;
 
 export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
