@@ -54,6 +54,11 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
         }}
       />
       
+      {/* Projector Slideshow — projected onto the outdoor screen */}
+      {projectorImages.length > 0 && (
+        <ProjectorSlideshow images={projectorImages} />
+      )}
+
       {/* Screen Flicker Overlay */}
       {showFlicker && (
         <div className="absolute inset-0 bg-white/10 screen-flicker pointer-events-none z-10" />
