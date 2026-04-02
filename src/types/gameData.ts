@@ -89,6 +89,10 @@ import patsyImage from '@/assets/characters/patsy.png';
 import zombiesImage from '@/assets/characters/zombies.png';
 import gabrielleImage from '@/assets/characters/gabrielle.png';
 import destinyImage from '@/assets/characters/destiny.png';
+import adrianneImage from '@/assets/characters/adrianne.png';
+import maureenImage from '@/assets/characters/maureen.png';
+import mortImage from '@/assets/characters/mort-the-teenage-dirtbag.png';
+import megabgconImage from '@/assets/locations/megabgcon.png';
 export interface FeatureFilm {
   id: string;
   name: string;
