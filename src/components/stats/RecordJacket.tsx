@@ -24,7 +24,6 @@ const StatCard = ({ label, value, backgroundImage, backgroundPosition = 'center'
     }}
   >
     <div className="hero-stat-card-content">
-      <div className="hero-stat-label">{label}</div>
       <div className="hero-stat-value">{value}</div>
     </div>
   </div>
