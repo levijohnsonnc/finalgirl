@@ -78,6 +78,8 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
       top: `${offsetY + MARQUEE_SCREEN_RECT.y * scale}px`,
       width: `${MARQUEE_SCREEN_RECT.width * scale}px`,
       height: `${MARQUEE_SCREEN_RECT.height * scale}px`,
+      transform: 'rotate(-0.5deg)',
+      transformOrigin: 'center center',
     };
   }, [viewportSize]);
 
