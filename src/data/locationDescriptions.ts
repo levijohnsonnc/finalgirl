@@ -165,7 +165,15 @@ Beyond the manicured lawns, a dense wall of lush green trees presses right up ag
 
 The atmosphere is one of suburban isolation and quiet dread—the kind of stillness that suggests everyone is indoors, watching from behind their shutters, waiting for something to break the silence.
 
-Key elements: Suburban cul-de-sac with 1980s-style homes and manicured lawns. Weathered wooden "Falconwood" entry sign. Vintage wood-paneled station wagon parked in a driveway. Glowing orange street light under a gloomy, overcast sky. Dense forest backdrop with a restricted chain-link fence.`
+Key elements: Suburban cul-de-sac with 1980s-style homes and manicured lawns. Weathered wooden "Falconwood" entry sign. Vintage wood-paneled station wagon parked in a driveway. Glowing orange street light under a gloomy, overcast sky. Dense forest backdrop with a restricted chain-link fence.`,
+
+  'MegaBGCon': `A massive board game convention center in full swing—or mid-collapse. The space is a cavernous exhibition hall with high industrial ceilings, exposed ductwork, and harsh fluorescent lighting. Rows upon rows of colorful vendor booths stretch into the distance, draped with banners for fictional board game titles and publishers. Folding tables are covered with game components, dice towers, and half-played games. Food court area visible in the background with food truck-style vendors and plastic seating.
+
+The atmosphere should feel like organized chaos tipping into real chaos: some booths are still staffed and lit, others are overturned or abandoned. Scattered swag bags, dropped lanyards, and spilled drinks on the convention floor. Crowds of attendees in nerdy t-shirts and cosplay, some frozen in confusion, others mid-stampede. Overhead PA system speakers visible. Exit signs glowing red at the far ends of the hall.
+
+Shot from a wide angle to capture the scale and density of the space. Bright, garish convention lighting mixed with shadows where overhead bulbs have gone out. VHS grain and slight color distortion. The vibe is "Comic-Con meets slasher film"—colorful and absurd on the surface, deeply wrong underneath.
+
+Key elements: Convention hall with vendor booths and gaming tables. Food court area with food trucks. Crowded hallways and bottleneck exits. Scattered board game components and dice. Convention banners and signage. Cosplaying attendees. PA system speakers. Red exit signs.`
 };
 
 /**
