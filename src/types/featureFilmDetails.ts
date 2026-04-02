@@ -624,8 +624,25 @@ They are in fact real, but it isn't what you might think. It would be impossible
 The location represents a dense, enchanted forest filled with landmarks pulled straight from folklore. You aren't just running through trees; you're navigating past The Three Pigs' Houses, The Grandma's House, and The Beanstalk.
 
 The atmosphere is "dark fantasy horror"—think The Brothers Grimm rather than Disney. The paths are winding, and the location is designed to make you feel like the forest itself is closing in on you.`,
-      setupCards: [],
-      events: []
+      setupCards: [
+        { name: 'Picnic', description: 'Victims are spread around the map, picnics are going on' },
+        { name: 'Forest Dwellers', description: 'Victims are mainly in the forest' },
+        { name: 'Scatter!', description: 'Victims have panicked, and are spread throughout the map' },
+        { name: 'Breadcrumb Trail', description: 'Victims have concentrated in the Glen, on the way to Grandmother\'s house' },
+        { name: 'Family Visit', description: 'Many victims are currently visiting Grandmother\'s house' }
+      ],
+      events: [
+        { name: 'Primrose Flowers', description: 'Something is sinister about the flowers in the meadow and glen, victims panic when they enter' },
+        { name: 'Harmless Old Woman', description: 'The killer is disguised as Grandmother, and the victims do not realize it!' },
+        { name: 'Hansel', description: 'One victim is Hansel, she wants to take her to the Gingerbread house' },
+        { name: 'Breadcrumb Path', description: 'Victims took bits of bread and scattered crumbs to lead them home' },
+        { name: 'Toll Bridge', description: 'You must pay to cross this bridge' },
+        { name: 'Furry Friends', description: 'The woodland creatures realize that you are keeping them safe, but make noise wherever you go' },
+        { name: 'Fairy Ring', description: 'All the victims at the Glen disappear. They aren\'t killed, they are just… somewhere else' },
+        { name: 'Travelers', description: 'New victims show up at the glen, meadow, and clearing' },
+        { name: 'The Woodsman', description: 'The woodsman will help attack the killer, and is eager to help' },
+        { name: 'Pied Piper', description: 'Any victims by the pied piper are killed' }
+      ]
     },
     killer: {
       name: 'Big Bad Wolf',
@@ -659,8 +676,23 @@ When she was with her dad, she would spend hours watching him take things apart,
       description: `Wingard Cottage is a perfect getaway, nestled in the woods on the edge of a pristine lake. The cottage has been in the family for generations, and although it has changed over the years, it still has the same charming quality as when it was first built.
 
 Many special events and relaxing getaways have been hosted here. Unfortunately, it has also seen its share of tragedies—horrible events that have plagued the family throughout the home's history. Best not to dwell on the past though, for surely your stay will be peaceful and carefree…`,
-      setupCards: [],
-      events: []
+      setupCards: [
+        { name: 'Special Occasion', description: 'Party in the cottage!' },
+        { name: 'Couples Weekend', description: 'Lots of couples in the cottage, paired up' },
+        { name: 'Grad Party', description: 'Grad party in the cottage!' },
+        { name: 'Fishing Trip', description: 'Buddies on a fishing trip are the victims' },
+        { name: 'Dysfunctional Family', description: 'Family trip, but the victims all hate each other' }
+      ],
+      events: [
+        { name: 'Booby Traps', description: 'The cottage is trapped! All victims in the house panic, anyone leaving the house is killed' },
+        { name: 'Battle Ready', description: 'You start with a weapon' },
+        { name: 'Home Security', description: 'The cottage is armed with alarms, which can keep the killer out for a bit' },
+        { name: 'Marked for Death', description: 'One victim is an outsider and will always be the first to be killed' },
+        { name: 'Escape Attempt', description: 'The victim closest to the driveway makes an attempt to get away' },
+        { name: 'Getting Resourceful', description: 'The cottage is well set up to make it easier to craft weapons and items' },
+        { name: 'Another Way Out', description: 'There is a boat in the lake, and the neighbor has keys to the boat' },
+        { name: 'Loser Boyfriend', description: 'One of the victims is your boyfriend, who has secretly been helping the killer' }
+      ]
     },
     killer: {
       name: 'The Intruders',
