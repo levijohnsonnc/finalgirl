@@ -14,6 +14,7 @@ import falconwoodFilesArt from '@/assets/box-art/the-falconwood-files.png';
 import terrorFromAboveArt from '@/assets/box-art/terror-from-above.png';
 import terrorFromGraveArt from '@/assets/box-art/terror-from-the-grave.png';
 import terrorFromDestinyArt from '@/assets/box-art/terror-from-destiny.png';
+import shriekArt from '@/assets/box-art/shriek.png';
 // Character/location specific images
 import hansImage from '@/assets/characters/hans.png';
 import laurieImage from '@/assets/characters/laurie.png';
