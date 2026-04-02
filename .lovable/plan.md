@@ -1,17 +1,23 @@
 
 
-# Softer Projector Edge Blending
+# Add Setup Cards & Events for Storybook Woods and Wingard Cottage
 
-## What's happening now
-The `mask-image` radial gradient goes from solid black at 60% to transparent at 100%. This creates a noticeable hard-ish edge. The `mix-blend-mode: normal` also makes it look overlaid rather than projected.
+## Summary
+Populate the empty `setupCards` and `events` arrays for two films in `src/types/featureFilmDetails.ts`. This data is already wired into the ScenarioDropdowns component and the story generation edge function — no other files need changes.
 
-## Changes (CSS only — no size/position changes)
+## Change: `src/types/featureFilmDetails.ts`
 
-**`src/index.css` — `.projector-slideshow`:**
-1. **Softer mask gradient** — expand the fade zone so it starts earlier and is more gradual: `radial-gradient(ellipse 96% 94% at center, black 40%, transparent 95%)`. This makes the edges dissolve much more gently into the white screen.
-2. **Switch to `mix-blend-mode: multiply`** — on a white/light screen surface, `multiply` darkens the image naturally onto the background, making it look like light is being absorbed by the screen rather than floating on top. (`lighten` was tried before but `normal` ended up in the final code.)
-3. **Slightly reduce opacity** on `.projector-slide` to ~90% so the screen texture bleeds through faintly, reinforcing the "projected onto" look.
-4. **Add a subtle box-shadow inset** on `.projector-slideshow`: `box-shadow: inset 0 0 30px 15px rgba(0,0,0,0.15)` to simulate natural light falloff at the edges of a real projection.
+**Storybook Woods** (`s2-once-upon-full-moon`, line 627-628) — replace empty arrays with:
 
-These are purely visual tweaks — no changes to positioning, sizing, or the Marquee component.
+- **setupCards** (5): Picnic, Forest Dwellers, Scatter!, Breadcrumb Trail, Family Visit
+- **events** (10): Primrose Flowers, Harmless Old Woman, Hansel, Breadcrumb Path, Toll Bridge, Furry Friends, Fairy Ring, Travelers, The Woodsman, Pied Piper
+
+**Wingard Cottage** (`s2-knock-at-door`, line 662-663) — replace empty arrays with:
+
+- **setupCards** (5): Special Occasion, Couples Weekend, Grad Party, Fishing Trip, Dysfunctional Family
+- **events** (8): Booby Traps, Battle Ready, Home Security, Marked for Death, Escape Attempt, Getting Resourceful, Another Way Out, Loser Boyfriend
+
+Each entry includes the `name` and `description` text you provided. The descriptions are already passed to the `generate-story` edge function via `startingSetup` and `startingEvent` fields, so the LLM will automatically incorporate them into generated stories.
+
+No other files require changes — the ScenarioDropdowns, CastingRoom, and NowPlaying components already read from `getSetupCardsForLocation()` and `getEventsForLocation()` which pull from this data.
 
