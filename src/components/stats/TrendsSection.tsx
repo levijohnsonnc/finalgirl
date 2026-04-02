@@ -172,17 +172,42 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
     <div className="trends-section">
       <h3 className="section-title">// RECOVERED FOOTAGE</h3>
 
-      {/* Win/Loss Bar - Clean and Simple */}
+      {/* Win/Loss Bar - Glass Tube */}
       <div className="winloss-bar-container">
         <div className="winloss-bar">
-          <div 
-            className="winloss-wins" 
-            style={{ width: `${winPercentage}%` }}
-          />
-          <div 
-            className="winloss-losses" 
-            style={{ width: `${100 - winPercentage}%` }}
-          />
+          {/* Wins side */}
+          <div className="winloss-wins" style={{ width: `${winPercentage}%` }}>
+            {[10, 28, 50, 68, 84].map((left, i) => (
+              <div key={i} className="winloss-bubble" style={{
+                left: `${left}%`, bottom: '8%',
+                width: i % 2 === 0 ? 3 : 4, height: i % 2 === 0 ? 3 : 4,
+                background: 'rgba(255,255,255,0.55)',
+                '--bubble-dur': `${12 + i * 4}s`,
+                '--bubble-delay': `${i * 1.3}s`,
+              } as React.CSSProperties} />
+            ))}
+            <div className="winloss-liquid-shimmer" />
+          </div>
+          {/* Losses side */}
+          <div className="winloss-losses" style={{ width: `${100 - winPercentage}%` }}>
+            {[8, 30, 52, 72, 90].map((left, i) => (
+              <div key={i} className="winloss-bubble" style={{
+                left: `${left}%`, bottom: '8%',
+                width: i % 2 === 0 ? 4 : 3, height: i % 2 === 0 ? 4 : 3,
+                background: 'rgba(255,160,160,0.4)',
+                '--bubble-dur': `${14 + i * 3}s`,
+                '--bubble-delay': `${i * 1.7 + 0.5}s`,
+              } as React.CSSProperties} />
+            ))}
+            <div className="winloss-liquid-shimmer" style={{ animationDelay: '1.6s' }} />
+          </div>
+          {/* Merge swirl */}
+          <div className="winloss-swirl" style={{ left: `${winPercentage}%` }} />
+          {/* Glass overlays */}
+          <div className="winloss-glass-top" />
+          <div className="winloss-glass-bottom" />
+          <div className="winloss-cap-left" />
+          <div className="winloss-cap-right" />
         </div>
         <div className="winloss-labels">
           <span className="text-neon-cyan">Wins {stats.totalWins}</span>
