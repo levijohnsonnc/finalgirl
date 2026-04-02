@@ -196,6 +196,19 @@ Her hair is honey-blonde, styled in a short, textured crop that is swept back fr
 
 She wears a tattered olive-green field jacket over a simple white tank top. The jacket is visibly worn, with a large tear at the shoulder and layers of grime on the fabric.`,
 
+  // Season 4 - Shriek
+  'Adrianne': `A woman in her early-to-mid 20s with an average build and a calm, slightly detached presence. She has fair, smooth skin with natural, subtle texturing typical of vintage film photography rather than modern airbrushing. Her face is slightly angular with a strong jawline, full lips, and a straight nose. She has clear, light-blue eyes with a direct, steady stare and strong, neatly arched eyebrows that convey a quiet, observant seriousness.
+
+Her hair is a striking, vibrant magenta-red, straight, shoulder-length, and styled in a sleek bob with blunt fringe bangs covering her forehead. She wears minimal, natural-looking makeup with a soft pinkish-nude lip and subtle shading. Her expression is serious, unsmiling, and emotionally composed.
+
+She appears youthful but self-possessed, like a quiet rebel from a bygone era. She wears a practical, textured, dark-plum knit sweater with a simple crew neckline. The fabric looks warm and cozy rather than overtly fashionable. Nothing ornamental or decorative. The overall aesthetic is nostalgic, grounded, and realistic, resembling an authentic 1980s analog portrait set against a faded, patterned wallpaper.`,
+
+  'Maureen': `A woman in her late 40s to early 50s with a commanding, authoritative presence. She has an olive complexion with smooth but mature skin, marked by a distinct mole on her left cheek. Her face features strong bone structure, a prominent, straight nose, and dark brown, piercing eyes. Her brows are dark, arched, and deeply furrowed, giving her a severe, critical, and unyielding stare.
+
+Her hair is dark espresso brown, thick, and worn straight, falling past her shoulders with a soft, natural volume and a subtle side part. She wears classic, professional makeup featuring matte brick-red lipstick and lightly defined eyes, complemented by elegant pearl stud earrings. Her expression is stern, unsmiling, and highly guarded, projecting a sense of intense scrutiny and no-nonsense professionalism.
+
+She is dressed in a bold, structured crimson red blazer characteristic of 1980s power dressing, layered over a simple, casual heather-grey crewneck top. The overall aesthetic is grounded, corporate, and sharply realistic, evoking the atmosphere of a tense, late-20th-century office environment.`,
+
 };
 
 /**
