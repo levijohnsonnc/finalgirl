@@ -126,9 +126,7 @@ Composition feels candid, like a photojournalist arrived moments after something
 
 Emotional tone: quiet dread, inevitability, "this could happen to anyone."`,
 
-  'Mort the Teenage Dirtbag': `A figure in a charcoal hoodie and red-and-black pants, wearing a distinctive ghost mask with one oversized, unblinking eye. The mask is white and angular, vaguely skull-like but warped into something almost cartoonish—which makes it worse. The hoodie is pulled up over the mask, casting deep shadow. One gloved hand holds a knife loosely at their side. The posture is casual, almost bored, like a teenager loitering at the mall—except they're standing in a pool of flickering fluorescent light on a convention floor littered with overturned chairs and scattered board game pieces.
-
-Setting should feel like a board game convention after hours or mid-panic: colorful booth banners half-collapsed, scattered swag bags, knocked-over displays. Harsh overhead fluorescent lighting with some bulbs flickering or dead, creating uneven pools of light and shadow. The atmosphere is chaos frozen mid-frame.
+  'Mort the Teenage Dirtbag': `A central person wearing a detailed, aged skull-like mask with dark, vacant eye sockets and a small, open mouth. They have a rugged appearance in a heavily distressed dark leather biker jacket over a green, red, and yellow plaid scarf. The look is gritty and alternative, set amidst a crowded night-time street market with other diverse individuals, including blurred masked faces, and stalls with music posters.
 
 Composition: mid-shot, slightly low angle looking up at the killer. Grainy, oversaturated VHS quality with tracking lines and color bleed. The vibe is slasher-meets-teen-comedy—absurd and menacing at the same time.
 
