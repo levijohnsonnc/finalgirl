@@ -1,23 +1,25 @@
 
 
-# Add Setup Cards & Events for Storybook Woods and Wingard Cottage
+# Tilt Projector Slideshow to Match Screen Border
 
-## Summary
-Populate the empty `setupCards` and `events` arrays for two films in `src/types/featureFilmDetails.ts`. This data is already wired into the ScenarioDropdowns component and the story generation edge function — no other files need changes.
+## The Problem
 
-## Change: `src/types/featureFilmDetails.ts`
+The white screen border in the background image (`marquee-bg.png`) isn't perfectly rectangular — the screen in the photo is slightly tilted/skewed (the upper-right corner clips). Since we can't modify the background image, the projected slideshow overlay doesn't align evenly with the white border on all sides.
 
-**Storybook Woods** (`s2-once-upon-full-moon`, line 627-628) — replace empty arrays with:
+## The Fix
 
-- **setupCards** (5): Picnic, Forest Dwellers, Scatter!, Breadcrumb Trail, Family Visit
-- **events** (10): Primrose Flowers, Harmless Old Woman, Hansel, Breadcrumb Path, Toll Bridge, Furry Friends, Fairy Ring, Travelers, The Woodsman, Pied Piper
+Yes, this is absolutely doable. We can apply a small CSS `transform: rotate()` to the `.projector-slideshow` element to tilt the projected image to match the screen's natural angle. The `projectorStyle` already sets `left`, `top`, `width`, and `height` dynamically — adding a rotation won't affect the positioning math.
 
-**Wingard Cottage** (`s2-knock-at-door`, line 662-663) — replace empty arrays with:
+### Changes
 
-- **setupCards** (5): Special Occasion, Couples Weekend, Grad Party, Fishing Trip, Dysfunctional Family
-- **events** (8): Booby Traps, Battle Ready, Home Security, Marked for Death, Escape Attempt, Getting Resourceful, Another Way Out, Loser Boyfriend
+**`src/components/Marquee.tsx`** — Add a slight rotation to the computed `projectorStyle` object:
+- Add `transform: 'rotate(-0.5deg)'` (or similar small value, will need fine-tuning) to match the screen's tilt
+- Add `transformOrigin: 'center center'` so the rotation pivots from the middle
 
-Each entry includes the `name` and `description` text you provided. The descriptions are already passed to the `generate-story` edge function via `startingSetup` and `startingEvent` fields, so the LLM will automatically incorporate them into generated stories.
+**Optionally adjust `MARQUEE_SCREEN_RECT`** — If the rotation shifts the image slightly, we may need to nudge `x`/`y` by 1-2px to re-center.
 
-No other files require changes — the ScenarioDropdowns, CastingRoom, and NowPlaying components already read from `getSetupCardsForLocation()` and `getEventsForLocation()` which pull from this data.
+The exact rotation angle will need visual tuning — starting at around **-0.3deg to -0.8deg** based on the screenshot. This is a pure CSS transform, no structural changes needed.
+
+### Files changed
+- **`src/components/Marquee.tsx`** — add `transform` and `transformOrigin` to projectorStyle
 
