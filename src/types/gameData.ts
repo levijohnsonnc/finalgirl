@@ -89,6 +89,10 @@ import patsyImage from '@/assets/characters/patsy.png';
 import zombiesImage from '@/assets/characters/zombies.png';
 import gabrielleImage from '@/assets/characters/gabrielle.png';
 import destinyImage from '@/assets/characters/destiny.png';
+import adrianneImage from '@/assets/characters/adrianne.png';
+import maureenImage from '@/assets/characters/maureen.png';
+import mortImage from '@/assets/characters/mort-the-teenage-dirtbag.png';
+import megabgconImage from '@/assets/locations/megabgcon.png';
 export interface FeatureFilm {
   id: string;
   name: string;
@@ -156,6 +160,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Zombies': zombiesImage,
   'Gabrielle': gabrielleImage,
   'Destiny': destinyImage,
+  'Adrianne': adrianneImage,
+  'Maureen': maureenImage,
+  'Mort the Teenage Dirtbag': mortImage,
 };
 
 // Location-specific images (for casting room display)
@@ -176,6 +183,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Hellscape': hellscapeImage,
   'Marrek Warehouse': marrekWarehouseImage,
   'Utopia': utopiaImage,
+  'MegaBGCon': megabgconImage,
 };
 
 export interface SessionLog {
@@ -221,7 +229,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's3-terror-from-destiny', name: 'Terror From Destiny', season: 3, killer: 'Destiny', location: '', finalGirls: ['Gabrielle'], boxArt: terrorFromDestinyArt, isVignette: true },
   
   // Season 4
-  { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
+  { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'Mort the Teenage Dirtbag', location: 'MegaBGCon', finalGirls: ['Adrianne', 'Maureen'] },
   { id: 's4-demon-shadows', name: 'A Demon in the Shadows', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-buddyland', name: 'Bad Times at Buddyland', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-rotten-harvest', name: 'A Rotten Harvest', season: 4, killer: 'Grimlash', location: 'Shady Acres', finalGirls: ['Joy', 'Vicky'], boxArt: rottenHarvestArt },
