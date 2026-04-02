@@ -676,8 +676,23 @@ When she was with her dad, she would spend hours watching him take things apart,
       description: `Wingard Cottage is a perfect getaway, nestled in the woods on the edge of a pristine lake. The cottage has been in the family for generations, and although it has changed over the years, it still has the same charming quality as when it was first built.
 
 Many special events and relaxing getaways have been hosted here. Unfortunately, it has also seen its share of tragedies—horrible events that have plagued the family throughout the home's history. Best not to dwell on the past though, for surely your stay will be peaceful and carefree…`,
-      setupCards: [],
-      events: []
+      setupCards: [
+        { name: 'Special Occasion', description: 'Party in the cottage!' },
+        { name: 'Couples Weekend', description: 'Lots of couples in the cottage, paired up' },
+        { name: 'Grad Party', description: 'Grad party in the cottage!' },
+        { name: 'Fishing Trip', description: 'Buddies on a fishing trip are the victims' },
+        { name: 'Dysfunctional Family', description: 'Family trip, but the victims all hate each other' }
+      ],
+      events: [
+        { name: 'Booby Traps', description: 'The cottage is trapped! All victims in the house panic, anyone leaving the house is killed' },
+        { name: 'Battle Ready', description: 'You start with a weapon' },
+        { name: 'Home Security', description: 'The cottage is armed with alarms, which can keep the killer out for a bit' },
+        { name: 'Marked for Death', description: 'One victim is an outsider and will always be the first to be killed' },
+        { name: 'Escape Attempt', description: 'The victim closest to the driveway makes an attempt to get away' },
+        { name: 'Getting Resourceful', description: 'The cottage is well set up to make it easier to craft weapons and items' },
+        { name: 'Another Way Out', description: 'There is a boat in the lake, and the neighbor has keys to the boat' },
+        { name: 'Loser Boyfriend', description: 'One of the victims is your boyfriend, who has secretly been helping the killer' }
+      ]
     },
     killer: {
       name: 'The Intruders',
