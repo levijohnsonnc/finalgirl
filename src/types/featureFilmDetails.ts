@@ -899,6 +899,47 @@ Now death is collecting. One by one, in increasingly elaborate and seemingly acc
 The horror lies not in a monster lurking in the shadows, but in the realization that the universe itself has turned against you. Every creak, every flicker, every minor malfunction could be the beginning of a carefully orchestrated demise. Destiny is patient, methodical, and absolutely certain.`
     }
   },
+
+  's4-shriek': {
+    filmId: 's4-shriek',
+    finalGirls: [
+      {
+        name: 'Adrianne',
+        backstory: 'No detailed backstory available yet.'
+      },
+      {
+        name: 'Maureen',
+        backstory: 'No detailed backstory available yet.'
+      }
+    ],
+    location: {
+      name: 'MegaBGCon',
+      description: `MegaBGCon is a sprawling board game convention packed wall-to-wall with booths, crowds, food vendors, and nonstop activity. What should feel like a celebration of gaming instead becomes a maze of noise, panic, and danger, with victims too overwhelmed to follow willingly and chaos erupting across the convention floor. The location is divided into Exhibit Areas, the Food Court, and General Areas, with crowded hallways, busy exits, and booth activity constantly introducing new people and new problems. MegaBGCon is convention chaos weaponized. The floor is crammed with search opportunities, parody booths, food, fans, and bottlenecks, but saving people here is harder than it looks. Victims won't simply follow along, booth activity keeps generating new trouble, and the packed hallways make every turn feel like a scramble to stay ahead of mounting panic.`,
+      setupCards: [
+        { name: 'Busiest Day', description: 'The event is packed to capacity with attendees.' },
+        { name: 'Family Day', description: 'The event is full of families.' },
+        { name: 'First Day', description: 'It is the first day of the convention.' },
+        { name: 'Last Day', description: 'It is the last day of the convention.' },
+        { name: 'Mega Events', description: 'The biggest event day—all the things are going on!' }
+      ],
+      events: [
+        { name: 'Annoying Reporter', description: '"This is Courtney Storm, on the scene!" An annoying reporter follows you around.' },
+        { name: 'Food Trucks Are Here!', description: '"Let\'s get some Island Noods!" Food trucks have arrived at the convention.' },
+        { name: 'Industry Bad Boy', description: '"Some love him, some hate him." He can either be your friend or your enemy.' },
+        { name: 'Lunch Time!', description: '"Let\'s go check out the food trucks!" It\'s lunch time at the convention.' },
+        { name: 'Media Starlet', description: '"I heard she has over 1 million subscribers OMG!" The media starlet shows up but won\'t follow you anywhere.' },
+        { name: 'Nervous Attendees', description: '"Something feels... off this year." The attendees are nervous and uneasy.' },
+        { name: 'Popular Game Designer', description: 'There is a board game booth with a popular Game Designer drawing crowds.' },
+        { name: 'Stampede', description: '"The doors are open. Go! Go! Go!" A stampede of attendees rushes through.' },
+        { name: 'SWAG Roulette', description: '"Don\'t open it until we leave. I want it to be a surprise!" Mystery swag bags are being distributed.' },
+        { name: 'Ticketed Events', description: '"Hand me your tickets and have a seat." Two new victims enter the location.' }
+      ]
+    },
+    killer: {
+      name: 'Mort the Teenage Dirtbag',
+      description: `Mort the Teenage Dirtbag wears a charcoal hoodie, red-and-black pants, and a ghost mask with one large eye. Inspired by the 'Scream' series, Mort's powers revolve around multiple killers working together to confuse investigators as to their identities. As one witness described: "I saw this dude in a pig mask kill a guy! But then he disappeared, and then I saw him and ripped his mask off and it was my best bro Tom! And Tom was like, 'I didn't kill no one, what's your damage?' And then we saw a babe in one of those Tormentor outfits and she TOTALLY killed this other babe, and we tackled her, but then it was just some kid who swore she didn't kill anyone. So WHAT THE HELL IS GOING ON?" The horror of Mort is that anyone could be the killer—and by the time you figure out who's behind the mask, it might already be too late.`
+    }
+  },
 };
 
 export const getFilmDetails = (filmId: string): FeatureFilmDetail | undefined => {
