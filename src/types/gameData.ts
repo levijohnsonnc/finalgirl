@@ -183,6 +183,7 @@ export const LOCATION_IMAGES: Record<string, string> = {
   'Hellscape': hellscapeImage,
   'Marrek Warehouse': marrekWarehouseImage,
   'Utopia': utopiaImage,
+  'MegaBGCon': megabgconImage,
 };
 
 export interface SessionLog {
