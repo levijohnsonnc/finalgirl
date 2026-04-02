@@ -14,6 +14,7 @@ import falconwoodFilesArt from '@/assets/box-art/the-falconwood-files.png';
 import terrorFromAboveArt from '@/assets/box-art/terror-from-above.png';
 import terrorFromGraveArt from '@/assets/box-art/terror-from-the-grave.png';
 import terrorFromDestinyArt from '@/assets/box-art/terror-from-destiny.png';
+import shriekArt from '@/assets/box-art/shriek.png';
 // Character/location specific images
 import hansImage from '@/assets/characters/hans.png';
 import laurieImage from '@/assets/characters/laurie.png';
@@ -229,7 +230,7 @@ export const FEATURE_FILMS: FeatureFilm[] = [
   { id: 's3-terror-from-destiny', name: 'Terror From Destiny', season: 3, killer: 'Destiny', location: '', finalGirls: ['Gabrielle'], boxArt: terrorFromDestinyArt, isVignette: true },
   
   // Season 4
-  { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'Mort the Teenage Dirtbag', location: 'MegaBGCon', finalGirls: ['Adrianne', 'Maureen'] },
+  { id: 's4-shriek', name: 'Shriek', season: 4, killer: 'Mort the Teenage Dirtbag', location: 'MegaBGCon', finalGirls: ['Adrianne', 'Maureen'], boxArt: shriekArt },
   { id: 's4-demon-shadows', name: 'A Demon in the Shadows', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-buddyland', name: 'Bad Times at Buddyland', season: 4, killer: 'TBD', location: 'TBD', finalGirls: ['TBD', 'TBD'] },
   { id: 's4-rotten-harvest', name: 'A Rotten Harvest', season: 4, killer: 'Grimlash', location: 'Shady Acres', finalGirls: ['Joy', 'Vicky'], boxArt: rottenHarvestArt },
