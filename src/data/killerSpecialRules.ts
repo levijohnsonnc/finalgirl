@@ -136,6 +136,10 @@ export const KILLER_SPECIAL_RULES: Record<string, KillerSpecialRules> = {
     narrativeNote:
       'A pumpkin-headed, fire-wielding entity that emerges from the harvest fields of Shady Acres. Fire is both its weapon and its essence — the autumnal setting amplifies its menace.',
   },
+  'Mort the Teenage Dirtbag': {
+    narrativeNote:
+      'Inspired by the Scream franchise. Mort uses multiple disguises and accomplices to confuse investigators—anyone at the convention could be the killer. The horror is paranoia and misdirection, not brute force. Ghost mask with one large eye, charcoal hoodie, red-and-black pants.',
+  },
 };
 
 /**
