@@ -160,6 +160,9 @@ export const CHARACTER_IMAGES: Record<string, string> = {
   'Zombies': zombiesImage,
   'Gabrielle': gabrielleImage,
   'Destiny': destinyImage,
+  'Adrianne': adrianneImage,
+  'Maureen': maureenImage,
+  'Mort the Teenage Dirtbag': mortImage,
 };
 
 // Location-specific images (for casting room display)
