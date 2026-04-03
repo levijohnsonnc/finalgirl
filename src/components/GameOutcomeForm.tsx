@@ -27,6 +27,13 @@ export const GameOutcomeForm = ({
   const killerIsUnkillable = useMemo(() => isKillerUnkillable(result.killer), [result.killer]);
   const isPoltergeist = result.killer === 'Poltergeist';
   const isOrganism = result.killer === 'The Organism';
+  const isEvomorph = result.killer === 'Evomorph';
+  const isRatchetLady = result.killer === 'Ratchet Lady';
+  const isBigBadWolf = result.killer === 'Big Bad Wolf';
+  const isIntruders = result.killer === 'The Intruders';
+  const isBuddyland = result.killer === 'Billy the Bear' || result.location === 'Buddyland';
+  const isGrimlash = result.killer === 'Grimlash';
+  const isBerith = result.killer === 'Berith' || result.location === "L'Armes Abbey";
   
   // Local form state - use character-specific max health for defaults
   const [finalHorrorLevel, setFinalHorrorLevel] = useState(result.finalHorrorLevel ?? 4);
@@ -42,6 +49,23 @@ export const GameOutcomeForm = ({
   const [foundMrFloppy, setFoundMrFloppy] = useState(false);
   // Organism-specific loss type
   const [organismLossType, setOrganismLossType] = useState<'caught' | 'assimilated'>('caught');
+  // Evomorph evolution stage
+  const [evomorphStage, setEvomorphStage] = useState<'Hatchling' | 'Youngling' | 'Adult'>('Hatchling');
+  // Ratchet Lady maniac count
+  const [maniacCount, setManiacCount] = useState(0);
+  // Big Bad Wolf mode
+  const [wolfMode, setWolfMode] = useState<'TRACK' | 'SLAY' | 'Killing Machine'>('SLAY');
+  // The Intruders - active killer at game end
+  const [activeIntruder, setActiveIntruder] = useState<'Baghead' | 'Redhood' | 'Zeke'>('Baghead');
+  // Buddyland - Buddies + power supplies
+  const [buddiesInPlay, setBuddiesInPlay] = useState(0);
+  const [powerSuppliesShutDown, setPowerSuppliesShutDown] = useState(false);
+  // Grimlash / A Rotten Harvest
+  const [childrenSurvived, setChildrenSurvived] = useState(0);
+  const [harvestMadnessPeaked, setHarvestMadnessPeaked] = useState(false);
+  // Berith / A Demon in the Shadows
+  const [ursulaSaved, setUrsulaSaved] = useState(false);
+  const [abbeyInfluence, setAbbeyInfluence] = useState<'Blessings Dominated' | 'Curses Dominated' | 'Balanced'>('Balanced');
 
   const handleContinue = () => {
     // Augment gameHighlights with killer-specific conditions so the LLM gets full context
@@ -58,6 +82,42 @@ export const GameOutcomeForm = ({
       highlights = highlights
         ? `${highlights}. Loss type: Assimilation (Horror Track exceeded 6 — Final Girl was absorbed into the Organism)`
         : 'Loss type: Assimilation (Horror Track exceeded 6 — Final Girl was absorbed into the Organism)';
+    }
+    if (isEvomorph) {
+      highlights = highlights
+        ? `${highlights}. Evomorph stage reached: ${evomorphStage}`
+        : `Evomorph stage reached: ${evomorphStage}`;
+    }
+    if (isRatchetLady) {
+      highlights = highlights
+        ? `${highlights}. Maniacs on board at end: ${maniacCount}`
+        : `Maniacs on board at end: ${maniacCount}`;
+    }
+    if (isBigBadWolf) {
+      highlights = highlights
+        ? `${highlights}. Wolf mode at end: ${wolfMode}`
+        : `Wolf mode at end: ${wolfMode}`;
+    }
+    if (isIntruders) {
+      highlights = highlights
+        ? `${highlights}. Active Intruder at end: ${activeIntruder}`
+        : `Active Intruder at end: ${activeIntruder}`;
+    }
+    if (isBuddyland) {
+      const buddyParts = [`Buddies in play at end: ${buddiesInPlay}`];
+      if (powerSuppliesShutDown) buddyParts.push('Power supplies shut down');
+      highlights = highlights ? `${highlights}. ${buddyParts.join('. ')}` : buddyParts.join('. ');
+    }
+    if (isGrimlash) {
+      const harvestParts = [`Children survived: ${childrenSurvived}`];
+      if (harvestMadnessPeaked) harvestParts.push('Harvest Madness peaked');
+      highlights = highlights ? `${highlights}. ${harvestParts.join('. ')}` : harvestParts.join('. ');
+    }
+    if (isBerith) {
+      const demonParts: string[] = [];
+      if (isWin && ursulaSaved) demonParts.push('Ursula saved');
+      demonParts.push(`L'Armes Abbey influence: ${abbeyInfluence}`);
+      highlights = highlights ? `${highlights}. ${demonParts.join('. ')}` : demonParts.join('. ');
     }
 
     const formData: EndingFormData = {
@@ -247,6 +307,208 @@ export const GameOutcomeForm = ({
               />
               <span className="font-vhs text-sm text-foreground">Assimilated (Horror &gt; 6)</span>
             </label>
+          </div>
+        </div>
+      )}
+
+      {/* Section: Evomorph evolution stage */}
+      {isEvomorph && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Evomorph Evolution
+          </h3>
+          <div className="flex flex-col sm:flex-row gap-2">
+            {(['Hatchling', 'Youngling', 'Adult'] as const).map((stage) => (
+              <label key={stage} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="evomorphStage"
+                  value={stage}
+                  checked={evomorphStage === stage}
+                  onChange={() => setEvomorphStage(stage)}
+                  className="accent-primary"
+                />
+                <span className="font-vhs text-sm text-foreground">{stage}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Section: Ratchet Lady - maniacs */}
+      {isRatchetLady && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Asylum Status
+          </h3>
+          <div className="space-y-1">
+            <label className="font-vhs text-xs text-muted-foreground">
+              Maniacs on Board at End (0–6)
+            </label>
+            <input
+              type="number"
+              min="0"
+              max="6"
+              value={maniacCount}
+              onChange={(e) => setManiacCount(Math.min(6, Math.max(0, Number(e.target.value))))}
+              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Section: Big Bad Wolf mode */}
+      {isBigBadWolf && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Wolf Status
+          </h3>
+          <div className="flex flex-col sm:flex-row gap-2">
+            {(['TRACK', 'SLAY', 'Killing Machine'] as const).map((mode) => (
+              <label key={mode} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="wolfMode"
+                  value={mode}
+                  checked={wolfMode === mode}
+                  onChange={() => setWolfMode(mode)}
+                  className="accent-primary"
+                />
+                <span className="font-vhs text-sm text-foreground">{mode}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Section: The Intruders - active killer */}
+      {isIntruders && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Active Intruder
+          </h3>
+          <div className="flex flex-col sm:flex-row gap-2">
+            {(['Baghead', 'Redhood', 'Zeke'] as const).map((intruder) => (
+              <label key={intruder} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="activeIntruder"
+                  value={intruder}
+                  checked={activeIntruder === intruder}
+                  onChange={() => setActiveIntruder(intruder)}
+                  className="accent-primary"
+                />
+                <span className="font-vhs text-sm text-foreground">{intruder}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Section: Buddyland - Buddies + power supplies */}
+      {isBuddyland && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Buddyland Status
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="font-vhs text-xs text-muted-foreground">
+                Buddies in Play at End (0–7)
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="7"
+                value={buddiesInPlay}
+                onChange={(e) => setBuddiesInPlay(Math.min(7, Math.max(0, Number(e.target.value))))}
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              />
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={powerSuppliesShutDown}
+                  onChange={(e) => setPowerSuppliesShutDown(e.target.checked)}
+                  className="w-4 h-4 accent-secondary"
+                />
+                <span className="font-vhs text-sm text-foreground">Power Supplies Shut Down</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Section: Grimlash / A Rotten Harvest */}
+      {isGrimlash && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Harvest
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="font-vhs text-xs text-muted-foreground">
+                Children Survived (0–3)
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="3"
+                value={childrenSurvived}
+                onChange={(e) => setChildrenSurvived(Math.min(3, Math.max(0, Number(e.target.value))))}
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              />
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={harvestMadnessPeaked}
+                  onChange={(e) => setHarvestMadnessPeaked(e.target.checked)}
+                  className="w-4 h-4 accent-primary"
+                />
+                <span className="font-vhs text-sm text-foreground">Harvest Madness Peaked</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Section: Berith / A Demon in the Shadows */}
+      {isBerith && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            The Demon
+          </h3>
+          {isWin && (
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={ursulaSaved}
+                onChange={(e) => setUrsulaSaved(e.target.checked)}
+                className="w-4 h-4 accent-secondary"
+              />
+              <span className="font-vhs text-sm text-foreground">Ursula Saved</span>
+            </label>
+          )}
+          <div>
+            <p className="font-vhs text-xs text-muted-foreground mb-2">L'Armes Abbey Influence</p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              {(['Blessings Dominated', 'Curses Dominated', 'Balanced'] as const).map((influence) => (
+                <label key={influence} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="abbeyInfluence"
+                    value={influence}
+                    checked={abbeyInfluence === influence}
+                    onChange={() => setAbbeyInfluence(influence)}
+                    className="accent-primary"
+                  />
+                  <span className="font-vhs text-sm text-foreground">{influence}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
       )}
