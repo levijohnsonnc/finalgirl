@@ -175,39 +175,47 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
       {/* Win/Loss Bar - Glass Tube */}
       <div className="winloss-bar-container">
         <div className="winloss-bar">
-          {/* Wins side */}
+          {/* Cyan liquid (wins) */}
           <div className="winloss-wins" style={{ width: `${winPercentage}%` }}>
-            {[10, 28, 50, 68, 84].map((left, i) => (
-              <div key={i} className="winloss-bubble" style={{
-                left: `${left}%`, bottom: '8%',
-                width: i % 2 === 0 ? 3 : 4, height: i % 2 === 0 ? 3 : 4,
-                background: 'rgba(255,255,255,0.55)',
-                '--bubble-dur': `${12 + i * 4}s`,
-                '--bubble-delay': `${i * 1.3}s`,
-              } as React.CSSProperties} />
-            ))}
-            <div className="winloss-liquid-shimmer" />
+            {[12, 35, 58, 82].map((left, i) => {
+              const size = [5, 7, 4, 6][i];
+              return (
+                <div key={`w${i}`} className="winloss-bubble" style={{
+                  left: `${left}%`, bottom: '10%',
+                  width: size, height: size,
+                  background: 'rgba(200, 255, 255, 0.5)',
+                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.4)',
+                  '--bubble-dur': `${8 + i * 5}s`,
+                  '--bubble-delay': `${i * 2.1}s`,
+                } as React.CSSProperties} />
+              );
+            })}
+            <div className="winloss-liquid-caustic" />
           </div>
-          {/* Losses side */}
+          {/* Red liquid (losses) */}
           <div className="winloss-losses" style={{ width: `${100 - winPercentage}%` }}>
-            {[8, 30, 52, 72, 90].map((left, i) => (
-              <div key={i} className="winloss-bubble" style={{
-                left: `${left}%`, bottom: '8%',
-                width: i % 2 === 0 ? 4 : 3, height: i % 2 === 0 ? 4 : 3,
-                background: 'rgba(255,160,160,0.4)',
-                '--bubble-dur': `${14 + i * 3}s`,
-                '--bubble-delay': `${i * 1.7 + 0.5}s`,
-              } as React.CSSProperties} />
-            ))}
-            <div className="winloss-liquid-shimmer" style={{ animationDelay: '1.6s' }} />
+            {[15, 40, 65, 88].map((left, i) => {
+              const size = [6, 4, 7, 5][i];
+              return (
+                <div key={`l${i}`} className="winloss-bubble" style={{
+                  left: `${left}%`, bottom: '10%',
+                  width: size, height: size,
+                  background: 'rgba(255, 180, 180, 0.4)',
+                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.3)',
+                  '--bubble-dur': `${10 + i * 4}s`,
+                  '--bubble-delay': `${i * 2.5 + 1}s`,
+                } as React.CSSProperties} />
+              );
+            })}
+            <div className="winloss-liquid-caustic" style={{ animationDelay: '3s' }} />
           </div>
-          {/* Merge swirl */}
+          {/* Boundary swirl */}
           <div className="winloss-swirl" style={{ left: `${winPercentage}%` }} />
           {/* Glass overlays */}
-          <div className="winloss-glass-top" />
+          <div className="winloss-glass-specular" />
+          <div className="winloss-glass-diffuse" />
+          <div className="winloss-glass-edges" />
           <div className="winloss-glass-bottom" />
-          <div className="winloss-cap-left" />
-          <div className="winloss-cap-right" />
         </div>
         <div className="winloss-labels">
           <span className="text-neon-cyan">Wins {stats.totalWins}</span>
