@@ -124,7 +124,13 @@ They appear as a weathered, decaying tide of humanity, functioning as a singular
 
 Composition feels candid, like a photojournalist arrived moments after something went wrong. Shallow depth of field, imperfect focus, mild motion blur, and natural lens falloff. Muted, realistic color palette. Subtle tension rather than spectacle. The mood should imply fate, bad luck, or a chain reaction about to happen. Nothing stylized, nothing digital-looking—it should feel like a real photograph from the 1980s found in a shoebox.
 
-Emotional tone: quiet dread, inevitability, "this could happen to anyone."`
+Emotional tone: quiet dread, inevitability, "this could happen to anyone."`,
+
+  'Mort the Teenage Dirtbag': `A central person wearing a detailed, aged skull-like mask with dark, vacant eye sockets and a small, open mouth. They have a rugged appearance in a heavily distressed dark leather biker jacket over a green, red, and yellow plaid scarf. The look is gritty and alternative, set amidst a crowded night-time street market with other diverse individuals, including blurred masked faces, and stalls with music posters.
+
+Composition: mid-shot, slightly low angle looking up at the killer. Grainy, oversaturated VHS quality with tracking lines and color bleed. The vibe is slasher-meets-teen-comedy—absurd and menacing at the same time.
+
+Emotional tone: paranoid fun, "who's behind the mask?", teen horror energy.`
 };
 
 /**

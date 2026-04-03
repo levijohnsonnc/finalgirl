@@ -64,8 +64,9 @@ const Archive = () => {
     's3-marrek-murders',
     's3-dont-make-sound',
     's3-terror-from-destiny',
-    // Season 4 - A Rotten Harvest
+    // Season 4
     's4-rotten-harvest',
+    's4-shriek',
   ];
 
   return (

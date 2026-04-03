@@ -165,7 +165,21 @@ Beyond the manicured lawns, a dense wall of lush green trees presses right up ag
 
 The atmosphere is one of suburban isolation and quiet dread—the kind of stillness that suggests everyone is indoors, watching from behind their shutters, waiting for something to break the silence.
 
-Key elements: Suburban cul-de-sac with 1980s-style homes and manicured lawns. Weathered wooden "Falconwood" entry sign. Vintage wood-paneled station wagon parked in a driveway. Glowing orange street light under a gloomy, overcast sky. Dense forest backdrop with a restricted chain-link fence.`
+Key elements: Suburban cul-de-sac with 1980s-style homes and manicured lawns. Weathered wooden "Falconwood" entry sign. Vintage wood-paneled station wagon parked in a driveway. Glowing orange street light under a gloomy, overcast sky. Dense forest backdrop with a restricted chain-link fence.`,
+
+  'MegaBGCon': `A massive board game convention hall spread across a cavernous indoor expo space, packed shoulder-to-shoulder with attendees, vendor booths, demo tables, food stands, and towering banners suspended from the ceiling. The layout feels broad and open at first glance, but the density of people, booths, and intersecting aisles turns it into a maze of congestion, noise, and constant motion.
+
+At ground level, the space is divided into long vendor corridors lined with brightly branded booths, shelving, signage, and play areas. Large tabletop publishers and parody-style exhibitors dominate the exhibit floor, while crowded side aisles and bottlenecks make movement feel slow and pressured. Every section looks busy, with clusters of people stopping to browse, talk, watch demos, or squeeze past one another.
+
+One side of the hall opens into a busy food court area with concession stands, café-style tables, and seated groups eating in the middle of the chaos. The food area adds warmth and color, but also contributes to the sense of clutter and overpopulation, with chairs, lines, and conversations spilling into the surrounding traffic flow.
+
+The ceiling is high, industrial, and lined with rows of bright overhead convention lights that flatten the scene in a realistic trade-show way rather than making it feel cinematic. Hanging aisle markers and oversized signs help orient the space, but they also emphasize just how huge and impersonal the hall is.
+
+The crowd is the defining feature: hundreds upon hundreds of people in constant motion, wearing badges, carrying bags, and filling nearly every open lane. What should feel festive instead feels overstimulating and precarious, as though one surge of panic could turn the whole convention floor into a trap.
+
+The overall mood is energetic but unstable—part celebration, part logistical nightmare. It feels like a place where excitement could flip into confusion instantly, and where the sheer volume of people, booths, and distractions makes rescuing anyone far more difficult than it should be.
+
+Key elements: Vast indoor convention hall with high industrial ceiling. Dense maze of vendor booths, signs, and demo areas. Large crowd filling aisles and creating bottlenecks. Food court with concession stands and table seating. Bright, realistic expo lighting with hanging aisle markers.`
 };
 
 /**
