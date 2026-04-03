@@ -323,21 +323,13 @@ const TheEnd = ({
 
           {/* Action Buttons - Show when story is loaded */}
           {endingStory && !isGenerating && !error && (
-            <div className="flex flex-col sm:flex-row gap-5 sm:gap-4 justify-center items-center mt-6 sm:mt-8 px-2">
+            <div className="flex justify-center items-center mt-6 sm:mt-8 px-2">
               <button
                 onClick={handleSave}
-                className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200 order-first`}
+                className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative min-w-[200px] sm:min-w-[240px] h-14 sm:h-16 overflow-hidden rounded-sm transition-all duration-200`}
               >
                 <span className={`relative z-10 font-display text-xl sm:text-2xl tracking-[0.2em] uppercase ${isWin ? 'text-secondary' : 'text-primary'} drop-shadow-lg`}>
                   SAVE
-                </span>
-              </button>
-              <button
-                onClick={onDiscard}
-                className={`outcome-btn ${isWin ? 'outcome-btn-won' : 'outcome-btn-lost'} group relative w-full sm:w-auto min-w-[200px] sm:min-w-[240px] h-11 sm:h-16 overflow-hidden rounded-sm transition-all duration-200 order-last`}
-              >
-                <span className={`relative z-10 font-display text-base sm:text-2xl tracking-[0.2em] uppercase text-muted-foreground drop-shadow-lg`}>
-                  DISCARD
                 </span>
               </button>
             </div>
