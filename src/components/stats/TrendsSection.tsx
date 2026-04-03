@@ -172,17 +172,50 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
     <div className="trends-section">
       <h3 className="section-title">// RECOVERED FOOTAGE</h3>
 
-      {/* Win/Loss Bar - Clean and Simple */}
+      {/* Win/Loss Bar - Glass Tube */}
       <div className="winloss-bar-container">
         <div className="winloss-bar">
-          <div 
-            className="winloss-wins" 
-            style={{ width: `${winPercentage}%` }}
-          />
-          <div 
-            className="winloss-losses" 
-            style={{ width: `${100 - winPercentage}%` }}
-          />
+          {/* Cyan liquid (wins) */}
+          <div className="winloss-wins" style={{ width: `${winPercentage}%` }}>
+            {[12, 35, 58, 82].map((left, i) => {
+              const size = [5, 7, 4, 6][i];
+              return (
+                <div key={`w${i}`} className="winloss-bubble" style={{
+                  left: `${left}%`, bottom: '10%',
+                  width: size, height: size,
+                  background: 'rgba(200, 255, 255, 0.5)',
+                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.4)',
+                  '--bubble-dur': `${8 + i * 5}s`,
+                  '--bubble-delay': `${i * 2.1}s`,
+                } as React.CSSProperties} />
+              );
+            })}
+            <div className="winloss-liquid-caustic" />
+          </div>
+          {/* Red liquid (losses) */}
+          <div className="winloss-losses" style={{ width: `${100 - winPercentage}%` }}>
+            {[15, 40, 65, 88].map((left, i) => {
+              const size = [6, 4, 7, 5][i];
+              return (
+                <div key={`l${i}`} className="winloss-bubble" style={{
+                  left: `${left}%`, bottom: '10%',
+                  width: size, height: size,
+                  background: 'rgba(255, 180, 180, 0.4)',
+                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.3)',
+                  '--bubble-dur': `${10 + i * 4}s`,
+                  '--bubble-delay': `${i * 2.5 + 1}s`,
+                } as React.CSSProperties} />
+              );
+            })}
+            <div className="winloss-liquid-caustic" style={{ animationDelay: '3s' }} />
+          </div>
+          {/* Boundary swirl */}
+          <div className="winloss-swirl" style={{ left: `${winPercentage}%` }} />
+          {/* Glass overlays */}
+          <div className="winloss-glass-specular" />
+          <div className="winloss-glass-diffuse" />
+          <div className="winloss-glass-edges" />
+          <div className="winloss-glass-bottom" />
         </div>
         <div className="winloss-labels">
           <span className="text-neon-cyan">Wins {stats.totalWins}</span>
