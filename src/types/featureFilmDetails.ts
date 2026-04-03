@@ -691,7 +691,9 @@ Many special events and relaxing getaways have been hosted here. Unfortunately, 
         { name: 'Escape Attempt', description: 'The victim closest to the driveway makes an attempt to get away' },
         { name: 'Getting Resourceful', description: 'The cottage is well set up to make it easier to craft weapons and items' },
         { name: 'Another Way Out', description: 'There is a boat in the lake, and the neighbor has keys to the boat' },
-        { name: 'Loser Boyfriend', description: 'One of the victims is your boyfriend, who has secretly been helping the killer' }
+        { name: 'Loser Boyfriend', description: 'One of the victims is your boyfriend, who has secretly been helping the killer' },
+        { name: 'Kick-scooter', description: 'A scooter is outside that can help you move around faster' },
+        { name: 'Brainstorming', description: '"They called me MacGuyver" — the final girl is much more adept than normal for crafting items' }
       ]
     },
     killer: {
