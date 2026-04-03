@@ -3,8 +3,9 @@ import { ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
-import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl } from '@/types/gameData';
+import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl, FEATURE_FILMS, LOCATION_IMAGES } from '@/types/gameData';
 import { getKillerSpecialRules } from '@/data/killerSpecialRules';
+import { FILM_THEMES } from '@/data/filmThemes';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
 import projectorSound from '@/assets/sounds/projector-start.mp3';
@@ -33,6 +34,10 @@ const NowPlaying = ({
   onBack,
   onGameEnd,
 }: NowPlayingProps) => {
+  const film = FEATURE_FILMS.find(f => f.id === filmId);
+  const theme = filmId ? FILM_THEMES[filmId] ?? null : null;
+  const bgImage = LOCATION_IMAGES[location] ?? nowPlayingBg;
+
   const [story, setStory] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -195,12 +200,18 @@ const NowPlaying = ({
   };
 
   return (
-    <div className="relative min-h-[80vh]">
-      {/* Background Image */}
-      <div 
+    <div
+      className="relative min-h-[80vh]"
+      style={theme ? {
+        '--primary': theme.primary,
+        '--secondary': theme.secondary,
+      } as React.CSSProperties : undefined}
+    >
+      {/* Background Image — location-specific when available */}
+      <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
-        style={{ 
-          backgroundImage: `url(${nowPlayingBg})`,
+        style={{
+          backgroundImage: `url(${bgImage})`,
           opacity: 0.4,
         }}
       />
@@ -215,9 +226,17 @@ const NowPlaying = ({
       <div className="relative z-10 flex flex-col items-center py-6 sm:py-8 pt-16 sm:pt-24 px-3 sm:px-4">
 
         {/* Title */}
-        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground tracking-[0.1em] sm:tracking-[0.15em] uppercase mb-1 sm:mb-2 text-center">
+        <p className="font-vhs text-xs text-primary/70 tracking-[0.2em] uppercase mb-1 text-center">
           Now Playing
+        </p>
+        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground tracking-[0.1em] sm:tracking-[0.15em] uppercase mb-1 sm:mb-1 text-center">
+          {film?.name ?? 'Now Playing'}
         </h1>
+        {theme?.tagline && (
+          <p className="font-vhs text-xs text-muted-foreground/70 italic mb-2 text-center px-4">
+            {theme.tagline}
+          </p>
+        )}
         <p className="font-vhs text-xs sm:text-sm text-muted-foreground mb-6 sm:mb-8 text-center px-2">
           {killer} vs {finalGirl} at {location}
         </p>
