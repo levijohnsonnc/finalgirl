@@ -129,7 +129,7 @@ const ChartWithToggle = ({ stats }: { stats: ComputedStats }) => {
             </LineChart>
           ) : activeChart === 'games' ? (
             <LineChart data={stats.gamesTrend}>
-              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <XAxis dataKey="ts" type="number" scale="time" domain={['dataMin', 'dataMax']} stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
               <Line type="monotone" dataKey="games" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} name="Games" />
