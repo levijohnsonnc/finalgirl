@@ -29,7 +29,7 @@ const getLoreDetails = (type: 'killer' | 'location' | 'finalGirl', name: string)
         filmName: FEATURE_FILMS.find(f => f.id === filmDetails.filmId)?.name,
       };
     }
-    if (type === 'location' && filmDetails.location.name === name) {
+    if (type === 'location' && filmDetails.location?.name === name) {
       return {
         backstory: filmDetails.location.description,
         visualDescription: LOCATION_DESCRIPTIONS[name],
