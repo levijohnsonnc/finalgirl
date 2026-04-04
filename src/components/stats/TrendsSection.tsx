@@ -172,42 +172,53 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
     <div className="trends-section">
       <h3 className="section-title">// RECOVERED FOOTAGE</h3>
 
-      {/* Win/Loss Bar - Glass Tube */}
-      <div className="winloss-bar-container">
+      {/* Win/Loss Bar - Glass Tube (Enhanced) */}
+      <div className="winloss-bar-container relative">
         <div className="winloss-bar">
           {/* Cyan liquid (wins) */}
           <div className="winloss-wins" style={{ width: `${winPercentage}%` }}>
-            {[12, 35, 58, 82].map((left, i) => {
-              const size = [5, 7, 4, 6][i];
+            {/* 6 bubbles — 3D radial gradient, varied sizes and heights */}
+            {[10, 24, 40, 56, 72, 86].map((left, i) => {
+              const sizes =   [6,  11,  5,  10,  7,  4];
+              const bottoms = [14, 30,  9,  22,  38, 17];
+              const sz = sizes[i];
               return (
                 <div key={`w${i}`} className="winloss-bubble" style={{
-                  left: `${left}%`, bottom: '10%',
-                  width: size, height: size,
-                  background: 'rgba(200, 255, 255, 0.5)',
-                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.4)',
-                  '--bubble-dur': `${8 + i * 5}s`,
-                  '--bubble-delay': `${i * 2.1}s`,
+                  left: `${left}%`,
+                  bottom: `${bottoms[i]}%`,
+                  width: sz,
+                  height: sz,
+                  background: `radial-gradient(circle at 33% 28%, rgba(255,255,255,0.92) 0%, rgba(160,255,255,0.55) 28%, rgba(0,200,230,0.14) 65%, transparent 100%)`,
+                  boxShadow: `0 1px 3px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(0,150,190,0.25)`,
+                  '--bubble-dur': `${6 + i * 3.5}s`,
+                  '--bubble-delay': `${i * 1.7}s`,
                 } as React.CSSProperties} />
               );
             })}
             <div className="winloss-liquid-caustic" />
+            <div className="winloss-liquid-caustic-2" />
           </div>
           {/* Red liquid (losses) */}
           <div className="winloss-losses" style={{ width: `${100 - winPercentage}%` }}>
-            {[15, 40, 65, 88].map((left, i) => {
-              const size = [6, 4, 7, 5][i];
+            {[12, 28, 44, 60, 76, 90].map((left, i) => {
+              const sizes =   [8,   5,  12,  6,  9,  4];
+              const bottoms = [22, 10,  32, 16,  26, 38];
+              const sz = sizes[i];
               return (
                 <div key={`l${i}`} className="winloss-bubble" style={{
-                  left: `${left}%`, bottom: '10%',
-                  width: size, height: size,
-                  background: 'rgba(255, 180, 180, 0.4)',
-                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.3)',
-                  '--bubble-dur': `${10 + i * 4}s`,
-                  '--bubble-delay': `${i * 2.5 + 1}s`,
+                  left: `${left}%`,
+                  bottom: `${bottoms[i]}%`,
+                  width: sz,
+                  height: sz,
+                  background: `radial-gradient(circle at 33% 28%, rgba(255,255,255,0.78) 0%, rgba(255,175,155,0.50) 28%, rgba(215,45,45,0.12) 65%, transparent 100%)`,
+                  boxShadow: `0 1px 3px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(150,15,15,0.25)`,
+                  '--bubble-dur': `${8 + i * 3.1}s`,
+                  '--bubble-delay': `${i * 2.0 + 1.3}s`,
                 } as React.CSSProperties} />
               );
             })}
-            <div className="winloss-liquid-caustic" style={{ animationDelay: '3s' }} />
+            <div className="winloss-liquid-caustic" style={{ animationDelay: '-3.5s' }} />
+            <div className="winloss-liquid-caustic-2" style={{ animationDelay: '-7s' }} />
           </div>
           {/* Boundary swirl */}
           <div className="winloss-swirl" style={{ left: `${winPercentage}%` }} />
