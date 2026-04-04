@@ -81,9 +81,9 @@ const CHART_OPTIONS: { key: ChartView; label: string }[] = [
   { key: 'winloss', label: 'W / L' },
 ];
 
-const formatTick = (value: string) => {
-  const [, month, day] = value.split('-');
-  return `${month}/${day}`;
+const formatTick = (ts: number) => {
+  const d = new Date(ts);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
 };
 
 const tooltipStyle = {
