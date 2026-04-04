@@ -121,7 +121,7 @@ const ChartWithToggle = ({ stats }: { stats: ComputedStats }) => {
         <ResponsiveContainer width="100%" height="100%">
           {activeChart === 'victims' ? (
             <LineChart data={stats.victimsTrend}>
-              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <XAxis dataKey="ts" type="number" scale="time" domain={['dataMin', 'dataMax']} stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
               <Line type="monotone" dataKey="saved" stroke="hsl(var(--neon-cyan))" strokeWidth={3} dot={false} name="Saved" />
