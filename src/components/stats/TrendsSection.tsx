@@ -81,9 +81,9 @@ const CHART_OPTIONS: { key: ChartView; label: string }[] = [
   { key: 'winloss', label: 'W / L' },
 ];
 
-const formatTick = (value: string) => {
-  const [, month, day] = value.split('-');
-  return `${month}/${day}`;
+const formatTick = (ts: number) => {
+  const d = new Date(ts);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
 };
 
 const tooltipStyle = {
@@ -121,7 +121,7 @@ const ChartWithToggle = ({ stats }: { stats: ComputedStats }) => {
         <ResponsiveContainer width="100%" height="100%">
           {activeChart === 'victims' ? (
             <LineChart data={stats.victimsTrend}>
-              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <XAxis dataKey="ts" type="number" scale="time" domain={['dataMin', 'dataMax']} stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
               <Line type="monotone" dataKey="saved" stroke="hsl(var(--neon-cyan))" strokeWidth={3} dot={false} name="Saved" />
@@ -129,14 +129,14 @@ const ChartWithToggle = ({ stats }: { stats: ComputedStats }) => {
             </LineChart>
           ) : activeChart === 'games' ? (
             <LineChart data={stats.gamesTrend}>
-              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <XAxis dataKey="ts" type="number" scale="time" domain={['dataMin', 'dataMax']} stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
               <Line type="monotone" dataKey="games" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} name="Games" />
             </LineChart>
           ) : (
             <LineChart data={stats.winLossTrend}>
-              <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
+              <XAxis dataKey="ts" type="number" scale="time" domain={['dataMin', 'dataMax']} stroke="hsl(var(--muted-foreground))" fontSize={10} tickFormatter={formatTick} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
               <Line type="monotone" dataKey="wins" stroke="hsl(var(--neon-cyan))" strokeWidth={3} dot={false} name="Wins" />

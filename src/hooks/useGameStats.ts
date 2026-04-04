@@ -100,9 +100,9 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
       dailyData.set(key, existing);
     });
     const sortedDays = Array.from(dailyData.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-    const victimsTrend = sortedDays.map(([date, d]) => ({ date, saved: d.saved, killed: d.killed }));
-    const gamesTrend = sortedDays.map(([date, d]) => ({ date, games: d.games }));
-    const winLossTrend = sortedDays.map(([date, d]) => ({ date, wins: d.wins, losses: d.losses }));
+    const victimsTrend = sortedDays.map(([date, d]) => ({ date, ts: new Date(date).getTime(), saved: d.saved, killed: d.killed }));
+    const gamesTrend = sortedDays.map(([date, d]) => ({ date, ts: new Date(date).getTime(), games: d.games }));
+    const winLossTrend = sortedDays.map(([date, d]) => ({ date, ts: new Date(date).getTime(), wins: d.wins, losses: d.losses }));
 
     // By Killer - for nemesis and usual suspect
     const killerMap = new Map<string, GameResult[]>();
