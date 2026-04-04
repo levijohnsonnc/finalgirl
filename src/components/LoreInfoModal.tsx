@@ -22,7 +22,7 @@ interface LoreInfoModalProps {
 const getLoreDetails = (type: 'killer' | 'location' | 'finalGirl', name: string) => {
   // Search through all feature films to find matching entity
   for (const filmDetails of Object.values(FEATURE_FILM_DETAILS)) {
-    if (type === 'killer' && filmDetails.killer.name === name) {
+    if (type === 'killer' && filmDetails.killer?.name === name) {
       return {
         backstory: filmDetails.killer.description,
         visualDescription: KILLER_DESCRIPTIONS[name],
