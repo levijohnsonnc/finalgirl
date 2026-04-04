@@ -1,25 +1,21 @@
 
 
-# Tilt Projector Slideshow to Match Screen Border
+## Problem
 
-## The Problem
+The X-axis on the trend charts uses Recharts' default `category` scale, which spaces dates evenly regardless of the actual time gaps between them. So if you played on Jan 1, Jan 2, and Jan 31, those three points would be equally spaced — making it look like Jan 2 to Jan 31 is the same distance as Jan 1 to Jan 2.
 
-The white screen border in the background image (`marquee-bg.png`) isn't perfectly rectangular — the screen in the photo is slightly tilted/skewed (the upper-right corner clips). Since we can't modify the background image, the projected slideshow overlay doesn't align evenly with the white border on all sides.
+## Solution
 
-## The Fix
-
-Yes, this is absolutely doable. We can apply a small CSS `transform: rotate()` to the `.projector-slideshow` element to tilt the projected image to match the screen's natural angle. The `projectorStyle` already sets `left`, `top`, `width`, and `height` dynamically — adding a rotation won't affect the positioning math.
+Convert the X-axis to a **time-based numeric scale** so the spacing between points reflects actual calendar distance.
 
 ### Changes
 
-**`src/components/Marquee.tsx`** — Add a slight rotation to the computed `projectorStyle` object:
-- Add `transform: 'rotate(-0.5deg)'` (or similar small value, will need fine-tuning) to match the screen's tilt
-- Add `transformOrigin: 'center center'` so the rotation pivots from the middle
+**`src/hooks/useGameStats.ts`** — Add a numeric timestamp field to each trend data point (e.g. `ts: new Date(date).getTime()`) alongside the existing `date` string. This gives Recharts a proper numeric value to scale against.
 
-**Optionally adjust `MARQUEE_SCREEN_RECT`** — If the rotation shifts the image slightly, we may need to nudge `x`/`y` by 1-2px to re-center.
+**`src/components/stats/TrendsSection.tsx`** — For all three `LineChart` instances:
+1. Switch `XAxis` from `dataKey="date"` to `dataKey="ts"` with `type="number"` and `scale="time"` and `domain={['dataMin', 'dataMax']}`.
+2. Update `tickFormatter` to convert the timestamp back to a readable date label (e.g. `MM/DD`).
+3. The axis will now auto-scale: dates that are far apart get proportionally more space, dates that are close together stay close.
 
-The exact rotation angle will need visual tuning — starting at around **-0.3deg to -0.8deg** based on the screenshot. This is a pure CSS transform, no structural changes needed.
-
-### Files changed
-- **`src/components/Marquee.tsx`** — add `transform` and `transformOrigin` to projectorStyle
+No visual or styling changes — just correcting the spatial accuracy of the X-axis.
 
