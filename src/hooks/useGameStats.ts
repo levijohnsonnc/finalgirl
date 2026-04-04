@@ -41,6 +41,7 @@ export interface ComputedStats {
   // Trends
   totalWins: number;
   totalLosses: number;
+  recentOutcomes: ('won' | 'lost')[];
   victimsTrend: { date: string; saved: number; killed: number }[];
   gamesTrend: { date: string; games: number }[];
   winLossTrend: { date: string; wins: number; losses: number }[];
@@ -103,6 +104,11 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
     const victimsTrend = sortedDays.map(([date, d]) => ({ date, saved: d.saved, killed: d.killed }));
     const gamesTrend = sortedDays.map(([date, d]) => ({ date, games: d.games }));
     const winLossTrend = sortedDays.map(([date, d]) => ({ date, wins: d.wins, losses: d.losses }));
+
+    const recentOutcomes = [...filteredGames]
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 19)
+      .map(g => g.outcome);
 
     // By Killer - for nemesis and usual suspect
     const killerMap = new Map<string, GameResult[]>();
@@ -272,6 +278,7 @@ export const useGameStats = (gameHistory: GameResult[]): ComputedStats => {
       totalVictimsKilled,
       totalWins: wins.length,
       totalLosses: losses.length,
+      recentOutcomes,
       victimsTrend,
       gamesTrend,
       winLossTrend,

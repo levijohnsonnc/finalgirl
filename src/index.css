@@ -2335,198 +2335,341 @@
   text-shadow: 0 0 8px hsl(var(--primary) / 0.4);
 }
 
-/* ===== Win/Loss Bar - Glass Tube (Photorealistic) ===== */
+/* ===== The Clash — Cinematic Win/Loss Scoreboard ===== */
 
-/* Bubble float with wobble */
-@keyframes fg-bubble {
-  0%   { transform: translateY(0) translateX(0px); opacity: 0; }
-  5%   { opacity: 0.7; }
-  25%  { transform: translateY(-30%) translateX(2px); }
-  50%  { transform: translateY(-60%) translateX(-1.5px); opacity: 0.5; }
-  75%  { transform: translateY(-90%) translateX(2.5px); }
-  95%  { opacity: 0.15; }
-  100% { transform: translateY(-120%) translateX(-1px); opacity: 0; }
+/* Clash point breathes like lightsabers touching */
+@keyframes clash-pulse {
+  0%, 100% {
+    transform: translateX(-50%) scaleY(1) scaleX(1);
+    opacity: 0.9;
+    box-shadow:
+      0 0 8px 2px rgba(255, 255, 255, 0.8),
+      0 0 20px 4px rgba(200, 180, 255, 0.5),
+      0 0 40px 8px rgba(200, 180, 255, 0.2);
+  }
+  50% {
+    transform: translateX(-50%) scaleY(1.5) scaleX(1.3);
+    opacity: 1;
+    box-shadow:
+      0 0 12px 4px rgba(255, 255, 255, 1),
+      0 0 30px 8px rgba(200, 180, 255, 0.7),
+      0 0 60px 16px rgba(200, 180, 255, 0.3);
+  }
 }
 
-/* Sliding caustic light across liquid */
-@keyframes fg-caustic {
+/* Sparks drift upward from clash point and vanish */
+@keyframes clash-spark-rise {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.9; }
+  100% { transform: translate(var(--spark-x, 3px), -28px) scale(0); opacity: 0; }
+}
+
+/* Shimmer sweep across cyan win bar */
+@keyframes clash-shimmer {
   0%   { background-position: -100% 0; }
   100% { background-position: 200% 0; }
 }
 
-/* Swirl pulse at boundary */
-@keyframes fg-swirl {
-  0%, 100% { transform: translateX(-50%) scaleY(1); opacity: 0.5; }
-  50%       { transform: translateX(-50%) scaleY(1.15); opacity: 0.85; }
+/* Double heartbeat pulse on red loss bar */
+@keyframes clash-heartbeat {
+  0%, 100% { opacity: 0; }
+  15%       { opacity: 0.15; }
+  30%       { opacity: 0; }
+  45%       { opacity: 0.1; }
+  60%       { opacity: 0; }
 }
 
-.winloss-bar-container {
-  @apply space-y-3;
+/* --- Outer container with ambient two-tone glow --- */
+.clash-container {
+  position: relative;
+  padding: 1.25rem 0;
 }
 
-/* --- Tube shell --- */
-.winloss-bar {
-  @apply flex relative;
-  height: 38px;
+.clash-container::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background:
+    radial-gradient(ellipse at 15% 50%, hsl(var(--neon-cyan) / 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 50%, hsl(var(--blood-red) / 0.05) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- Row 1: big numbers --- */
+.clash-numbers {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.clash-wins-block,
+.clash-losses-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.clash-big-number--cyan {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 10vw, 72px);
+  line-height: 1;
+  color: hsl(var(--neon-cyan));
+  text-shadow:
+    0 0 5px hsl(var(--neon-cyan)),
+    0 0 10px hsl(var(--neon-cyan)),
+    0 0 25px hsl(var(--neon-cyan)),
+    0 0 50px hsl(var(--neon-cyan) / 0.6);
+  animation: neon-flicker 4s infinite;
+}
+
+.clash-big-number--red {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 10vw, 72px);
+  line-height: 1;
+  color: hsl(var(--blood-red));
+  text-shadow:
+    0 0 5px hsl(var(--blood-red)),
+    0 0 10px hsl(var(--blood-red)),
+    0 0 25px hsl(var(--blood-red) / 0.8);
+}
+
+.clash-big-number--cyan.is-zero,
+.clash-big-number--red.is-zero {
+  opacity: 0.3;
+  animation: none;
+}
+
+.clash-label--cyan {
+  font-family: 'VT323', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: hsl(var(--neon-cyan) / 0.7);
+}
+
+.clash-label--red {
+  font-family: 'VT323', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: hsl(var(--blood-red) / 0.7);
+}
+
+.clash-winrate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.clash-winrate-value {
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1;
+}
+
+.clash-winrate-label {
+  font-family: 'VT323', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: hsl(var(--muted-foreground) / 0.45);
+}
+
+/* --- Row 2: the bar --- */
+.clash-bar-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: 6px 0;
+}
+
+.clash-bar {
+  position: relative;
+  display: flex;
+  height: 10px;
   border-radius: 999px;
   overflow: hidden;
-  background: #0a0a0a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: hsl(0 0% 4%);
   box-shadow:
-    /* inner glass wall shadow */
-    inset 0 2px 6px rgba(0, 0, 0, 0.95),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.7),
-    /* inner bright rim (glass thickness) */
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    /* outer drop shadow for grounding */
-    0 4px 14px rgba(0, 0, 0, 0.7),
-    0 2px 4px rgba(0, 0, 0, 0.5),
-    /* subtle color bleed */
-    0 0 20px hsl(var(--neon-cyan) / 0.06),
-    0 0 20px hsl(var(--blood-red) / 0.04);
+    inset 0 1px 3px rgba(0, 0, 0, 0.9),
+    0 0 20px hsl(var(--neon-cyan) / 0.08),
+    0 0 20px hsl(var(--blood-red) / 0.06);
 }
 
-/* --- Cyan liquid (wins) --- */
-.winloss-wins {
+/* Cyan fill with shimmer */
+.clash-bar-cyan {
   position: relative;
-  overflow: hidden;
+  height: 100%;
   background: linear-gradient(
     to bottom,
-    hsl(186 80% 22%)  0%,
-    hsl(186 100% 62%) 16%,
-    hsl(186 100% 50%) 38%,
-    hsl(186 95% 40%)  70%,
-    hsl(186 80% 24%)  100%
+    hsl(186 100% 55%) 0%,
+    hsl(186 100% 45%) 50%,
+    hsl(186 80% 30%) 100%
   );
-  box-shadow: inset 0 0 12px hsl(186 100% 50% / 0.3);
   transition: width 0.7s ease-in-out;
+  flex-shrink: 0;
 }
 
-/* --- Red liquid (losses) --- */
-.winloss-losses {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(
-    to bottom,
-    hsl(0 70% 16%)  0%,
-    hsl(0 88% 46%)  16%,
-    hsl(0 85% 36%)  38%,
-    hsl(0 88% 26%)  70%,
-    hsl(0 80% 13%)  100%
-  );
-  box-shadow: inset 0 0 12px hsl(0 85% 35% / 0.3);
-  transition: width 0.7s ease-in-out;
-}
-
-/* --- Caustic light sliding across liquid --- */
-.winloss-liquid-caustic {
+.clash-bar-cyan::after {
+  content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
     105deg,
-    transparent 0%,
-    transparent 35%,
-    rgba(255, 255, 255, 0.08) 42%,
-    rgba(255, 255, 255, 0.14) 50%,
-    rgba(255, 255, 255, 0.08) 58%,
-    transparent 65%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: fg-caustic 6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-/* --- Bubbles --- */
-.winloss-bubble {
-  position: absolute;
-  border-radius: 50%;
-  animation: fg-bubble var(--bubble-dur, 15s) var(--bubble-delay, 0s) infinite ease-in-out;
-  pointer-events: none;
-}
-
-/* --- Boundary swirl --- */
-.winloss-swirl {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 20px;
-  transform: translateX(-50%);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(160, 120, 200, 0.18) 0%,
-    rgba(180, 240, 255, 0.12) 40%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.22) 44%,
+    rgba(255, 255, 255, 0.38) 50%,
+    rgba(255, 255, 255, 0.22) 56%,
     transparent 70%
   );
-  animation: fg-swirl 3.2s ease-in-out infinite;
+  background-size: 200% 100%;
+  animation: clash-shimmer 5s ease-in-out infinite;
   pointer-events: none;
-  z-index: 8;
 }
 
-/* --- Glass: primary specular highlight (thin sharp stripe) --- */
-.winloss-glass-specular {
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
+/* Red fill with heartbeat */
+.clash-bar-red {
+  position: relative;
+  height: 100%;
   background: linear-gradient(
     to bottom,
-    transparent 8%,
-    rgba(255, 255, 255, 0.32) 14%,
-    rgba(255, 255, 255, 0.12) 22%,
-    transparent 28%
+    hsl(0 90% 42%) 0%,
+    hsl(0 85% 32%) 50%,
+    hsl(0 80% 18%) 100%
   );
-  pointer-events: none;
-  z-index: 20;
+  transition: width 0.7s ease-in-out;
+  flex-shrink: 0;
 }
 
-/* --- Glass: diffuse secondary glow --- */
-.winloss-glass-diffuse {
+.clash-bar-red::after {
+  content: '';
   position: absolute;
   inset: 0;
-  border-radius: 999px;
-  background: linear-gradient(
-    to bottom,
-    transparent 28%,
-    rgba(255, 255, 255, 0.03) 40%,
-    rgba(255, 255, 255, 0.015) 52%,
-    transparent 60%
-  );
+  background: rgba(255, 100, 100, 1);
+  animation: clash-heartbeat 2.8s ease-in-out infinite;
   pointer-events: none;
-  z-index: 20;
 }
 
-/* --- Glass: cylindrical edge darkening --- */
-.winloss-glass-edges {
+/* The clash point — where forces collide */
+.clash-point {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 4px;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 2px;
+  animation: clash-pulse 2.5s ease-in-out infinite;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Spark particles rising from clash point */
+.clash-spark {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: white;
+  left: 50%;
+  top: 2px;
+  --spark-x: calc((var(--spark-i, 0) - 1) * 8px);
+  animation: clash-spark-rise 1.8s ease-out infinite;
+  animation-delay: calc(var(--spark-i, 0) * 0.6s);
+}
+
+.clash-spark::before,
+.clash-spark::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(200, 180, 255, 0.85);
+  animation: clash-spark-rise 1.8s ease-out infinite;
+}
+
+.clash-spark::before {
+  --spark-x: calc((var(--spark-i, 0) - 1) * -6px);
+  animation-delay: calc(var(--spark-i, 0) * 0.6s + 0.3s);
+}
+
+.clash-spark::after {
+  --spark-x: calc(var(--spark-i, 0) * 5px);
+  animation-delay: calc(var(--spark-i, 0) * 0.6s + 0.9s);
+}
+
+/* Scanlines overlay on bar */
+.clash-bar-scanlines {
   position: absolute;
   inset: 0;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.35) 0%,
-    transparent 7%,
-    transparent 93%,
-    rgba(0, 0, 0, 0.35) 100%
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
   );
   pointer-events: none;
-  z-index: 21;
+  z-index: 5;
+  border-radius: 999px;
 }
 
-/* --- Glass: bottom shadow (underside of cylinder) --- */
-.winloss-glass-bottom {
+/* Film grain overlay on bar */
+.clash-bar-grain {
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 30%;
-  border-radius: 0 0 999px 999px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+  opacity: 0.04;
   pointer-events: none;
-  z-index: 20;
+  z-index: 6;
+  border-radius: 999px;
 }
 
-.winloss-labels {
-  @apply flex justify-between font-vhs text-xs uppercase;
+/* --- Row 3: tally marks --- */
+.clash-tally {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.clash-tally-label {
+  font-family: 'VT323', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
   letter-spacing: 0.15em;
-  opacity: 0.85;
-  padding: 0 4px;
+  opacity: 0.35;
+  white-space: nowrap;
+}
+
+.clash-tally-marks {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.clash-tally-mark {
+  width: 3px;
+  height: 14px;
+  border-radius: 1px;
+}
+
+.clash-tally-mark--cyan {
+  background: hsl(var(--neon-cyan));
+  box-shadow: 0 0 4px hsl(var(--neon-cyan) / 0.7), 0 0 8px hsl(var(--neon-cyan) / 0.3);
+}
+
+.clash-tally-mark--red {
+  background: hsl(var(--blood-red));
+  box-shadow: 0 0 4px hsl(var(--blood-red) / 0.7), 0 0 8px hsl(var(--blood-red) / 0.3);
 }
 
 /* ===== Narrative Badges Grid ===== */
