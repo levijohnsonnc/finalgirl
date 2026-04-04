@@ -172,55 +172,57 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
     <div className="trends-section">
       <h3 className="section-title">// RECOVERED FOOTAGE</h3>
 
-      {/* Win/Loss Bar - Glass Tube */}
-      <div className="winloss-bar-container">
-        <div className="winloss-bar">
-          {/* Cyan liquid (wins) */}
-          <div className="winloss-wins" style={{ width: `${winPercentage}%` }}>
-            {[12, 35, 58, 82].map((left, i) => {
-              const size = [5, 7, 4, 6][i];
-              return (
-                <div key={`w${i}`} className="winloss-bubble" style={{
-                  left: `${left}%`, bottom: '10%',
-                  width: size, height: size,
-                  background: 'rgba(200, 255, 255, 0.5)',
-                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.4)',
-                  '--bubble-dur': `${8 + i * 5}s`,
-                  '--bubble-delay': `${i * 2.1}s`,
-                } as React.CSSProperties} />
-              );
-            })}
-            <div className="winloss-liquid-caustic" />
+      {/* The Clash — Cinematic Win/Loss Scoreboard */}
+      <div className="clash-container">
+
+        {/* Row 1: Big Numbers */}
+        <div className="clash-numbers">
+          <div className="clash-wins-block">
+            <span className={`clash-big-number clash-big-number--cyan${stats.totalWins === 0 ? ' is-zero' : ''}`}>
+              {stats.totalWins}
+            </span>
+            <span className="clash-label clash-label--cyan">WINS</span>
           </div>
-          {/* Red liquid (losses) */}
-          <div className="winloss-losses" style={{ width: `${100 - winPercentage}%` }}>
-            {[15, 40, 65, 88].map((left, i) => {
-              const size = [6, 4, 7, 5][i];
-              return (
-                <div key={`l${i}`} className="winloss-bubble" style={{
-                  left: `${left}%`, bottom: '10%',
-                  width: size, height: size,
-                  background: 'rgba(255, 180, 180, 0.4)',
-                  boxShadow: 'inset -1px -1px 1px rgba(255,255,255,0.3)',
-                  '--bubble-dur': `${10 + i * 4}s`,
-                  '--bubble-delay': `${i * 2.5 + 1}s`,
-                } as React.CSSProperties} />
-              );
-            })}
-            <div className="winloss-liquid-caustic" style={{ animationDelay: '3s' }} />
+          <div className="clash-winrate">
+            <span className="clash-winrate-value">{Math.round(winPercentage)}%</span>
+            <span className="clash-winrate-label">WIN RATE</span>
           </div>
-          {/* Boundary swirl */}
-          <div className="winloss-swirl" style={{ left: `${winPercentage}%` }} />
-          {/* Glass overlays */}
-          <div className="winloss-glass-specular" />
-          <div className="winloss-glass-diffuse" />
-          <div className="winloss-glass-edges" />
-          <div className="winloss-glass-bottom" />
+          <div className="clash-losses-block">
+            <span className={`clash-big-number clash-big-number--red${stats.totalLosses === 0 ? ' is-zero' : ''}`}>
+              {stats.totalLosses}
+            </span>
+            <span className="clash-label clash-label--red">LOSSES</span>
+          </div>
         </div>
-        <div className="winloss-labels">
-          <span className="text-neon-cyan">Wins {stats.totalWins}</span>
-          <span className="text-blood-red">Losses {stats.totalLosses}</span>
+
+        {/* Row 2: The Clash Bar */}
+        <div className="clash-bar-wrapper">
+          <div className="clash-bar">
+            <div className="clash-bar-cyan" style={{ width: `${winPercentage}%` }} />
+            <div className="clash-bar-red" style={{ width: `${100 - winPercentage}%` }} />
+            {stats.totalWins > 0 && stats.totalLosses > 0 && (
+              <div className="clash-point" style={{ left: `${winPercentage}%` }}>
+                <span className="clash-spark" style={{ '--spark-i': 0 } as React.CSSProperties} />
+                <span className="clash-spark" style={{ '--spark-i': 1 } as React.CSSProperties} />
+                <span className="clash-spark" style={{ '--spark-i': 2 } as React.CSSProperties} />
+              </div>
+            )}
+            <div className="clash-bar-scanlines" />
+            <div className="clash-bar-grain" />
+          </div>
         </div>
+
+        {/* Row 3: Tally Marks */}
+        {stats.recentOutcomes.length > 0 && (
+          <div className="clash-tally">
+            <span className="clash-tally-label">LAST {stats.recentOutcomes.length}</span>
+            <div className="clash-tally-marks">
+              {stats.recentOutcomes.map((outcome, i) => (
+                <div key={i} className={`clash-tally-mark clash-tally-mark--${outcome === 'won' ? 'cyan' : 'red'}`} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Chart Section with Toggle */}
