@@ -60,7 +60,10 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
   const projectorStyle = useMemo(() => {
     const { width: viewportWidth, height: viewportHeight } = viewportSize;
     const isMobile = viewportWidth < 640;
-    const bgPositionY = isMobile ? 0.6 : 0.5;
+
+    // On mobile, shift bg-x to center the projector screen (screen center is at x=825 in 1536px image)
+    const bgPositionX = isMobile ? 0.567 : 0.5;
+    const bgPositionY = isMobile ? 0.5 : 0.5;
 
     const scale = Math.max(
       viewportWidth / MARQUEE_IMAGE_SIZE.width,
@@ -70,7 +73,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
     const renderedWidth = MARQUEE_IMAGE_SIZE.width * scale;
     const renderedHeight = MARQUEE_IMAGE_SIZE.height * scale;
 
-    const offsetX = (viewportWidth - renderedWidth) * 0.5;
+    const offsetX = (viewportWidth - renderedWidth) * bgPositionX;
     const offsetY = (viewportHeight - renderedHeight) * bgPositionY;
 
     return {
@@ -99,7 +102,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
     <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden transition-opacity duration-500 ${isClicked ? 'opacity-0' : 'opacity-100'}`}>
       {/* Background Image with VHS Effects + Projector Pulse + Hover Response */}
       <div 
-        className={`absolute inset-0 bg-cover bg-[center_60%] sm:bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''} ${isButtonHovered ? 'screen-hover-flicker' : ''}`}
+        className={`absolute inset-0 bg-cover bg-[56.7%_50%] sm:bg-center bg-no-repeat projector-pulse ${showFrameJump ? 'frame-jump' : ''} ${isButtonHovered ? 'screen-hover-flicker' : ''}`}
         style={{ 
           backgroundImage: `url(${marqueeBg})`,
         }}
