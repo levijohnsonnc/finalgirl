@@ -60,7 +60,10 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
   const projectorStyle = useMemo(() => {
     const { width: viewportWidth, height: viewportHeight } = viewportSize;
     const isMobile = viewportWidth < 640;
-    const bgPositionY = isMobile ? 0.6 : 0.5;
+
+    // On mobile, shift bg-x to center the projector screen (screen center is at x=825 in 1536px image)
+    const bgPositionX = isMobile ? 0.567 : 0.5;
+    const bgPositionY = isMobile ? 0.5 : 0.5;
 
     const scale = Math.max(
       viewportWidth / MARQUEE_IMAGE_SIZE.width,
@@ -70,7 +73,7 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
     const renderedWidth = MARQUEE_IMAGE_SIZE.width * scale;
     const renderedHeight = MARQUEE_IMAGE_SIZE.height * scale;
 
-    const offsetX = (viewportWidth - renderedWidth) * 0.5;
+    const offsetX = (viewportWidth - renderedWidth) * bgPositionX;
     const offsetY = (viewportHeight - renderedHeight) * bgPositionY;
 
     return {
