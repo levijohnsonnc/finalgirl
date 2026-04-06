@@ -618,37 +618,8 @@
     mix-blend-mode: multiply;
   }
 
-  /* ========== SLOT MACHINE REEL ANIMATION ========== */
-  
-  /* Container for vertical scrolling reel - GPU accelerated */
-  .slot-reel {
-    display: flex;
-    flex-direction: column;
-    animation: slot-scroll 1.6s cubic-bezier(0.12, 0.8, 0.3, 1) both;
-    will-change: transform;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    background: black;
-  }
-
-  .slot-reel > * {
-    flex-shrink: 0;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    margin-bottom: -1px;
-  }
-
-  @keyframes slot-scroll {
-    0% {
-      transform: translateY(0) translateZ(0);
-    }
-    100% {
-      /* Scroll to show the last item (final selection) */
-      transform: translateY(calc(-100% * (var(--item-count) - 1))) translateZ(0);
-    }
-  }
+  /* ========== SLOT FRAME STEPPER ========== */
+  /* No CSS animation needed — JS drives frame timing */
 
   /* Poster card shuffling state - subtle glow during animation */
   .poster-card-shuffling {
