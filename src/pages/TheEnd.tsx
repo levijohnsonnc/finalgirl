@@ -49,7 +49,10 @@ const TheEnd = ({
   const [isNarrating, setIsNarrating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [posterImageUrl, setPosterImageUrl] = useState<string>('');
+  const [generatedSceneUrl, setGeneratedSceneUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { hasApiKey, autoGenerate, generateImage } = useImageGeneration();
+  const autoGenerateTriggered = useRef(false);
   
   const isWin = result.outcome === 'won';
 
