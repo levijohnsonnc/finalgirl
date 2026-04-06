@@ -48,7 +48,7 @@ const SceneImageControls = ({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+    <>
       {/* Generate / Regenerate button */}
       <button
         onClick={handleGenerate}
@@ -76,7 +76,7 @@ const SceneImageControls = ({
           AUTO
         </span>
       </label>
-    </div>
+    </>
   );
 };
 
