@@ -4,6 +4,7 @@ import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
 import { useGameHistory } from '@/hooks/useGameHistory';
 import { useOwnedFilms } from '@/hooks/useOwnedFilms';
+import ApiKeyManager from '@/components/ApiKeyManager';
 import {
   AlertDialog,
   AlertDialogAction,
