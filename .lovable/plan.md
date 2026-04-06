@@ -1,69 +1,39 @@
 
 
-## Critique of Your Plan
+## Fix Casting Slot Shuffle Animation
 
-**What's strong:**
-- The concept reframe ("IMAGE ENGINE", "Access Code", "Activate Engine") is excellent and matches the VHS horror tone.
-- Collapsed/expanded pattern is the right UX — minimal footprint by default.
-- Moving it below all collection content is correct hierarchy.
-- Removing the dropdown in favor of selectable buttons fits the aesthetic.
-- The copy changes are spot-on for immersion.
+### Root Cause
 
-**What needs adjustment:**
-- "Stability AI" is missing from your source buttons — the current implementation supports three providers (Google Gemini, OpenAI, Stability AI). I'll include all three as selectable buttons.
-- The active/compact state showing "Provider: Gemini / Auto-generation: ON" with CHANGE and DISABLE buttons adds complexity. Simpler: just show ONLINE status + MANAGE button that re-expands, keeping the same pattern as OFFLINE → ACTIVATE.
-- "DISABLE" is ambiguous (disable auto-gen? remove key?). I'll use "REMOVE" for key deletion and keep the auto-generate toggle inside the expanded state only.
-- The 60-70% height reduction is achievable in collapsed state but the expanded setup flow needs enough room for the two steps — I'll keep it tight but won't sacrifice usability.
+The black flashes come from two issues:
 
----
+1. **Start flash**: The reel animation begins at `translateY(0)` showing the first item, but there's a multi-frame delay between React setting the shuffle sequence (`setShuffleSequence`) and enabling animation (`setIsAnimating`) via nested `requestAnimationFrame` calls. During these intermediate frames, the container briefly renders with no content or partially laid-out content → black flash.
 
-## Build Plan
+2. **End flash**: When `handleAnimationEnd` fires, it simultaneously clears the sequence (`setShuffleSequence([])`) and sets `isAnimating = false`. React unmounts the reel div and must mount the static image in the same render — but the image may need a paint cycle to appear, causing a single black frame.
 
-### 1. Move ApiKeyManager below all seasons in Archive.tsx
-- Remove the current `<ApiKeyManager />` from its position (between header and seasons).
-- Add it after the last season block with a spacer div (`mt-12 sm:mt-16`).
+3. **Mid-animation gaps**: Each reel child is `height: 100%` of the parent, but during the CSS animation the flex column can have sub-pixel rounding that briefly shows the dark background between items.
 
-### 2. Rewrite ApiKeyManager.tsx as "IMAGE ENGINE"
-Complete rewrite of the component with two visual states:
+### Fix Plan
 
-**Collapsed state (default):**
-- Slim horizontal card matching collection card width.
-- Left: film-reel icon (use `Film` from lucide).
-- Center: "IMAGE ENGINE" title + status badge (OFFLINE in muted / ONLINE in red glow).
-- Right: button — "ACTIVATE" if no key, "MANAGE" if key exists.
-- Scanline overlay, subtle red border on hover, same dark card bg as collection.
-- Click expands inline (no navigation).
+**File: `src/components/CastingSlot.tsx`**
 
-**Expanded state — Setup flow (no key):**
-- **Step 1: SELECT SOURCE** — Three selectable button cards: `[ GEMINI ]  [ OPENAI ]  [ STABILITY ]`. Selected gets `ring-2 ring-primary/50` + brightness boost (matching collection card style). Hover brightens.
-- **Step 2: ENTER ACCESS CODE** — Masked input with eye toggle. "ACTIVATE ENGINE" button (disabled until input present). Small inline text below: "🔒 Stored securely. Never shared." with optional tooltip for details.
+1. **Eliminate the double-rAF delay** — Build the sequence and set `isAnimating = true` in a single state update (or use `flushSync`). The nested rAF pattern causes 2-3 blank frames at the start.
 
-**Expanded state — Active/manage (has key):**
-- Shows current source with option to change or remove.
-- Auto-generate toggle: "RECONSTRUCT SCENES FROM YOUR SESSIONS" with red-styled switch.
-- "REMOVE" button to delete the key (with confirmation).
-- Collapse back via "DONE" or clicking the header bar.
+2. **Keep the last image visible after animation ends** — Instead of immediately clearing `shuffleSequence` in `handleAnimationEnd`, first set `displayValue` to the final value, then clear animating state in the *next* frame. This ensures the static image is painted before the reel unmounts.
 
-### 3. Visual/theme details
-- Add scanline texture overlay to the card (reuse existing `.scanlines` CSS class).
-- Subtle flicker animation on the ONLINE badge (reuse `.crt-flicker` or similar).
-- Red glow consistent with selected collection cards (`shadow-[0_0_15px_rgba(var(--blood-red),0.3)]`).
-- No flat UI — dark glass-card feel with border effects.
+3. **Pre-render the final image underneath the reel** — Always render the static `<img>` for the current `value` behind the reel (using z-index layering). This way, when the reel unmounts, the image is already painted and visible — zero black frames.
 
-### 4. Copy changes
-| Current | New |
-|---------|-----|
-| Image Generation | IMAGE ENGINE |
-| API Key | Access Code |
-| Save Key | Activate Engine |
-| Auto-generate scene images | Reconstruct scenes from your sessions |
-| Provider dropdown | Source selector buttons |
+**File: `src/index.css`**
 
-### Files changed
+4. **Add a tiny overlap between reel items** — Add `margin-bottom: -1px` on `.slot-reel > *` to eliminate sub-pixel gaps between frames during scroll.
+
+5. **Set a background color on the reel container** — Match the first item's average tone (or just use `background: black` which is better than a flash) so any sub-pixel gap shows black intentionally rather than as a jarring flash.
+
+6. **Add `animation-fill-mode: both`** to `.slot-reel` so the first frame is applied immediately before the animation starts (eliminates the "jump to start" flash).
+
+### Summary of Changes
+
 | File | Change |
 |------|--------|
-| `src/components/ApiKeyManager.tsx` | Full rewrite |
-| `src/pages/Archive.tsx` | Move `<ApiKeyManager />` to bottom of page |
-
-No database, hook, or edge function changes needed — only the UI component and its placement.
+| `src/components/CastingSlot.tsx` | Remove double-rAF, pre-render final image underneath reel, defer reel unmount by one frame |
+| `src/index.css` | Add `animation-fill-mode: both`, overlap reel items by 1px, background on reel container |
 
