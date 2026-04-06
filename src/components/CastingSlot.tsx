@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 import shuffleSound from '@/assets/sounds/card-shuffle.mp3';
 import { LoreInfoModal } from './LoreInfoModal';
@@ -43,6 +43,25 @@ const getObjectPosition = (type: 'killer' | 'location' | 'finalGirl', value: str
   return '';
 };
 
+/** Generate an ease-in-out delay curve: slow → fast → slow */
+const buildDelays = (count: number): number[] => {
+  const delays: number[] = [];
+  for (let i = 0; i < count; i++) {
+    // Normalize position to 0–1
+    const t = count <= 1 ? 0.5 : i / (count - 1);
+    // Sine-based ease-in-out: slow at edges, fast in middle
+    // sin goes 0→1→0, we invert to get delay (high→low→high)
+    const sinVal = Math.sin(t * Math.PI); // 0 at edges, 1 at center
+    const minDelay = 55;
+    const maxDelay = 280;
+    const delay = maxDelay - sinVal * (maxDelay - minDelay);
+    delays.push(Math.round(delay));
+  }
+  return delays;
+};
+
+const FRAME_COUNT = 20;
+
 export const CastingSlot = ({ 
   type, 
   value, 
@@ -54,9 +73,10 @@ export const CastingSlot = ({
 }: CastingSlotProps) => {
   const [displayValue, setDisplayValue] = useState(value);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [shuffleSequence, setShuffleSequence] = useState<string[]>([]);
+  const [currentFrame, setCurrentFrame] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedRef = useRef<boolean>(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Preload all option images on mount
   useEffect(() => {
@@ -71,9 +91,33 @@ export const CastingSlot = ({
     });
   }, [options, type]);
 
-  // Build shuffle sequence and start animation in one go (no double-rAF)
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  const runFrameStepper = useCallback((sequence: string[], delays: number[], index: number) => {
+    if (index >= sequence.length) {
+      // Animation complete — land on final value
+      setCurrentFrame(null);
+      setDisplayValue(value);
+      setIsAnimating(false);
+      return;
+    }
+    setCurrentFrame(sequence[index]);
+    timerRef.current = setTimeout(() => {
+      runFrameStepper(sequence, delays, index + 1);
+    }, delays[index]);
+  }, [value]);
+
+  // Start shuffle animation
   useEffect(() => {
     if (isShuffling && options.length > 0 && value) {
+      // Clear any existing timer
+      if (timerRef.current) clearTimeout(timerRef.current);
+
       // Play shuffle sound
       if (audioRef.current) {
         audioRef.current.pause();
@@ -83,34 +127,31 @@ export const CastingSlot = ({
       audioRef.current.volume = 0.4;
       audioRef.current.play().catch(() => {});
 
-      // Build sequence ending with the selected value
+      // Build sequence of random options ending with the selected value
       const sequence: string[] = [];
-      for (let i = 0; i < 12; i++) {
-        sequence.push(options[Math.floor(Math.random() * options.length)]);
+      for (let i = 0; i < FRAME_COUNT - 1; i++) {
+        // Avoid showing the final value in the sequence (except at the end)
+        const pool = options.length > 1 ? options.filter(o => o !== value) : options;
+        sequence.push(pool[Math.floor(Math.random() * pool.length)]);
       }
       sequence.push(value);
 
-      // Set both in one synchronous batch — no rAF delay
-      setShuffleSequence(sequence);
+      const delays = buildDelays(sequence.length);
+
       setIsAnimating(true);
-    } else if (!isShuffling) {
+      setCurrentFrame(sequence[0]);
+
+      // Start stepping from frame 1 after the first delay
+      timerRef.current = setTimeout(() => {
+        runFrameStepper(sequence, delays, 1);
+      }, delays[0]);
+    } else if (!isShuffling && !isAnimating) {
       setDisplayValue(value);
     }
   }, [isShuffling, shuffleKey, value, options]);
 
-  // Handle animation end — defer unmount by one frame
-  const handleAnimationEnd = () => {
-    setDisplayValue(value);
-    // Defer clearing animation state so the static image paints first
-    requestAnimationFrame(() => {
-      setIsAnimating(false);
-      setShuffleSequence([]);
-    });
-  };
-
-  const cardImage = getImageForValue(type, displayValue);
-  // Always have the final value's image ready underneath
-  const finalImage = getImageForValue(type, value);
+  const frameImage = currentFrame ? getImageForValue(type, currentFrame) : null;
+  const finalImage = getImageForValue(type, isAnimating ? null : displayValue);
   const isEmpty = !displayValue && !isAnimating && !value;
   const isLocation = type === 'location';
   
@@ -133,52 +174,29 @@ export const CastingSlot = ({
         `}
         onClick={isEmpty ? onChoose : undefined}
       >
-        {/* Pre-rendered final image underneath the reel — always painted, zero flash on unmount */}
-        {finalImage && (
+        {/* Static image — shown when NOT animating */}
+        {!isAnimating && finalImage && (
           <img 
             src={finalImage} 
-            alt={value || ''} 
-            className={`absolute inset-0 w-full h-full object-cover z-0 ${getObjectPosition(type, value)}`}
+            alt={displayValue || ''} 
+            className={`absolute inset-0 w-full h-full object-cover z-0 ${getObjectPosition(type, displayValue)}`}
           />
         )}
 
-        {/* Scrolling reel during animation */}
-        {isAnimating && shuffleSequence.length > 0 ? (
-          <div 
-            key={shuffleKey}
-            className="slot-reel absolute inset-0 z-10"
-            style={{ '--item-count': shuffleSequence.length } as React.CSSProperties}
-            onAnimationEnd={handleAnimationEnd}
-          >
-            {shuffleSequence.map((option, idx) => {
-              const img = getImageForValue(type, option);
-              const positionClass = getObjectPosition(type, option);
-              return img ? (
-                <img 
-                  key={idx}
-                  src={img}
-                  alt={option}
-                  className={`w-full h-full object-cover flex-shrink-0 ${positionClass}`}
-                  loading="eager"
-                />
-              ) : (
-                <div key={idx} className="w-full h-full mystery-static flex-shrink-0" />
-              );
-            })}
-          </div>
-        ) : (
-          /* Static display (only when no final image pre-rendered, e.g. empty state) */
-          !finalImage && (
-            cardImage ? (
-              <img 
-                src={cardImage} 
-                alt={displayValue || ''} 
-                className={`absolute inset-0 w-full h-full object-cover ${getObjectPosition(type, displayValue)}`}
-              />
-            ) : (
-              <div className="absolute inset-0 mystery-static" />
-            )
-          )
+        {/* Frame stepper — single image swapped via JS timing */}
+        {isAnimating && frameImage && (
+          <img 
+            key={currentFrame}
+            src={frameImage} 
+            alt={currentFrame || ''} 
+            className={`absolute inset-0 w-full h-full object-cover z-10 ${getObjectPosition(type, currentFrame)}`}
+            loading="eager"
+          />
+        )}
+
+        {/* Fallback static/empty */}
+        {!isAnimating && !finalImage && (
+          <div className="absolute inset-0 mystery-static" />
         )}
 
         {/* VHS softness overlay */}
