@@ -123,7 +123,7 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange, gameId }: ImageUpload
       type="button"
       onClick={handleClick}
       disabled={isProcessing}
-      className={`vcr-tape-button flex items-center justify-center gap-2 px-4 py-3 font-display text-xs tracking-[0.1em] uppercase transition-all duration-300 min-h-[44px] ${
+      className={`vcr-tape-button flex items-center justify-center gap-2 px-4 py-3 font-display text-xs tracking-[0.1em] uppercase transition-all duration-300 min-h-[44px] w-full ${
         isProcessing ? 'opacity-50' : ''
       }`}
     >
