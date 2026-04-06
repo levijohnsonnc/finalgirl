@@ -267,39 +267,41 @@ const TheEnd = ({
 
         {/* Story Container */}
         <div className="w-full max-w-4xl flex flex-col gap-4">
-          {/* Action Buttons - Above text, stack on mobile */}
+          {/* Action Buttons - Above text */}
           {endingStory && (
-            <div className="flex flex-col gap-3 px-2">
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
-                <button
-                  onClick={handleNarrate}
-                  disabled={isNarrating}
-                  className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px]"
-                >
-                  {isNarrating ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : isPlaying ? (
-                    <VolumeX className="w-4 h-4" />
-                  ) : (
-                    <Volume2 className="w-4 h-4" />
-                  )}
-                  {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 px-2">
+              {/* Narrate — full width on mobile, auto on desktop */}
+              <button
+                onClick={handleNarrate}
+                disabled={isNarrating}
+                className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px] w-full sm:w-auto"
+              >
+                {isNarrating ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isPlaying ? (
+                  <VolumeX className="w-4 h-4" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
+                {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
+              </button>
+              
+              {/* Poster Prompt + Upload — side by side on mobile, auto on desktop */}
+              <PosterPromptModal
+                introStory={introStory}
+                endingNarration={endingStory}
+                killer={result.killer}
+                location={result.location}
+                finalGirl={result.finalGirl}
+                outcome={result.outcome}
+              >
+                <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px] flex-1 sm:flex-none min-w-0">
+                  <ImageIcon className="w-4 h-4 shrink-0" />
+                  <span className="truncate">Poster Prompt</span>
                 </button>
-                
-                <PosterPromptModal
-                  introStory={introStory}
-                  endingNarration={endingStory}
-                  killer={result.killer}
-                  location={result.location}
-                  finalGirl={result.finalGirl}
-                  outcome={result.outcome}
-                >
-                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]">
-                    <ImageIcon className="w-4 h-4" />
-                    Poster Prompt
-                  </button>
-                </PosterPromptModal>
+              </PosterPromptModal>
 
+              <div className="flex-1 sm:flex-none min-w-0">
                 <ImageUploadSlot
                   imageUrl={posterImageUrl}
                   onImageChange={setPosterImageUrl}
@@ -307,18 +309,16 @@ const TheEnd = ({
                 />
               </div>
 
-              {/* AI Scene Image Generation */}
-              <div className="flex justify-center">
-                <SceneImageControls
-                  story={endingStory}
-                  killer={result.killer}
-                  finalGirl={result.finalGirl}
-                  location={result.location}
-                  sceneType="ending"
-                  generatedImageUrl={generatedSceneUrl}
-                  onImageGenerated={setGeneratedSceneUrl}
-                />
-              </div>
+              {/* Generate Scene + Auto toggle */}
+              <SceneImageControls
+                story={endingStory}
+                killer={result.killer}
+                finalGirl={result.finalGirl}
+                location={result.location}
+                sceneType="ending"
+                generatedImageUrl={generatedSceneUrl}
+                onImageGenerated={setGeneratedSceneUrl}
+              />
             </div>
           )}
           
