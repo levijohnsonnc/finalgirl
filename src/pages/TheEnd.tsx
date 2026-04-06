@@ -61,6 +61,23 @@ const TheEnd = ({
     generateEnding();
   }, []);
 
+  // Auto-generate scene image when ending loads (if enabled)
+  useEffect(() => {
+    if (endingStory && hasApiKey && autoGenerate && !autoGenerateTriggered.current) {
+      autoGenerateTriggered.current = true;
+      (async () => {
+        const url = await generateImage({
+          story: endingStory,
+          killer: result.killer,
+          finalGirl: result.finalGirl,
+          location: result.location,
+          sceneType: 'ending',
+        });
+        if (url) setGeneratedSceneUrl(url);
+      })();
+    }
+  }, [endingStory, hasApiKey, autoGenerate]);
+
   const generateEnding = async () => {
     if (!introStory) {
       setError('Missing intro story. Cannot generate ending.');
