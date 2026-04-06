@@ -150,7 +150,8 @@ export const CastingSlot = ({
           ${isEmpty ? 'poster-card-empty cursor-pointer hover:border-primary/50' : 'poster-card-filled'}
           ${isAnimating ? 'poster-card-shuffling' : ''}
         `}
-        onClick={isEmpty ? onChoose : undefined}
+        onClick={!isAnimating ? onChoose : undefined}
+        style={{ cursor: isAnimating ? 'default' : 'pointer' }}
       >
         {/* Scrolling reel during animation - key forces remount for fresh animation */}
         {isAnimating && shuffleSequence.length > 0 ? (
