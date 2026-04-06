@@ -188,17 +188,32 @@ async function generateWithOpenAI(apiKey: string, prompt: string): Promise<strin
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "dall-e-3",
+      model: "gpt-image-1",
       prompt,
+      moderation: "low",
       n: 1,
-      size: "1792x1024",
-      response_format: "b64_json",
+      size: "1536x1024",
     }),
   });
 
   if (!response.ok) {
     const errText = await response.text();
     console.error('OpenAI API error:', response.status, errText);
+    try {
+      const errJson = JSON.parse(errText);
+      const code = errJson?.error?.code;
+      if (code === 'content_policy_violation') {
+        throw new Error('OpenAI rejected this prompt due to content policy. Try switching to Google Gemini which handles horror themes better.');
+      }
+      if (code === 'invalid_api_key') {
+        throw new Error('Invalid OpenAI API key. Please check your key in My Collection.');
+      }
+      if (code === 'insufficient_quota') {
+        throw new Error('OpenAI quota exceeded. Please check your billing at platform.openai.com.');
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.startsWith('OpenAI')) throw e;
+    }
     throw new Error('OpenAI image generation failed. Check your API key and quota.');
   }
 
