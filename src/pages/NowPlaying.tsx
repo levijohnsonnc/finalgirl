@@ -46,7 +46,10 @@ const NowPlaying = ({
   const [isNarrating, setIsNarrating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [sceneImageUrl, setSceneImageUrl] = useState<string>('');
+  const [generatedSceneUrl, setGeneratedSceneUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { hasApiKey, autoGenerate, generateImage } = useImageGeneration();
+  const autoGenerateTriggered = useRef(false);
 
   // Auto-generate story on mount
   useEffect(() => {
