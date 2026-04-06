@@ -1,39 +1,51 @@
 
 
-## Fix Casting Slot Shuffle Animation
+## Why the Current Approach Doesn't Work
 
-### Root Cause
+The animation uses a single CSS `translateY` scroll over 13 stacked full-height items with `cubic-bezier(0.12, 0.8, 0.3, 1)`. This is a heavy ease-out — it covers ~80% of the scroll distance in the first ~25% of the time. Result: items 1–10 fly by in ~400ms (invisible blur), then it slowly decelerates into the final pick. You never actually *see* the options. The pre-rendered final image at z-0 also means the first frame shows the target before the reel even paints.
 
-The black flashes come from two issues:
+CSS `translateY` over stacked items is fundamentally the wrong tool here — you can't control per-frame dwell time with a single scroll animation.
 
-1. **Start flash**: The reel animation begins at `translateY(0)` showing the first item, but there's a multi-frame delay between React setting the shuffle sequence (`setShuffleSequence`) and enabling animation (`setIsAnimating`) via nested `requestAnimationFrame` calls. During these intermediate frames, the container briefly renders with no content or partially laid-out content → black flash.
+## New Approach: JavaScript-Driven Frame Stepper
 
-2. **End flash**: When `handleAnimationEnd` fires, it simultaneously clears the sequence (`setShuffleSequence([])`) and sets `isAnimating = false`. React unmounts the reel div and must mount the static image in the same render — but the image may need a paint cycle to appear, causing a single black frame.
+Replace the CSS scroll reel with a **timed frame swap** — show one image at a time, swapping it on a schedule that follows a custom timing curve (slow → fast → slow).
 
-3. **Mid-animation gaps**: Each reel child is `height: 100%` of the parent, but during the CSS animation the flex column can have sub-pixel rounding that briefly shows the dark background between items.
+### How it works
 
-### Fix Plan
+1. **Build a longer sequence** (~18–22 items) of random options, ending with the selected value.
+2. **Compute per-frame delays** using an ease-in-out curve: first few frames ~250ms each (slow start, you see them), middle frames ~60ms (fast blur), last few frames ramp back up to ~300ms (dramatic slowdown before landing).
+3. **Use `setTimeout` chain** (or `requestAnimationFrame` with accumulated time) to step through frames, updating a single `currentFrameIndex` state.
+4. **Render only one image at a time** — no stacking, no translateY. Just swap `src` on a single `<img>` element (or crossfade between two layered images).
+5. On the final frame, transition to the static display with no flash (image is already showing).
 
-**File: `src/components/CastingSlot.tsx`**
+### Timing curve detail
 
-1. **Eliminate the double-rAF delay** — Build the sequence and set `isAnimating = true` in a single state update (or use `flushSync`). The nested rAF pattern causes 2-3 blank frames at the start.
+```text
+Frame:  1    2    3    4    5   ...  10   11  ...  18   19   20   21   22
+Delay: 220  180  140  100   80  ...  60   60  ...  80  120  180  250  300  (ms)
+       ─── slow start ───  ──── fast middle ────  ──── slow finish ────
+```
 
-2. **Keep the last image visible after animation ends** — Instead of immediately clearing `shuffleSequence` in `handleAnimationEnd`, first set `displayValue` to the final value, then clear animating state in the *next* frame. This ensures the static image is painted before the reel unmounts.
+Total duration: ~2.2s (tunable). Each frame is clearly visible at the start and end.
 
-3. **Pre-render the final image underneath the reel** — Always render the static `<img>` for the current `value` behind the reel (using z-index layering). This way, when the reel unmounts, the image is already painted and visible — zero black frames.
+### Component changes (`CastingSlot.tsx`)
 
-**File: `src/index.css`**
+- Remove `shuffleSequence` array rendering (no more stacked children).
+- Add `currentFrameIndex` ref and a `setTimeout` chain that increments it.
+- Render a single image element that updates its `src` based on `sequence[currentFrameIndex]`.
+- Add a brief CSS crossfade transition (`opacity` swap between two layered `<img>` tags, ~50ms) so frame swaps aren't hard cuts.
+- Keep the pre-rendered final image at z-0 as a safety net, but hide it with `opacity-0` during animation so the old image doesn't linger.
 
-4. **Add a tiny overlap between reel items** — Add `margin-bottom: -1px` on `.slot-reel > *` to eliminate sub-pixel gaps between frames during scroll.
+### CSS changes (`index.css`)
 
-5. **Set a background color on the reel container** — Match the first item's average tone (or just use `background: black` which is better than a flash) so any sub-pixel gap shows black intentionally rather than as a jarring flash.
+- Remove the `slot-scroll` keyframe and `.slot-reel` styles entirely (no longer used).
+- Add a simple `.slot-frame-enter` transition class: `transition: opacity 50ms ease`.
+- Keep `.poster-card-shuffling` glow effect as-is.
 
-6. **Add `animation-fill-mode: both`** to `.slot-reel` so the first frame is applied immediately before the animation starts (eliminates the "jump to start" flash).
-
-### Summary of Changes
+### Files changed
 
 | File | Change |
 |------|--------|
-| `src/components/CastingSlot.tsx` | Remove double-rAF, pre-render final image underneath reel, defer reel unmount by one frame |
-| `src/index.css` | Add `animation-fill-mode: both`, overlap reel items by 1px, background on reel container |
+| `src/components/CastingSlot.tsx` | Replace CSS reel with JS frame stepper |
+| `src/index.css` | Remove slot-reel/slot-scroll, add slot-frame transition |
 
