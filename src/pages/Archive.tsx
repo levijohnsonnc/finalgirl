@@ -4,6 +4,7 @@ import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
 import { useGameHistory } from '@/hooks/useGameHistory';
 import { useOwnedFilms } from '@/hooks/useOwnedFilms';
+import ApiKeyManager from '@/components/ApiKeyManager';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -116,6 +117,11 @@ const Archive = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+      </div>
+
+      {/* Image Generation Settings */}
+      <div className="px-2">
+        <ApiKeyManager />
       </div>
 
       {/* Feature Films by Season */}

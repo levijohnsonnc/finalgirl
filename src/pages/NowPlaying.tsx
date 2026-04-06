@@ -12,6 +12,8 @@ import projectorSound from '@/assets/sounds/projector-start.mp3';
 import { ImagePromptModal } from '@/components/ImagePromptModal';
 import { ImageUploadSlot } from '@/components/ImageUploadSlot';
 import { renderFormattedText } from '@/lib/textFormatting';
+import SceneImageControls from '@/components/SceneImageControls';
+import { useImageGeneration } from '@/hooks/useImageGeneration';
 
 interface NowPlayingProps {
   killer: string;
@@ -44,12 +46,29 @@ const NowPlaying = ({
   const [isNarrating, setIsNarrating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [sceneImageUrl, setSceneImageUrl] = useState<string>('');
+  const [generatedSceneUrl, setGeneratedSceneUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { hasApiKey, autoGenerate, generateImage } = useImageGeneration();
+  const autoGenerateTriggered = useRef(false);
 
   // Auto-generate story on mount
   useEffect(() => {
     generateStory();
   }, []);
+
+  // Auto-generate scene image when story loads (if enabled)
+  useEffect(() => {
+    if (story && hasApiKey && autoGenerate && !autoGenerateTriggered.current) {
+      autoGenerateTriggered.current = true;
+      (async () => {
+        const url = await generateImage({ story, killer, finalGirl, location, sceneType: 'beginning' });
+        if (url) {
+          setGeneratedSceneUrl(url);
+          setSceneImageUrl(url);
+        }
+      })();
+    }
+  }, [story, hasApiKey, autoGenerate]);
 
   const generateStory = async () => {
     setIsGenerating(true);
@@ -245,38 +264,56 @@ const NowPlaying = ({
         <div className="w-full max-w-4xl flex flex-col gap-4">
           {/* Action Buttons - Above text, stack on mobile */}
           {story && (
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center px-2">
-              <button
-                onClick={handleNarrate}
-                disabled={isNarrating}
-                className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px]"
-              >
-                {isNarrating ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : isPlaying ? (
-                  <VolumeX className="w-4 h-4" />
-                ) : (
-                  <Volume2 className="w-4 h-4" />
-                )}
-                {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
-              </button>
-              
-              <ImagePromptModal
-                story={story}
-                killer={killer}
-                location={location}
-                finalGirl={finalGirl}
-              >
-                <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]">
-                  <ImageIcon className="w-4 h-4" />
-                  Image Prompt
+            <div className="flex flex-col gap-3 px-2">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
+                <button
+                  onClick={handleNarrate}
+                  disabled={isNarrating}
+                  className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px]"
+                >
+                  {isNarrating ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isPlaying ? (
+                    <VolumeX className="w-4 h-4" />
+                  ) : (
+                    <Volume2 className="w-4 h-4" />
+                  )}
+                  {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
                 </button>
-              </ImagePromptModal>
-              
-              <ImageUploadSlot
-                imageUrl={sceneImageUrl}
-                onImageChange={setSceneImageUrl}
-              />
+                
+                <ImagePromptModal
+                  story={story}
+                  killer={killer}
+                  location={location}
+                  finalGirl={finalGirl}
+                >
+                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]">
+                    <ImageIcon className="w-4 h-4" />
+                    Image Prompt
+                  </button>
+                </ImagePromptModal>
+                
+                <ImageUploadSlot
+                  imageUrl={sceneImageUrl}
+                  onImageChange={setSceneImageUrl}
+                />
+              </div>
+
+              {/* AI Scene Image Generation */}
+              <div className="flex justify-center">
+                <SceneImageControls
+                  story={story}
+                  killer={killer}
+                  finalGirl={finalGirl}
+                  location={location}
+                  sceneType="beginning"
+                  generatedImageUrl={generatedSceneUrl}
+                  onImageGenerated={(url) => {
+                    setGeneratedSceneUrl(url);
+                    setSceneImageUrl(url);
+                  }}
+                />
+              </div>
             </div>
           )}
           

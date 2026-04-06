@@ -14,6 +14,8 @@ import { getLocationDescription } from '@/data/locationDescriptions';
 import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
 import { getKillerSpecialRules } from '@/data/killerSpecialRules';
 import { renderFormattedText } from '@/lib/textFormatting';
+import SceneImageControls from '@/components/SceneImageControls';
+import { useImageGeneration } from '@/hooks/useImageGeneration';
 
 export interface EndingFormData {
   finalHorrorLevel: number;
@@ -47,7 +49,10 @@ const TheEnd = ({
   const [isNarrating, setIsNarrating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [posterImageUrl, setPosterImageUrl] = useState<string>('');
+  const [generatedSceneUrl, setGeneratedSceneUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { hasApiKey, autoGenerate, generateImage } = useImageGeneration();
+  const autoGenerateTriggered = useRef(false);
   
   const isWin = result.outcome === 'won';
 
@@ -55,6 +60,23 @@ const TheEnd = ({
   useEffect(() => {
     generateEnding();
   }, []);
+
+  // Auto-generate scene image when ending loads (if enabled)
+  useEffect(() => {
+    if (endingStory && hasApiKey && autoGenerate && !autoGenerateTriggered.current) {
+      autoGenerateTriggered.current = true;
+      (async () => {
+        const url = await generateImage({
+          story: endingStory,
+          killer: result.killer,
+          finalGirl: result.finalGirl,
+          location: result.location,
+          sceneType: 'ending',
+        });
+        if (url) setGeneratedSceneUrl(url);
+      })();
+    }
+  }, [endingStory, hasApiKey, autoGenerate]);
 
   const generateEnding = async () => {
     if (!introStory) {
@@ -247,41 +269,56 @@ const TheEnd = ({
         <div className="w-full max-w-4xl flex flex-col gap-4">
           {/* Action Buttons - Above text, stack on mobile */}
           {endingStory && (
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center px-2">
-              <button
-                onClick={handleNarrate}
-                disabled={isNarrating}
-                className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px]"
-              >
-                {isNarrating ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : isPlaying ? (
-                  <VolumeX className="w-4 h-4" />
-                ) : (
-                  <Volume2 className="w-4 h-4" />
-                )}
-                {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
-              </button>
-              
-              <PosterPromptModal
-                introStory={introStory}
-                endingNarration={endingStory}
-                killer={result.killer}
-                location={result.location}
-                finalGirl={result.finalGirl}
-                outcome={result.outcome}
-              >
-                <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]">
-                  <ImageIcon className="w-4 h-4" />
-                  Poster Prompt
+            <div className="flex flex-col gap-3 px-2">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
+                <button
+                  onClick={handleNarrate}
+                  disabled={isNarrating}
+                  className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 disabled:opacity-50 min-h-[44px]"
+                >
+                  {isNarrating ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isPlaying ? (
+                    <VolumeX className="w-4 h-4" />
+                  ) : (
+                    <Volume2 className="w-4 h-4" />
+                  )}
+                  {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
                 </button>
-              </PosterPromptModal>
+                
+                <PosterPromptModal
+                  introStory={introStory}
+                  endingNarration={endingStory}
+                  killer={result.killer}
+                  location={result.location}
+                  finalGirl={result.finalGirl}
+                  outcome={result.outcome}
+                >
+                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px]">
+                    <ImageIcon className="w-4 h-4" />
+                    Poster Prompt
+                  </button>
+                </PosterPromptModal>
 
-              <ImageUploadSlot
-                imageUrl={posterImageUrl}
-                onImageChange={setPosterImageUrl}
-                gameId={result.id}
-              />
+                <ImageUploadSlot
+                  imageUrl={posterImageUrl}
+                  onImageChange={setPosterImageUrl}
+                  gameId={result.id}
+                />
+              </div>
+
+              {/* AI Scene Image Generation */}
+              <div className="flex justify-center">
+                <SceneImageControls
+                  story={endingStory}
+                  killer={result.killer}
+                  finalGirl={result.finalGirl}
+                  location={result.location}
+                  sceneType="ending"
+                  generatedImageUrl={generatedSceneUrl}
+                  onImageGenerated={setGeneratedSceneUrl}
+                />
+              </div>
             </div>
           )}
           
