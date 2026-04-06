@@ -624,10 +624,11 @@
   .slot-reel {
     display: flex;
     flex-direction: column;
-    animation: slot-scroll 1.6s cubic-bezier(0.12, 0.8, 0.3, 1) forwards;
+    animation: slot-scroll 1.6s cubic-bezier(0.12, 0.8, 0.3, 1) both;
     will-change: transform;
     backface-visibility: hidden;
     transform-style: preserve-3d;
+    background: black;
   }
 
   .slot-reel > * {
@@ -636,6 +637,7 @@
     height: 100%;
     backface-visibility: hidden;
     transform: translateZ(0);
+    margin-bottom: -1px;
   }
 
   @keyframes slot-scroll {

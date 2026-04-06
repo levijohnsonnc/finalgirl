@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 import shuffleSound from '@/assets/sounds/card-shuffle.mp3';
 import { LoreInfoModal } from './LoreInfoModal';
@@ -21,39 +21,24 @@ const SLOT_LABELS = {
   finalGirl: 'FINAL GIRL',
 };
 
-// Get image for a value - prioritize character/location specific images, fall back to box art
 const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: string | null): string | null => {
   if (!value) return null;
+  if (type === 'killer' && CHARACTER_IMAGES[value]) return CHARACTER_IMAGES[value];
+  if (type === 'finalGirl' && CHARACTER_IMAGES[value]) return CHARACTER_IMAGES[value];
+  if (type === 'location' && LOCATION_IMAGES[value]) return LOCATION_IMAGES[value];
   
-  // Check for character/location specific images first
-  if (type === 'killer' && CHARACTER_IMAGES[value]) {
-    return CHARACTER_IMAGES[value];
-  }
-  if (type === 'finalGirl' && CHARACTER_IMAGES[value]) {
-    return CHARACTER_IMAGES[value];
-  }
-  if (type === 'location' && LOCATION_IMAGES[value]) {
-    return LOCATION_IMAGES[value];
-  }
-  
-  // Fall back to box art
   const film = FEATURE_FILMS.find(f => {
     if (type === 'killer') return f.killer === value;
     if (type === 'location') return f.location === value;
     if (type === 'finalGirl') return f.finalGirls.some(fg => fg === value);
     return false;
   });
-  
   return film?.boxArt ?? null;
 };
 
-// Get object position for specific characters (some need different cropping)
 const getObjectPosition = (type: 'killer' | 'location' | 'finalGirl', value: string | null): string => {
-  // Dr. Fright should use center positioning, not top
   if (value === 'Dr. Fright') return 'object-center';
-  // Poltergeist needs center positioning to show the ghost figure
   if (value === 'Poltergeist') return 'object-center';
-  // Other killers use top positioning
   if (type === 'killer') return 'object-top';
   return '';
 };
@@ -73,11 +58,10 @@ export const CastingSlot = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedRef = useRef<boolean>(false);
 
-  // Preload all option images on mount for smooth animation
+  // Preload all option images on mount
   useEffect(() => {
     if (preloadedRef.current || options.length === 0) return;
     preloadedRef.current = true;
-    
     options.forEach(option => {
       const imgSrc = getImageForValue(type, option);
       if (imgSrc) {
@@ -87,10 +71,10 @@ export const CastingSlot = ({
     });
   }, [options, type]);
 
-  // Build shuffle sequence when shuffling starts
+  // Build shuffle sequence and start animation in one go (no double-rAF)
   useEffect(() => {
     if (isShuffling && options.length > 0 && value) {
-      // Play shuffle sound immediately
+      // Play shuffle sound
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -99,38 +83,35 @@ export const CastingSlot = ({
       audioRef.current.volume = 0.4;
       audioRef.current.play().catch(() => {});
 
-      // Use requestAnimationFrame to ensure DOM is ready before starting animation
-      requestAnimationFrame(() => {
-        // Build sequence: 12 random options ending with the selected value
-        const sequence: string[] = [];
-        for (let i = 0; i < 12; i++) {
-          const randomIdx = Math.floor(Math.random() * options.length);
-          sequence.push(options[randomIdx]);
-        }
-        sequence.push(value); // Final item is the selected value
-        setShuffleSequence(sequence);
-        
-        // Set animating state after sequence is ready
-        requestAnimationFrame(() => {
-          setIsAnimating(true);
-        });
-      });
+      // Build sequence ending with the selected value
+      const sequence: string[] = [];
+      for (let i = 0; i < 12; i++) {
+        sequence.push(options[Math.floor(Math.random() * options.length)]);
+      }
+      sequence.push(value);
+
+      // Set both in one synchronous batch — no rAF delay
+      setShuffleSequence(sequence);
+      setIsAnimating(true);
     } else if (!isShuffling) {
       setDisplayValue(value);
     }
   }, [isShuffling, shuffleKey, value, options]);
 
-  // Handle animation end
+  // Handle animation end — defer unmount by one frame
   const handleAnimationEnd = () => {
-    setIsAnimating(false);
-    setShuffleSequence([]);
     setDisplayValue(value);
+    // Defer clearing animation state so the static image paints first
+    requestAnimationFrame(() => {
+      setIsAnimating(false);
+      setShuffleSequence([]);
+    });
   };
 
   const cardImage = getImageForValue(type, displayValue);
-  const isEmpty = !displayValue && !isAnimating;
-
-  // Location cards are landscape (16:10), character cards are square (1:1)
+  // Always have the final value's image ready underneath
+  const finalImage = getImageForValue(type, value);
+  const isEmpty = !displayValue && !isAnimating && !value;
   const isLocation = type === 'location';
   
   return (
@@ -142,7 +123,7 @@ export const CastingSlot = ({
         {SLOT_LABELS[type]}
       </span>
 
-      {/* Poster Card - different dimensions for location vs characters */}
+      {/* Poster Card */}
       <div 
         className={`
           poster-card relative rounded-sm overflow-hidden w-full
@@ -152,11 +133,20 @@ export const CastingSlot = ({
         `}
         onClick={isEmpty ? onChoose : undefined}
       >
-        {/* Scrolling reel during animation - key forces remount for fresh animation */}
+        {/* Pre-rendered final image underneath the reel — always painted, zero flash on unmount */}
+        {finalImage && (
+          <img 
+            src={finalImage} 
+            alt={value || ''} 
+            className={`absolute inset-0 w-full h-full object-cover z-0 ${getObjectPosition(type, value)}`}
+          />
+        )}
+
+        {/* Scrolling reel during animation */}
         {isAnimating && shuffleSequence.length > 0 ? (
           <div 
             key={shuffleKey}
-            className="slot-reel absolute inset-0"
+            className="slot-reel absolute inset-0 z-10"
             style={{ '--item-count': shuffleSequence.length } as React.CSSProperties}
             onAnimationEnd={handleAnimationEnd}
           >
@@ -177,23 +167,24 @@ export const CastingSlot = ({
             })}
           </div>
         ) : (
-          /* Static display */
-          cardImage ? (
-            <img 
-              src={cardImage} 
-              alt={displayValue || ''} 
-              className={`absolute inset-0 w-full h-full object-cover ${getObjectPosition(type, displayValue)}`}
-            />
-          ) : (
-            <div className="absolute inset-0 mystery-static" />
+          /* Static display (only when no final image pre-rendered, e.g. empty state) */
+          !finalImage && (
+            cardImage ? (
+              <img 
+                src={cardImage} 
+                alt={displayValue || ''} 
+                className={`absolute inset-0 w-full h-full object-cover ${getObjectPosition(type, displayValue)}`}
+              />
+            ) : (
+              <div className="absolute inset-0 mystery-static" />
+            )
           )
         )}
 
         {/* VHS softness overlay */}
-        <div className="absolute inset-0 vhs-softness pointer-events-none" />
-        
+        <div className="absolute inset-0 vhs-softness pointer-events-none z-20" />
         {/* Film grain */}
-        <div className="absolute inset-0 film-grain pointer-events-none" />
+        <div className="absolute inset-0 film-grain pointer-events-none z-20" />
       </div>
 
       {/* Name with Info Icon */}
@@ -212,7 +203,7 @@ export const CastingSlot = ({
         )}
       </div>
 
-      {/* Action Buttons - 3D Pressable Style */}
+      {/* Action Buttons */}
       <div className="flex gap-4 mt-2">
         <button
           onClick={onShuffle}
