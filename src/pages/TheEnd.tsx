@@ -269,8 +269,8 @@ const TheEnd = ({
         <div className="w-full max-w-4xl flex flex-col gap-4">
           {/* Action Buttons - Above text */}
           {endingStory && (
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 px-2">
-              {/* Narrate — full width on mobile, auto on desktop */}
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 px-2">
+              {/* Row 1: Narrate — full width on mobile */}
               <button
                 onClick={handleNarrate}
                 disabled={isNarrating}
@@ -286,30 +286,32 @@ const TheEnd = ({
                 {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
               </button>
               
-              {/* Poster Prompt + Upload — side by side on mobile, auto on desktop */}
-              <PosterPromptModal
-                introStory={introStory}
-                endingNarration={endingStory}
-                killer={result.killer}
-                location={result.location}
-                finalGirl={result.finalGirl}
-                outcome={result.outcome}
-              >
-                <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px] flex-1 sm:flex-none min-w-0">
-                  <ImageIcon className="w-4 h-4 shrink-0" />
-                  <span className="truncate">Poster Prompt</span>
-                </button>
-              </PosterPromptModal>
+              {/* Row 2: Poster Prompt + Upload — side by side on mobile */}
+              <div className="flex w-full sm:w-auto gap-2 sm:gap-3 sm:contents">
+                <PosterPromptModal
+                  introStory={introStory}
+                  endingNarration={endingStory}
+                  killer={result.killer}
+                  location={result.location}
+                  finalGirl={result.finalGirl}
+                  outcome={result.outcome}
+                >
+                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px] flex-1 sm:flex-none">
+                    <ImageIcon className="w-4 h-4 shrink-0" />
+                    <span>Poster Prompt</span>
+                  </button>
+                </PosterPromptModal>
 
-              <div className="flex-1 sm:flex-none min-w-0">
-                <ImageUploadSlot
-                  imageUrl={posterImageUrl}
-                  onImageChange={setPosterImageUrl}
-                  gameId={result.id}
-                />
+                <div className="flex-1 sm:flex-none">
+                  <ImageUploadSlot
+                    imageUrl={posterImageUrl}
+                    onImageChange={setPosterImageUrl}
+                    gameId={result.id}
+                  />
+                </div>
               </div>
 
-              {/* Generate Scene + Auto toggle */}
+              {/* Row 3: Generate Scene — full width on mobile */}
               <SceneImageControls
                 story={endingStory}
                 killer={result.killer}
