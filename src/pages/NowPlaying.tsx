@@ -56,6 +56,20 @@ const NowPlaying = ({
     generateStory();
   }, []);
 
+  // Auto-generate scene image when story loads (if enabled)
+  useEffect(() => {
+    if (story && hasApiKey && autoGenerate && !autoGenerateTriggered.current) {
+      autoGenerateTriggered.current = true;
+      (async () => {
+        const url = await generateImage({ story, killer, finalGirl, location, sceneType: 'beginning' });
+        if (url) {
+          setGeneratedSceneUrl(url);
+          setSceneImageUrl(url);
+        }
+      })();
+    }
+  }, [story, hasApiKey, autoGenerate]);
+
   const generateStory = async () => {
     setIsGenerating(true);
     setError(null);
