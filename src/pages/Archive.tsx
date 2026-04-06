@@ -119,6 +119,11 @@ const Archive = () => {
         </AlertDialog>
       </div>
 
+      {/* Image Generation Settings */}
+      <div className="px-2">
+        <ApiKeyManager />
+      </div>
+
       {/* Feature Films by Season */}
       {Object.entries(filmsBySeason).map(([season, films]) => {
         const seasonNum = parseInt(season);
