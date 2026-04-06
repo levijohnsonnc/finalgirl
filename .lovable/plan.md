@@ -1,92 +1,69 @@
 
 
-## User API Key for Image Generation
+## Critique of Your Plan
 
-### Overview
-Let users bring their own API key (Google Gemini, OpenAI, or Stability AI) to unlock AI-generated scene images on both the "Now Playing" (beginning) and "The End" (ending) pages. Keys are stored server-side only, never exposed to the client after entry.
+**What's strong:**
+- The concept reframe ("IMAGE ENGINE", "Access Code", "Activate Engine") is excellent and matches the VHS horror tone.
+- Collapsed/expanded pattern is the right UX — minimal footprint by default.
+- Moving it below all collection content is correct hierarchy.
+- Removing the dropdown in favor of selectable buttons fits the aesthetic.
+- The copy changes are spot-on for immersion.
 
-### Security Model
-- API keys are stored in a new `user_api_keys` table with RLS so users can only access their own rows.
-- The key value is sent to the backend once on save; the client never reads it back (write-only from the UI perspective).
-- A new edge function `generate-scene-image` accepts the user's auth token, looks up the key from the DB server-side, and calls the appropriate provider. The raw key never touches the client after initial entry.
-- The UI masks the key after entry, showing only the last 4 characters.
+**What needs adjustment:**
+- "Stability AI" is missing from your source buttons — the current implementation supports three providers (Google Gemini, OpenAI, Stability AI). I'll include all three as selectable buttons.
+- The active/compact state showing "Provider: Gemini / Auto-generation: ON" with CHANGE and DISABLE buttons adds complexity. Simpler: just show ONLINE status + MANAGE button that re-expands, keeping the same pattern as OFFLINE → ACTIVATE.
+- "DISABLE" is ambiguous (disable auto-gen? remove key?). I'll use "REMOVE" for key deletion and keep the auto-generate toggle inside the expanded state only.
+- The 60-70% height reduction is achievable in collapsed state but the expanded setup flow needs enough room for the two steps — I'll keep it tight but won't sacrifice usability.
 
-### Database
+---
 
-**New table: `user_api_keys`**
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid PK | default gen_random_uuid() |
-| user_id | uuid NOT NULL | |
-| provider | text NOT NULL | 'google', 'openai', or 'stability' |
-| api_key_encrypted | text NOT NULL | stored as-is (encrypted at rest by Supabase) |
-| created_at | timestamptz | default now() |
-| updated_at | timestamptz | default now() |
+## Build Plan
 
-- UNIQUE constraint on (user_id, provider) — one key per provider per user.
-- RLS: users can INSERT/UPDATE/DELETE their own rows. SELECT returns only `id`, `provider`, `user_id`, `created_at` (the edge function reads the key server-side using service role).
-- Actually, for simplicity: RLS allows full CRUD on own rows. The client simply never queries the `api_key_encrypted` column — we only SELECT `id, provider, created_at` in the hook.
+### 1. Move ApiKeyManager below all seasons in Archive.tsx
+- Remove the current `<ApiKeyManager />` from its position (between header and seasons).
+- Add it after the last season block with a spacer div (`mt-12 sm:mt-16`).
 
-**New table: `user_image_settings`**
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid PK | default gen_random_uuid() |
-| user_id | uuid NOT NULL UNIQUE | |
-| auto_generate_images | boolean | default false |
-| preferred_provider | text | default null |
-| created_at / updated_at | timestamptz | |
+### 2. Rewrite ApiKeyManager.tsx as "IMAGE ENGINE"
+Complete rewrite of the component with two visual states:
 
-- RLS: users can CRUD their own row.
+**Collapsed state (default):**
+- Slim horizontal card matching collection card width.
+- Left: film-reel icon (use `Film` from lucide).
+- Center: "IMAGE ENGINE" title + status badge (OFFLINE in muted / ONLINE in red glow).
+- Right: button — "ACTIVATE" if no key, "MANAGE" if key exists.
+- Scanline overlay, subtle red border on hover, same dark card bg as collection.
+- Click expands inline (no navigation).
 
-### Frontend Changes
+**Expanded state — Setup flow (no key):**
+- **Step 1: SELECT SOURCE** — Three selectable button cards: `[ GEMINI ]  [ OPENAI ]  [ STABILITY ]`. Selected gets `ring-2 ring-primary/50` + brightness boost (matching collection card style). Hover brightens.
+- **Step 2: ENTER ACCESS CODE** — Masked input with eye toggle. "ACTIVATE ENGINE" button (disabled until input present). Small inline text below: "🔒 Stored securely. Never shared." with optional tooltip for details.
 
-**1. My Collection (Archive.tsx) — New "Image Generation" settings section**
-- Placed above the season list, below the header.
-- If not logged in: greyed out with "Sign in to configure image generation."
-- If logged in, shows:
-  - Provider dropdown (Google Gemini / OpenAI DALL-E / Stability AI).
-  - Password-style input for the API key, with a Save button.
-  - After saving, shows "Key saved (····XXXX)" with a Remove button.
-  - Security copy: "Your key is stored securely and is never exposed after saving."
-  - Toggle: "Auto-generate scene images" (disabled until a key is saved).
+**Expanded state — Active/manage (has key):**
+- Shows current source with option to change or remove.
+- Auto-generate toggle: "RECONSTRUCT SCENES FROM YOUR SESSIONS" with red-styled switch.
+- "REMOVE" button to delete the key (with confirmation).
+- Collapse back via "DONE" or clicking the header bar.
 
-**2. New hook: `useImageGeneration`**
-- Reads from `user_api_keys` and `user_image_settings`.
-- Exposes: `hasApiKey`, `provider`, `autoGenerate`, `setAutoGenerate`, `saveApiKey`, `removeApiKey`, `generateImage(context)`.
-- `generateImage` calls the new edge function with auth token + image context; the edge function looks up the key.
+### 3. Visual/theme details
+- Add scanline texture overlay to the card (reuse existing `.scanlines` CSS class).
+- Subtle flicker animation on the ONLINE badge (reuse `.crt-flicker` or similar).
+- Red glow consistent with selected collection cards (`shadow-[0_0_15px_rgba(var(--blood-red),0.3)]`).
+- No flat UI — dark glass-card feel with border effects.
 
-**3. NowPlaying.tsx — After story loads**
-- If `hasApiKey`:
-  - If `autoGenerate` is on, automatically call `generateImage` with the story context.
-  - Show a "Generate Scene" button (replaces/augments the current Image Prompt button). If an image exists, show "Regenerate Scene" instead.
-  - Show the auto-generate toggle inline.
-- If no API key:
-  - Where the generate button would be, show a muted hint: "Add an image API key in My Collection to generate scene images."
+### 4. Copy changes
+| Current | New |
+|---------|-----|
+| Image Generation | IMAGE ENGINE |
+| API Key | Access Code |
+| Save Key | Activate Engine |
+| Auto-generate scene images | Reconstruct scenes from your sessions |
+| Provider dropdown | Source selector buttons |
 
-**4. TheEnd.tsx — Same pattern**
-- Identical generate/regenerate/auto-generate controls after the ending story loads.
-- Uses the ending story + character context for the image prompt.
-
-### Edge Function: `generate-scene-image`
-
-- Authenticated endpoint (validates JWT in code).
-- Reads the user's API key from `user_api_keys` using the service role client.
-- Accepts: `{ story, killer, killerDescription, finalGirl, finalGirlDescription, location, locationDescription, sceneType: 'beginning' | 'ending' }`.
-- Uses the same two-step approach as the existing `generate-story-image`: extract a visual description via Lovable AI, then call the user's chosen provider to generate the image.
-- Provider routing:
-  - **Google Gemini**: calls `generativelanguage.googleapis.com` (same as current).
-  - **OpenAI**: calls `api.openai.com/v1/images/generations` with DALL-E 3.
-  - **Stability AI**: calls `api.stability.ai/v2beta/stable-image/generate/core`.
-- Returns `{ imageUrl }` (base64 data URL).
-
-### Summary of files changed/created
-
-| File | Action |
+### Files changed
+| File | Change |
 |------|--------|
-| Migration SQL | New tables `user_api_keys`, `user_image_settings` with RLS |
-| `src/hooks/useImageGeneration.ts` | New hook |
-| `src/pages/Archive.tsx` | Add API key management section |
-| `src/pages/NowPlaying.tsx` | Add generate/regenerate/auto-generate controls |
-| `src/pages/TheEnd.tsx` | Same controls |
-| `supabase/functions/generate-scene-image/index.ts` | New edge function |
+| `src/components/ApiKeyManager.tsx` | Full rewrite |
+| `src/pages/Archive.tsx` | Move `<ApiKeyManager />` to bottom of page |
+
+No database, hook, or edge function changes needed — only the UI component and its placement.
 
