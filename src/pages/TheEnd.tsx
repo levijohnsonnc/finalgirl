@@ -14,6 +14,8 @@ import { getLocationDescription } from '@/data/locationDescriptions';
 import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
 import { getKillerSpecialRules } from '@/data/killerSpecialRules';
 import { renderFormattedText } from '@/lib/textFormatting';
+import SceneImageControls from '@/components/SceneImageControls';
+import { useImageGeneration } from '@/hooks/useImageGeneration';
 
 export interface EndingFormData {
   finalHorrorLevel: number;
