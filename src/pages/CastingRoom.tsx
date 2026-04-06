@@ -71,10 +71,10 @@ const CastingRoom = ({ onStartGame, onGoToArchive }: CastingRoomProps) => {
       [slot]: finalValue,
     }));
     
-    // Clear shuffling state after animation completes (~1.8s)
+    // Clear shuffling state after animation completes (~2.6s)
     setTimeout(() => {
       setShufflingSlot(null);
-    }, 1800);
+    }, 2600);
   }, [ownedContent, getRandomItem]);
 
   // Handle manual selection from picker

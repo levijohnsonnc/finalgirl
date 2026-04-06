@@ -101,9 +101,9 @@ export const CastingSlot = ({
 
       // Use requestAnimationFrame to ensure DOM is ready before starting animation
       requestAnimationFrame(() => {
-        // Build sequence: 12 random options ending with the selected value
+        // Build sequence: 22 random options ending with the selected value
         const sequence: string[] = [];
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 22; i++) {
           const randomIdx = Math.floor(Math.random() * options.length);
           sequence.push(options[randomIdx]);
         }
