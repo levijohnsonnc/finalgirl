@@ -2,6 +2,7 @@ const ALLOWED_ORIGIN_PATTERNS = [
   'https://cdyvccecrovyjkabfcnx.supabase.co',
   /^https:\/\/.*\.lovable\.app$/,
   /^https:\/\/.*\.lovable\.dev$/,
+  /^https:\/\/.*\.lovableproject\.com$/,
   'http://localhost:5173',
   'http://localhost:8080',
 ];
