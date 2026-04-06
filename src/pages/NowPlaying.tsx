@@ -264,8 +264,8 @@ const NowPlaying = ({
         <div className="w-full max-w-4xl flex flex-col gap-4">
           {/* Action Buttons - Above text */}
           {story && (
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 px-2">
-              {/* Narrate — full width on mobile, auto on desktop */}
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 px-2">
+              {/* Row 1: Narrate — full width on mobile */}
               <button
                 onClick={handleNarrate}
                 disabled={isNarrating}
@@ -281,27 +281,29 @@ const NowPlaying = ({
                 {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
               </button>
               
-              {/* Image Prompt + Upload — side by side on mobile, auto on desktop */}
-              <ImagePromptModal
-                story={story}
-                killer={killer}
-                location={location}
-                finalGirl={finalGirl}
-              >
-                <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px] flex-1 sm:flex-none min-w-0">
-                  <ImageIcon className="w-4 h-4 shrink-0" />
-                  <span className="truncate">Image Prompt</span>
-                </button>
-              </ImagePromptModal>
-              
-              <div className="flex-1 sm:flex-none min-w-0">
-                <ImageUploadSlot
-                  imageUrl={sceneImageUrl}
-                  onImageChange={setSceneImageUrl}
-                />
+              {/* Row 2: Image Prompt + Upload — side by side on mobile */}
+              <div className="flex w-full sm:w-auto gap-2 sm:gap-3 sm:contents">
+                <ImagePromptModal
+                  story={story}
+                  killer={killer}
+                  location={location}
+                  finalGirl={finalGirl}
+                >
+                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px] flex-1 sm:flex-none">
+                    <ImageIcon className="w-4 h-4 shrink-0" />
+                    <span>Image Prompt</span>
+                  </button>
+                </ImagePromptModal>
+                
+                <div className="flex-1 sm:flex-none">
+                  <ImageUploadSlot
+                    imageUrl={sceneImageUrl}
+                    onImageChange={setSceneImageUrl}
+                  />
+                </div>
               </div>
 
-              {/* Generate Scene + Auto toggle */}
+              {/* Row 3: Generate Scene — full width on mobile */}
               <SceneImageControls
                 story={story}
                 killer={killer}

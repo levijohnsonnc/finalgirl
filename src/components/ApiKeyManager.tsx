@@ -261,7 +261,7 @@ const ApiKeyManager = () => {
         {hasApiKey && (
           <div className="flex items-center justify-between pt-3 border-t border-muted-foreground/10">
             <p className="font-vhs text-[10px] sm:text-xs text-foreground/80 uppercase tracking-wider">
-              Reconstruct Scenes
+              Auto Generate Scenes
             </p>
             <Switch
               checked={autoGenerate}
