@@ -1,51 +1,69 @@
 
 
-## Why the Current Approach Doesn't Work
+## Critique of Your Plan
 
-The animation uses a single CSS `translateY` scroll over 13 stacked full-height items with `cubic-bezier(0.12, 0.8, 0.3, 1)`. This is a heavy ease-out — it covers ~80% of the scroll distance in the first ~25% of the time. Result: items 1–10 fly by in ~400ms (invisible blur), then it slowly decelerates into the final pick. You never actually *see* the options. The pre-rendered final image at z-0 also means the first frame shows the target before the reel even paints.
+**What's strong:**
+- The concept reframe ("IMAGE ENGINE", "Access Code", "Activate Engine") is excellent and matches the VHS horror tone.
+- Collapsed/expanded pattern is the right UX — minimal footprint by default.
+- Moving it below all collection content is correct hierarchy.
+- Removing the dropdown in favor of selectable buttons fits the aesthetic.
+- The copy changes are spot-on for immersion.
 
-CSS `translateY` over stacked items is fundamentally the wrong tool here — you can't control per-frame dwell time with a single scroll animation.
+**What needs adjustment:**
+- "Stability AI" is missing from your source buttons — the current implementation supports three providers (Google Gemini, OpenAI, Stability AI). I'll include all three as selectable buttons.
+- The active/compact state showing "Provider: Gemini / Auto-generation: ON" with CHANGE and DISABLE buttons adds complexity. Simpler: just show ONLINE status + MANAGE button that re-expands, keeping the same pattern as OFFLINE → ACTIVATE.
+- "DISABLE" is ambiguous (disable auto-gen? remove key?). I'll use "REMOVE" for key deletion and keep the auto-generate toggle inside the expanded state only.
+- The 60-70% height reduction is achievable in collapsed state but the expanded setup flow needs enough room for the two steps — I'll keep it tight but won't sacrifice usability.
 
-## New Approach: JavaScript-Driven Frame Stepper
+---
 
-Replace the CSS scroll reel with a **timed frame swap** — show one image at a time, swapping it on a schedule that follows a custom timing curve (slow → fast → slow).
+## Build Plan
 
-### How it works
+### 1. Move ApiKeyManager below all seasons in Archive.tsx
+- Remove the current `<ApiKeyManager />` from its position (between header and seasons).
+- Add it after the last season block with a spacer div (`mt-12 sm:mt-16`).
 
-1. **Build a longer sequence** (~18–22 items) of random options, ending with the selected value.
-2. **Compute per-frame delays** using an ease-in-out curve: first few frames ~250ms each (slow start, you see them), middle frames ~60ms (fast blur), last few frames ramp back up to ~300ms (dramatic slowdown before landing).
-3. **Use `setTimeout` chain** (or `requestAnimationFrame` with accumulated time) to step through frames, updating a single `currentFrameIndex` state.
-4. **Render only one image at a time** — no stacking, no translateY. Just swap `src` on a single `<img>` element (or crossfade between two layered images).
-5. On the final frame, transition to the static display with no flash (image is already showing).
+### 2. Rewrite ApiKeyManager.tsx as "IMAGE ENGINE"
+Complete rewrite of the component with two visual states:
 
-### Timing curve detail
+**Collapsed state (default):**
+- Slim horizontal card matching collection card width.
+- Left: film-reel icon (use `Film` from lucide).
+- Center: "IMAGE ENGINE" title + status badge (OFFLINE in muted / ONLINE in red glow).
+- Right: button — "ACTIVATE" if no key, "MANAGE" if key exists.
+- Scanline overlay, subtle red border on hover, same dark card bg as collection.
+- Click expands inline (no navigation).
 
-```text
-Frame:  1    2    3    4    5   ...  10   11  ...  18   19   20   21   22
-Delay: 220  180  140  100   80  ...  60   60  ...  80  120  180  250  300  (ms)
-       ─── slow start ───  ──── fast middle ────  ──── slow finish ────
-```
+**Expanded state — Setup flow (no key):**
+- **Step 1: SELECT SOURCE** — Three selectable button cards: `[ GEMINI ]  [ OPENAI ]  [ STABILITY ]`. Selected gets `ring-2 ring-primary/50` + brightness boost (matching collection card style). Hover brightens.
+- **Step 2: ENTER ACCESS CODE** — Masked input with eye toggle. "ACTIVATE ENGINE" button (disabled until input present). Small inline text below: "🔒 Stored securely. Never shared." with optional tooltip for details.
 
-Total duration: ~2.2s (tunable). Each frame is clearly visible at the start and end.
+**Expanded state — Active/manage (has key):**
+- Shows current source with option to change or remove.
+- Auto-generate toggle: "RECONSTRUCT SCENES FROM YOUR SESSIONS" with red-styled switch.
+- "REMOVE" button to delete the key (with confirmation).
+- Collapse back via "DONE" or clicking the header bar.
 
-### Component changes (`CastingSlot.tsx`)
+### 3. Visual/theme details
+- Add scanline texture overlay to the card (reuse existing `.scanlines` CSS class).
+- Subtle flicker animation on the ONLINE badge (reuse `.crt-flicker` or similar).
+- Red glow consistent with selected collection cards (`shadow-[0_0_15px_rgba(var(--blood-red),0.3)]`).
+- No flat UI — dark glass-card feel with border effects.
 
-- Remove `shuffleSequence` array rendering (no more stacked children).
-- Add `currentFrameIndex` ref and a `setTimeout` chain that increments it.
-- Render a single image element that updates its `src` based on `sequence[currentFrameIndex]`.
-- Add a brief CSS crossfade transition (`opacity` swap between two layered `<img>` tags, ~50ms) so frame swaps aren't hard cuts.
-- Keep the pre-rendered final image at z-0 as a safety net, but hide it with `opacity-0` during animation so the old image doesn't linger.
-
-### CSS changes (`index.css`)
-
-- Remove the `slot-scroll` keyframe and `.slot-reel` styles entirely (no longer used).
-- Add a simple `.slot-frame-enter` transition class: `transition: opacity 50ms ease`.
-- Keep `.poster-card-shuffling` glow effect as-is.
+### 4. Copy changes
+| Current | New |
+|---------|-----|
+| Image Generation | IMAGE ENGINE |
+| API Key | Access Code |
+| Save Key | Activate Engine |
+| Auto-generate scene images | Reconstruct scenes from your sessions |
+| Provider dropdown | Source selector buttons |
 
 ### Files changed
-
 | File | Change |
 |------|--------|
-| `src/components/CastingSlot.tsx` | Replace CSS reel with JS frame stepper |
-| `src/index.css` | Remove slot-reel/slot-scroll, add slot-frame transition |
+| `src/components/ApiKeyManager.tsx` | Full rewrite |
+| `src/pages/Archive.tsx` | Move `<ApiKeyManager />` to bottom of page |
+
+No database, hook, or edge function changes needed — only the UI component and its placement.
 
