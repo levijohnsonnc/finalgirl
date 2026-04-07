@@ -69,6 +69,7 @@ const TheEnd = ({
         const url = await generateImage({
           story: endingStory,
           killer: result.killer,
+          killerDescription: getKillerDescription(result.killer),
           finalGirl: result.finalGirl,
           location: result.location,
           sceneType: 'ending',

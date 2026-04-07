@@ -1,5 +1,6 @@
 import { ImageIcon, Loader2, RefreshCw } from 'lucide-react';
 import { useImageGeneration } from '@/hooks/useImageGeneration';
+import { getKillerDescription } from '@/data/killerDescriptions';
 
 interface SceneImageControlsProps {
   story: string;
@@ -28,7 +29,7 @@ const SceneImageControls = ({
   } = useImageGeneration();
 
   const handleGenerate = async () => {
-    const url = await generateImage({ story, killer, finalGirl, location, sceneType });
+    const url = await generateImage({ story, killer, killerDescription: getKillerDescription(killer), finalGirl, location, sceneType });
     if (url) onImageGenerated(url);
   };
 

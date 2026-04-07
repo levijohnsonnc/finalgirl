@@ -35,7 +35,7 @@ serve(async (req) => {
     }
 
     // --- Parse request body ---
-    const { story, killer, finalGirl, location, sceneType } = await req.json();
+    const { story, killer, killerDescription, finalGirl, location, sceneType } = await req.json();
     if (!story || !killer || !finalGirl || !location) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
         status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
@@ -79,6 +79,10 @@ serve(async (req) => {
 
     const sceneLabel = sceneType === 'beginning' ? 'opening' : 'closing';
 
+    const killerAppearanceBlock = killerDescription
+      ? `\nKILLER APPEARANCE: ${killerDescription}\n`
+      : '';
+
     const extractionPrompt = `You are a horror film cinematographer selecting the most emotionally powerful ${sceneLabel} shot from this story.
 
 CRITICAL RULES:
@@ -86,7 +90,7 @@ CRITICAL RULES:
 - Describe camera angle, framing, lighting, and emotional focus
 - Do NOT mention character names - describe them visually instead
 - Output ONE vivid sentence describing a powerful cinematic shot
-
+${killerAppearanceBlock}
 STORY:
 ${story}
 
@@ -113,7 +117,9 @@ OUTPUT: One vivid sentence describing a powerful cinematic shot.`;
     const visualDescription = extractData.choices?.[0]?.message?.content?.trim() ||
       'Atmospheric vintage scene with dramatic lighting';
 
-    const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}
+    const killerLine = killerDescription ? `\nThe antagonist: ${killerDescription}` : '';
+
+    const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}${killerLine}
 
 Style: Practical on-set lighting, shallow depth of field, cinematic tension, 35mm film grain.
 DO NOT create a movie poster, group portrait, or composite image.
