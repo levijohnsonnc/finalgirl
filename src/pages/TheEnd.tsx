@@ -348,9 +348,23 @@ const TheEnd = ({
                   </button>
                 </div>
               ) : endingStory ? (
-                <p className="font-vhs text-sm sm:text-sm text-muted-foreground leading-relaxed sm:leading-relaxed whitespace-pre-wrap">
-                  {renderFormattedText(endingStory)}
-                </p>
+                <div className={generatedSceneUrl ? 'grid grid-cols-1 md:grid-cols-[1fr_35%] gap-4 sm:gap-6' : ''}>
+                  <p className="font-vhs text-sm sm:text-sm text-muted-foreground leading-relaxed sm:leading-relaxed whitespace-pre-wrap">
+                    {renderFormattedText(endingStory)}
+                  </p>
+                  {generatedSceneUrl && (
+                    <div className="relative rounded-sm overflow-hidden">
+                      <img
+                        src={generatedSceneUrl}
+                        alt="Generated scene"
+                        className="w-full h-auto rounded-sm"
+                        style={{ filter: 'contrast(1.1) saturate(0.85) sepia(0.15)' }}
+                      />
+                      <div className="film-grain absolute inset-0 pointer-events-none opacity-[0.12]" />
+                      <div className="vignette absolute inset-0 pointer-events-none" />
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12">
                   <p className="font-vhs text-sm text-muted-foreground">
