@@ -1,5 +1,6 @@
 import { ImageIcon, Loader2, RefreshCw } from 'lucide-react';
 import { useImageGeneration } from '@/hooks/useImageGeneration';
+import { getKillerDescription } from '@/data/killerDescriptions';
 
 interface SceneImageControlsProps {
   story: string;
