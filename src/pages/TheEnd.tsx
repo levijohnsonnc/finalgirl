@@ -318,8 +318,8 @@ const TheEnd = ({
                 finalGirl={result.finalGirl}
                 location={result.location}
                 sceneType="ending"
-                generatedImageUrl={generatedSceneUrl}
-                onImageGenerated={setGeneratedSceneUrl}
+                generatedImageUrl={posterImageUrl || null}
+                onImageGenerated={setPosterImageUrl}
               />
             </div>
           )}
