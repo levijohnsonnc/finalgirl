@@ -79,6 +79,10 @@ serve(async (req) => {
 
     const sceneLabel = sceneType === 'beginning' ? 'opening' : 'closing';
 
+    const killerAppearanceBlock = killerDescription
+      ? `\nKILLER APPEARANCE: ${killerDescription}\n`
+      : '';
+
     const extractionPrompt = `You are a horror film cinematographer selecting the most emotionally powerful ${sceneLabel} shot from this story.
 
 CRITICAL RULES:
@@ -86,7 +90,7 @@ CRITICAL RULES:
 - Describe camera angle, framing, lighting, and emotional focus
 - Do NOT mention character names - describe them visually instead
 - Output ONE vivid sentence describing a powerful cinematic shot
-
+${killerAppearanceBlock}
 STORY:
 ${story}
 
