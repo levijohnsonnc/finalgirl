@@ -230,7 +230,7 @@ const TheEnd = ({
 
   const handleSave = () => {
     if (endingStory) {
-      onSave(endingStory, posterImageUrl || undefined);
+      onSave(endingStory, posterImageUrl || undefined, generatedSceneUrl || undefined);
     }
   };
 
