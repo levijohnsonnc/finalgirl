@@ -32,7 +32,7 @@ interface TheEndProps {
   result: GameResult;
   introStory?: string;
   formData: EndingFormData;
-  onSave: (endingNarration: string, posterImageUrl?: string, sceneImageUrl?: string) => void;
+  onSave: (endingNarration: string, posterImageUrl?: string) => void;
   onDiscard: () => void;
 }
 
