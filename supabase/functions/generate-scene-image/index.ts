@@ -77,13 +77,46 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const sceneLabel = sceneType === 'beginning' ? 'opening' : 'closing';
+    const isPoster = sceneType === 'ending';
+    const sceneLabel = isPoster ? 'closing' : 'opening';
 
     const killerAppearanceBlock = killerDescription
       ? `\nKILLER APPEARANCE: ${killerDescription}\n`
       : '';
 
-    const extractionPrompt = `You are a horror film cinematographer selecting the most emotionally powerful ${sceneLabel} shot from this story.
+    let extractionPrompt: string;
+    let buildImagePrompt: (visualDescription: string) => string;
+
+    if (isPoster) {
+      // --- Poster-style prompt for endings ---
+      extractionPrompt = `You are an artist designing a painted 1980s horror movie poster for this story.
+
+CRITICAL RULES:
+- Extract the single most powerful, iconic visual moment from the ending
+- Describe a dramatic poster composition: character positioning, mood, atmosphere
+- Do NOT mention character names - describe them visually instead
+- Output ONE vivid sentence describing the poster's central image
+${killerAppearanceBlock}
+STORY:
+${story}
+
+OUTPUT: One vivid sentence describing the poster's central dramatic image.`;
+
+      buildImagePrompt = (visualDescription: string) => {
+        const killerLine = killerDescription ? `\nThe antagonist: ${killerDescription}` : '';
+        return `Painted 1980s horror movie poster. Vertical 2:3 composition.
+
+${visualDescription}${killerLine}
+
+Style: Painterly realism in the tradition of 1980s VHS box art and horror paperback covers. Dramatic chiaroscuro lighting, visible brushwork, subtle film grain and paper texture.
+NOT photorealistic, NOT digital/glossy, NOT cartoonish.
+PG-13: imply threat through atmosphere, posture, and shadow — no explicit gore.
+Leave space at the top for a title and at the bottom for a tagline and billing block.
+Muted, atmospheric color palette drawn from the story's setting.`;
+      };
+    } else {
+      // --- Cinematic still prompt for beginnings ---
+      extractionPrompt = `You are a horror film cinematographer selecting the most emotionally powerful ${sceneLabel} shot from this story.
 
 CRITICAL RULES:
 - Focus on ONE dramatic moment of tension, fear, revelation, or confrontation
@@ -95,6 +128,17 @@ STORY:
 ${story}
 
 OUTPUT: One vivid sentence describing a powerful cinematic shot.`;
+
+      buildImagePrompt = (visualDescription: string) => {
+        const killerLine = killerDescription ? `\nThe antagonist: ${killerDescription}` : '';
+        return `Ultra photorealistic 1980s horror film still. ${visualDescription}${killerLine}
+
+Style: Practical on-set lighting, shallow depth of field, cinematic tension, 35mm film grain.
+DO NOT create a movie poster, group portrait, or composite image.
+Focus on this single dramatic moment with authentic vintage analog film quality.
+Muted, desaturated color palette. Widescreen composition. No text or titles.`;
+      };
+    }
 
     const extractResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -117,14 +161,7 @@ OUTPUT: One vivid sentence describing a powerful cinematic shot.`;
     const visualDescription = extractData.choices?.[0]?.message?.content?.trim() ||
       'Atmospheric vintage scene with dramatic lighting';
 
-    const killerLine = killerDescription ? `\nThe antagonist: ${killerDescription}` : '';
-
-    const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}${killerLine}
-
-Style: Practical on-set lighting, shallow depth of field, cinematic tension, 35mm film grain.
-DO NOT create a movie poster, group portrait, or composite image.
-Focus on this single dramatic moment with authentic vintage analog film quality.
-Muted, desaturated color palette. Widescreen composition. No text or titles.`;
+    const imagePrompt = buildImagePrompt(visualDescription);
 
     // --- Step 2: Generate image using user's chosen provider ---
     let imageUrl: string;
