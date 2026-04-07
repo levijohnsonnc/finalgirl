@@ -35,7 +35,7 @@ serve(async (req) => {
     }
 
     // --- Parse request body ---
-    const { story, killer, finalGirl, location, sceneType } = await req.json();
+    const { story, killer, killerDescription, finalGirl, location, sceneType } = await req.json();
     if (!story || !killer || !finalGirl || !location) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
         status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
