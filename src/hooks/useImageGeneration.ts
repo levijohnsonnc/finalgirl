@@ -19,6 +19,7 @@ interface ImageSettings {
 interface GenerateImageContext {
   story: string;
   killer: string;
+  killerDescription?: string;
   finalGirl: string;
   location: string;
   sceneType: 'beginning' | 'ending';

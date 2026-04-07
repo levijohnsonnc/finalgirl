@@ -29,7 +29,7 @@ const SceneImageControls = ({
   } = useImageGeneration();
 
   const handleGenerate = async () => {
-    const url = await generateImage({ story, killer, finalGirl, location, sceneType });
+    const url = await generateImage({ story, killer, killerDescription: getKillerDescription(killer), finalGirl, location, sceneType });
     if (url) onImageGenerated(url);
   };
 

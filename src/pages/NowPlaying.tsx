@@ -62,7 +62,7 @@ const NowPlaying = ({
     if (story && hasApiKey && autoGenerate && !autoGenerateTriggered.current) {
       autoGenerateTriggered.current = true;
       (async () => {
-        const url = await generateImage({ story, killer, finalGirl, location, sceneType: 'beginning' });
+        const url = await generateImage({ story, killer, killerDescription: getKillerDescription(killer), finalGirl, location, sceneType: 'beginning' });
         if (url) {
           setGeneratedSceneUrl(url);
           setSceneImageUrl(url);

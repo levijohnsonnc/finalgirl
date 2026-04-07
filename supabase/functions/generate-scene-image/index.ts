@@ -117,7 +117,9 @@ OUTPUT: One vivid sentence describing a powerful cinematic shot.`;
     const visualDescription = extractData.choices?.[0]?.message?.content?.trim() ||
       'Atmospheric vintage scene with dramatic lighting';
 
-    const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}
+    const killerLine = killerDescription ? `\nThe antagonist: ${killerDescription}` : '';
+
+    const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}${killerLine}
 
 Style: Practical on-set lighting, shallow depth of field, cinematic tension, 35mm film grain.
 DO NOT create a movie poster, group portrait, or composite image.
