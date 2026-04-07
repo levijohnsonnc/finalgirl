@@ -347,15 +347,15 @@ const TheEnd = ({
                   </button>
                 </div>
               ) : endingStory ? (
-                <div className={generatedSceneUrl ? 'grid grid-cols-1 md:grid-cols-[1fr_35%] gap-4 sm:gap-6' : ''}>
+                <div className={posterImageUrl ? 'grid grid-cols-1 md:grid-cols-[1fr_35%] gap-4 sm:gap-6' : ''}>
                   <p className="font-vhs text-sm sm:text-sm text-muted-foreground leading-relaxed sm:leading-relaxed whitespace-pre-wrap">
                     {renderFormattedText(endingStory)}
                   </p>
-                  {generatedSceneUrl && (
+                  {posterImageUrl && (
                     <div className="relative rounded-sm overflow-hidden">
                       <img
-                        src={generatedSceneUrl}
-                        alt="Generated scene"
+                        src={posterImageUrl}
+                        alt="Generated poster"
                         className="w-full h-auto rounded-sm"
                         style={{ filter: 'contrast(1.1) saturate(0.85) sepia(0.15)' }}
                       />
