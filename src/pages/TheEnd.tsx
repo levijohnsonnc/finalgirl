@@ -73,7 +73,7 @@ const TheEnd = ({
           location: result.location,
           sceneType: 'ending',
         });
-        if (url) setGeneratedSceneUrl(url);
+        if (url) setPosterImageUrl(url);
       })();
     }
   }, [endingStory, hasApiKey, autoGenerate]);
