@@ -5,6 +5,7 @@ import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl, FEATURE_FILMS, LOCATION_IMAGES } from '@/types/gameData';
 import { getKillerSpecialRules } from '@/data/killerSpecialRules';
+import { getKillerDescription } from '@/data/killerDescriptions';
 import { FILM_THEMES } from '@/data/filmThemes';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
