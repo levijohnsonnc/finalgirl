@@ -32,7 +32,7 @@ interface TheEndProps {
   result: GameResult;
   introStory?: string;
   formData: EndingFormData;
-  onSave: (endingNarration: string, posterImageUrl?: string, sceneImageUrl?: string) => void;
+  onSave: (endingNarration: string, posterImageUrl?: string) => void;
   onDiscard: () => void;
 }
 
@@ -49,7 +49,6 @@ const TheEnd = ({
   const [isNarrating, setIsNarrating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [posterImageUrl, setPosterImageUrl] = useState<string>('');
-  const [generatedSceneUrl, setGeneratedSceneUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { hasApiKey, autoGenerate, generateImage } = useImageGeneration();
   const autoGenerateTriggered = useRef(false);
@@ -74,7 +73,7 @@ const TheEnd = ({
           location: result.location,
           sceneType: 'ending',
         });
-        if (url) setGeneratedSceneUrl(url);
+        if (url) setPosterImageUrl(url);
       })();
     }
   }, [endingStory, hasApiKey, autoGenerate]);
@@ -230,7 +229,7 @@ const TheEnd = ({
 
   const handleSave = () => {
     if (endingStory) {
-      onSave(endingStory, posterImageUrl || undefined, generatedSceneUrl || undefined);
+      onSave(endingStory, posterImageUrl || undefined);
     }
   };
 
@@ -319,8 +318,8 @@ const TheEnd = ({
                 finalGirl={result.finalGirl}
                 location={result.location}
                 sceneType="ending"
-                generatedImageUrl={generatedSceneUrl}
-                onImageGenerated={setGeneratedSceneUrl}
+                generatedImageUrl={posterImageUrl || null}
+                onImageGenerated={setPosterImageUrl}
               />
             </div>
           )}
@@ -348,15 +347,15 @@ const TheEnd = ({
                   </button>
                 </div>
               ) : endingStory ? (
-                <div className={generatedSceneUrl ? 'grid grid-cols-1 md:grid-cols-[1fr_35%] gap-4 sm:gap-6' : ''}>
+                <div className={posterImageUrl ? 'grid grid-cols-1 md:grid-cols-[1fr_35%] gap-4 sm:gap-6' : ''}>
                   <p className="font-vhs text-sm sm:text-sm text-muted-foreground leading-relaxed sm:leading-relaxed whitespace-pre-wrap">
                     {renderFormattedText(endingStory)}
                   </p>
-                  {generatedSceneUrl && (
+                  {posterImageUrl && (
                     <div className="relative rounded-sm overflow-hidden">
                       <img
-                        src={generatedSceneUrl}
-                        alt="Generated scene"
+                        src={posterImageUrl}
+                        alt="Generated poster"
                         className="w-full h-auto rounded-sm"
                         style={{ filter: 'contrast(1.1) saturate(0.85) sepia(0.15)' }}
                       />

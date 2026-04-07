@@ -121,13 +121,12 @@ const Index = () => {
     setCurrentPage('ending');
   };
 
-  const handleSaveEnding = (endingNarration: string, posterImageUrl?: string, sceneImageUrl?: string) => {
+  const handleSaveEnding = (endingNarration: string, posterImageUrl?: string) => {
     if (lastGameResult && endingFormData) {
       updateGame(lastGameResult.id, {
         ...endingFormData,
         endingNarration,
         posterImageUrl,
-        sceneImageUrl,
       });
     }
     // Navigate to scrapbooks after saving
