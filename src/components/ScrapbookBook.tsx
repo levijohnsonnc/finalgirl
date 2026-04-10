@@ -249,8 +249,8 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
 
                       <ScrapbookStoryPage game={selectedGame} type={type} />
 
-                      {/* Delete at bottom */}
-                      <div className="mt-6 flex justify-center">
+                      {/* Delete at bottom-right */}
+                      <div className="mt-6 flex justify-end">
                         <button
                           onClick={() => setShowDeleteConfirm(true)}
                           className="delete-entry-btn"
@@ -332,7 +332,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                   <div className="page-content">
                     {selectedGame ? (
                       <div className="story-display">
-                        {/* Action buttons row */}
+                        {/* Back button row */}
                         <div className="flex justify-between items-center mb-2">
                           <button
                             onClick={() => setSelectedGame(null)}
@@ -340,6 +340,10 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                           >
                             ← Back to Grid
                           </button>
+                        </div>
+                        <ScrapbookStoryPage game={selectedGame} type={type} />
+                        {/* Delete at bottom-right */}
+                        <div className="mt-6 flex justify-end">
                           <button
                             onClick={() => setShowDeleteConfirm(true)}
                             className="delete-entry-btn"
@@ -347,7 +351,6 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             Delete
                           </button>
                         </div>
-                        <ScrapbookStoryPage game={selectedGame} type={type} />
                       </div>
                     ) : (
                       <ScrapbookGrid

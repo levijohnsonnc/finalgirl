@@ -66,18 +66,11 @@ export const ScrapbookStoryPage = ({ game, type }: ScrapbookStoryPageProps) => {
 
   return (
     <div className="story-page-content">
-      {/* Date + Outcome Header */}
-      <div className="flex items-center justify-between gap-2 mb-1">
-        <div className="story-date" style={{ marginBottom: 0 }}>
+      {/* Date Header */}
+      <div className="mb-1">
+        <div className="story-date">
           {format(new Date(game.timestamp), 'MMMM d, yyyy')}
         </div>
-        <span className={`font-display text-xs tracking-[0.15em] uppercase px-2 py-0.5 rounded-sm border ${
-          isWin
-            ? 'text-secondary border-secondary/50 bg-secondary/10'
-            : 'text-primary border-primary/50 bg-primary/10'
-        }`}>
-          {isWin ? 'SURVIVED' : 'LOST'}
-        </span>
       </div>
 
       {/* Intro Story Section */}
