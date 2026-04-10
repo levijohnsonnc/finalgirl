@@ -19,7 +19,7 @@ import {
 
 const Archive = () => {
   const { ownedFilms, setOwnedFilms } = useOwnedFilms();
-  const { clearHistory } = useGameHistory();
+  const { clearHistory } = useGameHistoryContext();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 

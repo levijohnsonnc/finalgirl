@@ -5,7 +5,7 @@ import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';
 
 const Scrapbooks = () => {
-  const { gameHistory, updateGame, deleteGame } = useGameHistory();
+  const { gameHistory, updateGame, deleteGame } = useGameHistoryContext();
   const [openBook, setOpenBook] = useState<'finalGirl' | 'killer' | null>(null);
 
   const wonGames = gameHistory.filter(g => g.outcome === 'won');

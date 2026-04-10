@@ -31,7 +31,7 @@ const MARQUEE_SCREEN_RECT = {
 export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
-  const { gameHistory } = useGameHistory();
+  const { gameHistory } = useGameHistoryContext();
   const [isClicked, setIsClicked] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [viewportSize, setViewportSize] = useState(() => ({

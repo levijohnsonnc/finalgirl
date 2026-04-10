@@ -36,7 +36,7 @@ const Index = () => {
   const [introStory, setIntroStory] = useState<string | undefined>(undefined);
   const [endingFormData, setEndingFormData] = useState<EndingFormData | null>(null);
   const [time, setTime] = useState(new Date());
-  const { recordGame, updateGame } = useGameHistory();
+  const { recordGame, updateGame } = useGameHistoryContext();
 
   // Update time every second for VCR display
   useEffect(() => {
