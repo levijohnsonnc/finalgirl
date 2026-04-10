@@ -58,9 +58,10 @@ const renderStoryText = (text: string): React.ReactNode[] => {
 interface ScrapbookStoryPageProps {
   game: GameResult;
   type: 'finalGirl' | 'killer';
+  onDelete?: () => void;
 }
 
-export const ScrapbookStoryPage = ({ game, type }: ScrapbookStoryPageProps) => {
+export const ScrapbookStoryPage = ({ game, type, onDelete }: ScrapbookStoryPageProps) => {
   const maxFinalGirlHealth = getFinalGirlMaxHealth(game.finalGirl);
   const isWin = game.outcome === 'won';
 
@@ -189,6 +190,15 @@ export const ScrapbookStoryPage = ({ game, type }: ScrapbookStoryPageProps) => {
               <span className="detail-value">{game.endingSubLocation}</span>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Delete button — tucked at the very bottom */}
+      {onDelete && (
+        <div className="mt-4 flex justify-end">
+          <button onClick={onDelete} className="delete-entry-btn">
+            Delete
+          </button>
         </div>
       )}
     </div>

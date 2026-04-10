@@ -247,17 +247,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                         </div>
                       )}
 
-                      <ScrapbookStoryPage game={selectedGame} type={type} />
-
-                      {/* Delete at bottom-right */}
-                      <div className="mt-6 flex justify-end">
-                        <button
-                          onClick={() => setShowDeleteConfirm(true)}
-                          className="delete-entry-btn"
-                        >
-                          Delete Entry
-                        </button>
-                      </div>
+                      <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
                     </div>
                   ) : (
                     <ScrapbookGrid
@@ -341,16 +331,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             ← Back to Grid
                           </button>
                         </div>
-                        <ScrapbookStoryPage game={selectedGame} type={type} />
-                        {/* Delete at bottom-right */}
-                        <div className="mt-6 flex justify-end">
-                          <button
-                            onClick={() => setShowDeleteConfirm(true)}
-                            className="delete-entry-btn"
-                          >
-                            Delete
-                          </button>
-                        </div>
+                        <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
                       </div>
                     ) : (
                       <ScrapbookGrid
