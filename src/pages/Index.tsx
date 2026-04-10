@@ -26,7 +26,7 @@ interface GameSelection {
   introStory?: string;
 }
 
-const Index = () => {
+const IndexContent = () => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const [hasStarted, setHasStarted] = useState(false);
@@ -299,5 +299,11 @@ const Index = () => {
     </div>
   );
 };
+
+const Index = () => (
+  <GameHistoryProvider>
+    <IndexContent />
+  </GameHistoryProvider>
+);
 
 export default Index;
