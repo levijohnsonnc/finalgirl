@@ -58,6 +58,7 @@ const renderStoryText = (text: string): React.ReactNode[] => {
 interface ScrapbookStoryPageProps {
   game: GameResult;
   type: 'finalGirl' | 'killer';
+  onDelete?: () => void;
 }
 
 export const ScrapbookStoryPage = ({ game, type }: ScrapbookStoryPageProps) => {
