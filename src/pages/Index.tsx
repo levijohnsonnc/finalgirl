@@ -11,7 +11,8 @@ import Scrapbooks from './Scrapbooks';
 import Stats from './Stats';
 import { Library, BookOpen, BarChart3, ArrowLeft, User } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
-import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
+import { GameResult } from '@/hooks/useGameHistory';
+import { GameHistoryProvider, useGameHistoryContext } from '@/contexts/GameHistoryContext';
 import { NewsTicker } from '@/components/NewsTicker';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -25,7 +26,7 @@ interface GameSelection {
   introStory?: string;
 }
 
-const Index = () => {
+const IndexContent = () => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const [hasStarted, setHasStarted] = useState(false);
@@ -35,7 +36,7 @@ const Index = () => {
   const [introStory, setIntroStory] = useState<string | undefined>(undefined);
   const [endingFormData, setEndingFormData] = useState<EndingFormData | null>(null);
   const [time, setTime] = useState(new Date());
-  const { recordGame, updateGame } = useGameHistory();
+  const { recordGame, updateGame } = useGameHistoryContext();
 
   // Update time every second for VCR display
   useEffect(() => {
@@ -298,5 +299,11 @@ const Index = () => {
     </div>
   );
 };
+
+const Index = () => (
+  <GameHistoryProvider>
+    <IndexContent />
+  </GameHistoryProvider>
+);
 
 export default Index;
