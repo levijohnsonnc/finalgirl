@@ -195,7 +195,7 @@ export const ScrapbookStoryPage = ({ game, type, onDelete }: ScrapbookStoryPageP
 
       {/* Delete button — tucked at the very bottom */}
       {onDelete && (
-        <div className="mt-4 flex justify-end">
+        <div className="mt-4 flex justify-start">
           <button onClick={onDelete} className="delete-entry-btn">
             Delete
           </button>
