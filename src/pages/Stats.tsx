@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useGameHistory } from '@/hooks/useGameHistory';
+import { useGameHistoryContext } from '@/contexts/GameHistoryContext';
 import { useGameStats } from '@/hooks/useGameStats';
 import { RecordJacket } from '@/components/stats/RecordJacket';
 import { TrendsSection } from '@/components/stats/TrendsSection';

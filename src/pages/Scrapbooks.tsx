@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
+import { useGameHistoryContext } from '@/contexts/GameHistoryContext';
 import { ScrapbookBook } from '@/components/ScrapbookBook';
 import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';

@@ -5,7 +5,7 @@ import marqueeBg from '@/assets/marquee-bg.png';
 import { AppHeader } from './AppHeader';
 import { useAuth } from '@/hooks/useAuth';
 import { useScreenEffects } from '@/hooks/useScreenEffects';
-import { useGameHistory } from '@/hooks/useGameHistory';
+import { useGameHistoryContext } from '@/contexts/GameHistoryContext';
 import { ProjectorSlideshow } from './ProjectorSlideshow';
 
 interface MarqueeProps {

@@ -11,7 +11,8 @@ import Scrapbooks from './Scrapbooks';
 import Stats from './Stats';
 import { Library, BookOpen, BarChart3, ArrowLeft, User } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
-import { useGameHistory, GameResult } from '@/hooks/useGameHistory';
+import { GameResult } from '@/hooks/useGameHistory';
+import { GameHistoryProvider, useGameHistoryContext } from '@/contexts/GameHistoryContext';
 import { NewsTicker } from '@/components/NewsTicker';
 import { useAuth } from '@/hooks/useAuth';
 

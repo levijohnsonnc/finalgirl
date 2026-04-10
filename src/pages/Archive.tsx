@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
-import { useGameHistory } from '@/hooks/useGameHistory';
+import { useGameHistoryContext } from '@/contexts/GameHistoryContext';
 import { useOwnedFilms } from '@/hooks/useOwnedFilms';
 import ApiKeyManager from '@/components/ApiKeyManager';
 import {
