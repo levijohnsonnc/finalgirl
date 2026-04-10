@@ -167,11 +167,11 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
     let imageUrl: string;
 
     if (provider === 'google') {
-      imageUrl = await generateWithGoogle(apiKey, imagePrompt);
+      imageUrl = await generateWithGoogle(apiKey, imagePrompt, isPoster);
     } else if (provider === 'openai') {
-      imageUrl = await generateWithOpenAI(apiKey, imagePrompt);
+      imageUrl = await generateWithOpenAI(apiKey, imagePrompt, isPoster);
     } else if (provider === 'stability') {
-      imageUrl = await generateWithStability(apiKey, imagePrompt);
+      imageUrl = await generateWithStability(apiKey, imagePrompt, isPoster);
     } else {
       throw new Error(`Unknown provider: ${provider}`);
     }
@@ -193,7 +193,7 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
 
 // ---- Provider implementations ----
 
-async function generateWithGoogle(apiKey: string, prompt: string): Promise<string> {
+async function generateWithGoogle(apiKey: string, prompt: string, isPoster: boolean): Promise<string> {
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${apiKey}`,
     {
@@ -223,7 +223,8 @@ async function generateWithGoogle(apiKey: string, prompt: string): Promise<strin
   return `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}`;
 }
 
-async function generateWithOpenAI(apiKey: string, prompt: string): Promise<string> {
+async function generateWithOpenAI(apiKey: string, prompt: string, isPoster: boolean): Promise<string> {
+  const size = isPoster ? "1024x1536" : "1536x1024";
   const response = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
     headers: {
@@ -235,7 +236,7 @@ async function generateWithOpenAI(apiKey: string, prompt: string): Promise<strin
       prompt,
       moderation: "low",
       n: 1,
-      size: "1536x1024",
+      size,
     }),
   });
 
@@ -269,10 +270,11 @@ async function generateWithOpenAI(apiKey: string, prompt: string): Promise<strin
   return `data:image/png;base64,${b64}`;
 }
 
-async function generateWithStability(apiKey: string, prompt: string): Promise<string> {
+async function generateWithStability(apiKey: string, prompt: string, isPoster: boolean): Promise<string> {
   const formData = new FormData();
   formData.append('prompt', prompt);
   formData.append('output_format', 'png');
+  formData.append('aspect_ratio', isPoster ? '2:3' : '3:2');
 
   const response = await fetch(
     "https://api.stability.ai/v2beta/stable-image/generate/core",
