@@ -6,6 +6,8 @@ import { getFilmDetails } from '@/types/featureFilmDetails';
 import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl, FEATURE_FILMS, LOCATION_IMAGES } from '@/types/gameData';
 import { getKillerSpecialRules } from '@/data/killerSpecialRules';
 import { getKillerDescription } from '@/data/killerDescriptions';
+import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
+import { getLocationDescription } from '@/data/locationDescriptions';
 import { FILM_THEMES } from '@/data/filmThemes';
 import { toast } from 'sonner';
 import nowPlayingBg from '@/assets/now-playing-bg.png';
@@ -62,7 +64,16 @@ const NowPlaying = ({
     if (story && hasApiKey && autoGenerate && !autoGenerateTriggered.current) {
       autoGenerateTriggered.current = true;
       (async () => {
-        const url = await generateImage({ story, killer, killerDescription: getKillerDescription(killer), finalGirl, location, sceneType: 'beginning' });
+        const url = await generateImage({
+          story,
+          killer,
+          killerDescription: getKillerDescription(killer),
+          finalGirl,
+          finalGirlDescription: getFinalGirlDescription(finalGirl),
+          location,
+          locationDescription: getLocationDescription(location),
+          sceneType: 'beginning',
+        });
         if (url) {
           setGeneratedSceneUrl(url);
           setSceneImageUrl(url);

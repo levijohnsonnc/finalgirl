@@ -70,8 +70,11 @@ const TheEnd = ({
           killer: result.killer,
           killerDescription: getKillerDescription(result.killer),
           finalGirl: result.finalGirl,
+          finalGirlDescription: getFinalGirlDescription(result.finalGirl),
           location: result.location,
+          locationDescription: getLocationDescription(result.location),
           sceneType: 'ending',
+          outcome: result.outcome,
         });
         if (url) setPosterImageUrl(url);
       })();
@@ -318,6 +321,7 @@ const TheEnd = ({
                 finalGirl={result.finalGirl}
                 location={result.location}
                 sceneType="ending"
+                outcome={result.outcome}
                 generatedImageUrl={posterImageUrl || null}
                 onImageGenerated={setPosterImageUrl}
               />
