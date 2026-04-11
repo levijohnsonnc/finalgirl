@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
 import { Upload, Check, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
 interface ImageUploadSlotProps {
@@ -60,10 +61,15 @@ const resizeImage = (file: File, maxWidth: number = 1200): Promise<Blob> => {
 export const ImageUploadSlot = ({ imageUrl, onImageChange, gameId }: ImageUploadSlotProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const { user } = useAuth();
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast.error('Please select an image file');
+      return;
+    }
+    if (!user) {
+      toast.error('You must be signed in to upload');
       return;
     }
     
@@ -72,9 +78,9 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange, gameId }: ImageUpload
       // Resize the image first
       const resizedBlob = await resizeImage(file);
       
-      // Generate a unique filename
+      // Generate a unique filename scoped to user folder
       const fileName = `${gameId || crypto.randomUUID()}-${Date.now()}.jpg`;
-      const filePath = `game-posters/${fileName}`;
+      const filePath = `game-posters/${user.id}/${fileName}`;
       
       // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
@@ -103,7 +109,7 @@ export const ImageUploadSlot = ({ imageUrl, onImageChange, gameId }: ImageUpload
     } finally {
       setIsProcessing(false);
     }
-  }, [onImageChange, gameId]);
+  }, [onImageChange, gameId, user]);
 
   const handleClick = () => {
     fileInputRef.current?.click();

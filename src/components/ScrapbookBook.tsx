@@ -8,6 +8,7 @@ import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/hooks/useAuth';
 import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';
 
@@ -72,7 +73,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
-
+  const { user } = useAuth();
   // Trigger open animation after mount
   useEffect(() => {
     const timer = setTimeout(() => setIsOpen(true), 50);
@@ -99,12 +100,16 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
       toast.error('Please select an image file');
       return;
     }
+    if (!user) {
+      toast.error('You must be signed in to upload');
+      return;
+    }
 
     setIsUploading(true);
     try {
       const resizedBlob = await resizeImage(file);
       const fileName = `${selectedGame.id}-${Date.now()}.jpg`;
-      const filePath = `game-posters/${fileName}`;
+      const filePath = `game-posters/${user.id}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('posters')
@@ -132,7 +137,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
     } finally {
       setIsUploading(false);
     }
-  }, [selectedGame, onUpdateGame]);
+  }, [selectedGame, onUpdateGame, user]);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
