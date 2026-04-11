@@ -137,7 +137,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
     } finally {
       setIsUploading(false);
     }
-  }, [selectedGame, onUpdateGame]);
+  }, [selectedGame, onUpdateGame, user]);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
