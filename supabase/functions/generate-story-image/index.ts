@@ -32,77 +32,64 @@ serve(async (req) => {
       locationDescription 
     } = validation.data;
 
-
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY not configured');
+    // Build character context block
+    const characterSection: string[] = [];
+    if (finalGirl && finalGirlDescription) {
+      characterSection.push(`FINAL GIRL - ${finalGirl}: ${finalGirlDescription}`);
+    }
+    if (killer && killerDescription) {
+      characterSection.push(`KILLER - ${killer}: ${killerDescription}`);
+    }
+    if (location && locationDescription) {
+      characterSection.push(`LOCATION - ${location}: ${locationDescription}`);
     }
 
-    // Build character context for the extraction prompt
-    const characterContext = [];
-    if (finalGirl) {
-      characterContext.push(`FINAL GIRL "${finalGirl}": ${finalGirlDescription || 'A determined survivor'}`);
-    }
-    if (killer) {
-      characterContext.push(`KILLER "${killer}": ${killerDescription || 'A menacing antagonist'}`);
-    }
-    if (location) {
-      characterContext.push(`LOCATION "${location}": ${locationDescription || 'An atmospheric setting'}`);
-    }
+    const characterBlock = characterSection.length > 0
+      ? characterSection.join('\n\n')
+      : 'No detailed visual descriptions available.';
 
     const positionLabel = position === 1 ? 'first' : position === 2 ? 'second' : position === 3 ? 'third' : 'fourth';
 
-    // Dramatic cinematographer extraction prompt
-    const extractionPrompt = `You are a horror film cinematographer selecting the ${positionLabel} most emotionally powerful shot from this story.
+    // Rich single-step prompt matching the manual ImagePromptModal
+    const imagePrompt = `You are a horror film cinematographer.
 
-CRITICAL RULES:
-- Focus on ONE dramatic moment of tension, fear, revelation, or confrontation
-- You do NOT need to show all characters or the full location
-- A tight close-up of terrified eyes can be more powerful than a wide shot showing everything
-- IGNORE minor NPCs, background characters, or security guards mentioned in the story
-- Choose the most cinematic framing: character close-up, killer reveal, atmospheric detail, or intense confrontation
-- Describe camera angle, framing, lighting, and emotional focus
-- Use ONLY the main characters listed below if they appear in your chosen moment
+From the story, select the ${positionLabel} most emotionally powerful moment. The impact may come from dread, discovery, aftermath, transformation, or false safety—not just confrontation.
 
-MAIN CHARACTERS (use visual details ONLY if they appear in your shot):
-${characterContext.join('\n')}
+Do NOT default to a hero vs. monster composition.
+
+COMPOSITION RULES:
+The frame may show:
+- Only the environment
+- Only a fragment of a character
+- Only evidence of horror
+- Or a distorted/obstructed view
+
+The killer or final girl may be completely off-screen.
+Favor implication over direct display.
+Use negative space, occlusion, reflections, silhouettes, or foreground obstruction.
+The camera can be low, high, tilted, partially hidden, or from an inhuman perspective.
+
+VARIETY RULE (important):
+Before choosing the shot, randomly pick ONE category and base the image on it:
+- Aftermath
+- Discovery
+- Pursuit
+- Transformation
+- Dread
+- False calm
+
+MAIN CHARACTERS (use visual details ONLY if they appear in your chosen moment):
+${characterBlock}
 
 STORY:
 ${fullStory}
 
-OUTPUT: One vivid sentence describing a powerful cinematic shot. Focus on DRAMA and EMOTION, not completeness. Do NOT mention character names - describe them visually instead.`;
+---
 
-    // Extract the visual description using text model
-    const extractResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash-lite",
-        messages: [{ role: "user", content: extractionPrompt }],
-      })
-    });
-
-    if (!extractResponse.ok) {
-      console.error('Visual extraction failed:', extractResponse.status);
-      throw new Error('Failed to process story content');
-    }
-
-    const extractData = await extractResponse.json();
-    const visualDescription = extractData.choices?.[0]?.message?.content?.trim() || 
-      'Atmospheric vintage scene with dramatic lighting';
-
-
-    // Dramatic image prompt that avoids poster-style compositions
-    const imagePrompt = `Ultra photorealistic 1980s horror film still. ${visualDescription}
-
-Style: Practical on-set lighting, shallow depth of field, cinematic tension, 35mm film grain.
-DO NOT create a movie poster, group portrait, or composite image.
-Focus on this single dramatic moment with authentic vintage analog film quality.
+Generate an ultra photorealistic 1980s horror film still based on your chosen moment.
+Style: Practical lighting, shallow depth of field, cinematic tension, 35mm film grain.
+DO NOT create a movie poster or group portrait.
 Muted, desaturated color palette. Widescreen composition. No text or titles.`;
-
 
     const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
     if (!GOOGLE_API_KEY) {
@@ -146,7 +133,7 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
     const imageUrl = `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}`;
 
     return new Response(
-      JSON.stringify({ imageUrl, position, visualDescription }),
+      JSON.stringify({ imageUrl, position }),
       { headers: { ...cors, 'Content-Type': 'application/json' } }
     );
 
