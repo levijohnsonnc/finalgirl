@@ -35,7 +35,18 @@ serve(async (req) => {
     }
 
     // --- Parse request body ---
-    const { story, killer, killerDescription, finalGirl, location, sceneType } = await req.json();
+    const {
+      story,
+      killer,
+      killerDescription,
+      finalGirl,
+      finalGirlDescription,
+      location,
+      locationDescription,
+      sceneType,
+      outcome,
+    } = await req.json();
+
     if (!story || !killer || !finalGirl || !location) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
         status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
@@ -45,7 +56,6 @@ serve(async (req) => {
     // --- Look up user's API key + preferred provider using service role ---
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
-    // Get preferred provider from settings
     const { data: settingsRow } = await adminClient
       .from('user_image_settings')
       .select('preferred_provider')
@@ -54,7 +64,6 @@ serve(async (req) => {
 
     const preferredProvider = settingsRow?.preferred_provider;
 
-    // Get user's API keys
     const { data: keys } = await adminClient
       .from('user_api_keys')
       .select('provider, api_key_encrypted')
@@ -66,104 +75,21 @@ serve(async (req) => {
       });
     }
 
-    // Pick the key: preferred provider first, then first available
     const chosenKey = keys.find(k => k.provider === preferredProvider) ?? keys[0];
     const provider = chosenKey.provider;
     const apiKey = chosenKey.api_key_encrypted;
 
-    // --- Step 1: Extract visual description via Lovable AI ---
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY not configured');
-    }
-
+    // --- Build rich prompt directly (no extraction step) ---
     const isPoster = sceneType === 'ending';
-    const sceneLabel = isPoster ? 'closing' : 'opening';
-
-    const killerAppearanceBlock = killerDescription
-      ? `\nKILLER APPEARANCE: ${killerDescription}\n`
-      : '';
-
-    let extractionPrompt: string;
-    let buildImagePrompt: (visualDescription: string) => string;
+    let imagePrompt: string;
 
     if (isPoster) {
-      // --- Poster-style prompt for endings ---
-      extractionPrompt = `You are an artist designing a painted 1980s horror movie poster for this story.
-
-CRITICAL RULES:
-- Extract the single most powerful, iconic visual moment from the ending
-- Describe a dramatic poster composition: character positioning, mood, atmosphere
-- Do NOT mention character names - describe them visually instead
-- Output ONE vivid sentence describing the poster's central image
-${killerAppearanceBlock}
-STORY:
-${story}
-
-OUTPUT: One vivid sentence describing the poster's central dramatic image.`;
-
-      buildImagePrompt = (visualDescription: string) => {
-        const killerLine = killerDescription ? `\nThe antagonist: ${killerDescription}` : '';
-        return `Painted 1980s horror movie poster. Vertical 2:3 composition.
-
-${visualDescription}${killerLine}
-
-Style: Painterly realism in the tradition of 1980s VHS box art and horror paperback covers. Dramatic chiaroscuro lighting, visible brushwork, subtle film grain and paper texture.
-NOT photorealistic, NOT digital/glossy, NOT cartoonish.
-PG-13: imply threat through atmosphere, posture, and shadow — no explicit gore.
-Leave space at the top for a title and at the bottom for a tagline and billing block.
-Muted, atmospheric color palette drawn from the story's setting.`;
-      };
+      imagePrompt = buildPosterPrompt(story, killer, killerDescription, finalGirl, finalGirlDescription, location, locationDescription, outcome);
     } else {
-      // --- Cinematic still prompt for beginnings ---
-      extractionPrompt = `You are a horror film cinematographer selecting the most emotionally powerful ${sceneLabel} shot from this story.
-
-CRITICAL RULES:
-- Focus on ONE dramatic moment of tension, fear, revelation, or confrontation
-- Describe camera angle, framing, lighting, and emotional focus
-- Do NOT mention character names - describe them visually instead
-- Output ONE vivid sentence describing a powerful cinematic shot
-${killerAppearanceBlock}
-STORY:
-${story}
-
-OUTPUT: One vivid sentence describing a powerful cinematic shot.`;
-
-      buildImagePrompt = (visualDescription: string) => {
-        const killerLine = killerDescription ? `\nThe antagonist: ${killerDescription}` : '';
-        return `Ultra photorealistic 1980s horror film still. ${visualDescription}${killerLine}
-
-Style: Practical on-set lighting, shallow depth of field, cinematic tension, 35mm film grain.
-DO NOT create a movie poster, group portrait, or composite image.
-Focus on this single dramatic moment with authentic vintage analog film quality.
-Muted, desaturated color palette. Widescreen composition. No text or titles.`;
-      };
+      imagePrompt = buildBeginningPrompt(story, killer, killerDescription, finalGirl, finalGirlDescription, location, locationDescription);
     }
 
-    const extractResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash-lite",
-        messages: [{ role: "user", content: extractionPrompt }],
-      }),
-    });
-
-    if (!extractResponse.ok) {
-      console.error('Visual extraction failed:', extractResponse.status);
-      throw new Error('Failed to process story content');
-    }
-
-    const extractData = await extractResponse.json();
-    const visualDescription = extractData.choices?.[0]?.message?.content?.trim() ||
-      'Atmospheric vintage scene with dramatic lighting';
-
-    const imagePrompt = buildImagePrompt(visualDescription);
-
-    // --- Step 2: Generate image using user's chosen provider ---
+    // --- Generate image using user's chosen provider ---
     let imageUrl: string;
 
     if (provider === 'google') {
@@ -177,7 +103,7 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
     }
 
     return new Response(
-      JSON.stringify({ imageUrl, visualDescription }),
+      JSON.stringify({ imageUrl }),
       { headers: { ...cors, 'Content-Type': 'application/json' } }
     );
 
@@ -190,6 +116,123 @@ Muted, desaturated color palette. Widescreen composition. No text or titles.`;
     );
   }
 });
+
+// ---- Prompt builders ----
+
+function buildPosterPrompt(
+  story: string,
+  killer: string,
+  killerDescription: string | undefined,
+  finalGirl: string,
+  finalGirlDescription: string | undefined,
+  location: string,
+  locationDescription: string | undefined,
+  outcome: string | undefined,
+): string {
+  const isVictory = outcome === 'won';
+
+  const compositions = [
+    `Close-up portrait: the Final Girl's face fills the frame, the killer's presence suggested only by a shadow or reflection.`,
+    `Wide establishing shot: the location dominates, with small figures dwarfed by the environment. The horror is in the scale.`,
+    `Over-the-shoulder: we see what the Final Girl sees—or what's behind her. One figure in focus, threat in bokeh.`,
+    `Extreme low angle: looking up at the dominant figure (winner of the encounter), architecture or trees looming overhead.`,
+    `Reflection or mirror: the scene is shown through a reflective surface—a window, puddle, broken mirror, TV screen, knife blade.`,
+    `Split composition: the poster is divided diagonally or vertically, one half showing the killer's world, the other the Final Girl's.`,
+  ];
+  const compositionSeed = compositions[Math.floor(Math.random() * compositions.length)];
+
+  const outcomeMood = isVictory
+    ? `${finalGirl} survived. Convey this through ONE of these (pick the most cinematic for the story): exhaustion in her posture, a weapon held loosely at her side, smoke or dust still settling, the quiet stillness after violence ends, a first hint of dawn light that feels more eerie than hopeful. The killer's defeat should be implied—never show police tape, chalk outlines, or explicit crime scene imagery.`
+    : `${killer} prevailed. Convey this through ONE of these (pick the most cinematic for the story): the killer's silhouette filling the frame with nothing left to oppose them, an empty space where someone used to stand, a flickering light illuminating absence, a personal item left behind on the ground, a door hanging open to darkness. The Final Girl's fate is implied, never shown.`;
+
+  return `Generate a painted 1980s horror movie poster image. Vertical 2:3 aspect ratio, high resolution.
+
+SCENE — based on this story:
+${story}
+
+CHARACTERS:
+• ${finalGirl}: ${finalGirlDescription || 'A resourceful survivor. Use story context for appearance.'}
+• ${killer}: ${killerDescription || 'A terrifying antagonist. Use story context for appearance.'}
+
+LOCATION: ${location} — ${locationDescription || 'Use story context for setting details.'}
+
+OUTCOME: ${outcomeMood}
+
+COMPOSITION: ${compositionSeed}
+
+STYLE: Painterly realism in the tradition of 1980s VHS box art and horror paperback covers. Dramatic chiaroscuro lighting, visible brushwork, subtle film grain and paper texture. NOT photorealistic, NOT digital/glossy, NOT cartoonish. PG-13: imply threat through atmosphere, posture, and shadow — no explicit gore.
+
+PALETTE: Draw colors from the location's natural atmosphere (neon for malls, moonlight for woods, sodium lamps for streets, fluorescent for institutions). Let the mood shift based on outcome — warmer if survived, cooler if fallen — but don't force a single accent color.
+
+TYPOGRAPHY (painted into the image, not floating): Invent a punchy 1–3 word horror movie title inspired by the story. Add one tagline (max 10 words) reflecting the outcome. Small billing block at the bottom.
+
+Extract the single most powerful visual moment from the ending story and build the entire poster around that one image. Less is more.`;
+}
+
+function buildBeginningPrompt(
+  story: string,
+  killer: string,
+  killerDescription: string | undefined,
+  finalGirl: string,
+  finalGirlDescription: string | undefined,
+  location: string,
+  locationDescription: string | undefined,
+): string {
+  const characterSection: string[] = [];
+  if (finalGirlDescription) {
+    characterSection.push(`FINAL GIRL - ${finalGirl}: ${finalGirlDescription}`);
+  }
+  if (killerDescription) {
+    characterSection.push(`KILLER - ${killer}: ${killerDescription}`);
+  }
+  if (locationDescription) {
+    characterSection.push(`LOCATION - ${location}: ${locationDescription}`);
+  }
+
+  const characterBlock = characterSection.length > 0
+    ? characterSection.join('\n\n')
+    : 'No detailed visual descriptions available.';
+
+  return `You are a horror film cinematographer.
+
+From the story, select ONE moment that creates the strongest emotional impact. The impact may come from dread, discovery, aftermath, transformation, or false safety—not just confrontation.
+
+Do NOT default to a hero vs. monster composition.
+
+COMPOSITION RULES:
+The frame may show:
+- Only the environment
+- Only a fragment of a character
+- Only evidence of horror
+- Or a distorted/obstructed view
+
+The killer or final girl may be completely off-screen.
+Favor implication over direct display.
+Use negative space, occlusion, reflections, silhouettes, or foreground obstruction.
+The camera can be low, high, tilted, partially hidden, or from an inhuman perspective.
+
+VARIETY RULE (important):
+Before choosing the shot, randomly pick ONE category and base the image on it:
+- Aftermath
+- Discovery
+- Pursuit
+- Transformation
+- Dread
+- False calm
+
+MAIN CHARACTERS (use visual details ONLY if they appear in your chosen moment):
+${characterBlock}
+
+STORY:
+${story}
+
+---
+
+Generate an ultra photorealistic 1980s horror film still based on your chosen moment.
+Style: Practical lighting, shallow depth of field, cinematic tension, 35mm film grain.
+DO NOT create a movie poster or group portrait.
+Muted, desaturated color palette. Widescreen composition. No text or titles.`;
+}
 
 // ---- Provider implementations ----
 

@@ -1,6 +1,8 @@
 import { ImageIcon, Loader2, RefreshCw } from 'lucide-react';
 import { useImageGeneration } from '@/hooks/useImageGeneration';
 import { getKillerDescription } from '@/data/killerDescriptions';
+import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
+import { getLocationDescription } from '@/data/locationDescriptions';
 
 interface SceneImageControlsProps {
   story: string;
@@ -8,6 +10,7 @@ interface SceneImageControlsProps {
   finalGirl: string;
   location: string;
   sceneType: 'beginning' | 'ending';
+  outcome?: 'won' | 'lost';
   generatedImageUrl: string | null;
   onImageGenerated: (url: string) => void;
 }
@@ -18,6 +21,7 @@ const SceneImageControls = ({
   finalGirl,
   location,
   sceneType,
+  outcome,
   generatedImageUrl,
   onImageGenerated,
 }: SceneImageControlsProps) => {
@@ -29,7 +33,17 @@ const SceneImageControls = ({
   } = useImageGeneration();
 
   const handleGenerate = async () => {
-    const url = await generateImage({ story, killer, killerDescription: getKillerDescription(killer), finalGirl, location, sceneType });
+    const url = await generateImage({
+      story,
+      killer,
+      killerDescription: getKillerDescription(killer),
+      finalGirl,
+      finalGirlDescription: getFinalGirlDescription(finalGirl),
+      location,
+      locationDescription: getLocationDescription(location),
+      sceneType,
+      outcome,
+    });
     if (url) onImageGenerated(url);
   };
 

@@ -21,8 +21,11 @@ interface GenerateImageContext {
   killer: string;
   killerDescription?: string;
   finalGirl: string;
+  finalGirlDescription?: string;
   location: string;
+  locationDescription?: string;
   sceneType: 'beginning' | 'ending';
+  outcome?: 'won' | 'lost';
 }
 
 export const PROVIDER_LABELS: Record<string, string> = {
