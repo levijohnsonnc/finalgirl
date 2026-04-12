@@ -13,7 +13,7 @@ const GameOutcome = ({ result, introStory, onContinue, onDiscard }: GameOutcomeP
   const isWin = result.outcome === 'won';
 
   return (
-    <div className="relative min-h-[60vh] flex flex-col items-center py-8 px-3 sm:px-4">
+    <div className="relative min-h-[60vh] flex flex-col items-center py-8 px-3 sm:px-4 overflow-x-hidden">
       {/* Header */}
       <div className="text-center space-y-2 mb-8 sm:mb-10">
         <h1 
