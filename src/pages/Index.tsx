@@ -38,6 +38,11 @@ const IndexContent = () => {
   const [time, setTime] = useState(new Date());
   const { recordGame, updateGame } = useGameHistoryContext();
 
+  // Scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   // Update time every second for VCR display
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -214,7 +219,7 @@ const IndexContent = () => {
   const isScrapbookOpen = currentPage === 'scrapbooks';
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
       {/* Shared App Header — hidden on mobile when scrapbook is open */}
       <div className={isScrapbookOpen ? 'hidden sm:block' : ''}>
         <AppHeader onNavigateHome={handleNavigateHome} />

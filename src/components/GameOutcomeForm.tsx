@@ -172,7 +172,7 @@ export const GameOutcomeForm = ({
               value={weaponUsed}
               onChange={(e) => setWeaponUsed(e.target.value)}
               placeholder="Machete, Axe, Fire..."
-              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
+              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
             />
           </div>
 
@@ -182,12 +182,16 @@ export const GameOutcomeForm = ({
               Final Girl Health (0-{maxFinalGirlHealth})
             </label>
             <input
-              type="number"
-              min="0"
-              max={maxFinalGirlHealth}
-              value={finalGirlHealth}
-              onChange={(e) => setFinalGirlHealth(Math.min(maxFinalGirlHealth, Math.max(0, Number(e.target.value))))}
-              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={finalGirlHealth === 0 ? '' : String(finalGirlHealth)}
+              onChange={(e) => {
+                const val = e.target.value === '' ? 0 : Math.min(maxFinalGirlHealth, Math.max(0, Number(e.target.value)));
+                setFinalGirlHealth(isNaN(val) ? 0 : val);
+              }}
+              placeholder="0"
+              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-primary/50 transition-colors"
             />
           </div>
 
@@ -198,12 +202,16 @@ export const GameOutcomeForm = ({
                 Killer Health (0-{maxKillerHealth})
               </label>
               <input
-                type="number"
-                min="0"
-                max={maxKillerHealth}
-                value={killerHealth}
-                onChange={(e) => setKillerHealth(Math.min(maxKillerHealth, Math.max(0, Number(e.target.value))))}
-                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={killerHealth === 0 ? '' : String(killerHealth)}
+                onChange={(e) => {
+                  const val = e.target.value === '' ? 0 : Math.min(maxKillerHealth, Math.max(0, Number(e.target.value)));
+                  setKillerHealth(isNaN(val) ? 0 : val);
+                }}
+                placeholder="0"
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-primary/50 transition-colors"
               />
             </div>
           )}
@@ -223,12 +231,16 @@ export const GameOutcomeForm = ({
               Victims Saved
             </label>
             <input
-              type="number"
-              min="0"
-              max="20"
-              value={victimsSaved}
-              onChange={(e) => setVictimsSaved(Math.max(0, Number(e.target.value)))}
-              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-secondary/50 transition-colors"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={victimsSaved === 0 ? '' : String(victimsSaved)}
+              onChange={(e) => {
+                const val = e.target.value === '' ? 0 : Math.max(0, Number(e.target.value));
+                setVictimsSaved(isNaN(val) ? 0 : val);
+              }}
+              placeholder="0"
+              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-secondary/50 transition-colors"
             />
           </div>
 
@@ -238,12 +250,16 @@ export const GameOutcomeForm = ({
               Victims Killed
             </label>
             <input
-              type="number"
-              min="0"
-              max="20"
-              value={victimsKilled}
-              onChange={(e) => setVictimsKilled(Math.max(0, Number(e.target.value)))}
-              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={victimsKilled === 0 ? '' : String(victimsKilled)}
+              onChange={(e) => {
+                const val = e.target.value === '' ? 0 : Math.max(0, Number(e.target.value));
+                setVictimsKilled(isNaN(val) ? 0 : val);
+              }}
+              placeholder="0"
+              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-primary/50 transition-colors"
             />
           </div>
         </div>
@@ -346,13 +362,17 @@ export const GameOutcomeForm = ({
               Maniacs on Board at End (0–6)
             </label>
             <input
-              type="number"
-              min="0"
-              max="6"
-              value={maniacCount}
-              onChange={(e) => setManiacCount(Math.min(6, Math.max(0, Number(e.target.value))))}
-              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
-            />
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={maniacCount === 0 ? '' : String(maniacCount)}
+                onChange={(e) => {
+                  const val = e.target.value === '' ? 0 : Math.min(6, Math.max(0, Number(e.target.value)));
+                  setManiacCount(isNaN(val) ? 0 : val);
+                }}
+                placeholder="0"
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              />
           </div>
         </div>
       )}
@@ -417,12 +437,16 @@ export const GameOutcomeForm = ({
                 Buddies in Play at End (0–7)
               </label>
               <input
-                type="number"
-                min="0"
-                max="7"
-                value={buddiesInPlay}
-                onChange={(e) => setBuddiesInPlay(Math.min(7, Math.max(0, Number(e.target.value))))}
-                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={buddiesInPlay === 0 ? '' : String(buddiesInPlay)}
+                onChange={(e) => {
+                  const val = e.target.value === '' ? 0 : Math.min(7, Math.max(0, Number(e.target.value)));
+                  setBuddiesInPlay(isNaN(val) ? 0 : val);
+                }}
+                placeholder="0"
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-primary/50 transition-colors"
               />
             </div>
             <div className="flex items-end pb-2">
@@ -452,12 +476,16 @@ export const GameOutcomeForm = ({
                 Children Survived (0–3)
               </label>
               <input
-                type="number"
-                min="0"
-                max="3"
-                value={childrenSurvived}
-                onChange={(e) => setChildrenSurvived(Math.min(3, Math.max(0, Number(e.target.value))))}
-                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={childrenSurvived === 0 ? '' : String(childrenSurvived)}
+                onChange={(e) => {
+                  const val = e.target.value === '' ? 0 : Math.min(3, Math.max(0, Number(e.target.value)));
+                  setChildrenSurvived(isNaN(val) ? 0 : val);
+                }}
+                placeholder="0"
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-primary/50 transition-colors"
               />
             </div>
             <div className="flex items-end pb-2">
@@ -529,7 +557,7 @@ export const GameOutcomeForm = ({
             value={endingSubLocation}
             onChange={(e) => setEndingSubLocation(e.target.value)}
             placeholder="Kitchen, Basement, Rooftop..."
-            className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
+            className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
           />
         </div>
 
@@ -543,7 +571,7 @@ export const GameOutcomeForm = ({
             onChange={(e) => setGameHighlights(e.target.value)}
             placeholder="Memorable moments, close calls, dramatic kills..."
             rows={3}
-            className="w-full px-3 py-2 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors resize-none"
+            className="w-full px-3 py-2 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors resize-none"
           />
         </div>
       </div>
