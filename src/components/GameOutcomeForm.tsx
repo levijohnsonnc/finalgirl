@@ -172,7 +172,7 @@ export const GameOutcomeForm = ({
               value={weaponUsed}
               onChange={(e) => setWeaponUsed(e.target.value)}
               placeholder="Machete, Axe, Fire..."
-              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
+              className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
             />
           </div>
 
@@ -557,7 +557,7 @@ export const GameOutcomeForm = ({
             value={endingSubLocation}
             onChange={(e) => setEndingSubLocation(e.target.value)}
             placeholder="Kitchen, Basement, Rooftop..."
-            className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
+            className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
           />
         </div>
 
