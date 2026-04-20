@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
 import shuffleSound from '@/assets/sounds/card-shuffle.mp3';
 import { LoreInfoModal } from './LoreInfoModal';
 import shuffleButton from '@/assets/buttons/shuffle-button.png';
 import chooseButton from '@/assets/buttons/choose-button.png';
+import { useActiveImages } from '@/hooks/useActiveImages';
 
 interface CastingSlotProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -19,32 +19,6 @@ const SLOT_LABELS = {
   killer: 'KILLER',
   location: 'LOCATION',
   finalGirl: 'FINAL GIRL',
-};
-
-// Get image for a value - prioritize character/location specific images, fall back to box art
-const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: string | null): string | null => {
-  if (!value) return null;
-  
-  // Check for character/location specific images first
-  if (type === 'killer' && CHARACTER_IMAGES[value]) {
-    return CHARACTER_IMAGES[value];
-  }
-  if (type === 'finalGirl' && CHARACTER_IMAGES[value]) {
-    return CHARACTER_IMAGES[value];
-  }
-  if (type === 'location' && LOCATION_IMAGES[value]) {
-    return LOCATION_IMAGES[value];
-  }
-  
-  // Fall back to box art
-  const film = FEATURE_FILMS.find(f => {
-    if (type === 'killer') return f.killer === value;
-    if (type === 'location') return f.location === value;
-    if (type === 'finalGirl') return f.finalGirls.some(fg => fg === value);
-    return false;
-  });
-  
-  return film?.boxArt ?? null;
 };
 
 // Get object position for specific characters (some need different cropping)
@@ -72,6 +46,7 @@ export const CastingSlot = ({
   const [shuffleSequence, setShuffleSequence] = useState<string[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedRef = useRef<boolean>(false);
+  const { getImageForValue } = useActiveImages();
 
   // Preload all option images on mount for smooth animation
   useEffect(() => {
@@ -85,7 +60,7 @@ export const CastingSlot = ({
         img.src = imgSrc;
       }
     });
-  }, [options, type]);
+  }, [options, type, getImageForValue]);
 
   // Build shuffle sequence when shuffling starts
   useEffect(() => {

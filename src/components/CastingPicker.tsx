@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { X } from 'lucide-react';
-import { FEATURE_FILMS, CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
+import { useActiveImages } from '@/hooks/useActiveImages';
 
 interface CastingPickerProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -15,31 +15,9 @@ const PICKER_TITLES = {
   finalGirl: 'CHOOSE YOUR FINAL GIRL',
 };
 
-// Get image for a value - prioritize character/location specific images, fall back to box art
-const getImageForValue = (type: 'killer' | 'location' | 'finalGirl', value: string): string | null => {
-  // Check for character/location specific images first
-  if (type === 'killer' && CHARACTER_IMAGES[value]) {
-    return CHARACTER_IMAGES[value];
-  }
-  if (type === 'finalGirl' && CHARACTER_IMAGES[value]) {
-    return CHARACTER_IMAGES[value];
-  }
-  if (type === 'location' && LOCATION_IMAGES[value]) {
-    return LOCATION_IMAGES[value];
-  }
-  
-  // Fall back to box art
-  const film = FEATURE_FILMS.find(f => {
-    if (type === 'killer') return f.killer === value;
-    if (type === 'location') return f.location === value;
-    if (type === 'finalGirl') return f.finalGirls.some(fg => fg === value);
-    return false;
-  });
-  
-  return film?.boxArt ?? null;
-};
-
 export const CastingPicker = ({ type, options, onSelect, onClose }: CastingPickerProps) => {
+  const { getImageForValue } = useActiveImages();
+
   // Handle escape key
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') onClose();
