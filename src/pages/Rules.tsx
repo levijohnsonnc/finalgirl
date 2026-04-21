@@ -45,7 +45,52 @@ function sectionMatches(section: RuleSectionType, query: string): number {
 
 const Rules = () => {
   const moduleId = MODULES[0].id;
-  const module = MODULES[0];
+  const coreModule = MODULES[0];
+  const { ownedFilms } = useOwnedFilms();
+
+  const { ownedKillers, ownedLocations } = useMemo(() => {
+    const killers = new Set<string>();
+    const locations = new Set<string>();
+    for (const film of FEATURE_FILMS) {
+      if (!ownedFilms.includes(film.id)) continue;
+      if (film.killer) killers.add(film.killer);
+      if (film.location) locations.add(film.location);
+    }
+    return { ownedKillers: killers, ownedLocations: locations };
+  }, [ownedFilms]);
+
+  const { killerChapters, locationChapters, entitySections } = useMemo(() => {
+    const killerChapters: RuleChapterType[] = [];
+    const locationChapters: RuleChapterType[] = [];
+    const entitySections: RuleSectionType[] = [];
+    let kI = 0;
+    let lI = 0;
+    for (const mod of ENTITY_RULE_MODULES) {
+      const owned =
+        mod.kind === 'killer'
+          ? ownedKillers.has(mod.entity)
+          : ownedLocations.has(mod.entity);
+      if (!owned) continue;
+      const number =
+        mod.kind === 'killer'
+          ? `K${String(++kI).padStart(2, '0')}`
+          : `L${String(++lI).padStart(2, '0')}`;
+      const built = buildEntityChapter(mod, number);
+      entitySections.push(...built.sections);
+      if (mod.kind === 'killer') killerChapters.push(built.chapter);
+      else locationChapters.push(built.chapter);
+    }
+    return { killerChapters, locationChapters, entitySections };
+  }, [ownedKillers, ownedLocations]);
+
+  const module = useMemo<RuleModule>(
+    () => ({
+      ...coreModule,
+      sections: [...coreModule.sections, ...entitySections],
+      chapters: [...coreModule.chapters, ...killerChapters, ...locationChapters],
+    }),
+    [coreModule, entitySections, killerChapters, locationChapters]
+  );
   const [query, setQuery] = useState('');
   const [openChapterId, setOpenChapterId] = useLocalStorage<string | null>(
     'rules-open-chapter',
