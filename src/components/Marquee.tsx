@@ -14,6 +14,7 @@ interface MarqueeProps {
   onNavigateHome: () => void;
   onScrapbooks?: () => void;
   onStats?: () => void;
+  onRules?: () => void;
 }
 
 const MARQUEE_IMAGE_SIZE = {
@@ -28,7 +29,7 @@ const MARQUEE_SCREEN_RECT = {
   height: 252,
 } as const;
 
-export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats }: MarqueeProps) => {
+export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats, onRules }: MarqueeProps) => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const { gameHistory } = useGameHistoryContext();
@@ -174,6 +175,15 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
               style={{ fontFamily: 'var(--font-vhs)' }}
             >
               Stats
+            </button>
+          )}
+          {onRules && (
+            <button
+              onClick={onRules}
+              className="text-xs tracking-wider uppercase text-foreground/30 hover:text-amber-400/60 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
+              style={{ fontFamily: 'var(--font-vhs)' }}
+            >
+              Rules
             </button>
           )}
           {/* Auth link - subtle */}
