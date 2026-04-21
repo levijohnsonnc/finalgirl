@@ -11,14 +11,13 @@ interface RuleBlockProps {
 // Replace glossary terms in a string with React nodes (case-insensitive, longest match first).
 function renderText(text: string, glossary: GlossaryTermType[], onJumpTo: (id: string) => void): React.ReactNode {
   if (glossary.length === 0) return text;
-  // Sort by length desc to prefer longer matches
   const terms = [...glossary].sort((a, b) => b.term.length - a.term.length);
   const pattern = new RegExp(`\\b(${terms.map((t) => t.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b`, 'gi');
 
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
-  const used = new Set<string>(); // only highlight first occurrence per block
+  const used = new Set<string>();
 
   while ((match = pattern.exec(text)) !== null) {
     const matched = match[0];
@@ -38,23 +37,23 @@ function renderText(text: string, glossary: GlossaryTermType[], onJumpTo: (id: s
 
 const calloutStyles: Record<string, { className: string; icon: React.ReactNode; defaultTitle: string }> = {
   note: {
-    className: 'border-secondary/40 bg-secondary/5',
-    icon: <Info className="w-4 h-4 text-secondary" />,
+    className: 'callout-note',
+    icon: <Info className="w-3.5 h-3.5" />,
     defaultTitle: 'Note',
   },
   critical: {
-    className: 'border-primary/50 bg-primary/5',
-    icon: <AlertTriangle className="w-4 h-4 text-primary" />,
+    className: 'callout-critical',
+    icon: <AlertTriangle className="w-3.5 h-3.5" />,
     defaultTitle: 'Critical',
   },
   designer: {
-    className: 'border-muted-foreground/30 bg-muted/30',
-    icon: <Pencil className="w-4 h-4 text-muted-foreground" />,
+    className: 'callout-designer',
+    icon: <Pencil className="w-3.5 h-3.5" />,
     defaultTitle: "Designer's Note",
   },
   tip: {
-    className: 'border-green-500/40 bg-green-500/5',
-    icon: <Lightbulb className="w-4 h-4 text-green-400" />,
+    className: 'callout-tip',
+    icon: <Lightbulb className="w-3.5 h-3.5" />,
     defaultTitle: 'Tip',
   },
 };
@@ -63,7 +62,7 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
   switch (block.type) {
     case 'paragraph':
       return (
-        <p className="text-foreground/85 leading-relaxed text-sm sm:text-base">
+        <p className="rule-paragraph text-foreground/90 leading-relaxed text-[15px] sm:text-base">
           {renderText(block.text, glossary, onJumpTo)}
         </p>
       );
@@ -72,7 +71,7 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
       const Tag = block.ordered ? 'ol' : 'ul';
       return (
         <Tag
-          className={`${block.ordered ? 'list-decimal' : 'list-disc'} pl-6 space-y-1.5 text-foreground/85 text-sm sm:text-base marker:text-secondary/60`}
+          className={`${block.ordered ? 'list-decimal' : 'list-disc'} pl-6 space-y-1.5 text-foreground/90 text-[15px] sm:text-base marker:text-primary/70`}
         >
           {block.items.map((item, i) => (
             <li key={i} className="leading-relaxed">
@@ -86,7 +85,7 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
     case 'heading': {
       const Tag = block.level === 2 ? 'h3' : 'h4';
       return (
-        <Tag className="font-title text-base sm:text-lg text-secondary uppercase tracking-wide mt-4 mb-1">
+        <Tag className="font-title text-base sm:text-lg text-secondary uppercase tracking-wide mt-5 mb-1 flex items-center gap-2 before:content-[''] before:block before:w-1.5 before:h-4 before:bg-secondary/70">
           {block.text}
         </Tag>
       );
@@ -96,14 +95,14 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
       const variant = block.variant ?? 'note';
       const style = calloutStyles[variant];
       return (
-        <div className={`border-l-4 ${style.className} px-3 py-2 sm:px-4 sm:py-3 rounded-r my-2`}>
-          <div className="flex items-center gap-2 mb-1">
+        <div className={`rule-callout ${style.className} my-3`}>
+          <div className="rule-callout-header">
             {style.icon}
-            <span className="font-vhs text-xs uppercase tracking-wider text-foreground/70">
+            <span className="font-vhs text-[10px] uppercase tracking-[0.2em]">
               {block.title ?? style.defaultTitle}
             </span>
           </div>
-          <p className="text-sm text-foreground/85 leading-relaxed">
+          <p className="text-sm leading-relaxed">
             {renderText(block.text, glossary, onJumpTo)}
           </p>
         </div>
@@ -112,11 +111,16 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
 
     case 'example':
       return (
-        <div className="border border-dashed border-secondary/40 bg-card/50 rounded p-3 sm:p-4 my-2">
-          <div className="font-vhs text-xs uppercase tracking-wider text-secondary mb-1">
-            Example — {block.title}
+        <div className="rule-example my-3">
+          <div className="rule-example-stamp">
+            <span className="font-vhs text-[10px] uppercase tracking-[0.25em]">
+              ◉ Example
+            </span>
+            <span className="font-vhs text-[10px] uppercase tracking-widest text-muted-foreground">
+              {block.title}
+            </span>
           </div>
-          <p className="text-sm text-foreground/80 italic leading-relaxed">
+          <p className="text-sm text-foreground/85 italic leading-relaxed mt-1.5">
             {renderText(block.text, glossary, onJumpTo)}
           </p>
         </div>
@@ -124,12 +128,12 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
 
     case 'table':
       return (
-        <div className="overflow-x-auto my-2 border border-border rounded">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/40">
+        <div className="rule-table-wrap my-3">
+          <table className="rule-table w-full text-sm">
+            <thead>
               <tr>
                 {block.headers.map((h, i) => (
-                  <th key={i} className="text-left px-3 py-2 font-vhs text-xs uppercase tracking-wider text-secondary">
+                  <th key={i} className="font-vhs text-[10px] uppercase tracking-[0.2em]">
                     {h}
                   </th>
                 ))}
@@ -137,9 +141,9 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
             </thead>
             <tbody>
               {block.rows.map((row, i) => (
-                <tr key={i} className="border-t border-border">
+                <tr key={i}>
                   {row.map((cell, j) => (
-                    <td key={j} className="px-3 py-2 text-foreground/85 align-top">
+                    <td key={j} className="align-top">
                       {renderText(cell, glossary, onJumpTo)}
                     </td>
                   ))}
