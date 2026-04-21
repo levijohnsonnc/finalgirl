@@ -24,10 +24,20 @@ export interface GlossaryTerm {
   sectionId?: string;
 }
 
+export interface RuleChapter {
+  id: string;
+  number: string; // e.g. "01"
+  title: string;
+  subtitle?: string;
+  sectionIds: string[]; // IDs of RuleSection rendered as sub-tabs (or single-section chapters)
+  tags?: string[];
+}
+
 export interface RuleModule {
   id: string;
   title: string;
   source: string;
   sections: RuleSection[];
+  chapters: RuleChapter[];
   glossary: GlossaryTerm[];
 }

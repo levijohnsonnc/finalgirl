@@ -2919,3 +2919,376 @@
   letter-spacing: 0.1em;
   opacity: 0.8;
 }
+
+/* ============================================================
+   RULES — VHS Binder
+   ============================================================ */
+@layer components {
+  /* REC dot used in the rules header */
+  .rules-page .rec-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: hsl(var(--blood-red));
+    box-shadow: 0 0 8px hsl(var(--blood-red) / 0.8);
+    animation: rules-rec-pulse 1.4s infinite ease-in-out;
+    display: inline-block;
+  }
+  @keyframes rules-rec-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+  }
+
+  .rules-header {
+    border-bottom: 1px solid hsl(var(--border) / 0.6);
+  }
+
+  .vhs-spec-label {
+    background: hsl(var(--card));
+    border: 1px dashed hsl(var(--secondary) / 0.4);
+    color: hsl(var(--secondary));
+    border-radius: 2px;
+  }
+
+  /* Search — label-maker strip */
+  .rules-search {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--card) / 0.85) 100%
+    );
+    border: 1px solid hsl(var(--primary) / 0.35);
+    border-radius: 3px;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.04),
+      0 2px 0 hsl(0 0% 0% / 0.4),
+      0 0 0 1px hsl(0 0% 0% / 0.4);
+    backdrop-filter: blur(6px);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .rules-search:focus-within {
+    border-color: hsl(var(--neon-cyan) / 0.6);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.04),
+      0 0 0 1px hsl(var(--neon-cyan) / 0.4),
+      0 0 18px hsl(var(--neon-cyan) / 0.25);
+  }
+  .rules-search-input {
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: hsl(var(--foreground));
+  }
+  .rules-search-input::placeholder {
+    color: hsl(var(--muted-foreground) / 0.6);
+    letter-spacing: 0.15em;
+  }
+
+  /* Chapter row (closed = VHS tape spine) */
+  .chapter-row {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--background)) 100%
+    );
+    border: 1px solid hsl(var(--border));
+    border-left: 4px solid hsl(var(--blood-red) / 0.7);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
+  }
+  .chapter-row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      hsl(0 0% 0% / 0.06) 3px,
+      hsl(0 0% 0% / 0.06) 4px
+    );
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .chapter-row:hover {
+    border-left-color: hsl(var(--blood-red));
+    box-shadow:
+      0 0 0 1px hsl(var(--blood-red) / 0.2),
+      0 4px 14px hsl(var(--blood-red) / 0.12);
+    transform: translateY(-1px);
+  }
+  .chapter-row.chapter-open {
+    border-left-color: hsl(var(--secondary));
+    box-shadow:
+      0 0 0 1px hsl(var(--secondary) / 0.25),
+      0 6px 22px hsl(0 0% 0% / 0.45);
+  }
+  .chapter-row.chapter-dimmed {
+    opacity: 0.35;
+    filter: grayscale(0.4);
+  }
+
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 0.85rem 0.85rem 0.75rem;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: inherit;
+    position: relative;
+    z-index: 1;
+  }
+  @media (min-width: 640px) {
+    .chapter-header { padding: 1rem 1.1rem 1rem 1rem; }
+  }
+  .chapter-header:focus-visible {
+    outline: 2px solid hsl(var(--secondary));
+    outline-offset: -2px;
+  }
+
+  .chapter-number-chip {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: hsl(var(--blood-red) / 0.18);
+    border: 1px solid hsl(var(--blood-red) / 0.55);
+    color: hsl(var(--blood-red));
+    border-radius: 3px;
+    text-shadow: 0 0 6px hsl(var(--blood-red) / 0.6);
+    box-shadow: inset 0 0 8px hsl(0 0% 0% / 0.4);
+  }
+  @media (min-width: 640px) {
+    .chapter-number-chip { width: 48px; height: 48px; }
+  }
+  .chapter-row.chapter-open .chapter-number-chip {
+    background: hsl(var(--secondary) / 0.18);
+    border-color: hsl(var(--secondary) / 0.6);
+    color: hsl(var(--secondary));
+    text-shadow: 0 0 6px hsl(var(--secondary) / 0.6);
+  }
+
+  .hits-chip {
+    background: hsl(var(--neon-cyan) / 0.15);
+    color: hsl(var(--neon-cyan));
+    border: 1px solid hsl(var(--neon-cyan) / 0.45);
+    border-radius: 2px;
+  }
+
+  /* Chapter open body — aged paper */
+  .chapter-body {
+    border-top: 1px dashed hsl(var(--border));
+    background: hsl(var(--background) / 0.6);
+    position: relative;
+    z-index: 1;
+    animation: chapter-open-anim 0.25s ease-out;
+  }
+  @keyframes chapter-open-anim {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .rule-paper {
+    margin: 0.75rem;
+    padding: 1rem 1rem 1.25rem;
+    background:
+      linear-gradient(180deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%);
+    border: 1px solid hsl(var(--border) / 0.6);
+    border-radius: 3px;
+    position: relative;
+  }
+  @media (min-width: 640px) {
+    .rule-paper { margin: 1rem; padding: 1.5rem; }
+  }
+  .rule-paper::before,
+  .rule-paper::after {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    height: 1px;
+    background: repeating-linear-gradient(
+      90deg,
+      hsl(var(--border)) 0,
+      hsl(var(--border)) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+    opacity: 0.5;
+  }
+  .rule-paper::before { top: 0.3rem; }
+  .rule-paper::after { bottom: 0.3rem; }
+
+  /* Binder sub-tabs */
+  .binder-tabs {
+    border-bottom: 1px solid hsl(var(--border));
+    scrollbar-width: thin;
+  }
+  .binder-tab {
+    background: hsl(var(--muted) / 0.4);
+    border: 1px solid hsl(var(--border));
+    border-bottom: none;
+    color: hsl(var(--muted-foreground));
+    border-radius: 4px 4px 0 0;
+    transform: translateY(1px);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .binder-tab:hover {
+    background: hsl(var(--muted) / 0.7);
+    color: hsl(var(--foreground));
+  }
+  .binder-tab-active {
+    background: hsl(var(--card));
+    color: hsl(var(--secondary));
+    border-color: hsl(var(--secondary) / 0.5);
+    border-bottom: 1px solid hsl(var(--card));
+    box-shadow: 0 -2px 0 hsl(var(--secondary) / 0.6) inset;
+  }
+
+  /* Callouts */
+  .rule-callout {
+    border-radius: 3px;
+    padding: 0.65rem 0.85rem 0.75rem;
+    border-left-width: 4px;
+    border-left-style: solid;
+    position: relative;
+  }
+  .rule-callout-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.3rem;
+  }
+  .callout-note {
+    background: hsl(var(--neon-cyan) / 0.06);
+    border: 1px solid hsl(var(--neon-cyan) / 0.25);
+    border-left-color: hsl(var(--neon-cyan));
+    color: hsl(var(--foreground));
+  }
+  .callout-note .rule-callout-header {
+    color: hsl(var(--neon-cyan));
+  }
+  .callout-critical {
+    background: hsl(var(--blood-red) / 0.08);
+    border: 1px solid hsl(var(--blood-red) / 0.4);
+    border-left-color: hsl(var(--blood-red));
+    color: hsl(var(--foreground));
+  }
+  .callout-critical .rule-callout-header {
+    color: hsl(var(--blood-red));
+    text-shadow: 0 0 4px hsl(var(--blood-red) / 0.5);
+  }
+  .callout-designer {
+    background: hsl(var(--muted) / 0.4);
+    border: 1px dashed hsl(var(--border));
+    border-left: 4px solid hsl(var(--muted-foreground) / 0.5);
+    color: hsl(var(--foreground) / 0.85);
+    font-style: italic;
+    transform: rotate(-0.2deg);
+  }
+  .callout-designer .rule-callout-header {
+    color: hsl(var(--muted-foreground));
+    font-style: normal;
+  }
+  .callout-tip {
+    background: hsl(140 60% 45% / 0.08);
+    border: 1px solid hsl(140 60% 45% / 0.3);
+    border-left-color: hsl(140 70% 50%);
+  }
+  .callout-tip .rule-callout-header {
+    color: hsl(140 70% 60%);
+  }
+
+  /* Examples — torn paper */
+  .rule-example {
+    background: hsl(var(--card) / 0.5);
+    border: 1px dashed hsl(var(--secondary) / 0.4);
+    border-radius: 2px;
+    padding: 0.75rem 0.85rem 0.85rem;
+    position: relative;
+  }
+  .rule-example-stamp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: hsl(var(--secondary));
+    border-bottom: 1px dashed hsl(var(--secondary) / 0.3);
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Tables — VHS data readout */
+  .rule-table-wrap {
+    border: 1px solid hsl(var(--secondary) / 0.35);
+    border-radius: 2px;
+    overflow-x: auto;
+    background: hsl(var(--card) / 0.6);
+  }
+  .rule-table {
+    border-collapse: collapse;
+    font-family: var(--font-vhs);
+  }
+  .rule-table thead {
+    background: hsl(var(--secondary) / 0.18);
+  }
+  .rule-table th {
+    text-align: left;
+    padding: 0.55rem 0.75rem;
+    color: hsl(var(--secondary));
+    border-bottom: 1px solid hsl(var(--secondary) / 0.4);
+  }
+  .rule-table td {
+    padding: 0.55rem 0.75rem;
+    border-top: 1px dashed hsl(var(--border));
+    color: hsl(var(--foreground) / 0.9);
+    font-family: var(--font-sans, inherit);
+  }
+  .rule-table tbody tr:nth-child(even) td {
+    background: hsl(0 0% 100% / 0.02);
+  }
+
+  /* See-also tape labels */
+  .see-also-tape {
+    background: hsl(var(--secondary) / 0.1);
+    border: 1px solid hsl(var(--secondary) / 0.4);
+    color: hsl(var(--secondary));
+    border-radius: 2px;
+    transition: all 0.15s ease;
+    box-shadow: inset 0 -1px 0 hsl(0 0% 0% / 0.3);
+  }
+  .see-also-tape:hover {
+    background: hsl(var(--secondary) / 0.22);
+    border-color: hsl(var(--secondary));
+    transform: translateY(-1px);
+  }
+
+  .back-to-chapters {
+    color: hsl(var(--muted-foreground));
+    background: transparent;
+    border: 1px dashed hsl(var(--border));
+    padding: 0.4rem 0.85rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .back-to-chapters:hover {
+    color: hsl(var(--secondary));
+    border-color: hsl(var(--secondary) / 0.6);
+    background: hsl(var(--secondary) / 0.06);
+  }
+
+  /* Glossary entries */
+  .glossary-entry {
+    padding: 0.75rem;
+    border-bottom: 1px dashed hsl(var(--border));
+  }
+  .glossary-entry:last-child { border-bottom: 0; }
+}

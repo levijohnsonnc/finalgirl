@@ -11,24 +11,36 @@ export const GlossaryTerm = ({ term, onJumpTo }: GlossaryTermProps) => (
     <PopoverTrigger asChild>
       <button
         type="button"
-        className="underline decoration-dotted decoration-secondary/60 underline-offset-4 hover:text-secondary transition-colors cursor-help"
+        className="font-medium text-primary/90 underline decoration-dotted decoration-primary/70 underline-offset-[3px] hover:text-primary hover:decoration-primary transition-colors cursor-help"
       >
         {term.term}
       </button>
     </PopoverTrigger>
-    <PopoverContent className="w-72 text-sm bg-card border-border">
-      <div className="font-vhs text-xs text-secondary uppercase tracking-wider mb-1">
-        {term.term}
+    <PopoverContent
+      side="top"
+      className="glossary-popover w-72 p-0 border-0 bg-transparent shadow-none"
+    >
+      <div className="glass-card border border-primary/30 rounded-sm overflow-hidden">
+        <div className="vhs-label flex items-center justify-between px-3 py-1.5 border-b border-primary/30 bg-primary/10">
+          <span className="font-vhs text-[10px] uppercase tracking-[0.2em] text-primary">
+            ▸ {term.term}
+          </span>
+          <span className="font-vhs text-[9px] uppercase tracking-widest text-muted-foreground">
+            DEF
+          </span>
+        </div>
+        <div className="px-3 py-2.5">
+          <p className="text-sm text-foreground/90 leading-relaxed">{term.short}</p>
+          {term.sectionId && onJumpTo && (
+            <button
+              onClick={() => onJumpTo(term.sectionId!)}
+              className="mt-2 text-[11px] font-vhs uppercase tracking-wider text-secondary hover:text-secondary/80 transition-colors"
+            >
+              → Jump to section
+            </button>
+          )}
+        </div>
       </div>
-      <p className="text-muted-foreground leading-relaxed">{term.short}</p>
-      {term.sectionId && onJumpTo && (
-        <button
-          onClick={() => onJumpTo(term.sectionId!)}
-          className="mt-2 text-xs font-vhs uppercase tracking-wider text-primary hover:text-primary/80"
-        >
-          Jump to section →
-        </button>
-      )}
     </PopoverContent>
   </Popover>
 );
