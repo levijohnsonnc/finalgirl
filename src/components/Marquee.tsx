@@ -186,11 +186,13 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
               Rules
             </button>
           )}
-          {/* Auth link - subtle */}
+          {/* Auth link - subtle. Hide "Sign Out" on mobile to reduce clutter. */}
           {!authLoading && (
             <button
               onClick={handleAuthClick}
-              className="text-xs tracking-wider uppercase text-foreground/20 hover:text-foreground/50 transition-colors duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center px-2"
+              className={`text-xs tracking-wider uppercase text-foreground/20 hover:text-foreground/50 transition-colors duration-300 min-h-[44px] min-w-[44px] items-center justify-center px-2 ${
+                user ? 'hidden sm:flex' : 'flex'
+              }`}
               style={{ fontFamily: 'var(--font-vhs)' }}
             >
               {user ? 'Sign Out' : 'Sign In'}
