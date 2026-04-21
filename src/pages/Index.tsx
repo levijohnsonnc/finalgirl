@@ -9,7 +9,8 @@ import GameOutcome from './GameOutcome';
 import TheEnd, { EndingFormData } from './TheEnd';
 import Scrapbooks from './Scrapbooks';
 import Stats from './Stats';
-import { Library, BookOpen, BarChart3, ArrowLeft, User } from 'lucide-react';
+import Rules from './Rules';
+import { Library, BookOpen, BarChart3, ArrowLeft, User, BookMarked } from 'lucide-react';
 import { getFilmIdByLocation } from '@/types/gameData';
 import { GameResult } from '@/hooks/useGameHistory';
 import { GameHistoryProvider, useGameHistoryContext } from '@/contexts/GameHistoryContext';
@@ -30,7 +31,7 @@ const IndexContent = () => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'ending' | 'scrapbooks' | 'stats'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'archive' | 'nowPlaying' | 'outcome' | 'ending' | 'scrapbooks' | 'stats' | 'rules'>('dashboard');
   const [gameSelection, setGameSelection] = useState<GameSelection | null>(null);
   const [lastGameResult, setLastGameResult] = useState<GameResult | null>(null);
   const [introStory, setIntroStory] = useState<string | undefined>(undefined);
@@ -158,6 +159,7 @@ const IndexContent = () => {
         onNavigateHome={handleNavigateHome}
         onScrapbooks={() => { setHasStarted(true); setCurrentPage('scrapbooks'); }}
         onStats={() => { setHasStarted(true); setCurrentPage('stats'); }}
+        onRules={() => { setHasStarted(true); setCurrentPage('rules'); }}
       />
     );
   }
@@ -211,6 +213,8 @@ const IndexContent = () => {
         return <Scrapbooks />;
       case 'stats':
         return <Stats />;
+      case 'rules':
+        return <Rules />;
       default:
         return <CastingRoom onStartGame={handleStartGame} onGoToArchive={() => setCurrentPage('archive')} />;
     }
@@ -269,6 +273,13 @@ const IndexContent = () => {
             >
               <Library className="w-3 h-3" />
               <span className="hidden sm:inline">COLLECTION</span>
+            </button>
+            <button
+              onClick={() => setCurrentPage('rules')}
+              className="font-vhs text-[10px] sm:text-xs text-muted-foreground hover:text-amber-400 transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[44px] px-1 sm:px-2"
+            >
+              <BookMarked className="w-3 h-3" />
+              <span className="hidden sm:inline">RULES</span>
             </button>
             <button
               onClick={() => setCurrentPage('stats')}
