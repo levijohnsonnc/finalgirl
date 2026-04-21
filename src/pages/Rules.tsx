@@ -4,6 +4,9 @@ import { coreRules } from '@/data/rules/coreRules';
 import { RuleModule, RuleSection as RuleSectionType, RuleBlock, RuleChapter as RuleChapterType } from '@/data/rules/types';
 import { RuleChapter } from '@/components/rules/RuleChapter';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useOwnedFilms } from '@/hooks/useOwnedFilms';
+import { FEATURE_FILMS } from '@/types/gameData';
+import { ENTITY_RULE_MODULES, buildEntityChapter, EntityRuleModule } from '@/data/rules/moduleRules';
 
 const MODULES: RuleModule[] = [coreRules];
 
