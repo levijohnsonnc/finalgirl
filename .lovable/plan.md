@@ -1,116 +1,99 @@
 
 
-## Plan: Interactive Rulebook section
+## Plan: Restyle Rules as a VHS Binder with Collapsed Sections
 
-### Goal
-Add a new **RULES** section to the app that presents the Final Girl Core Rules in an interactive, searchable, easy-to-look-up format — designed to scale later to per-module rules (Killers, Locations, Vignettes).
+### What's wrong today
 
-### Where it lives
-- New page `Rules` reachable from the VHS footer in `Index.tsx` (alongside COLLECTION / STATS / SCRAPBOOKS), and from the Marquee bottom nav.
-- Footer chip uses a `BookMarked` (lucide) icon, themed in the existing VHS palette (e.g. amber/yellow accent so it doesn't clash with the existing colors).
-- Added as a `currentPage: 'rules'` in the existing `IndexContent` switch — same pattern as `scrapbooks`/`stats`. Scroll-to-top already handled.
+**Look & feel — off-brand:**
+- Plain neutral cards/borders, generic dropdown, generic search input. Nothing reads as "VHS horror" the way Casting Room, Scrapbook, or Stats do (no film grain, no scanlines, no neon glow, no tape labels, no aged paper, no blood-red accents).
+- Typography hierarchy is flat — section headings look like a docs site, not a slasher-era rulebook.
+- Glossary popovers, callouts, and tables use default shadcn styling instead of the project's `glass-card` / `vhs-label` / `neon-text` vocabulary.
 
-### Layout (desktop)
+**Usability — wall of text:**
+- Every section of the entire rulebook renders fully expanded at once. Scrolling past Overview → Boards → Game Turn → 5 phases → Attacking → Bloodlust → Tokens → Minions → Weapons → End is exhausting on mobile and the ToC's "scroll-spy" can't compensate.
+- Sub-sections (e.g. the 5 turn phases under "Game Turn") aren't grouped under their parent — they're siblings in the long scroll, so the structure the ToC implies doesn't exist visually on the page.
+- The sticky search/module bar plus the sticky app header eat ~25% of mobile viewport.
+- No "back to top" or breadcrumb when deep in a section.
+
+### New design: **The Rulebook Binder**
+
+Treat the rules like a battered VHS-era spiral-bound rulebook / case-file binder. **Only one chapter is open at a time.** Everything else stays as labeled tape spines / index tabs.
+
+#### Information architecture (collapsed by default)
 
 ```text
-┌────────────────────────────────────────────────────────┐
-│  RULEBOOK              [ Core Rules ▾ ] [🔍 search... ]│
-├──────────────┬─────────────────────────────────────────┤
-│ TABLE OF     │  ## The Game Turn                        │
-│ CONTENTS     │                                          │
-│              │  A turn has 5 phases:                    │
-│ ▸ Overview   │   1. Action Phase                        │
-│ ▾ Game Turn  │   2. Planning Phase                      │
-│   • Action   │   3. Killer Phase                        │
-│   • Planning │   4. Panic Phase                         │
-│   • Killer   │   5. Cleanup Phase                       │
-│   • Panic    │                                          │
-│   • Cleanup  │  [Quick ref: Turn Summary card ▸]        │
-│ ▸ Attacking  │                                          │
-│ ▸ Bloodlust  │  See also: Attacking, Horror Roll        │
-│ ▸ Tokens     │                                          │
-│ ▸ Minions    │                                          │
-│ ▸ Weapons    │                                          │
-│ ▸ Glossary   │                                          │
-└──────────────┴─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│  📼 RULEBOOK — CORE RULES               [search]│
+│  Unofficial fan reference                       │
+├─────────────────────────────────────────────────┤
+│ [▸ 01  GAME OVERVIEW & OBJECTIVE          ›]   │
+│ [▸ 02  THE BOARDS                         ›]   │  ← groups player/killer/location
+│ [▾ 03  THE GAME TURN                      ›]   │  ← only this one is open
+│      ┌──────────────────────────────────┐       │
+│      │ Sub-tabs:                        │       │
+│      │ [Action][Planning][Killer][Panic][Cleanup]
+│      │ ─────────────────────────────────│       │
+│      │  ## Action Phase                 │       │
+│      │  body content for the active tab │       │
+│      │                                  │       │
+│      │  See also: Attacking, Horror Roll│       │
+│      └──────────────────────────────────┘       │
+│ [▸ 04  ATTACKING THE KILLER               ›]   │
+│ [▸ 05  BLOODLUST                          ›]   │
+│ [▸ 06  TOKENS                             ›]   │
+│ [▸ 07  MINIONS                            ›]   │
+│ [▸ 08  WEAPONS                            ›]   │
+│ [▸ 09  ENDING THE GAME                    ›]   │
+│ [▸ 10  GLOSSARY                           ›]   │
+└─────────────────────────────────────────────────┘
 ```
 
-Sticky left ToC, scroll-spy highlights the active section as you scroll. On mobile the ToC collapses into a top dropdown ("Jump to…") and a floating "↑ Top" button appears.
+- **Chapters** are accordion rows styled as VHS tape spines (or rulebook index tabs): numbered, uppercase title font, blood-red number chip, faint scanline texture, neon hover glow.
+- **One chapter open at a time** (single-open accordion). Opening another auto-closes the previous — no infinite scroll.
+- **Sub-sections become tabs inside the open chapter** (e.g. the 5 turn phases under "Game Turn"; the 3 boards under "The Boards"). This matches how the rulebook actually groups material and keeps page length bounded.
+- **Glossary becomes its own chapter** at the end with an A–Z jumpbar instead of being inline-only.
 
-### Interactive features
+#### Visual restyle (match the app)
 
-1. **Search** — fuzzy search across all rule sections + glossary terms. Live-filters the visible content and dims non-matches; ToC shows match counts per section. (Simple in-memory filter, no library needed; or `fuse.js` if we want fuzziness.)
-2. **Scroll-spy ToC** — `IntersectionObserver` highlights the section currently in view; clicking ToC entries smooth-scrolls and updates the URL hash (`/#rules/killer-phase`) so sections are linkable/shareable.
-3. **Glossary tooltips** — terms like *Horror Roll*, *Bloodlust*, *Terror card*, *Minion* get a dotted underline; hover/tap shows a short definition popover (reusing existing shadcn `Popover`/`Tooltip`). Powered by a small glossary map.
-4. **Cross-references** — each section ends with a "See also:" row of chips that jump to related sections.
-5. **Quick-reference cards** — collapsible callouts for things players look up mid-game: Turn Summary, Horror Roll dice table, Attack steps, Panic direction lookup. Default-collapsed on mobile.
-6. **"Card examples"** — render the rulebook's example callouts (e.g. Weak Attack, Short Rest, Terror card) as styled "card" components rather than inline images, so they look native to the app's VHS aesthetic.
-7. **Bookmarks** — a star icon per section saves to `localStorage` so returning users see their pinned sections at the top of the ToC.
-8. **Print-friendly view** — a "Print / Save as PDF" button that switches to a single-page stacked layout.
-9. **"Modules" picker (future-proof)** — the top-right dropdown shows `Core Rules` now, but is structured to later list `Hans the Butcher`, `Camp Happy Trails`, etc. Each module is just another rules dataset loaded into the same UI.
+- **Page chrome:** wrap the whole page in `static-bg` / `film-grain` / `vignette` overlays already used by Stats. Add the project's CRT scanline overlay.
+- **Header:** title in `font-title` with `neon-text text-secondary`, plus a small `vhs-label` chip reading "CORE RULES VHS-001 / FAN REFERENCE". Animated REC dot like the Stats page.
+- **Module picker:** restyle as a `vcr-tape-button` instead of a generic dropdown — looks like swapping VHS tapes (future-proof for Killer/Location modules).
+- **Search:** restyle the input as a worn label-maker strip with a magnifier icon; on focus, neon cyan glow; show match-count chips inline on chapter headers (`03 · 4 hits`).
+- **Chapter rows:** `glass-card` base with a left blood-red ribbon, large numbered chip (`01`–`10`), uppercase title in `font-title`, tag chips on the right, chevron rotates on open. Subtle tape-tracking glitch on hover.
+- **Open chapter body:** styled like an aged-paper rulebook page (cream/off-white tinted, dotted-rule top/bottom, slight paper-grain) — borrowing from the Scrapbook page treatment so it feels of-a-piece.
+- **Sub-tabs inside a chapter:** styled like binder index tabs (small angled labels) rather than generic shadcn tabs.
+- **Callouts:** restyle the four variants in the project's vocabulary — `note` = neon cyan label tape, `critical` = blood-red stamped warning, `designer` = handwritten margin note (italic, slightly rotated), `tip` = highlighter strikethrough green.
+- **Tables:** monospaced VHS data-readout look (thin scanlines on rows, secondary-color header row).
+- **Examples:** stamped "EXAMPLE" header in `font-vhs`, dashed border becomes torn-paper edge.
+- **Glossary terms inline:** keep the dotted underline but tint it blood-red; popover gets the `glass-card` treatment with a small VHS label header.
+- **See-also chips:** restyle as VHS tape labels ("→ ATTACKING") instead of generic pill buttons.
 
-### Content model
+#### Behavior changes
 
-A single typed dataset, easy to extend per-module later:
+1. **Single-open accordion** for chapters. Default state: all closed, hero chapter list visible. Persist last-opened chapter in `localStorage` so returning users land where they left off.
+2. **Sub-section tabs** replace today's flat sub-section scroll. Active tab persists in URL hash (`#rules/game-turn/killer`).
+3. **Search behavior changes:** when the user types, auto-expand chapters that have matches (and auto-switch the sub-tab to the first matching one). Non-matching chapters dim and show "no hits". Match counts on each chapter row.
+4. **Mobile:** chapter rows become full-width cards with bigger tap targets; sub-tabs become a horizontal swipeable scroller; remove the desktop sticky ToC entirely (it's redundant with the accordion). Floating "↑ Top" button stays.
+5. **Drop the desktop left ToC.** The accordion list IS the ToC — much cleaner, no duplication, no scroll-spy needed.
+6. **"Back to chapter list"** link at the bottom of every open chapter (smooth-scrolls and closes the chapter).
+7. **Deep links still work:** `/#rules/killer-phase` opens the right chapter and selects the right sub-tab.
 
-```ts
-// src/data/rules/coreRules.ts
-export interface RuleSection {
-  id: string;           // 'killer-phase'
-  title: string;        // 'The Killer Phase'
-  parentId?: string;    // for nested ToC
-  order: number;
-  body: RuleBlock[];    // structured blocks (paragraph, list, callout, table, example-card)
-  seeAlso?: string[];   // ids of related sections
-  tags?: string[];      // for search/filter
-}
-
-export interface RuleModule {
-  id: 'core' | string;       // future: 's1-hans', 's1-camp-happy-trails'
-  title: string;
-  sections: RuleSection[];
-  glossary: GlossaryTerm[];
-}
-```
-
-Storing rules as **structured blocks** (not raw markdown) means the same data can power search, glossary linking, ToC, cross-refs, and future per-module rules without re-parsing.
-
-### Source content
-- Hand-transcribed from the official Core Rulebook PDF you linked, faithful to the wording, broken into the natural sections already in the book (Overview, Game Boards, Setup, Game Turn → 5 phases, Attacking, Bloodlust, Tokens, Minions, Weapons, Game End, Glossary/Index).
-- A small disclaimer footer notes this is an unofficial reference and links to the official rulebook PDF.
-
-### Files to add / change
+#### Files changed
 
 | File | Change |
 |------|--------|
-| `src/pages/Rules.tsx` | New page — layout, search, scroll-spy, ToC, module picker |
-| `src/components/rules/RulesTOC.tsx` | Sticky/collapsible table of contents with scroll-spy + bookmark stars |
-| `src/components/rules/RuleSection.tsx` | Renders a section: heading, blocks, see-also chips |
-| `src/components/rules/RuleBlock.tsx` | Renders a single block (paragraph / list / callout / table / example-card) |
-| `src/components/rules/GlossaryTerm.tsx` | Inline term with popover definition |
-| `src/components/rules/QuickRefCard.tsx` | Collapsible quick-reference callout |
-| `src/components/rules/RulesSearch.tsx` | Search input + result count badges |
-| `src/data/rules/types.ts` | `RuleModule`, `RuleSection`, `RuleBlock`, `GlossaryTerm` types |
-| `src/data/rules/coreRules.ts` | Core Rulebook content as structured data |
-| `src/data/rules/glossary.ts` | Shared glossary terms (Horror Roll, Bloodlust, etc.) |
-| `src/hooks/useScrollSpy.ts` | IntersectionObserver hook for active-section highlighting |
-| `src/hooks/useRulesBookmarks.ts` | localStorage-backed bookmarked sections |
-| `src/pages/Index.tsx` | Add `'rules'` to `currentPage` union; add footer button + render switch case |
-| `src/components/Marquee.tsx` | Add a "Rules" entry to the bottom nav |
-| `src/index.css` | Styling for ToC, search highlight, glossary underline, quick-ref cards (VHS aesthetic) |
+| `src/pages/Rules.tsx` | Rebuild as accordion-of-chapters with VHS chrome (grain/vignette/scanlines, neon header, restyled search + module picker). Drop the desktop ToC sidebar. Single-open behavior, search-auto-expand, deep-link routing to chapter+subtab. |
+| `src/components/rules/RuleChapter.tsx` (new) | Collapsible chapter row: numbered tape-spine header, sub-section tabs inside, see-also footer, "back to chapters" link. |
+| `src/components/rules/RuleSubTabs.tsx` (new) | Binder-tab styled tab strip for sub-sections within a chapter. |
+| `src/components/rules/RuleSection.tsx` | Simplified — no longer renders its own H2 framing (the chapter does that). Just renders blocks + see-also for one sub-section. |
+| `src/components/rules/RuleBlock.tsx` | Restyle callouts (4 variants), examples, tables in the VHS vocabulary. |
+| `src/components/rules/GlossaryTerm.tsx` | Blood-red dotted underline + `glass-card` popover with VHS label header. |
+| `src/components/rules/RulesTOC.tsx` | **Deleted** (accordion replaces it). |
+| `src/hooks/useScrollSpy.ts` | **Deleted** (no longer needed). |
+| `src/data/rules/coreRules.ts` | Add a top-level `chapters` grouping (chapter id → child section ids) so 5 turn phases nest under "Game Turn" and 3 boards nest under "The Boards". No rule-text changes. |
+| `src/data/rules/types.ts` | Add `RuleChapter { id, number, title, sectionIds[] }`; module gets `chapters: RuleChapter[]`. |
+| `src/index.css` | New styles: `.rules-page`, `.chapter-row`, `.chapter-number-chip`, `.binder-tab`, `.rule-paper`, restyled callout variants, `.glossary-popover`. Reuses existing `glass-card`, `neon-text`, `film-grain`, `vignette`, `scanlines`, `vcr-tape-button`. |
 
-### Phasing (ship in two passes)
-
-**Phase 1 — Core experience (this implementation):**
-- Page, ToC with scroll-spy, all Core Rulebook sections as structured content, search, glossary tooltips, see-also chips, quick-ref cards, mobile dropdown ToC, footer/Marquee entry points.
-
-**Phase 2 — Future (not built now, but the data model supports it):**
-- Per-module rules (each Killer / Location / Vignette as its own `RuleModule`).
-- "Rules for my current game" — auto-shows just the relevant Killer + Location rules from the Casting Room.
-- Bookmarks, print view, and cross-module links between core rules and module overrides.
-
-### Strict-accuracy guardrails (Final Girl skill)
-- All rule text is transcribed from the official Core Rulebook only; no inference, no merging of Feature Film rules into core.
-- Each section carries a `source: 'Core Rulebook'` field so future per-module sections can be clearly attributed.
-- A visible "Unofficial fan reference — see official rulebook for authoritative text" disclaimer at the top of the page.
+#### Out of scope (keep for later)
+- Bookmarks (stars), print view, per-Killer/Location modules — the new structure makes all of these easier to add next.
 
