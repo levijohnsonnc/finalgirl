@@ -1,70 +1,27 @@
 
 
-## Plan: Per-Killer & Per-Location rules in the Rulebook
+## Plan: Add Big Bad Wolf (Killer) + new Location rules from screenshots
 
-Add **owned-only** module rule sections for individual Killers and Locations. Start with **Grimlash** (killer) and **Storybook Woods** (location), transcribed verbatim from the uploaded sheets. Each rules entry is split into **Special Setup** and **Special Rules**, matching the printed sheets.
+### Blocker: HEIC files can't be read in plan mode
+The 5 uploaded screenshots are `.HEIC`, which neither `code--view` nor `document--parse_document` can open. I need to convert them to PNG before I can transcribe the rules verbatim. That requires shell access (ImageMagick / `heif-convert`), which is only available once you approve this plan and I switch to default mode.
 
-### Where it appears
-- Same `/rules` page, rendered **below** the Core Rulebook chapters in two new chapter groups:
-  - `KILLERS` — one chapter per owned killer
-  - `LOCATIONS` — one chapter per owned location
-- Each chapter has two sub-tabs: `SETUP` and `RULES` (reusing the existing `RuleSubTabs` component).
-- Chapters only render if the user owns at least one Feature Film containing that killer/location. If the user owns nothing in a group, the entire `KILLERS` / `LOCATIONS` group is hidden.
-- Search bar already in the page indexes these new sections automatically.
+### Steps after approval
 
-### Ownership gating
-Reuse `useOwnedFilms()` plus `FEATURE_FILMS` to compute the owned killer + location name sets:
-- A killer module is shown if any owned film's `killer` matches.
-- A location module is shown if any owned film's `location` matches.
-- For unauthenticated/empty collections, neither group renders (matches the rest of the app's collection-gated pattern).
+1. **Convert HEICs → PNG** in `/tmp/` using `nix run nixpkgs#libheif -- heif-convert` (or ImageMagick fallback), then `code--view` each PNG to read the printed text.
 
-### Data model (additive, no breaking changes)
+2. **Identify which sheet is which.** Expected: 2–3 sheets for Big Bad Wolf (killer board has multiple ability tracks, often 2-page), and 1–2 sheets for the new Location. I'll confirm the Location's name from the sheet header before adding it (you mentioned "the location I've provided" but Storybook Woods is already in. If the new sheet is also Storybook Woods I'll skip; otherwise I'll add the new one as a fresh module).
 
-New file `src/data/rules/moduleRules.ts` exports:
+3. **Add new entries to `src/data/rules/moduleRules.ts`** following the exact same `EntityRuleModule` shape as Grimlash / Storybook Woods:
+   - `bigBadWolf`: `kind: 'killer'`, `filmId: 's2-once-upon-full-moon'`, `entity: 'Big Bad Wolf'`, with `setup` + `rules` blocks transcribed verbatim (special abilities, Huff & Puff / howl / scent mechanics — whatever the sheet actually prints).
+   - `<newLocation>`: `kind: 'location'`, `filmId` matched from `FEATURE_FILMS`, transcribed verbatim.
+   - Append both to the existing `ENTITY_RULE_MODULES` array — no other code changes needed; `Rules.tsx` already iterates this list and gates by ownership.
 
-```ts
-interface EntityRuleModule {
-  entity: string;          // e.g. 'Grimlash' (matches FEATURE_FILMS killer/location names)
-  kind: 'killer' | 'location';
-  filmId: string;          // e.g. 's4-rotten-harvest' — used for ownership check
-  source: string;          // e.g. 'A Rotten Harvest — Killer Sheet'
-  setup: RuleBlock[];      // body for SETUP sub-tab
-  rules: RuleBlock[];      // body for RULES sub-tab
-  tags?: string[];
-}
-```
+4. **Verify in preview**: with Once Upon a Full Moon owned, the LOCATIONS group now shows two location chapters, and KILLERS gains a Big Bad Wolf chapter, each with SETUP / RULES sub-tabs, matching Grimlash's styling exactly.
 
-Two seed entries transcribed verbatim from the uploaded photos:
+### One thing I need from you
+Either:
+- (a) Approve the plan as-is — I'll convert the HEICs after switching to default mode and read the location's name straight off the sheet header, **or**
+- (b) Tell me the location name now (and ideally re-upload as JPG/PNG so the conversion step isn't needed), which is faster and avoids any OCR ambiguity.
 
-1. **Grimlash** (`kind: 'killer'`, `filmId: 's4-rotten-harvest'`)
-   - SETUP: split Harvest Madness cards by level into 3 decks; place Harvest Madness marker on the orange starting space at the top of the Killer board.
-   - RULES: full **Harvest Madness** explanation — pumpkin-icon trigger, draw 2 / keep 1 per new level, effects persist while at-or-above that level, Level 3 → skull = lose, heart-recovery may instead reduce Madness (one or the other, not both), discarding cards on level-down, redraw on re-entering a level, face-down once-per-turn flips reset in Upkeep.
-
-2. **Storybook Woods** (`kind: 'location'`, `filmId: 's2-once-upon-full-moon'`)
-   - SETUP: "Setup the game as normal — there are no special setup rules for this Location."
-   - RULES: **Fewer Spaces** note · **Bridges** (3 bridges + Toll Bridge token: only 1 Victim follows across) · **The Raft** (choose 4 marked ashore-spaces touching river + non-exit, move along river per Raft Item card).
-
-All text is a direct transcription from the printed sheets. Each module carries a `source` field for clear attribution. No inference, no merging with Core rules.
-
-### Rendering
-- New component `src/components/rules/EntityRuleChapter.tsx` — thin wrapper that builds a `RuleChapter` with two synthetic sections (`{id}-setup`, `{id}-rules`) and feeds them to existing `RuleSubTabs` so the look matches Core chapters exactly.
-- `src/pages/Rules.tsx` updates:
-  - Compute `ownedKillerModules` and `ownedLocationModules` from `useOwnedFilms` + `moduleRules`.
-  - Render two group headers (`KILLERS`, `LOCATIONS`) styled as the existing chapter dividers, each followed by their owned chapters.
-  - Search match counts include these new sections (reuse existing `sectionMatches` over the synthetic SETUP+RULES bodies).
-
-### Files
-
-| File | Change |
-|---|---|
-| `src/data/rules/moduleRules.ts` | **New.** `EntityRuleModule` type + Grimlash + Storybook Woods entries (verbatim from photos). |
-| `src/components/rules/EntityRuleChapter.tsx` | **New.** Wraps a module as a chapter with SETUP / RULES sub-tabs. |
-| `src/pages/Rules.tsx` | Filter modules by owned films, render KILLERS + LOCATIONS groups, include in search index. |
-| `src/data/rules/types.ts` | Export `EntityRuleModule` type alongside existing types. |
-
-### Out of scope (easy follow-ups later)
-- Final Girl per-character rules (no per-girl sheets transcribed yet).
-- Vignette rules (different structure).
-- Cross-links from Core rules (e.g. Bloodlust) into specific killer overrides.
-- Empty-state copy explaining "Own a Feature Film to unlock its killer/location rules" — happy to add if you want, just say so.
+No other files change. No schema/UI changes. Pure data addition.
 
