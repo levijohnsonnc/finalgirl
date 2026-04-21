@@ -1,16 +1,9 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Search, BookMarked, ArrowUp, ChevronDown } from 'lucide-react';
+import { Search, BookMarked, ArrowUp, X } from 'lucide-react';
 import { coreRules } from '@/data/rules/coreRules';
-import { RuleModule, RuleSection as RuleSectionType, RuleBlock } from '@/data/rules/types';
-import { RuleSection } from '@/components/rules/RuleSection';
-import { RulesTOC } from '@/components/rules/RulesTOC';
-import { useScrollSpy } from '@/hooks/useScrollSpy';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { RuleModule, RuleSection as RuleSectionType, RuleBlock, RuleChapter as RuleChapterType } from '@/data/rules/types';
+import { RuleChapter } from '@/components/rules/RuleChapter';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const MODULES: RuleModule[] = [coreRules];
 
@@ -48,37 +41,106 @@ function sectionMatches(section: RuleSectionType, query: string): number {
 }
 
 const Rules = () => {
-  const [moduleId, setModuleId] = useState<string>(MODULES[0].id);
+  const moduleId = MODULES[0].id;
+  const module = MODULES[0];
   const [query, setQuery] = useState('');
+  const [openChapterId, setOpenChapterId] = useLocalStorage<string | null>(
+    'rules-open-chapter',
+    null
+  );
+  const [initialSubBySection, setInitialSubBySection] = useState<Record<string, string>>({});
   const [showTopButton, setShowTopButton] = useState(false);
 
-  const module = MODULES.find((m) => m.id === moduleId) ?? MODULES[0];
-
-  const matchCounts = useMemo(() => {
+  // Match counts per section
+  const sectionMatchCounts = useMemo(() => {
     if (!query.trim()) return {} as Record<string, number>;
     const counts: Record<string, number> = {};
     for (const s of module.sections) {
       const c = sectionMatches(s, query.trim());
       if (c > 0) counts[s.id] = c;
     }
+    // Glossary chapter — match against terms
     return counts;
   }, [query, module]);
 
-  const filteredSections = useMemo(() => {
-    if (!query.trim()) return module.sections;
-    return module.sections.filter((s) => (matchCounts[s.id] ?? 0) > 0);
-  }, [query, matchCounts, module]);
+  const glossaryHits = useMemo(() => {
+    if (!query.trim()) return 0;
+    const q = query.trim().toLowerCase();
+    return module.glossary.filter(
+      (t) => t.term.toLowerCase().includes(q) || t.short.toLowerCase().includes(q)
+    ).length;
+  }, [query, module]);
 
-  const sectionIds = useMemo(() => filteredSections.map((s) => s.id), [filteredSections]);
-  const activeId = useScrollSpy(sectionIds);
-
-  const handleJumpTo = useCallback((id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      window.history.replaceState(null, '', `#rules/${id}`);
+  // Match counts per chapter (sum of its sections + glossary chapter handles its own)
+  const chapterMatchCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const ch of module.chapters) {
+      if (ch.id === 'ch-glossary') {
+        if (glossaryHits > 0) counts[ch.id] = glossaryHits;
+        continue;
+      }
+      let total = 0;
+      for (const sid of ch.sectionIds) total += sectionMatchCounts[sid] ?? 0;
+      if (total > 0) counts[ch.id] = total;
     }
-  }, []);
+    return counts;
+  }, [module, sectionMatchCounts, glossaryHits]);
+
+  // Auto-expand first matching chapter when searching
+  useEffect(() => {
+    if (!query.trim()) return;
+    const firstMatch = module.chapters.find((c) => (chapterMatchCounts[c.id] ?? 0) > 0);
+    if (firstMatch) {
+      setOpenChapterId(firstMatch.id);
+      // Find the first matching section inside, set it as initial sub
+      const firstSec = firstMatch.sectionIds.find((sid) => (sectionMatchCounts[sid] ?? 0) > 0);
+      if (firstSec) {
+        setInitialSubBySection((prev) => ({ ...prev, [firstMatch.id]: firstSec }));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  const handleToggle = useCallback(
+    (chapterId: string) => {
+      setOpenChapterId((prev) => (prev === chapterId ? null : chapterId));
+      setTimeout(() => {
+        const el = document.getElementById(chapterId);
+        el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    },
+    [setOpenChapterId]
+  );
+
+  const handleClose = useCallback(() => {
+    setOpenChapterId(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [setOpenChapterId]);
+
+  // Find the chapter that owns a given sectionId
+  const chapterForSection = useCallback(
+    (sectionId: string): RuleChapterType | undefined =>
+      module.chapters.find((c) => c.sectionIds.includes(sectionId)),
+    [module]
+  );
+
+  const handleJumpTo = useCallback(
+    (sectionId: string) => {
+      const ch = chapterForSection(sectionId);
+      if (!ch) return;
+      setOpenChapterId(ch.id);
+      // Set sub-tab to that section if it's a top-level section in chapter
+      const sec = module.sections.find((s) => s.id === sectionId);
+      const subId = sec?.parentId && ch.sectionIds.includes(sec.parentId) ? sec.parentId : sectionId;
+      setInitialSubBySection((prev) => ({ ...prev, [ch.id]: subId }));
+      window.history.replaceState(null, '', `#rules/${sectionId}`);
+      setTimeout(() => {
+        const el = document.getElementById(sectionId) ?? document.getElementById(ch.id);
+        el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 120);
+    },
+    [chapterForSection, module, setOpenChapterId]
+  );
 
   // Honor incoming hash on mount
   useEffect(() => {
@@ -87,7 +149,8 @@ const Rules = () => {
     if (m) {
       setTimeout(() => handleJumpTo(m[1]), 100);
     }
-  }, [handleJumpTo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Show "back to top" after scrolling
   useEffect(() => {
@@ -96,128 +159,141 @@ const Rules = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Filter glossary for search
+  const filteredGlossary = useMemo(() => {
+    if (!query.trim()) return module.glossary;
+    const q = query.trim().toLowerCase();
+    return module.glossary.filter(
+      (t) => t.term.toLowerCase().includes(q) || t.short.toLowerCase().includes(q)
+    );
+  }, [query, module]);
+
+  const glossaryBody = (
+    <div className="space-y-2">
+      {filteredGlossary.length === 0 ? (
+        <p className="font-vhs text-xs uppercase tracking-wider text-muted-foreground">
+          No terms match "{query}".
+        </p>
+      ) : (
+        filteredGlossary.map((t) => (
+          <div key={t.id} className="glossary-entry">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="font-title text-base uppercase tracking-wide text-secondary">
+                {t.term}
+              </span>
+              {t.sectionId && (
+                <button
+                  onClick={() => handleJumpTo(t.sectionId!)}
+                  className="font-vhs text-[10px] uppercase tracking-widest text-primary/80 hover:text-primary"
+                >
+                  → see rule
+                </button>
+              )}
+            </div>
+            <p className="text-sm text-foreground/85 leading-relaxed mt-1">{t.short}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+
+  const isSearching = query.trim().length > 0;
+  const visibleChapters = isSearching
+    ? module.chapters.filter((c) => (chapterMatchCounts[c.id] ?? 0) > 0)
+    : module.chapters;
+
   return (
-    <div className="max-w-7xl mx-auto overflow-x-hidden">
+    <div className="rules-page relative max-w-5xl mx-auto px-3 sm:px-4 pb-24">
+      {/* Page chrome overlays */}
+      <div className="film-grain pointer-events-none" aria-hidden />
+      <div className="vignette pointer-events-none" aria-hidden />
+
       {/* Header */}
-      <div className="mb-6">
+      <header className="rules-header relative pt-2 pb-5 mb-5">
         <div className="flex items-center gap-3 mb-2">
-          <BookMarked className="w-6 h-6 text-secondary" />
+          <span className="rec-dot" aria-hidden />
+          <BookMarked className="w-5 h-5 text-secondary" />
           <h1 className="font-title text-2xl sm:text-3xl uppercase tracking-wide neon-text text-secondary">
             Rulebook
           </h1>
+          <span className="vhs-spec-label hidden sm:inline-flex font-vhs text-[10px] uppercase tracking-[0.2em] px-2 py-0.5">
+            CORE · VHS-001 · FAN REF
+          </span>
         </div>
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          Unofficial fan reference — see the official rulebook for authoritative text.{' '}
+        <p className="font-vhs text-[11px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground">
+          Unofficial fan reference ·{' '}
           <a
             href="https://gamers-hq.de/media/pdf/22/ba/4a/FinalGirl_Rules.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="text-secondary/80 hover:text-secondary underline decoration-dotted"
           >
-            Source: Final Girl Core Rulebook ↗
+            Official Core Rulebook ↗
           </a>
         </p>
-      </div>
+      </header>
 
-      {/* Controls */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6 sticky top-20 sm:top-24 z-30 bg-background/95 backdrop-blur py-2 -mx-3 px-3 sm:mx-0 sm:px-0 border-b border-border/50">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center justify-between gap-2 px-3 py-2 border border-border bg-card rounded font-vhs text-xs uppercase tracking-wider hover:bg-muted/50 transition-colors min-w-[180px]">
-            <span>{module.title}</span>
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {MODULES.map((m) => (
-              <DropdownMenuItem
-                key={m.id}
-                onClick={() => setModuleId(m.id)}
-                className="font-vhs text-xs uppercase tracking-wider"
-              >
-                {m.title}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuItem disabled className="font-vhs text-xs uppercase tracking-wider opacity-50">
-              Killer & Location modules — coming soon
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      {/* Search bar — label-maker strip */}
+      <div className="rules-search-wrap mb-5 sticky top-16 sm:top-20 z-30">
+        <div className="rules-search relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/70" />
           <input
             type="text"
             inputMode="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search rules, terms, or icons..."
-            className="w-full pl-9 pr-3 py-2 bg-card border border-border rounded text-base sm:text-sm font-vhs placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-secondary/50"
+            placeholder="SEARCH RULES, TERMS, ICONS…"
+            className="rules-search-input w-full pl-9 pr-9 py-2.5 font-vhs text-sm uppercase tracking-wider"
           />
-        </div>
-      </div>
-
-      {/* Mobile ToC dropdown */}
-      <div className="lg:hidden mb-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="w-full flex items-center justify-between gap-2 px-3 py-2 border border-border bg-card rounded font-vhs text-xs uppercase tracking-wider">
-            <span>Jump to section…</span>
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="max-h-[60vh] overflow-y-auto w-[calc(100vw-1.5rem)]">
-            {filteredSections
-              .filter((s) => !s.parentId)
-              .map((s) => (
-                <DropdownMenuItem
-                  key={s.id}
-                  onClick={() => handleJumpTo(s.id)}
-                  className="font-vhs text-xs uppercase tracking-wider"
-                >
-                  {s.title}
-                </DropdownMenuItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
-        {/* Desktop ToC */}
-        <aside className="hidden lg:block sticky top-44 self-start max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
-          <RulesTOC
-            sections={filteredSections}
-            activeId={activeId}
-            matchCounts={matchCounts}
-            onJumpTo={handleJumpTo}
-          />
-        </aside>
-
-        {/* Content */}
-        <div className="min-w-0">
-          {filteredSections.length === 0 ? (
-            <div className="text-center py-16 text-muted-foreground font-vhs uppercase tracking-wider text-sm">
-              No rules match "{query}".
-            </div>
-          ) : (
-            filteredSections.map((section) => (
-              <RuleSection
-                key={section.id}
-                section={section}
-                allSections={module.sections}
-                glossary={module.glossary}
-                onJumpTo={handleJumpTo}
-              />
-            ))
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+              aria-label="Clear search"
+            >
+              <X className="w-4 h-4" />
+            </button>
           )}
-
-          <div className="mt-12 pt-6 border-t border-border text-xs text-muted-foreground/70 font-vhs uppercase tracking-wider">
-            {module.source}
-          </div>
         </div>
+      </div>
+
+      {/* Chapter list */}
+      <div className="space-y-2.5">
+        {visibleChapters.length === 0 ? (
+          <div className="text-center py-16 font-vhs uppercase tracking-wider text-sm text-muted-foreground">
+            No chapters match "{query}".
+          </div>
+        ) : (
+          visibleChapters.map((ch) => (
+            <RuleChapter
+              key={ch.id}
+              chapter={ch}
+              allSections={module.sections}
+              glossary={module.glossary}
+              isOpen={openChapterId === ch.id}
+              matchCount={chapterMatchCounts[ch.id] ?? 0}
+              isDimmed={isSearching && (chapterMatchCounts[ch.id] ?? 0) === 0}
+              initialSubId={initialSubBySection[ch.id]}
+              onToggle={() => handleToggle(ch.id)}
+              onJumpTo={handleJumpTo}
+              onClose={handleClose}
+              customBody={ch.id === 'ch-glossary' ? glossaryBody : undefined}
+            />
+          ))
+        )}
+      </div>
+
+      {/* Source footer */}
+      <div className="mt-10 pt-5 border-t border-border/50 text-[11px] text-muted-foreground/70 font-vhs uppercase tracking-[0.18em] text-center">
+        {module.source}
       </div>
 
       {/* Floating back-to-top */}
       {showTopButton && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-20 right-4 z-40 p-3 rounded-full bg-secondary/20 border border-secondary/50 text-secondary hover:bg-secondary/30 transition-colors backdrop-blur"
+          className="fixed bottom-20 right-4 z-40 p-3 rounded-full bg-primary/15 border border-primary/40 text-primary hover:bg-primary/25 transition-colors backdrop-blur"
           aria-label="Back to top"
         >
           <ArrowUp className="w-5 h-5" />
