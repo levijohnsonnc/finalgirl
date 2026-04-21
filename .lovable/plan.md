@@ -1,99 +1,85 @@
 
 
-## Plan: Restyle Rules as a VHS Binder with Collapsed Sections
+## Critique: why the "default to official art" change appears to do nothing
 
-### What's wrong today
+The refactor in `src/types/gameData.ts` is structurally sound but **functionally a no-op today** because the official art directories are empty.
 
-**Look & feel — off-brand:**
-- Plain neutral cards/borders, generic dropdown, generic search input. Nothing reads as "VHS horror" the way Casting Room, Scrapbook, or Stats do (no film grain, no scanlines, no neon glow, no tape labels, no aged paper, no blood-red accents).
-- Typography hierarchy is flat — section headings look like a docs site, not a slasher-era rulebook.
-- Glossary popovers, callouts, and tables use default shadcn styling instead of the project's `glass-card` / `vhs-label` / `neon-text` vocabulary.
+### What the change actually did
+- Split image globs into two sets: top-level (`src/assets/characters/*.png`) treated as "official", and `ai/` subfolder treated as legacy AI.
+- Built two registries per category: `CHARACTER_IMAGES` / `CHARACTER_IMAGES_AI` (same for locations + box art).
+- Added `useActiveImages` hook that picks the registry based on the user's `auto_generate_images` Supabase setting.
+- Added a `FALLBACK_TO_AI_WHEN_MISSING = true` constant so any entity without an official PNG falls back to its AI counterpart.
 
-**Usability — wall of text:**
-- Every section of the entire rulebook renders fully expanded at once. Scrolling past Overview → Boards → Game Turn → 5 phases → Attacking → Bloodlust → Tokens → Minions → Weapons → End is exhausting on mobile and the ToC's "scroll-spy" can't compensate.
-- Sub-sections (e.g. the 5 turn phases under "Game Turn") aren't grouped under their parent — they're siblings in the long scroll, so the structure the ToC implies doesn't exist visually on the page.
-- The sticky search/module bar plus the sticky app header eat ~25% of mobile viewport.
-- No "back to top" or breadcrumb when deep in a section.
+### Why nothing visibly changed
+Disk reality:
 
-### New design: **The Rulebook Binder**
+| Folder | Official files | AI files |
+|---|---|---|
+| `src/assets/characters/` | **0** | 57 |
+| `src/assets/locations/` | **0** | 17 |
+| `src/assets/box-art/` | **0** | 20 |
 
-Treat the rules like a battered VHS-era spiral-bound rulebook / case-file binder. **Only one chapter is open at a time.** Everything else stays as labeled tape spines / index tabs.
+Because **zero official PNGs exist**, every lookup falls through to the AI fallback. Visually identical to before the refactor — the user sees the exact same AI art. The "default to official" only takes effect once real PNG files are dropped into the top-level folders matching the filenames in `CHARACTER_FILES` / `LOCATION_FILES` / `FILM_BOX_ART_FILES`.
 
-#### Information architecture (collapsed by default)
+### Second issue: the toggle's semantics are now wrong
+`useActiveImages` is currently driven by `useImageGeneration().autoGenerate`, which is the **"auto-generate scene/poster images on story completion"** setting (used by `NowPlaying.tsx` / `TheEnd.tsx`). It was repurposed to also mean "show legacy AI character/location art." Two completely unrelated concerns now share one switch:
 
-```text
-┌─────────────────────────────────────────────────┐
-│  📼 RULEBOOK — CORE RULES               [search]│
-│  Unofficial fan reference                       │
-├─────────────────────────────────────────────────┤
-│ [▸ 01  GAME OVERVIEW & OBJECTIVE          ›]   │
-│ [▸ 02  THE BOARDS                         ›]   │  ← groups player/killer/location
-│ [▾ 03  THE GAME TURN                      ›]   │  ← only this one is open
-│      ┌──────────────────────────────────┐       │
-│      │ Sub-tabs:                        │       │
-│      │ [Action][Planning][Killer][Panic][Cleanup]
-│      │ ─────────────────────────────────│       │
-│      │  ## Action Phase                 │       │
-│      │  body content for the active tab │       │
-│      │                                  │       │
-│      │  See also: Attacking, Horror Roll│       │
-│      └──────────────────────────────────┘       │
-│ [▸ 04  ATTACKING THE KILLER               ›]   │
-│ [▸ 05  BLOODLUST                          ›]   │
-│ [▸ 06  TOKENS                             ›]   │
-│ [▸ 07  MINIONS                            ›]   │
-│ [▸ 08  WEAPONS                            ›]   │
-│ [▸ 09  ENDING THE GAME                    ›]   │
-│ [▸ 10  GLOSSARY                           ›]   │
-└─────────────────────────────────────────────────┘
-```
+- A user who wants official portraits but still wants AI **scene generation** can't have both.
+- A user who's never enabled auto-generate is stuck on AI portraits forever (because the setting defaults to `false` → AI registry off → but with no official files, fallback brings AI back anyway). Today it accidentally works, but the moment you ship some official files, users with `autoGenerate=true` will mysteriously keep seeing AI art for those entities.
 
-- **Chapters** are accordion rows styled as VHS tape spines (or rulebook index tabs): numbered, uppercase title font, blood-red number chip, faint scanline texture, neon hover glow.
-- **One chapter open at a time** (single-open accordion). Opening another auto-closes the previous — no infinite scroll.
-- **Sub-sections become tabs inside the open chapter** (e.g. the 5 turn phases under "Game Turn"; the 3 boards under "The Boards"). This matches how the rulebook actually groups material and keeps page length bounded.
-- **Glossary becomes its own chapter** at the end with an A–Z jumpbar instead of being inline-only.
+### Third issue: no neutral placeholder
+`getImageForValue` returns `null` when nothing is found. `getBoxArt` returns `undefined`. There is no "non-AI default" — components either render the AI fallback or render nothing. The user's stated goal ("non-AI image as a default if not [present]") is not met anywhere.
 
-#### Visual restyle (match the app)
+---
 
-- **Page chrome:** wrap the whole page in `static-bg` / `film-grain` / `vignette` overlays already used by Stats. Add the project's CRT scanline overlay.
-- **Header:** title in `font-title` with `neon-text text-secondary`, plus a small `vhs-label` chip reading "CORE RULES VHS-001 / FAN REFERENCE". Animated REC dot like the Stats page.
-- **Module picker:** restyle as a `vcr-tape-button` instead of a generic dropdown — looks like swapping VHS tapes (future-proof for Killer/Location modules).
-- **Search:** restyle the input as a worn label-maker strip with a magnifier icon; on focus, neon cyan glow; show match-count chips inline on chapter headers (`03 · 4 hits`).
-- **Chapter rows:** `glass-card` base with a left blood-red ribbon, large numbered chip (`01`–`10`), uppercase title in `font-title`, tag chips on the right, chevron rotates on open. Subtle tape-tracking glitch on hover.
-- **Open chapter body:** styled like an aged-paper rulebook page (cream/off-white tinted, dotted-rule top/bottom, slight paper-grain) — borrowing from the Scrapbook page treatment so it feels of-a-piece.
-- **Sub-tabs inside a chapter:** styled like binder index tabs (small angled labels) rather than generic shadcn tabs.
-- **Callouts:** restyle the four variants in the project's vocabulary — `note` = neon cyan label tape, `critical` = blood-red stamped warning, `designer` = handwritten margin note (italic, slightly rotated), `tip` = highlighter strikethrough green.
-- **Tables:** monospaced VHS data-readout look (thin scanlines on rows, secondary-color header row).
-- **Examples:** stamped "EXAMPLE" header in `font-vhs`, dashed border becomes torn-paper edge.
-- **Glossary terms inline:** keep the dotted underline but tint it blood-red; popover gets the `glass-card` treatment with a small VHS label header.
-- **See-also chips:** restyle as VHS tape labels ("→ ATTACKING") instead of generic pill buttons.
+## Plan to actually default to official art
 
-#### Behavior changes
+### 1. Make the image source explicit and decoupled from auto-generation
+- Rename the resolved setting consumed by `useActiveImages` to `useOfficialArt` (boolean, default **`true`**).
+- Add a new column `prefer_official_art boolean default true` to `user_image_settings` via a migration. Keep `auto_generate_images` strictly for scene/poster generation.
+- Update `useImageGeneration` to expose `useOfficialArt` + `setUseOfficialArt` independently of `autoGenerate`.
+- Default for unauthenticated / no-row-yet users: **official art on**.
 
-1. **Single-open accordion** for chapters. Default state: all closed, hero chapter list visible. Persist last-opened chapter in `localStorage` so returning users land where they left off.
-2. **Sub-section tabs** replace today's flat sub-section scroll. Active tab persists in URL hash (`#rules/game-turn/killer`).
-3. **Search behavior changes:** when the user types, auto-expand chapters that have matches (and auto-switch the sub-tab to the first matching one). Non-matching chapters dim and show "no hits". Match counts on each chapter row.
-4. **Mobile:** chapter rows become full-width cards with bigger tap targets; sub-tabs become a horizontal swipeable scroller; remove the desktop sticky ToC entirely (it's redundant with the accordion). Floating "↑ Top" button stays.
-5. **Drop the desktop left ToC.** The accordion list IS the ToC — much cleaner, no duplication, no scroll-spy needed.
-6. **"Back to chapter list"** link at the bottom of every open chapter (smooth-scrolls and closes the chapter).
-7. **Deep links still work:** `/#rules/killer-phase` opens the right chapter and selects the right sub-tab.
+### 2. Add an "Art Style" toggle in `ApiKeyManager.tsx`
+A second switch above (or beside) the existing auto-generate switch:
+> **Art style:** `Official Van Ryder` ⇄ `AI-generated (legacy)`
 
-#### Files changed
+### 3. Fix the resolution order in `useActiveImages`
+New cascade for every lookup (`getImageForValue`, `getBoxArt`, `characterImages[name]`):
+1. If `useOfficialArt` → official PNG if present.
+2. Else (or if missing) → AI PNG if present (only when `useOfficialArt=false` **or** when `FALLBACK_TO_AI_WHEN_MISSING=true` during the art-drop transition).
+3. Else → **neutral placeholder** (see step 4) — never `null`.
+
+### 4. Add a non-AI default placeholder per type
+Add three small SVGs to `src/assets/placeholders/`:
+- `character-placeholder.svg` — VHS-style silhouette + "?" in the project's blood-red on dark.
+- `location-placeholder.svg` — empty grainy frame.
+- `box-art-placeholder.svg` — VHS spine reading "VHS — ART PENDING".
+
+`useActiveImages` returns one of these instead of `null`/`undefined` so the UI never falls back to AI when the user has explicitly opted out, and never shows a broken image.
+
+### 5. Telemetry/visibility for missing official files
+- In `gameData.ts`, after building `CHARACTER_IMAGES`, if `import.meta.env.DEV`, `console.warn` a single grouped list of entity names whose official PNG is missing. This makes it obvious to you what's still pending each time you reload.
+
+### 6. Clean up the misnamed conditional in `LoreInfoModal.tsx`
+That component reads `characterImages[name]` directly from the hook — already routed through the new resolver, so once step 3 lands it works correctly with placeholders too.
+
+### 7. (Optional, recommended) Phase out `FALLBACK_TO_AI_WHEN_MISSING`
+Once you've confirmed the toggle + placeholders work, flip it to `false` so users who choose "Official" actually see placeholders for missing entities, not silent AI fallbacks. Keep the constant as a single switch you can flip per-release.
+
+### Files touched
 
 | File | Change |
-|------|--------|
-| `src/pages/Rules.tsx` | Rebuild as accordion-of-chapters with VHS chrome (grain/vignette/scanlines, neon header, restyled search + module picker). Drop the desktop ToC sidebar. Single-open behavior, search-auto-expand, deep-link routing to chapter+subtab. |
-| `src/components/rules/RuleChapter.tsx` (new) | Collapsible chapter row: numbered tape-spine header, sub-section tabs inside, see-also footer, "back to chapters" link. |
-| `src/components/rules/RuleSubTabs.tsx` (new) | Binder-tab styled tab strip for sub-sections within a chapter. |
-| `src/components/rules/RuleSection.tsx` | Simplified — no longer renders its own H2 framing (the chapter does that). Just renders blocks + see-also for one sub-section. |
-| `src/components/rules/RuleBlock.tsx` | Restyle callouts (4 variants), examples, tables in the VHS vocabulary. |
-| `src/components/rules/GlossaryTerm.tsx` | Blood-red dotted underline + `glass-card` popover with VHS label header. |
-| `src/components/rules/RulesTOC.tsx` | **Deleted** (accordion replaces it). |
-| `src/hooks/useScrollSpy.ts` | **Deleted** (no longer needed). |
-| `src/data/rules/coreRules.ts` | Add a top-level `chapters` grouping (chapter id → child section ids) so 5 turn phases nest under "Game Turn" and 3 boards nest under "The Boards". No rule-text changes. |
-| `src/data/rules/types.ts` | Add `RuleChapter { id, number, title, sectionIds[] }`; module gets `chapters: RuleChapter[]`. |
-| `src/index.css` | New styles: `.rules-page`, `.chapter-row`, `.chapter-number-chip`, `.binder-tab`, `.rule-paper`, restyled callout variants, `.glossary-popover`. Reuses existing `glass-card`, `neon-text`, `film-grain`, `vignette`, `scanlines`, `vcr-tape-button`. |
+|---|---|
+| `supabase/migrations/<new>.sql` | Add `prefer_official_art boolean not null default true` to `user_image_settings`. |
+| `src/integrations/supabase/types.ts` | (Auto-regenerates after migration.) |
+| `src/hooks/useImageGeneration.ts` | Track + persist `prefer_official_art`; expose `useOfficialArt`, `setUseOfficialArt`. Default `true` even when no row exists. |
+| `src/hooks/useActiveImages.ts` | Switch source from `autoGenerate` → `useOfficialArt`. New 3-step cascade returning placeholders instead of null. |
+| `src/types/gameData.ts` | Add dev warning for missing official files; expose placeholder constants. |
+| `src/assets/placeholders/*.svg` | Three new placeholders. |
+| `src/components/ApiKeyManager.tsx` | New "Art Style" switch row, separate from auto-generate. |
+| `src/types/gameData.test.ts` | Update tests to no longer assume every `CHARACTER_IMAGES[x]` is truthy under "official only" mode (or assert placeholder). |
 
-#### Out of scope (keep for later)
-- Bookmarks (stars), print view, per-Killer/Location modules — the new structure makes all of these easier to add next.
+### What you still need to do **outside code**
+This is the actual blocker: **drop the official PNG files into the top-level folders** with the exact filenames already mapped in `CHARACTER_FILES`, `LOCATION_FILES`, and `FILM_BOX_ART_FILES`. Until those files exist, even a perfect toggle will show placeholders (or AI fallbacks while `FALLBACK_TO_AI_WHEN_MISSING=true`). The `scripts/import-vr-art.mjs` script appears to exist for this — worth a follow-up to confirm it lands files in the right spots with the right names.
 
