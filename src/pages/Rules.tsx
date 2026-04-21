@@ -4,6 +4,9 @@ import { coreRules } from '@/data/rules/coreRules';
 import { RuleModule, RuleSection as RuleSectionType, RuleBlock, RuleChapter as RuleChapterType } from '@/data/rules/types';
 import { RuleChapter } from '@/components/rules/RuleChapter';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useOwnedFilms } from '@/hooks/useOwnedFilms';
+import { FEATURE_FILMS } from '@/types/gameData';
+import { ENTITY_RULE_MODULES, buildEntityChapter, EntityRuleModule } from '@/data/rules/moduleRules';
 
 const MODULES: RuleModule[] = [coreRules];
 
@@ -42,7 +45,52 @@ function sectionMatches(section: RuleSectionType, query: string): number {
 
 const Rules = () => {
   const moduleId = MODULES[0].id;
-  const module = MODULES[0];
+  const coreModule = MODULES[0];
+  const { ownedFilms } = useOwnedFilms();
+
+  const { ownedKillers, ownedLocations } = useMemo(() => {
+    const killers = new Set<string>();
+    const locations = new Set<string>();
+    for (const film of FEATURE_FILMS) {
+      if (!ownedFilms.includes(film.id)) continue;
+      if (film.killer) killers.add(film.killer);
+      if (film.location) locations.add(film.location);
+    }
+    return { ownedKillers: killers, ownedLocations: locations };
+  }, [ownedFilms]);
+
+  const { killerChapters, locationChapters, entitySections } = useMemo(() => {
+    const killerChapters: RuleChapterType[] = [];
+    const locationChapters: RuleChapterType[] = [];
+    const entitySections: RuleSectionType[] = [];
+    let kI = 0;
+    let lI = 0;
+    for (const mod of ENTITY_RULE_MODULES) {
+      const owned =
+        mod.kind === 'killer'
+          ? ownedKillers.has(mod.entity)
+          : ownedLocations.has(mod.entity);
+      if (!owned) continue;
+      const number =
+        mod.kind === 'killer'
+          ? `K${String(++kI).padStart(2, '0')}`
+          : `L${String(++lI).padStart(2, '0')}`;
+      const built = buildEntityChapter(mod, number);
+      entitySections.push(...built.sections);
+      if (mod.kind === 'killer') killerChapters.push(built.chapter);
+      else locationChapters.push(built.chapter);
+    }
+    return { killerChapters, locationChapters, entitySections };
+  }, [ownedKillers, ownedLocations]);
+
+  const module = useMemo<RuleModule>(
+    () => ({
+      ...coreModule,
+      sections: [...coreModule.sections, ...entitySections],
+      chapters: [...coreModule.chapters, ...killerChapters, ...locationChapters],
+    }),
+    [coreModule, entitySections, killerChapters, locationChapters]
+  );
   const [query, setQuery] = useState('');
   const [openChapterId, setOpenChapterId] = useLocalStorage<string | null>(
     'rules-open-chapter',
@@ -265,22 +313,63 @@ const Rules = () => {
             No chapters match "{query}".
           </div>
         ) : (
-          visibleChapters.map((ch) => (
-            <RuleChapter
-              key={ch.id}
-              chapter={ch}
-              allSections={module.sections}
-              glossary={module.glossary}
-              isOpen={openChapterId === ch.id}
-              matchCount={chapterMatchCounts[ch.id] ?? 0}
-              isDimmed={isSearching && (chapterMatchCounts[ch.id] ?? 0) === 0}
-              initialSubId={initialSubBySection[ch.id]}
-              onToggle={() => handleToggle(ch.id)}
-              onJumpTo={handleJumpTo}
-              onClose={handleClose}
-              customBody={ch.id === 'ch-glossary' ? glossaryBody : undefined}
-            />
-          ))
+          (() => {
+            const killerIds = new Set(killerChapters.map((c) => c.id));
+            const locationIds = new Set(locationChapters.map((c) => c.id));
+            const visibleKillers = visibleChapters.filter((c) => killerIds.has(c.id));
+            const visibleLocations = visibleChapters.filter((c) => locationIds.has(c.id));
+            const visibleCore = visibleChapters.filter(
+              (c) => !killerIds.has(c.id) && !locationIds.has(c.id)
+            );
+
+            const renderChapter = (ch: RuleChapterType) => (
+              <RuleChapter
+                key={ch.id}
+                chapter={ch}
+                allSections={module.sections}
+                glossary={module.glossary}
+                isOpen={openChapterId === ch.id}
+                matchCount={chapterMatchCounts[ch.id] ?? 0}
+                isDimmed={isSearching && (chapterMatchCounts[ch.id] ?? 0) === 0}
+                initialSubId={initialSubBySection[ch.id]}
+                onToggle={() => handleToggle(ch.id)}
+                onJumpTo={handleJumpTo}
+                onClose={handleClose}
+                customBody={ch.id === 'ch-glossary' ? glossaryBody : undefined}
+              />
+            );
+
+            const GroupHeader = ({ label, hint }: { label: string; hint: string }) => (
+              <div className="pt-6 pb-1 flex items-baseline gap-3">
+                <span className="h-px flex-1 bg-secondary/30" />
+                <span className="font-title text-sm uppercase tracking-[0.3em] text-secondary">
+                  {label}
+                </span>
+                <span className="font-vhs text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {hint}
+                </span>
+                <span className="h-px flex-1 bg-secondary/30" />
+              </div>
+            );
+
+            return (
+              <>
+                {visibleCore.map(renderChapter)}
+                {visibleKillers.length > 0 && (
+                  <>
+                    <GroupHeader label="Killers" hint="Owned · Special Rules" />
+                    {visibleKillers.map(renderChapter)}
+                  </>
+                )}
+                {visibleLocations.length > 0 && (
+                  <>
+                    <GroupHeader label="Locations" hint="Owned · Special Rules" />
+                    {visibleLocations.map(renderChapter)}
+                  </>
+                )}
+              </>
+            );
+          })()
         )}
       </div>
 
