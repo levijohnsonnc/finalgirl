@@ -3,6 +3,7 @@ import { Switch } from '@/components/ui/switch';
 import { FeatureFilm } from '@/types/gameData';
 import { Skull, MapPin, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useActiveImages } from '@/hooks/useActiveImages';
 
 interface FilmToggleProps {
   film: FeatureFilm;
@@ -13,31 +14,33 @@ interface FilmToggleProps {
 
 export const FilmToggle = React.forwardRef<HTMLDivElement, FilmToggleProps>(
   ({ film, isOwned, onToggle, disabled = false }, ref) => {
+    const { getBoxArt } = useActiveImages();
+    const boxArt = getBoxArt(film);
     return (
       <div
         ref={ref}
         className={cn(
           "glass-card p-3 sm:p-4 rounded transition-all duration-300",
-          isOwned 
-            ? "border-primary/50 shadow-blood" 
+          isOwned
+            ? "border-primary/50 shadow-blood"
             : "border-border hover:border-muted-foreground/50"
         )}
       >
         <div className="flex gap-3 sm:gap-4">
           {/* Box Art */}
-          {film.boxArt && (
+          {boxArt && (
             <div className="flex-shrink-0 w-20 h-28 sm:w-24 sm:h-36 relative z-10">
-              <img 
-                src={film.boxArt} 
+              <img
+                src={boxArt}
                 alt={`${film.name} box art`}
                 className={cn(
                   "w-full h-full object-cover object-top rounded transition-all",
-                  isOwned 
-                    ? "ring-2 ring-primary/50 brightness-105" 
+                  isOwned
+                    ? "ring-2 ring-primary/50 brightness-105"
                     : "opacity-60 grayscale-[30%]"
                 )}
                 onError={(e) => {
-                  console.error(`Failed to load box art for ${film.id}:`, film.boxArt);
+                  console.error(`Failed to load box art for ${film.id}:`, boxArt);
                   e.currentTarget.style.display = 'none';
                 }}
               />

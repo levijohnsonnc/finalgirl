@@ -3,7 +3,8 @@ import { ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
-import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl, FEATURE_FILMS, LOCATION_IMAGES } from '@/types/gameData';
+import { getFilmIdByKiller, getFilmIdByLocation, getFilmIdByFinalGirl, FEATURE_FILMS } from '@/types/gameData';
+import { useActiveImages } from '@/hooks/useActiveImages';
 import { getKillerSpecialRules } from '@/data/killerSpecialRules';
 import { getKillerDescription } from '@/data/killerDescriptions';
 import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
@@ -41,7 +42,8 @@ const NowPlaying = ({
 }: NowPlayingProps) => {
   const film = FEATURE_FILMS.find(f => f.id === filmId);
   const theme = filmId ? FILM_THEMES[filmId] ?? null : null;
-  const bgImage = LOCATION_IMAGES[location] ?? nowPlayingBg;
+  const { locationImages } = useActiveImages();
+  const bgImage = locationImages[location] ?? nowPlayingBg;
 
   const [story, setStory] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);

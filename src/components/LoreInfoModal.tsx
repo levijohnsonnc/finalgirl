@@ -11,7 +11,8 @@ import { FEATURE_FILM_DETAILS } from '@/types/featureFilmDetails';
 import { KILLER_DESCRIPTIONS } from '@/data/killerDescriptions';
 import { LOCATION_DESCRIPTIONS } from '@/data/locationDescriptions';
 import { FINAL_GIRL_DESCRIPTIONS } from '@/data/finalGirlDescriptions';
-import { CHARACTER_IMAGES, LOCATION_IMAGES, FEATURE_FILMS } from '@/types/gameData';
+import { FEATURE_FILMS } from '@/types/gameData';
+import { useActiveImages } from '@/hooks/useActiveImages';
 
 interface LoreInfoModalProps {
   type: 'killer' | 'location' | 'finalGirl';
@@ -52,17 +53,6 @@ const getLoreDetails = (type: 'killer' | 'location' | 'finalGirl', name: string)
   return null;
 };
 
-// Get image for display
-const getImage = (type: 'killer' | 'location' | 'finalGirl', name: string) => {
-  if (type === 'killer' || type === 'finalGirl') {
-    return CHARACTER_IMAGES[name];
-  }
-  if (type === 'location') {
-    return LOCATION_IMAGES[name];
-  }
-  return null;
-};
-
 const TYPE_LABELS = {
   killer: 'Killer',
   location: 'Location',
@@ -71,7 +61,9 @@ const TYPE_LABELS = {
 
 export const LoreInfoModal = ({ type, name }: LoreInfoModalProps) => {
   const lore = getLoreDetails(type, name);
-  const image = getImage(type, name);
+  const { characterImages, locationImages } = useActiveImages();
+  const image =
+    type === 'location' ? locationImages[name] : characterImages[name];
 
   if (!lore) return null;
 

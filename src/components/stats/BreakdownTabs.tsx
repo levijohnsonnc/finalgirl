@@ -1,13 +1,15 @@
 import { ComputedStats } from '@/hooks/useGameStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
+import { useActiveImages } from '@/hooks/useActiveImages';
 
 interface BreakdownTabsProps {
   stats: ComputedStats;
 }
 
 export const BreakdownTabs = ({ stats }: BreakdownTabsProps) => {
+  const { characterImages: CHARACTER_IMAGES, locationImages: LOCATION_IMAGES } = useActiveImages();
+
   if (stats.gamesPlayed === 0) {
     return null;
   }

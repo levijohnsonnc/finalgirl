@@ -257,18 +257,21 @@ const ApiKeyManager = () => {
           </button>
         </div>
 
-        {/* ── AUTO-GENERATE TOGGLE ── */}
-        {hasApiKey && (
-          <div className="flex items-center justify-between pt-3 border-t border-muted-foreground/10">
+        {/* ── ENABLE AI IMAGES TOGGLE ── */}
+        <div className="pt-3 border-t border-muted-foreground/10 space-y-1.5">
+          <div className="flex items-center justify-between gap-3">
             <p className="font-vhs text-[10px] sm:text-xs text-foreground/80 uppercase tracking-wider">
-              Auto Generate Scenes
+              Enable AI Images
             </p>
             <Switch
               checked={autoGenerate}
               onCheckedChange={setAutoGenerate}
             />
           </div>
-        )}
+          <p className="font-vhs text-[9px] sm:text-[10px] text-muted-foreground/70 leading-snug">
+            Off by default. Replaces the official Van Ryder Games art with AI-generated artwork. If you've added an API key, also enables on-demand scene generation.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ComputedStats } from '@/hooks/useGameStats';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
-import { CHARACTER_IMAGES, LOCATION_IMAGES } from '@/types/gameData';
+import { useActiveImages } from '@/hooks/useActiveImages';
 import { NarrativeBadgeModal } from './NarrativeBadgeModal';
 
 type ChartView = 'victims' | 'games' | 'winloss';
@@ -150,6 +150,7 @@ const ChartWithToggle = ({ stats }: { stats: ComputedStats }) => {
 };
 
 export const TrendsSection = ({ stats }: TrendsSectionProps) => {
+  const { characterImages, locationImages } = useActiveImages();
   const hasEnoughData = stats.gamesPlayed >= 3;
 
   if (!hasEnoughData) {
@@ -245,7 +246,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="Nemesis"
           value={stats.nemesis?.killer || null}
           subtext={stats.nemesis ? `${stats.nemesis.losses} defeats` : ''}
-          image={stats.nemesis ? CHARACTER_IMAGES[stats.nemesis.killer] : undefined}
+          image={stats.nemesis ? characterImages[stats.nemesis.killer] : undefined}
           type="killer"
           variant="danger"
         />
@@ -253,7 +254,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="The Usual Suspect"
           value={stats.usualSuspect?.killer || null}
           subtext={stats.usualSuspect ? `${stats.usualSuspect.wins} wins` : ''}
-          image={stats.usualSuspect ? CHARACTER_IMAGES[stats.usualSuspect.killer] : undefined}
+          image={stats.usualSuspect ? characterImages[stats.usualSuspect.killer] : undefined}
           type="killer"
           variant="success"
         />
@@ -261,7 +262,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="Cursed Site"
           value={stats.cursedSite?.location || null}
           subtext={stats.cursedSite ? `${stats.cursedSite.losses} losses` : ''}
-          image={stats.cursedSite ? LOCATION_IMAGES[stats.cursedSite.location] : undefined}
+          image={stats.cursedSite ? locationImages[stats.cursedSite.location] : undefined}
           type="location"
           variant="warning"
         />
@@ -269,7 +270,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="Home Turf"
           value={stats.homeTurf?.location || null}
           subtext={stats.homeTurf ? `${stats.homeTurf.wins} wins` : ''}
-          image={stats.homeTurf ? LOCATION_IMAGES[stats.homeTurf.location] : undefined}
+          image={stats.homeTurf ? locationImages[stats.homeTurf.location] : undefined}
           type="location"
           variant="info"
         />
@@ -281,7 +282,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="Comfort Zone"
           value={stats.comfortZone?.finalGirl || null}
           subtext={stats.comfortZone ? `${stats.comfortZone.wins} wins` : ''}
-          image={stats.comfortZone ? CHARACTER_IMAGES[stats.comfortZone.finalGirl] : undefined}
+          image={stats.comfortZone ? characterImages[stats.comfortZone.finalGirl] : undefined}
           type="finalGirl"
           variant="success"
         />
@@ -289,7 +290,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="Cursed Pick"
           value={stats.cursedPick?.finalGirl || null}
           subtext={stats.cursedPick ? `${stats.cursedPick.losses} losses` : ''}
-          image={stats.cursedPick ? CHARACTER_IMAGES[stats.cursedPick.finalGirl] : undefined}
+          image={stats.cursedPick ? characterImages[stats.cursedPick.finalGirl] : undefined}
           type="finalGirl"
           variant="danger"
         />
@@ -297,7 +298,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="Grinder"
           value={stats.grinder?.finalGirl || null}
           subtext={stats.grinder ? `${stats.grinder.plays} games` : ''}
-          image={stats.grinder ? CHARACTER_IMAGES[stats.grinder.finalGirl] : undefined}
+          image={stats.grinder ? characterImages[stats.grinder.finalGirl] : undefined}
           type="finalGirl"
           variant="info"
         />
@@ -305,7 +306,7 @@ export const TrendsSection = ({ stats }: TrendsSectionProps) => {
           label="Lost Cause"
           value={stats.lostCause?.finalGirl || null}
           subtext={stats.lostCause ? `${Math.round(stats.lostCause.winRate)}% win rate` : ''}
-          image={stats.lostCause ? CHARACTER_IMAGES[stats.lostCause.finalGirl] : undefined}
+          image={stats.lostCause ? characterImages[stats.lostCause.finalGirl] : undefined}
           type="finalGirl"
           variant="warning"
         />
