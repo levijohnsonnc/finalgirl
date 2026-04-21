@@ -313,22 +313,63 @@ const Rules = () => {
             No chapters match "{query}".
           </div>
         ) : (
-          visibleChapters.map((ch) => (
-            <RuleChapter
-              key={ch.id}
-              chapter={ch}
-              allSections={module.sections}
-              glossary={module.glossary}
-              isOpen={openChapterId === ch.id}
-              matchCount={chapterMatchCounts[ch.id] ?? 0}
-              isDimmed={isSearching && (chapterMatchCounts[ch.id] ?? 0) === 0}
-              initialSubId={initialSubBySection[ch.id]}
-              onToggle={() => handleToggle(ch.id)}
-              onJumpTo={handleJumpTo}
-              onClose={handleClose}
-              customBody={ch.id === 'ch-glossary' ? glossaryBody : undefined}
-            />
-          ))
+          (() => {
+            const killerIds = new Set(killerChapters.map((c) => c.id));
+            const locationIds = new Set(locationChapters.map((c) => c.id));
+            const visibleKillers = visibleChapters.filter((c) => killerIds.has(c.id));
+            const visibleLocations = visibleChapters.filter((c) => locationIds.has(c.id));
+            const visibleCore = visibleChapters.filter(
+              (c) => !killerIds.has(c.id) && !locationIds.has(c.id)
+            );
+
+            const renderChapter = (ch: RuleChapterType) => (
+              <RuleChapter
+                key={ch.id}
+                chapter={ch}
+                allSections={module.sections}
+                glossary={module.glossary}
+                isOpen={openChapterId === ch.id}
+                matchCount={chapterMatchCounts[ch.id] ?? 0}
+                isDimmed={isSearching && (chapterMatchCounts[ch.id] ?? 0) === 0}
+                initialSubId={initialSubBySection[ch.id]}
+                onToggle={() => handleToggle(ch.id)}
+                onJumpTo={handleJumpTo}
+                onClose={handleClose}
+                customBody={ch.id === 'ch-glossary' ? glossaryBody : undefined}
+              />
+            );
+
+            const GroupHeader = ({ label, hint }: { label: string; hint: string }) => (
+              <div className="pt-6 pb-1 flex items-baseline gap-3">
+                <span className="h-px flex-1 bg-secondary/30" />
+                <span className="font-title text-sm uppercase tracking-[0.3em] text-secondary">
+                  {label}
+                </span>
+                <span className="font-vhs text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {hint}
+                </span>
+                <span className="h-px flex-1 bg-secondary/30" />
+              </div>
+            );
+
+            return (
+              <>
+                {visibleCore.map(renderChapter)}
+                {visibleKillers.length > 0 && (
+                  <>
+                    <GroupHeader label="Killers" hint="Owned · Special Rules" />
+                    {visibleKillers.map(renderChapter)}
+                  </>
+                )}
+                {visibleLocations.length > 0 && (
+                  <>
+                    <GroupHeader label="Locations" hint="Owned · Special Rules" />
+                    {visibleLocations.map(renderChapter)}
+                  </>
+                )}
+              </>
+            );
+          })()
         )}
       </div>
 
