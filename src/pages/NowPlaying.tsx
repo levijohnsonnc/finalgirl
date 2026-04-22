@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { ImageIcon, Volume2, VolumeX, Loader2, ScrollText } from 'lucide-react';
+import { SpecialRulesModal, getApplicableSpecialRules } from '@/components/SpecialRulesModal';
 import { supabase } from '@/integrations/supabase/client';
 import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
