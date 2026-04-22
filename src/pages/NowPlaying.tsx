@@ -295,6 +295,16 @@ const NowPlaying = ({
                 )}
                 {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
               </button>
+
+              {/* Special Rules — only when killer/location has dedicated rules */}
+              {getApplicableSpecialRules(killer, location).length > 0 && (
+                <SpecialRulesModal killer={killer} location={location}>
+                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px] w-full sm:w-auto">
+                    <ScrollText className="w-4 h-4 shrink-0" />
+                    <span>Special Rules</span>
+                  </button>
+                </SpecialRulesModal>
+              )}
               
               {/* Row 2: Image Prompt + Upload — side by side on mobile */}
               <div className="flex w-full sm:w-auto gap-2 sm:gap-3 sm:contents">
