@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { ImageIcon, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { ImageIcon, Volume2, VolumeX, Loader2, ScrollText } from 'lucide-react';
+import { SpecialRulesModal, getApplicableSpecialRules } from '@/components/SpecialRulesModal';
 import { supabase } from '@/integrations/supabase/client';
 import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
@@ -294,6 +295,16 @@ const NowPlaying = ({
                 )}
                 {isNarrating ? 'Generating...' : isPlaying ? 'Stop' : 'Narrate'}
               </button>
+
+              {/* Special Rules — only when killer/location has dedicated rules */}
+              {getApplicableSpecialRules(killer, location).length > 0 && (
+                <SpecialRulesModal killer={killer} location={location}>
+                  <button className="vcr-tape-button flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-display text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.15em] uppercase transition-all duration-300 min-h-[44px] w-full sm:w-auto">
+                    <ScrollText className="w-4 h-4 shrink-0" />
+                    <span>Special Rules</span>
+                  </button>
+                </SpecialRulesModal>
+              )}
               
               {/* Row 2: Image Prompt + Upload — side by side on mobile */}
               <div className="flex w-full sm:w-auto gap-2 sm:gap-3 sm:contents">
