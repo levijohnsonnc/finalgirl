@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { GameResult } from '@/hooks/useGameHistory';
 import { format } from 'date-fns';
 
@@ -9,6 +10,9 @@ interface ScrapbookGridProps {
 }
 
 export const ScrapbookGrid = ({ games, selectedGameId, onSelectGame, type }: ScrapbookGridProps) => {
+  const [visibleCount, setVisibleCount] = useState(12);
+  const visibleGames = games.slice(0, visibleCount);
+
   if (games.length === 0) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -30,7 +34,7 @@ export const ScrapbookGrid = ({ games, selectedGameId, onSelectGame, type }: Scr
       
       <div className="flex-1 overflow-y-auto pr-2 scrapbook-scroll">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 pb-4">
-          {games.map((game, index) => (
+          {visibleGames.map((game, index) => (
             <button
               key={game.id}
               onClick={() => onSelectGame(game)}
@@ -47,6 +51,8 @@ export const ScrapbookGrid = ({ games, selectedGameId, onSelectGame, type }: Scr
                     src={game.posterImageUrl}
                     alt={`${game.finalGirl} story`}
                     className="thumbnail-image"
+                    loading="lazy"
+                    decoding="async"
                   />
                 ) : (
                   <div className="thumbnail-placeholder">
@@ -67,6 +73,14 @@ export const ScrapbookGrid = ({ games, selectedGameId, onSelectGame, type }: Scr
             </button>
           ))}
         </div>
+        {visibleCount < games.length && (
+          <button
+            onClick={() => setVisibleCount(count => Math.min(count + 12, games.length))}
+            className="mx-auto mb-4 block font-vhs text-xs text-amber-900/80 hover:text-amber-950 underline underline-offset-4"
+          >
+            Load more recovered photos
+          </button>
+        )}
       </div>
     </div>
   );

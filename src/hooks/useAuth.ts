@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { createContext, createElement, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
@@ -14,6 +14,14 @@ interface SignInResult {
 }
 
 export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return ctx;
+};
+
+const useAuthState = () => {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     session: null,
@@ -87,4 +95,13 @@ export const useAuth = () => {
     signInWithGoogle,
     signOut,
   };
+};
+
+type AuthContextValue = ReturnType<typeof useAuthState>;
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const value = useAuthState();
+  return createElement(AuthContext.Provider, { value }, children);
 };

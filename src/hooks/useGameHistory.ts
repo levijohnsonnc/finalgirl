@@ -30,6 +30,27 @@ const deleteStorageFiles = async (game: { posterImageUrl?: string; sceneImageUrl
   }
 };
 
+const HISTORY_SUMMARY_SELECT = [
+  'id',
+  'user_id',
+  'timestamp',
+  'outcome',
+  'killer',
+  'location',
+  'final_girl',
+  'setup_scenario',
+  'starting_event',
+  'final_horror_level',
+  'final_girl_health',
+  'killer_health',
+  'weapon_used',
+  'ending_sub_location',
+  'victims_saved',
+  'victims_killed',
+  'poster_image_url',
+  'scene_image_url',
+].join(',');
+
 export interface GameResult {
   id: string;
   timestamp: number;
@@ -118,6 +139,7 @@ export const useGameHistory = () => {
   const [localGameHistory, setLocalGameHistory] = useLocalStorage<GameResult[]>('final-girl-game-history', []);
   const [dbGameHistory, setDbGameHistory] = useState<GameResult[]>([]);
   const [isDbLoading, setIsDbLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [hasMigrated, setHasMigrated] = useState(false);
   const fetchIdRef = useRef(0);
 
@@ -131,35 +153,43 @@ export const useGameHistory = () => {
     if (!user) {
       fetchIdRef.current += 1;
       setIsDbLoading(false);
+      setLoadError(null);
       setDbGameHistory([]);
       return;
     }
 
     const fetchId = fetchIdRef.current + 1;
     fetchIdRef.current = fetchId;
-    const abortController = new AbortController();
+    let ignore = false;
 
     const fetchFromDb = async () => {
       setIsDbLoading(true);
+      setLoadError(null);
       try {
         const { data, error } = await supabase
           .from('game_history')
-          .select('*')
+          .select(HISTORY_SUMMARY_SELECT)
           .eq('user_id', user.id)
-          .order('timestamp', { ascending: false })
-          .abortSignal(abortController.signal);
+          .order('timestamp', { ascending: false });
 
         if (error) {
-          if (abortController.signal.aborted) return;
           console.error('Error fetching game history:', error);
+          if (!ignore && fetchIdRef.current === fetchId) {
+            setLoadError(error.message || 'Failed to retrieve session data.');
+          }
           return;
         }
 
-        if (data && fetchIdRef.current === fetchId) {
-          setDbGameHistory(data.map(row => fromDbRow(row as Record<string, unknown>)));
+        if (!ignore && data && fetchIdRef.current === fetchId) {
+          setDbGameHistory(data.map(row => fromDbRow(row as unknown as Record<string, unknown>)));
+        }
+      } catch (err) {
+        console.error('Game history fetch failed:', err);
+        if (!ignore && fetchIdRef.current === fetchId) {
+          setLoadError(err instanceof Error ? err.message : 'Failed to retrieve session data.');
         }
       } finally {
-        if (fetchIdRef.current === fetchId) {
+        if (!ignore && fetchIdRef.current === fetchId) {
           setIsDbLoading(false);
         }
       }
@@ -168,7 +198,7 @@ export const useGameHistory = () => {
     fetchFromDb();
 
     return () => {
-      abortController.abort();
+      ignore = true;
     };
   }, [user, authLoading]);
 
@@ -345,6 +375,30 @@ export const useGameHistory = () => {
     };
   }, [gameHistory]);
 
+  const fetchGameDetails = useCallback(async (id: string): Promise<GameResult | null> => {
+    const existing = gameHistory.find(g => g.id === id);
+    if (!user) return existing ?? null;
+    if (existing?.introStory || existing?.endingNarration || existing?.gameHighlights) return existing;
+
+    const { data, error } = await supabase
+      .from('game_history')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching game details:', error);
+      toast.error('Failed to load story details');
+      return existing ?? null;
+    }
+    if (!data) return existing ?? null;
+
+    const fullGame = fromDbRow(data as unknown as Record<string, unknown>);
+    setDbGameHistory(prev => prev.map(game => game.id === id ? { ...game, ...fullGame } : game));
+    return fullGame;
+  }, [user, gameHistory]);
+
   const deleteGame = useCallback(async (id: string) => {
     // Find the game to get image URLs before deletion
     const gameToDelete = gameHistory.find(g => g.id === id);
@@ -407,7 +461,9 @@ export const useGameHistory = () => {
     updateGame,
     deleteGame,
     getStats,
+    fetchGameDetails,
     clearHistory,
     isLoading: authLoading || isDbLoading,
+    loadError,
   };
 };

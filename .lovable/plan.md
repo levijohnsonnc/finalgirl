@@ -1,121 +1,116 @@
-## Plan: Add Shriek rules + make them drive narration, images, and ending tracking
+## Diagnosis
 
-Use the uploaded Shriek screenshots to make the app smarter in three places: the rulebook / in-session rules modal, AI story + image generation context, and the end-of-game tracker.
+The Stats and Scrapbooks delays are related: both depend on the same shared `GameHistoryProvider` / `useGameHistory` data load.
 
-### 1. Transcribe Shriek killer + location rules
+### What is causing the hang/delay
 
-The new uploads are `.HEIC`, so after approval I’ll convert them to viewable images, read the sheets, and transcribe them into the existing module rules system.
+1. **Duplicate auth + history loading paths**
+   - `GameHistoryProvider`, `IndexContent`, `Marquee`, `ScrapbookBook`, `useImageGeneration`, and other children each call `useAuth()` independently.
+   - Each `useAuth()` instance creates its own auth listener and `getSession()` call.
+   - The game history fetch depends on one auth instance, while the UI depends on others, so page transitions can happen while auth/history state is still churned by repeated session restoration.
 
-Add two new `EntityRuleModule` entries in `src/data/rules/moduleRules.ts`:
+2. **The recent abort-based race fix is too aggressive**
+   - Network logs show repeated `game_history` requests being aborted: `signal is aborted without reason`.
+   - A later request eventually returns `200`, but if the active effect is replaced/aborted during auth churn, Stats can remain on `RETRIEVING SESSION DATA...` until another successful fetch settles the exact active request.
 
-- Killer: `Mort the Teenage Dirtbag`
-  - `kind: 'killer'`
-  - `filmId: 's4-shriek'`
-  - `source: 'Shriek — Killer Sheet'`
-  - split into `setup` and `rules`
-- Location: `MegaBGCon`
-  - `kind: 'location'`
-  - `filmId: 's4-shriek'`
-  - `source: 'Shriek — Location Sheet'`
-  - split into `setup` and `rules`
+3. **The history query fetches full story bodies and image URLs for every page**
+   - The main user has 42 game records with ~216k narrative characters and 40 poster URLs / 40 scene URLs.
+   - Stats only needs compact numeric/categorical fields, but currently receives all intro stories, ending narrations, highlights, and image URLs.
+   - Scrapbooks need the full records eventually, but not before showing the covers/counts.
 
-These will automatically appear:
-- on the Rules page under KILLERS / LOCATIONS when Shriek is owned
-- on the first narration page through the existing Special Rules modal when the session includes Mort or MegaBGCon
+4. **Scrapbooks eagerly render many poster thumbnails**
+   - `ScrapbookGrid` renders all poster `<img>` elements immediately.
+   - For 40+ cloud images, opening Scrapbooks can trigger a large burst of image downloads/decodes, explaining the 30+ second perceived load.
 
-If the sheets reveal that Shriek’s killer identity is mechanically hidden / determined during play, I’ll preserve that exactly in the rule text and add the necessary tracker fields below.
+5. **Initial page load is also heavier than needed**
+   - Performance snapshot shows ~250 script modules, ~10s full page load in the sandbox, and eager image glob imports in `gameData.ts`.
+   - This is secondary to the Stats/Scrapbooks issue, but it amplifies the delay.
 
-### 2. Add reusable “module prompt context” instead of duplicating rule logic
+## Fix Plan
 
-Right now story/ending prompts only use `killerSpecialRules.ts`, and the newly added `EntityRuleModule` rulebook text is not automatically passed into narration or image prompts.
+### 1. Centralize auth state once
 
-I’ll add a helper near the module rules data that can return concise guidance for the active killer/location:
+Create an `AuthProvider` / `useAuthContext` and wrap the app once near the top level.
 
-```ts
-getModulePromptContext(killer, location) => {
-  narrativeGuidance: string;
-  visualGuidance: string;
-  rulesSummary: string;
-}
-```
+Then update existing consumers to read from this shared context instead of each component creating its own `useAuth()` listener.
 
-This avoids sending long verbatim rulebook text to the AI, while still making generated content respect the actual mechanics.
+This removes duplicated session restoration and makes history loading depend on one stable auth source.
 
-For Shriek, that guidance will be based on the screenshots after transcription, but the intent is:
-- narrative should reflect the real Shriek mechanism, especially any hidden/final killer identity logic
-- MegaBGCon should feel like the specific convention location rather than a generic building
-- generated scenes should use the location’s concrete visual vocabulary from the rules/sheets
-- image prompts should not accidentally depict the wrong killer identity if the final identity is known
+### 2. Replace the fragile abort race logic in `useGameHistory`
 
-### 3. Update the first narration / cold open prompt
+Update `useGameHistory` to use a simpler, deterministic load state:
 
-Update `NowPlaying.tsx` and `supabase/functions/generate-story/index.ts` so the cold open receives both:
-- killer-specific module context
-- location-specific module context
+- Wait until shared auth is ready.
+- If no user, immediately use local history and set loading false.
+- If user exists, run one active database fetch for that user.
+- Use a mounted/stale flag to ignore outdated results, but do not abort normal page-transition fetches in a way that can strand loading.
+- Always clear `isDbLoading` in success and error paths for the current request.
 
-This means a Shriek session can mention the convention environment, suspicion, misdirection, crowd chaos, or whatever the sheet’s mechanics require, without spoiling or contradicting the rules.
+### 3. Split game history into summary vs full detail payloads
 
-Technical changes:
-- extend the story payload so `location.specialRules` is allowed, not just `killer.specialRules`
-- increase validation limits as needed in `supabase/functions/_shared/validation.ts`
-- include module context alongside existing `killerSpecialRules.ts` notes
+Change the initial database query to fetch a compact field list needed for Stats, counts, and grids:
 
-### 4. Update ending generation so Shriek outcomes make sense
+- id, timestamp, outcome
+- killer, location, final_girl
+- setup_scenario, starting_event
+- final_horror_level, final_girl_health, killer_health
+- weapon_used, ending_sub_location
+- victims_saved, victims_killed
+- poster_image_url, scene_image_url
 
-Update `TheEnd.tsx` and `supabase/functions/generate-ending/index.ts` so the ending prompt receives:
-- the active module context
-- any Shriek-specific tracker fields from the outcome form
-- especially the final killer identity, if the rules require it
+Do **not** fetch `intro_story`, `ending_narration`, or `game_highlights` in the global load.
 
-The ending should be able to say the right thing based on the actual final game state, rather than writing a generic “Mort was defeated” ending when the rules say something more specific happened.
+Then add a targeted detail fetch by game id when a scrapbook story is selected, loading only that one record’s long text before rendering the story page.
 
-### 5. Update image generation prompts
+Result:
 
-Update `useImageGeneration.ts` and `supabase/functions/generate-scene-image/index.ts` so generated beginning/ending images receive module-aware visual guidance.
+- Stats stops waiting on large narrative payloads it never uses.
+- Scrapbook covers/counts can render quickly.
+- Story text loads on demand only when the user opens a specific entry.
 
-For Shriek, the image prompt should be able to use:
-- Mort / killer visual details from the screenshots or existing art references
-- MegaBGCon convention-specific imagery
-- final killer identity context for ending posters/stills, if known
+### 4. Optimize Scrapbook image loading
 
-This will keep both visual and narrative generation aligned with the actual module mechanics.
+Update `ScrapbookGrid` and selected-image displays to:
 
-### 6. Add Shriek-specific fields to the ending tracker
+- Add `loading="lazy"` and `decoding="async"` to poster/scene images.
+- Limit initial grid thumbnails to a reasonable first batch, with a “Load more recovered photos” button if needed.
+- Keep cover counts visible immediately even while thumbnails stream in.
 
-Update `src/components/GameOutcomeForm.tsx` with a Shriek-specific section shown when:
+This preserves the scrapbook feel while preventing dozens of poster downloads from blocking the page.
 
-```ts
-result.killer === 'Mort the Teenage Dirtbag' || result.location === 'MegaBGCon'
-```
+### 5. Add page-level fallback/error states
 
-Expected fields, subject to what the sheets say:
-- Final Killer Identity — radio/select options based on the printed rules
-- optional additional state if the rules make it important, such as whether the killer was revealed, escaped, or another Shriek-specific end condition
+For Stats:
 
-These details will be appended into `gameHighlights`, which is already persisted in saved game history and passed to the ending generator.
+- If history fetch fails, show a VHS-style error state with a retry button instead of looping forever.
+- If loading exceeds a short threshold, keep the skeleton but display “Still recovering cloud records...” so it is clear the app is not frozen.
 
-I will not add database columns unless the screenshots reveal a Shriek value that should be queried statistically later. For now this follows the app’s existing pattern for killer-specific ending details: capture it in the form, append it to the persisted highlights, and feed it to the ending narration.
+For Scrapbooks:
 
-### Files likely to change
+- Show covers as soon as counts are available.
+- Show lightweight placeholders for poster thumbnails while images load.
 
-| File | Change |
-|---|---|
-| `src/data/rules/moduleRules.ts` | Add Mort + MegaBGCon rules and prompt guidance helpers. |
-| `src/components/SpecialRulesModal.tsx` | Likely no change unless Shriek needs special display handling. |
-| `src/pages/NowPlaying.tsx` | Pass module context into cold open and beginning image generation. |
-| `src/pages/TheEnd.tsx` | Pass module context + Shriek tracker details into ending and poster generation. |
-| `src/components/GameOutcomeForm.tsx` | Add Shriek-specific ending tracker fields. |
-| `src/hooks/useImageGeneration.ts` | Add optional module visual/narrative context to image request payload. |
-| `supabase/functions/_shared/validation.ts` | Allow location/module context in validated story/ending requests. |
-| `supabase/functions/generate-story/index.ts` | Use module context in cold open prompt. |
-| `supabase/functions/generate-ending/index.ts` | Use module context and final killer identity in ending prompt. |
-| `supabase/functions/generate-scene-image/index.ts` | Use visual guidance for Shriek-aware stills/posters. |
+### 6. Verify with diagnostics
 
-### Result
+After implementation, validate:
 
-Shriek will become a full first-class module in the app:
+- Open Stats from the marquee and footer; confirm it leaves `RETRIEVING SESSION DATA...`.
+- Open Scrapbooks; confirm covers/counts appear quickly.
+- Select a scrapbook entry; confirm long story text loads on demand.
+- Check network panel: initial `game_history` response should be smaller and no repeated abort loop should occur.
+- Check console for new errors.
 
-- rules visible in the Rules page and in-session modal
-- cold opens understand the actual Shriek setup/rules
-- scene and poster images use the correct Shriek visual logic
-- the ending tracker records the Shriek-specific final killer identity and feeds it into the ending narration
+## Files expected to change
+
+- `src/hooks/useAuth.ts` or new auth context file
+- `src/App.tsx`
+- `src/hooks/useGameHistory.ts`
+- `src/contexts/GameHistoryContext.tsx`
+- `src/pages/Stats.tsx`
+- `src/pages/Scrapbooks.tsx`
+- `src/components/ScrapbookBook.tsx`
+- `src/components/ScrapbookGrid.tsx`
+
+## Optional follow-up after this fix
+
+Further reduce initial app load by changing eager image globs in `src/types/gameData.ts` to lazy URL mapping or generated manifest entries. That is broader than the immediate Stats/Scrapbooks fix, so I would keep it separate unless the app still feels slow after the targeted changes above.

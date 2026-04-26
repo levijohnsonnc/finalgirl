@@ -18,6 +18,7 @@ interface ScrapbookBookProps {
   onClose: () => void;
   onUpdateGame: (id: string, updates: Partial<GameResult>) => void;
   onDeleteGame: (id: string) => Promise<void> | void;
+  onFetchGameDetails: (id: string) => Promise<GameResult | null>;
 }
 
 // Resize and compress image before upload
@@ -66,7 +67,7 @@ const resizeImage = (file: File, maxWidth: number = 1200): Promise<Blob> => {
   });
 };
 
-export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame }: ScrapbookBookProps) => {
+export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame, onFetchGameDetails }: ScrapbookBookProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState<GameResult | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -74,6 +75,7 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
   const { user } = useAuth();
+  const [isLoadingStory, setIsLoadingStory] = useState(false);
   // Trigger open animation after mount
   useEffect(() => {
     const timer = setTimeout(() => setIsOpen(true), 50);
@@ -93,6 +95,18 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
       toast.success('Record destroyed');
     }
   };
+
+  const handleSelectGame = useCallback(async (game: GameResult) => {
+    setSelectedGame(game);
+    if (game.introStory || game.endingNarration || game.gameHighlights) return;
+    setIsLoadingStory(true);
+    try {
+      const fullGame = await onFetchGameDetails(game.id);
+      if (fullGame) setSelectedGame(fullGame);
+    } finally {
+      setIsLoadingStory(false);
+    }
+  }, [onFetchGameDetails]);
 
   const handlePosterUpload = useCallback(async (file: File) => {
     if (!selectedGame) return;
@@ -220,6 +234,8 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             src={selectedGame.posterImageUrl}
                             alt="Game Poster"
                             className="max-h-[200px] w-auto object-contain border-4 border-[hsl(30_20%_25%)] shadow-lg"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                       ) : (
@@ -248,17 +264,23 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             src={selectedGame.sceneImageUrl}
                             alt="Scene"
                             className="max-h-[180px] w-auto object-contain rounded-sm shadow-md"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                       )}
 
-                      <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                      {isLoadingStory ? (
+                        <p className="font-vhs text-sm text-muted-foreground text-center py-6 animate-pulse">Recovering full case file...</p>
+                      ) : (
+                        <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                      )}
                     </div>
                   ) : (
                     <ScrapbookGrid
                       games={games}
                       selectedGameId={null}
-                      onSelectGame={setSelectedGame}
+                      onSelectGame={handleSelectGame}
                       type={type}
                     />
                   )}
@@ -277,6 +299,8 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             src={selectedGame.posterImageUrl}
                             alt="Game Poster"
                             className="w-full h-full object-contain"
+                            loading="lazy"
+                            decoding="async"
                           />
                         ) : (
                           <button
@@ -336,13 +360,17 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             ← Back to Grid
                           </button>
                         </div>
-                        <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                        {isLoadingStory ? (
+                          <p className="font-vhs text-sm text-muted-foreground text-center py-6 animate-pulse">Recovering full case file...</p>
+                        ) : (
+                          <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                        )}
                       </div>
                     ) : (
                       <ScrapbookGrid
                         games={games}
                         selectedGameId={null}
-                        onSelectGame={setSelectedGame}
+                        onSelectGame={handleSelectGame}
                         type={type}
                       />
                     )}
