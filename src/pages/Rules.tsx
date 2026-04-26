@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Search, BookMarked, ArrowUp, X } from 'lucide-react';
+import { Search, BookMarked, ArrowUp, X, Radio, FileText, AlertTriangle } from 'lucide-react';
 import { coreRules } from '@/data/rules/coreRules';
 import { RuleModule, RuleSection as RuleSectionType, RuleBlock, RuleChapter as RuleChapterType } from '@/data/rules/types';
 import { RuleChapter } from '@/components/rules/RuleChapter';
@@ -9,6 +9,18 @@ import { FEATURE_FILMS } from '@/types/gameData';
 import { ENTITY_RULE_MODULES, buildEntityChapter, EntityRuleModule } from '@/data/rules/moduleRules';
 
 const MODULES: RuleModule[] = [coreRules];
+
+type RuleCategory = 'ALL' | 'CORE' | 'TURN' | 'COMBAT' | 'KILLER' | 'TOKENS' | 'VICTIMS' | 'ITEMS';
+
+const CATEGORY_FILTERS: RuleCategory[] = ['ALL', 'CORE', 'TURN', 'COMBAT', 'KILLER', 'TOKENS', 'VICTIMS', 'ITEMS'];
+
+const RULES_TICKER = [
+  'ARCHIVE NOTE: RULEBOOK FOUND WITH THREE PAGES MISSING.',
+  'WARNING: FEATURE FILMS REQUIRED — CORE BOX ALONE IS NOT ENOUGH.',
+  'SYSTEM: CROSS-REFERENCING KILLER PHASE...',
+  'REPORT: PLAYER FORGOT TO RESOLVE PANIC AGAIN.',
+  'CASE FILE: SURVIVOR MOVEMENT CONFIRMED UNDER POOR LIGHTING.',
+];
 
 function blockToText(block: RuleBlock): string {
   switch (block.type) {
@@ -41,6 +53,27 @@ function sectionMatches(section: RuleSectionType, query: string): number {
     }
   }
   return count;
+}
+
+function getChapterCategory(chapter: RuleChapterType, sections: RuleSectionType[], killerIds: Set<string>, locationIds: Set<string>): RuleCategory | 'LOCATION' {
+  if (killerIds.has(chapter.id)) return 'KILLER';
+  if (locationIds.has(chapter.id)) return 'LOCATION';
+  const text = [
+    chapter.title,
+    chapter.subtitle ?? '',
+    ...chapter.sectionIds.flatMap((id) => {
+      const section = sections.find((s) => s.id === id);
+      return section ? [section.title, ...(section.tags ?? [])] : [];
+    }),
+  ].join(' ').toLowerCase();
+
+  if (/victim|bystander|rescue|panic/.test(text)) return 'VICTIMS';
+  if (/item|search|craft|weapon/.test(text)) return 'ITEMS';
+  if (/attack|combat|guard|retaliate|damage|health/.test(text)) return 'COMBAT';
+  if (/killer|terror|horror|dark power|finale|bloodlust/.test(text)) return 'KILLER';
+  if (/token|marker|time|track/.test(text)) return 'TOKENS';
+  if (/turn|action|planning|upkeep|phase/.test(text)) return 'TURN';
+  return 'CORE';
 }
 
 const Rules = () => {
