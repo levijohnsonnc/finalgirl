@@ -34,6 +34,7 @@ export const GameOutcomeForm = ({
   const isBuddyland = result.killer === 'Billy the Bear' || result.location === 'Buddyland';
   const isGrimlash = result.killer === 'Grimlash';
   const isBerith = result.killer === 'Berith' || result.location === "L'Armes Abbey";
+  const isShriek = result.killer === 'Mort the Teenage Dirtbag' || result.location === 'MegaBGCon';
   
   // Local form state - use character-specific max health for defaults
   const [finalHorrorLevel, setFinalHorrorLevel] = useState(result.finalHorrorLevel ?? 4);
@@ -66,6 +67,9 @@ export const GameOutcomeForm = ({
   // Berith / A Demon in the Shadows
   const [ursulaSaved, setUrsulaSaved] = useState(false);
   const [abbeyInfluence, setAbbeyInfluence] = useState<'Blessings Dominated' | 'Curses Dominated' | 'Balanced'>('Balanced');
+  // Shriek / MegaBGCon
+  const [mortRevealed, setMortRevealed] = useState(false);
+  const [finalKillerIdentity, setFinalKillerIdentity] = useState('Unknown');
 
   const handleContinue = () => {
     // Augment gameHighlights with killer-specific conditions so the LLM gets full context
@@ -118,6 +122,11 @@ export const GameOutcomeForm = ({
       if (isWin && ursulaSaved) demonParts.push('Ursula saved');
       demonParts.push(`L'Armes Abbey influence: ${abbeyInfluence}`);
       highlights = highlights ? `${highlights}. ${demonParts.join('. ')}` : demonParts.join('. ');
+    }
+    if (isShriek) {
+      const shriekParts = [`Final killer identity: ${finalKillerIdentity}`];
+      shriekParts.push(mortRevealed ? 'Mort was revealed' : 'Mort remained hidden');
+      highlights = highlights ? `${highlights}. ${shriekParts.join('. ')}` : shriekParts.join('. ');
     }
 
     const formData: EndingFormData = {
