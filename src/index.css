@@ -3292,3 +3292,79 @@
   }
   .glossary-entry:last-child { border-bottom: 0; }
 }
+
+@layer components {
+  .rules-page {
+    background:
+      radial-gradient(circle at 22% 8%, hsl(var(--blood-red) / 0.12), transparent 30rem),
+      radial-gradient(circle at 88% 18%, hsl(var(--neon-cyan) / 0.05), transparent 24rem),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--card)) 54%, hsl(var(--background)));
+  }
+
+  .rules-binder {
+    max-width: 1180px;
+    position: relative;
+    padding: clamp(1rem, 2vw, 1.75rem);
+    border: 1px solid hsl(var(--blood-red) / 0.35);
+    border-radius: 8px 5px 10px 6px;
+    background:
+      linear-gradient(90deg, hsl(var(--blood-red) / 0.12) 0 12px, transparent 12px),
+      repeating-linear-gradient(0deg, hsl(0 0% 100% / 0.018) 0 1px, transparent 1px 5px),
+      linear-gradient(145deg, hsl(var(--card) / 0.94), hsl(var(--background) / 0.98) 62%, hsl(var(--card) / 0.9));
+    box-shadow:
+      0 38px 80px hsl(0 0% 0% / 0.62),
+      inset 0 1px 0 hsl(0 0% 100% / 0.05),
+      inset 18px 0 34px hsl(0 0% 0% / 0.34);
+    overflow: hidden;
+  }
+
+  .rules-binder::before,
+  .rules-binder::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.28;
+  }
+
+  .rules-binder::before {
+    inset: 0;
+    background:
+      radial-gradient(circle at 18% 26%, hsl(var(--blood-red) / 0.2), transparent 5rem),
+      radial-gradient(circle at 74% 10%, hsl(var(--vhs-yellow) / 0.08), transparent 8rem),
+      repeating-linear-gradient(92deg, transparent 0 14px, hsl(0 0% 0% / 0.12) 14px 15px);
+    mix-blend-mode: multiply;
+  }
+
+  .rules-binder::after {
+    inset: 10px;
+    border: 1px dashed hsl(var(--border) / 0.4);
+    border-radius: 5px;
+  }
+
+  .rules-header {
+    padding: 0.4rem 0 1.25rem;
+    border-bottom: 1px solid hsl(var(--blood-red) / 0.32);
+  }
+
+  .rules-dossier-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    width: min(100%, 320px);
+    padding: 0.8rem;
+    background: hsl(var(--muted) / 0.34);
+    border: 1px dashed hsl(var(--border) / 0.72);
+    box-shadow: inset 0 0 18px hsl(0 0% 0% / 0.28);
+    transform: rotate(0.35deg);
+  }
+
+  .rules-layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 1280px) {
+    .rules-layout-grid { grid-template-columns: minmax(0, 1fr) 280px; }
+  }
+}
