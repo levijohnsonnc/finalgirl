@@ -448,11 +448,69 @@ const Rules = () => {
             );
           })()
         )}
+          </main>
+
+          <aside className="rules-case-notes hidden xl:block">
+            <div className="rules-case-note-card sticky top-28">
+              <div className="flex items-center gap-2 font-vhs text-[10px] uppercase tracking-[0.22em] text-primary/80">
+                <Radio className="w-3.5 h-3.5" />
+                Rulebook Status: Indexed
+              </div>
+              <div className="mt-5">
+                <p className="font-vhs text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Currently Viewing</p>
+                <h2 className="mt-1 font-title text-xl uppercase tracking-wide text-foreground leading-tight">
+                  {activeChapter?.title ?? 'No File Selected'}
+                </h2>
+                <p className="mt-1 font-vhs text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  {activeChapter ? `${chapterCategories[activeChapter.id]} · ${activeChapter.number}` : 'Archive standby'}
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-dashed border-border/70">
+                <p className="font-vhs text-[10px] uppercase tracking-[0.24em] text-primary/80 flex items-center gap-2">
+                  <FileText className="w-3.5 h-3.5" /> Related Rules
+                </p>
+                <div className="mt-3 space-y-2">
+                  {relatedSections.length > 0 ? relatedSections.map((section) => (
+                    <button key={section.id} onClick={() => handleJumpTo(section.id)} className="rules-related-tab w-full text-left font-vhs text-[10px] uppercase tracking-[0.14em]">
+                      {section.title}
+                    </button>
+                  )) : (
+                    <p className="font-vhs text-[10px] uppercase tracking-[0.14em] text-muted-foreground">No cross-reference recovered.</p>
+                  )}
+                </div>
+              </div>
+              <div className="mt-5 pt-4 border-t border-dashed border-border/70">
+                <p className="font-vhs text-[10px] uppercase tracking-[0.24em] text-primary/80 flex items-center gap-2">
+                  <AlertTriangle className="w-3.5 h-3.5" /> Survivor Tip
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                  {sidebarTip && 'text' in sidebarTip ? sidebarTip.text : 'Read the phase timing twice before resolving panic, attacks, or finale effects.'}
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div className="mt-10 pt-5 border-t border-border/50 text-[11px] text-muted-foreground/70 font-vhs uppercase tracking-[0.18em] text-center">
+          {module.source}
+        </div>
       </div>
 
-      {/* Source footer */}
-      <div className="mt-10 pt-5 border-t border-border/50 text-[11px] text-muted-foreground/70 font-vhs uppercase tracking-[0.18em] text-center">
-        {module.source}
+      <div className="rules-bottom-ticker fixed bottom-11 sm:bottom-14 left-0 right-0 z-40 overflow-hidden">
+        <div className="relative h-7 sm:h-8 flex items-center">
+          <div className="absolute left-0 z-10 h-full flex items-center px-2 sm:px-3 pr-8 rules-ticker-badge">
+            <span className="font-vhs text-[10px] sm:text-xs text-primary uppercase tracking-wider blood-glow">⚠ RULES ⚠</span>
+          </div>
+          <div className="news-ticker flex items-center whitespace-nowrap pl-24 sm:pl-28">
+            {tickerContent.map((headline, idx) => (
+              <span key={idx} className="inline-flex items-center">
+                <span className="font-vhs text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">{headline}</span>
+                <span className="mx-32 sm:mx-48 text-primary/60">◆</span>
+              </span>
+            ))}
+          </div>
+          <div className="absolute right-0 z-10 h-full w-8 sm:w-12 rules-ticker-fade" />
+        </div>
       </div>
 
       {/* Floating back-to-top */}
