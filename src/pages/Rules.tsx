@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Search, BookMarked, ArrowUp, X } from 'lucide-react';
+import { Search, BookMarked, ArrowUp, X, Radio, FileText, AlertTriangle } from 'lucide-react';
 import { coreRules } from '@/data/rules/coreRules';
 import { RuleModule, RuleSection as RuleSectionType, RuleBlock, RuleChapter as RuleChapterType } from '@/data/rules/types';
 import { RuleChapter } from '@/components/rules/RuleChapter';
@@ -9,6 +9,18 @@ import { FEATURE_FILMS } from '@/types/gameData';
 import { ENTITY_RULE_MODULES, buildEntityChapter, EntityRuleModule } from '@/data/rules/moduleRules';
 
 const MODULES: RuleModule[] = [coreRules];
+
+type RuleCategory = 'ALL' | 'CORE' | 'TURN' | 'COMBAT' | 'KILLER' | 'TOKENS' | 'VICTIMS' | 'ITEMS';
+
+const CATEGORY_FILTERS: RuleCategory[] = ['ALL', 'CORE', 'TURN', 'COMBAT', 'KILLER', 'TOKENS', 'VICTIMS', 'ITEMS'];
+
+const RULES_TICKER = [
+  'ARCHIVE NOTE: RULEBOOK FOUND WITH THREE PAGES MISSING.',
+  'WARNING: FEATURE FILMS REQUIRED — CORE BOX ALONE IS NOT ENOUGH.',
+  'SYSTEM: CROSS-REFERENCING KILLER PHASE...',
+  'REPORT: PLAYER FORGOT TO RESOLVE PANIC AGAIN.',
+  'CASE FILE: SURVIVOR MOVEMENT CONFIRMED UNDER POOR LIGHTING.',
+];
 
 function blockToText(block: RuleBlock): string {
   switch (block.type) {
@@ -41,6 +53,27 @@ function sectionMatches(section: RuleSectionType, query: string): number {
     }
   }
   return count;
+}
+
+function getChapterCategory(chapter: RuleChapterType, sections: RuleSectionType[], killerIds: Set<string>, locationIds: Set<string>): RuleCategory | 'LOCATION' {
+  if (killerIds.has(chapter.id)) return 'KILLER';
+  if (locationIds.has(chapter.id)) return 'LOCATION';
+  const text = [
+    chapter.title,
+    chapter.subtitle ?? '',
+    ...chapter.sectionIds.flatMap((id) => {
+      const section = sections.find((s) => s.id === id);
+      return section ? [section.title, ...(section.tags ?? [])] : [];
+    }),
+  ].join(' ').toLowerCase();
+
+  if (/victim|bystander|rescue|panic/.test(text)) return 'VICTIMS';
+  if (/item|search|craft|weapon/.test(text)) return 'ITEMS';
+  if (/attack|combat|guard|retaliate|damage|health/.test(text)) return 'COMBAT';
+  if (/killer|terror|horror|dark power|finale|bloodlust/.test(text)) return 'KILLER';
+  if (/token|marker|time|track/.test(text)) return 'TOKENS';
+  if (/turn|action|planning|upkeep|phase/.test(text)) return 'TURN';
+  return 'CORE';
 }
 
 const Rules = () => {
@@ -92,6 +125,7 @@ const Rules = () => {
     [coreModule, entitySections, killerChapters, locationChapters]
   );
   const [query, setQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<RuleCategory>('ALL');
   const [openChapterId, setOpenChapterId] = useLocalStorage<string | null>(
     'rules-open-chapter',
     null
@@ -246,68 +280,111 @@ const Rules = () => {
   );
 
   const isSearching = query.trim().length > 0;
-  const visibleChapters = isSearching
-    ? module.chapters.filter((c) => (chapterMatchCounts[c.id] ?? 0) > 0)
-    : module.chapters;
+  const killerIds = useMemo(() => new Set(killerChapters.map((c) => c.id)), [killerChapters]);
+  const locationIds = useMemo(() => new Set(locationChapters.map((c) => c.id)), [locationChapters]);
+  const chapterCategories = useMemo(
+    () => Object.fromEntries(module.chapters.map((chapter) => [chapter.id, getChapterCategory(chapter, module.sections, killerIds, locationIds)])),
+    [module, killerIds, locationIds]
+  );
+  const visibleChapters = module.chapters.filter((chapter) => {
+    const matchesSearch = !isSearching || (chapterMatchCounts[chapter.id] ?? 0) > 0;
+    const category = chapterCategories[chapter.id];
+    const matchesCategory = activeCategory === 'ALL' || category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
+  const activeChapter = module.chapters.find((chapter) => chapter.id === openChapterId) ?? visibleChapters[0];
+  const activeChapterSections = activeChapter
+    ? activeChapter.sectionIds.map((id) => module.sections.find((section) => section.id === id)).filter((section): section is RuleSectionType => !!section)
+    : [];
+  const relatedSections = activeChapterSections
+    .flatMap((section) => section.seeAlso ?? [])
+    .map((id) => module.sections.find((section) => section.id === id))
+    .filter((section, index, arr): section is RuleSectionType => !!section && arr.findIndex((item) => item?.id === section.id) === index)
+    .slice(0, 4);
+  const sidebarTip = activeChapterSections.flatMap((section) => section.body).find((block) => block.type === 'callout' || block.type === 'example');
+  const tickerContent = [...RULES_TICKER, ...RULES_TICKER];
 
   return (
-    <div className="rules-page relative max-w-5xl mx-auto px-3 sm:px-4 pb-24">
+    <div className="rules-page relative min-h-screen px-3 sm:px-5 pb-28 pt-3 sm:pt-6">
       {/* Page chrome overlays */}
       <div className="film-grain pointer-events-none" aria-hidden />
       <div className="vignette pointer-events-none" aria-hidden />
 
-      {/* Header */}
-      <header className="rules-header relative pt-2 pb-5 mb-5">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="rec-dot" aria-hidden />
-          <BookMarked className="w-5 h-5 text-secondary" />
-          <h1 className="font-title text-2xl sm:text-3xl uppercase tracking-wide neon-text text-secondary">
-            Rulebook
-          </h1>
-          <span className="vhs-spec-label hidden sm:inline-flex font-vhs text-[10px] uppercase tracking-[0.2em] px-2 py-0.5">
-            CORE · VHS-001 · FAN REF
-          </span>
-        </div>
-        <p className="font-vhs text-[11px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground">
-          Unofficial fan reference ·{' '}
-          <a
-            href="https://gamers-hq.de/media/pdf/22/ba/4a/FinalGirl_Rules.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-secondary/80 hover:text-secondary underline decoration-dotted"
-          >
-            Official Core Rulebook ↗
-          </a>
-        </p>
-      </header>
+      <div className="rules-binder mx-auto">
+        {/* Header */}
+        <header className="rules-header relative mb-5">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3 font-vhs text-[10px] sm:text-xs uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="rec-dot" aria-hidden />
+                <span>Final Girl / Unofficial Case Files</span>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <BookMarked className="w-7 h-7 text-primary" />
+                <h1 className="font-title text-4xl sm:text-6xl uppercase tracking-wide text-foreground blood-glow">
+                  Rulebook
+                </h1>
+              </div>
+              <p className="mt-3 font-vhs text-[11px] sm:text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                Unofficial Fan Reference · Recovered Binder Copy ·{' '}
+                <a
+                  href="https://gamers-hq.de/media/pdf/22/ba/4a/FinalGirl_Rules.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-secondary/80 hover:text-secondary underline decoration-dotted"
+                >
+                  Official Core Rulebook ↗
+                </a>
+              </p>
+            </div>
+            <div className="rules-dossier-card">
+              <span className="vhs-spec-label font-vhs text-[10px] uppercase tracking-[0.22em] px-2 py-0.5">CORE · VHS-001 · FAN REF</span>
+              <span className="font-vhs text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Recovered Tape / Evidence Box 07</span>
+              <span className="font-vhs text-[10px] uppercase tracking-[0.2em] text-primary/80">Archive Ref: FG-RULES-{String(visibleChapters.length).padStart(2, '0')}</span>
+            </div>
+          </div>
+        </header>
 
-      {/* Search bar — label-maker strip */}
-      <div className="rules-search-wrap mb-5 sticky top-16 sm:top-20 z-30">
-        <div className="rules-search relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/70" />
-          <input
-            type="text"
-            inputMode="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="SEARCH RULES, TERMS, ICONS…"
-            className="rules-search-input w-full pl-9 pr-9 py-2.5 font-vhs text-sm uppercase tracking-wider"
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
-              aria-label="Clear search"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
+        {/* Search bar + filters */}
+        <div className="rules-search-wrap mb-6 sticky top-3 sm:top-5 z-30">
+          <div className="rules-search relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/70" />
+            <input
+              type="text"
+              inputMode="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="SEARCH RULES, TERMS, ICONS..."
+              className="rules-search-input w-full pl-9 pr-9 py-3 font-vhs text-sm uppercase tracking-wider"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          <div className="rules-filter-strip mt-3 flex gap-2 overflow-x-auto pb-1" aria-label="Rule categories">
+            {CATEGORY_FILTERS.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className={`rules-filter-chip font-vhs text-[10px] sm:text-[11px] uppercase tracking-[0.18em] px-3 py-1.5 whitespace-nowrap ${activeCategory === category ? 'rules-filter-chip-active' : ''}`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Chapter list */}
-      <div className="space-y-2.5">
+        <div className="rules-layout-grid">
+          {/* Chapter list */}
+          <main className="space-y-2.5 min-w-0">
         {visibleChapters.length === 0 ? (
           <div className="text-center py-16 font-vhs uppercase tracking-wider text-sm text-muted-foreground">
             No chapters match "{query}".
@@ -371,11 +448,69 @@ const Rules = () => {
             );
           })()
         )}
+          </main>
+
+          <aside className="rules-case-notes hidden xl:block">
+            <div className="rules-case-note-card sticky top-28">
+              <div className="flex items-center gap-2 font-vhs text-[10px] uppercase tracking-[0.22em] text-primary/80">
+                <Radio className="w-3.5 h-3.5" />
+                Rulebook Status: Indexed
+              </div>
+              <div className="mt-5">
+                <p className="font-vhs text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Currently Viewing</p>
+                <h2 className="mt-1 font-title text-xl uppercase tracking-wide text-foreground leading-tight">
+                  {activeChapter?.title ?? 'No File Selected'}
+                </h2>
+                <p className="mt-1 font-vhs text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  {activeChapter ? `${chapterCategories[activeChapter.id]} · ${activeChapter.number}` : 'Archive standby'}
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-dashed border-border/70">
+                <p className="font-vhs text-[10px] uppercase tracking-[0.24em] text-primary/80 flex items-center gap-2">
+                  <FileText className="w-3.5 h-3.5" /> Related Rules
+                </p>
+                <div className="mt-3 space-y-2">
+                  {relatedSections.length > 0 ? relatedSections.map((section) => (
+                    <button key={section.id} onClick={() => handleJumpTo(section.id)} className="rules-related-tab w-full text-left font-vhs text-[10px] uppercase tracking-[0.14em]">
+                      {section.title}
+                    </button>
+                  )) : (
+                    <p className="font-vhs text-[10px] uppercase tracking-[0.14em] text-muted-foreground">No cross-reference recovered.</p>
+                  )}
+                </div>
+              </div>
+              <div className="mt-5 pt-4 border-t border-dashed border-border/70">
+                <p className="font-vhs text-[10px] uppercase tracking-[0.24em] text-primary/80 flex items-center gap-2">
+                  <AlertTriangle className="w-3.5 h-3.5" /> Survivor Tip
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                  {sidebarTip && 'text' in sidebarTip ? sidebarTip.text : 'Read the phase timing twice before resolving panic, attacks, or finale effects.'}
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div className="mt-10 pt-5 border-t border-border/50 text-[11px] text-muted-foreground/70 font-vhs uppercase tracking-[0.18em] text-center">
+          {module.source}
+        </div>
       </div>
 
-      {/* Source footer */}
-      <div className="mt-10 pt-5 border-t border-border/50 text-[11px] text-muted-foreground/70 font-vhs uppercase tracking-[0.18em] text-center">
-        {module.source}
+      <div className="rules-bottom-ticker fixed bottom-11 sm:bottom-14 left-0 right-0 z-40 overflow-hidden">
+        <div className="relative h-7 sm:h-8 flex items-center">
+          <div className="absolute left-0 z-10 h-full flex items-center px-2 sm:px-3 pr-8 rules-ticker-badge">
+            <span className="font-vhs text-[10px] sm:text-xs text-primary uppercase tracking-wider blood-glow">⚠ RULES ⚠</span>
+          </div>
+          <div className="news-ticker flex items-center whitespace-nowrap pl-24 sm:pl-28">
+            {tickerContent.map((headline, idx) => (
+              <span key={idx} className="inline-flex items-center">
+                <span className="font-vhs text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">{headline}</span>
+                <span className="mx-32 sm:mx-48 text-primary/60">◆</span>
+              </span>
+            ))}
+          </div>
+          <div className="absolute right-0 z-10 h-full w-8 sm:w-12 rules-ticker-fade" />
+        </div>
       </div>
 
       {/* Floating back-to-top */}

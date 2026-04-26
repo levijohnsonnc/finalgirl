@@ -62,7 +62,7 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
   switch (block.type) {
     case 'paragraph':
       return (
-        <p className="rule-paragraph text-foreground/90 leading-relaxed text-[15px] sm:text-base">
+        <p className="rule-paragraph text-foreground/90 leading-7 text-[15px] sm:text-base">
           {renderText(block.text, glossary, onJumpTo)}
         </p>
       );
@@ -96,6 +96,9 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
       const style = calloutStyles[variant];
       return (
         <div className={`rule-callout ${style.className} my-3`}>
+          <span className="rule-callout-stamp font-vhs text-[9px] uppercase tracking-[0.22em]">
+            {variant === 'critical' ? 'Warning' : variant === 'tip' ? 'Case Note' : 'Archive Ref'}
+          </span>
           <div className="rule-callout-header">
             {style.icon}
             <span className="font-vhs text-[10px] uppercase tracking-[0.2em]">
@@ -112,6 +115,9 @@ export const RuleBlock = ({ block, glossary, onJumpTo }: RuleBlockProps) => {
     case 'example':
       return (
         <div className="rule-example my-3">
+          <span className="rule-callout-stamp font-vhs text-[9px] uppercase tracking-[0.22em]">
+            Case Note
+          </span>
           <div className="rule-example-stamp">
             <span className="font-vhs text-[10px] uppercase tracking-[0.25em]">
               ◉ Example
