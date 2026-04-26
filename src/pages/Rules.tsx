@@ -289,7 +289,7 @@ const Rules = () => {
   const visibleChapters = module.chapters.filter((chapter) => {
     const matchesSearch = !isSearching || (chapterMatchCounts[chapter.id] ?? 0) > 0;
     const category = chapterCategories[chapter.id];
-    const matchesCategory = activeCategory === 'ALL' || category === activeCategory || (activeCategory === 'CORE' && category === 'LOCATION');
+    const matchesCategory = activeCategory === 'ALL' || category === activeCategory;
     return matchesSearch && matchesCategory;
   });
   const activeChapter = module.chapters.find((chapter) => chapter.id === openChapterId) ?? visibleChapters[0];
