@@ -30,6 +30,27 @@ const deleteStorageFiles = async (game: { posterImageUrl?: string; sceneImageUrl
   }
 };
 
+const HISTORY_SUMMARY_SELECT = [
+  'id',
+  'user_id',
+  'timestamp',
+  'outcome',
+  'killer',
+  'location',
+  'final_girl',
+  'setup_scenario',
+  'starting_event',
+  'final_horror_level',
+  'final_girl_health',
+  'killer_health',
+  'weapon_used',
+  'ending_sub_location',
+  'victims_saved',
+  'victims_killed',
+  'poster_image_url',
+  'scene_image_url',
+].join(',');
+
 export interface GameResult {
   id: string;
   timestamp: number;
