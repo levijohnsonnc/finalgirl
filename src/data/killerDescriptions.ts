@@ -126,9 +126,9 @@ Composition feels candid, like a photojournalist arrived moments after something
 
 Emotional tone: quiet dread, inevitability, "this could happen to anyone."`,
 
-  'Mort the Teenage Dirtbag': `A central person wearing a detailed, aged skull-like mask with dark, vacant eye sockets and a small, open mouth. They have a rugged appearance in a heavily distressed dark leather biker jacket over a green, red, and yellow plaid scarf. The look is gritty and alternative, set amidst a crowded night-time street market with other diverse individuals, including blurred masked faces, and stalls with music posters.
+  'Mort the Teenage Dirtbag': `A masked teen-slasher figure wearing a charcoal gray hoodie with the hood up, red-and-black pants, and a white ghost mask with one oversized black eye and a smaller dark eye socket. The silhouette is casual and convention-ready rather than gothic: hoodie, sneakers, loose posture, and a knife implied or held low. Mort's threat is disguise and misdirection — the same figure may seem to be Hans, Geppetto, Dr. Fright, the Big Bad Wolf, or another familiar horror persona moments before the mask comes off.
 
-Composition: mid-shot, slightly low angle looking up at the killer. Grainy, oversaturated VHS quality with tracking lines and color bleed. The vibe is slasher-meets-teen-comedy—absurd and menacing at the same time.
+Composition: candid convention-floor slasher imagery, with crowded boardgame aisles, cosplay suspects, demo tables, banners, and confused attendees in the background. Grainy, oversaturated VHS quality with tracking lines and color bleed. The vibe is slasher-meets-teen-comedy—absurd and menacing at the same time.
 
 Emotional tone: paranoid fun, "who's behind the mask?", teen horror energy.`
 };

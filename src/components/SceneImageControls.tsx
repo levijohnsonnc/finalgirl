@@ -3,6 +3,7 @@ import { useImageGeneration } from '@/hooks/useImageGeneration';
 import { getKillerDescription } from '@/data/killerDescriptions';
 import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
 import { getLocationDescription } from '@/data/locationDescriptions';
+import { getModulePromptContext } from '@/data/rules/moduleRules';
 
 interface SceneImageControlsProps {
   story: string;
@@ -33,6 +34,7 @@ const SceneImageControls = ({
   } = useImageGeneration();
 
   const handleGenerate = async () => {
+    const moduleContext = getModulePromptContext(killer, location);
     const url = await generateImage({
       story,
       killer,
@@ -41,6 +43,7 @@ const SceneImageControls = ({
       finalGirlDescription: getFinalGirlDescription(finalGirl),
       location,
       locationDescription: getLocationDescription(location),
+      moduleVisualGuidance: moduleContext?.visualGuidance,
       sceneType,
       outcome,
     });

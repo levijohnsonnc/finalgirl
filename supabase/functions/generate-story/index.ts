@@ -35,12 +35,16 @@ serve(async (req) => {
       : `A mysterious killer known as ${killer.name}`;
 
     const killerSpecialRulesInfo = killer.specialRules
-      ? `IMPORTANT — Killer-specific gameplay rules (respect these in the narrative):\n${killer.specialRules}`
+      ? `IMPORTANT — Killer/module gameplay rules (respect these in the narrative):\n${killer.specialRules}`
       : null;
     
     const locationInfo = location.description
       ? `${location.name}: ${location.description}`
       : `A location called ${location.name}`;
+
+    const locationSpecialRulesInfo = location.specialRules
+      ? `IMPORTANT — Location/module gameplay rules (respect these in the narrative):\n${location.specialRules}`
+      : null;
     
     const finalGirlInfo = finalGirl.backstory
       ? `${finalGirl.name}: ${finalGirl.backstory}`
@@ -89,6 +93,7 @@ ${finalGirlInfo}
 
 Location Info:
 ${locationInfo}
+${locationSpecialRulesInfo ? `\n${locationSpecialRulesInfo}\n` : ''}
 
 Starting Event Info:
 ${startingEventInfo}

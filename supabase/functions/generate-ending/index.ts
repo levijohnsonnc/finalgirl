@@ -83,6 +83,10 @@ Return ONLY the story text. No headings, bullet points, or meta commentary.`;
       ? `Location: ${location.name}\nDescription: ${location.description}`
       : `Location: ${location.name}`;
 
+    const locationRulesContext = location.specialRules
+      ? `IMPORTANT — Location/module rules (respect these in the narrative):\n${location.specialRules}`
+      : null;
+
     // Build optional stats section with character-specific max health
     const maxHealth = finalGirlMaxHealth ?? 5;  // Default to 5 if not provided
     const optionalStats = [
@@ -104,6 +108,7 @@ ${killerContext}
 ${finalGirlContext}
 
 ${locationContext}
+${locationRulesContext ? `\n\n${locationRulesContext}` : ''}
 
 Outcome: ${outcome.toUpperCase()}
 

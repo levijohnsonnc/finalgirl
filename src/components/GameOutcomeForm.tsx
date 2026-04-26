@@ -34,6 +34,7 @@ export const GameOutcomeForm = ({
   const isBuddyland = result.killer === 'Billy the Bear' || result.location === 'Buddyland';
   const isGrimlash = result.killer === 'Grimlash';
   const isBerith = result.killer === 'Berith' || result.location === "L'Armes Abbey";
+  const isShriek = result.killer === 'Mort the Teenage Dirtbag' || result.location === 'MegaBGCon';
   
   // Local form state - use character-specific max health for defaults
   const [finalHorrorLevel, setFinalHorrorLevel] = useState(result.finalHorrorLevel ?? 4);
@@ -66,6 +67,9 @@ export const GameOutcomeForm = ({
   // Berith / A Demon in the Shadows
   const [ursulaSaved, setUrsulaSaved] = useState(false);
   const [abbeyInfluence, setAbbeyInfluence] = useState<'Blessings Dominated' | 'Curses Dominated' | 'Balanced'>('Balanced');
+  // Shriek / MegaBGCon
+  const [mortRevealed, setMortRevealed] = useState(false);
+  const [finalKillerIdentity, setFinalKillerIdentity] = useState('Unknown');
 
   const handleContinue = () => {
     // Augment gameHighlights with killer-specific conditions so the LLM gets full context
@@ -118,6 +122,11 @@ export const GameOutcomeForm = ({
       if (isWin && ursulaSaved) demonParts.push('Ursula saved');
       demonParts.push(`L'Armes Abbey influence: ${abbeyInfluence}`);
       highlights = highlights ? `${highlights}. ${demonParts.join('. ')}` : demonParts.join('. ');
+    }
+    if (isShriek) {
+      const shriekParts = [`Final killer identity: ${finalKillerIdentity}`];
+      shriekParts.push(mortRevealed ? 'Mort was revealed' : 'Mort remained hidden');
+      highlights = highlights ? `${highlights}. ${shriekParts.join('. ')}` : shriekParts.join('. ');
     }
 
     const formData: EndingFormData = {
@@ -536,6 +545,42 @@ export const GameOutcomeForm = ({
                   <span className="font-vhs text-sm text-foreground">{influence}</span>
                 </label>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Section: Shriek / MegaBGCon */}
+      {isShriek && (
+        <div className="space-y-3">
+          <h3 className="font-display text-xs tracking-[0.15em] uppercase text-muted-foreground border-b border-border/50 pb-1.5">
+            Shriek Reveal
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="font-vhs text-xs text-muted-foreground">
+                Final Killer Identity
+              </label>
+              <select
+                value={finalKillerIdentity}
+                onChange={(e) => setFinalKillerIdentity(e.target.value)}
+                className="w-full h-11 px-3 bg-muted/50 border border-border/50 rounded-sm font-vhs text-base text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              >
+                {['Unknown', 'Hans', 'Geppetto', 'Dr. Fright', 'Inkanyamba', 'Big Bad Wolf', 'Ratchet Lady', 'Evomorph', 'The Organism', 'The Intruders', 'Mort'].map((identity) => (
+                  <option key={identity} value={identity}>{identity}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={mortRevealed}
+                  onChange={(e) => setMortRevealed(e.target.checked)}
+                  className="w-4 h-4 accent-primary"
+                />
+                <span className="font-vhs text-sm text-foreground">Mort Revealed</span>
+              </label>
             </div>
           </div>
         </div>

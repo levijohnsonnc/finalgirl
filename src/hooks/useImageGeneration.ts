@@ -24,6 +24,7 @@ interface GenerateImageContext {
   finalGirlDescription?: string;
   location: string;
   locationDescription?: string;
+  moduleVisualGuidance?: string;
   sceneType: 'beginning' | 'ending';
   outcome?: 'won' | 'lost';
 }

@@ -6,11 +6,12 @@ export const StoryRequestSchema = z.object({
   killer: z.object({
     name: z.string().min(1).max(100),
     description: z.string().max(5000).optional(),
-    specialRules: z.string().max(1000).optional()
+    specialRules: z.string().max(3000).optional()
   }),
   location: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(5000).optional()
+    description: z.string().max(5000).optional(),
+    specialRules: z.string().max(3000).optional()
   }),
   finalGirl: z.object({
     name: z.string().min(1).max(100),
@@ -36,7 +37,8 @@ export const ImageRequestSchema = z.object({
   finalGirl: z.string().max(100).optional(),
   finalGirlDescription: z.string().max(3000).optional(),
   location: z.string().max(100).optional(),
-  locationDescription: z.string().max(3000).optional()
+  locationDescription: z.string().max(3000).optional(),
+  moduleVisualGuidance: z.string().max(3000).optional()
 });
 
 // Schema for narrate-story endpoint
@@ -52,11 +54,12 @@ export const EndingRequestSchema = z.object({
   killer: z.object({
     name: z.string().min(1).max(100),
     description: z.string().max(3000).optional(),
-    specialRules: z.string().max(1000).optional()
+    specialRules: z.string().max(3000).optional()
   }),
   location: z.object({
     name: z.string().min(1).max(100),
-    description: z.string().max(3000).optional()
+    description: z.string().max(3000).optional(),
+    specialRules: z.string().max(3000).optional()
   }),
   finalGirl: z.object({
     name: z.string().min(1).max(100),

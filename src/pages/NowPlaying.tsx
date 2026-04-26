@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ImageIcon, Volume2, VolumeX, Loader2, ScrollText } from 'lucide-react';
 import { SpecialRulesModal, getApplicableSpecialRules } from '@/components/SpecialRulesModal';
+import { getModulePromptContext } from '@/data/rules/moduleRules';
 import { supabase } from '@/integrations/supabase/client';
 import { createPrimedAudio, base64ToBlob } from '@/lib/audioUtils';
 import { getFilmDetails } from '@/types/featureFilmDetails';
@@ -56,6 +57,7 @@ const NowPlaying = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { hasApiKey, autoGenerate, generateImage } = useImageGeneration();
   const autoGenerateTriggered = useRef(false);
+  const moduleContext = getModulePromptContext(killer, location);
 
   // Auto-generate story on mount
   useEffect(() => {
@@ -75,6 +77,7 @@ const NowPlaying = ({
           finalGirlDescription: getFinalGirlDescription(finalGirl),
           location,
           locationDescription: getLocationDescription(location),
+          moduleVisualGuidance: moduleContext?.visualGuidance,
           sceneType: 'beginning',
         });
         if (url) {
@@ -109,17 +112,23 @@ const NowPlaying = ({
       const finalGirlDetails = finalGirlFilmDetails?.finalGirls?.find(fg => fg.name === finalGirl);
 
       const killerRules = getKillerSpecialRules(killer);
+      const moduleSpecialRules = moduleContext
+        ? [moduleContext.rulesSummary, moduleContext.narrativeGuidance].filter(Boolean).join('\n')
+        : undefined;
 
       // Build payload with complete objects matching the edge function's StoryRequest interface
       const payload = {
         killer: {
           name: killer,
           description: killerDetails?.description || `A terrifying killer known as ${killer}.`,
-          ...(killerRules?.narrativeNote && { specialRules: killerRules.narrativeNote }),
+          ...((killerRules?.narrativeNote || moduleSpecialRules) && {
+            specialRules: [killerRules?.narrativeNote, moduleSpecialRules].filter(Boolean).join('\n'),
+          }),
         },
         location: {
           name: location,
-          description: locationDetails?.description || `A dangerous place called ${location}.`
+          description: locationDetails?.description || `A dangerous place called ${location}.`,
+          ...(moduleSpecialRules && { specialRules: moduleSpecialRules }),
         },
         finalGirl: {
           name: finalGirl,
