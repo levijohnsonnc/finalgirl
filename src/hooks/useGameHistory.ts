@@ -139,6 +139,7 @@ export const useGameHistory = () => {
   const [localGameHistory, setLocalGameHistory] = useLocalStorage<GameResult[]>('final-girl-game-history', []);
   const [dbGameHistory, setDbGameHistory] = useState<GameResult[]>([]);
   const [isDbLoading, setIsDbLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [hasMigrated, setHasMigrated] = useState(false);
   const fetchIdRef = useRef(0);
 
@@ -152,35 +153,43 @@ export const useGameHistory = () => {
     if (!user) {
       fetchIdRef.current += 1;
       setIsDbLoading(false);
+      setLoadError(null);
       setDbGameHistory([]);
       return;
     }
 
     const fetchId = fetchIdRef.current + 1;
     fetchIdRef.current = fetchId;
-    const abortController = new AbortController();
+    let ignore = false;
 
     const fetchFromDb = async () => {
       setIsDbLoading(true);
+      setLoadError(null);
       try {
         const { data, error } = await supabase
           .from('game_history')
-          .select('*')
+          .select(HISTORY_SUMMARY_SELECT)
           .eq('user_id', user.id)
-          .order('timestamp', { ascending: false })
-          .abortSignal(abortController.signal);
+          .order('timestamp', { ascending: false });
 
         if (error) {
-          if (abortController.signal.aborted) return;
           console.error('Error fetching game history:', error);
+          if (!ignore && fetchIdRef.current === fetchId) {
+            setLoadError(error.message || 'Failed to retrieve session data.');
+          }
           return;
         }
 
-        if (data && fetchIdRef.current === fetchId) {
+        if (!ignore && data && fetchIdRef.current === fetchId) {
           setDbGameHistory(data.map(row => fromDbRow(row as Record<string, unknown>)));
         }
+      } catch (err) {
+        console.error('Game history fetch failed:', err);
+        if (!ignore && fetchIdRef.current === fetchId) {
+          setLoadError(err instanceof Error ? err.message : 'Failed to retrieve session data.');
+        }
       } finally {
-        if (fetchIdRef.current === fetchId) {
+        if (!ignore && fetchIdRef.current === fetchId) {
           setIsDbLoading(false);
         }
       }
@@ -189,7 +198,7 @@ export const useGameHistory = () => {
     fetchFromDb();
 
     return () => {
-      abortController.abort();
+      ignore = true;
     };
   }, [user, authLoading]);
 
