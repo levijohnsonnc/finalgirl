@@ -375,6 +375,30 @@ export const useGameHistory = () => {
     };
   }, [gameHistory]);
 
+  const fetchGameDetails = useCallback(async (id: string): Promise<GameResult | null> => {
+    const existing = gameHistory.find(g => g.id === id);
+    if (!user) return existing ?? null;
+    if (existing?.introStory || existing?.endingNarration || existing?.gameHighlights) return existing;
+
+    const { data, error } = await supabase
+      .from('game_history')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching game details:', error);
+      toast.error('Failed to load story details');
+      return existing ?? null;
+    }
+    if (!data) return existing ?? null;
+
+    const fullGame = fromDbRow(data as unknown as Record<string, unknown>);
+    setDbGameHistory(prev => prev.map(game => game.id === id ? { ...game, ...fullGame } : game));
+    return fullGame;
+  }, [user, gameHistory]);
+
   const deleteGame = useCallback(async (id: string) => {
     // Find the game to get image URLs before deletion
     const gameToDelete = gameHistory.find(g => g.id === id);
@@ -437,7 +461,9 @@ export const useGameHistory = () => {
     updateGame,
     deleteGame,
     getStats,
+    fetchGameDetails,
     clearHistory,
     isLoading: authLoading || isDbLoading,
+    loadError,
   };
 };
