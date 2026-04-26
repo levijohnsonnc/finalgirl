@@ -216,7 +216,116 @@ const shadyAcres: EntityRuleModule = {
   ],
 };
 
-export const ENTITY_RULE_MODULES: EntityRuleModule[] = [grimlash, storybookWoods, bigBadWolf, shadyAcres];
+// ─── Mort the Teenage Dirtbag (Killer) — Shriek ───────────────────────────
+const mortTheTeenageDirtbag: EntityRuleModule = {
+  entity: 'Mort the Teenage Dirtbag',
+  kind: 'killer',
+  filmId: 's4-shriek',
+  source: 'Shriek — Killer Sheet',
+  credits: { design: 'Evan Derrick', art: 'Tyler Johnson' },
+  tags: ['mort', 'shriek', 'suspects', 'clues', 'informants', 'identity', 'killer'],
+  setup: [
+    { type: 'callout', variant: 'critical', title: 'Do Not Open', text: 'There is a special Finale Secret Envelope included with Mort. DO NOT OPEN it until you are instructed to! Otherwise, it will spoil the surprise.' },
+    {
+      type: 'list',
+      items: [
+        'Place the Basic Finale card on the Killer board. It will be used for the Killer Action until the Finale is revealed.',
+        'Add the Interrogate and Coerce Action cards to the Action Tableau.',
+        'Place the 10 Suspect cards in a row above the board with their attributes side showing. Place the 10 Suspect tokens in the Suspect bag.',
+        'Mort does not start on the board. Instead, he is wearing one of 10 possible disguises. After placing the Victims and Final Girl on the Location board, take the 10 Suspect miniatures and randomly place each Suspect on an empty space until there are either no empty spaces left or no Suspects left to place. If there are no empty spaces and Suspects still need to be placed, place them in the furthest spaces from you that contain Victims, but only 1 Suspect per space.',
+        'Randomly choose a Clue card and place it next to the board on whichever side you wish. This card determines who Mort will be disguised as. Place the Clue Viewer and the Reminder tokens, facedown, next to the Clue card.',
+        'Place the Horror Track token on the Killer board in its designated space.',
+      ],
+    },
+  ],
+  rules: [
+    { type: 'heading', level: 3, text: 'Suspects' },
+    { type: 'paragraph', text: 'You are attempting to figure out who Mort is actually masquerading as, but until you have eliminated all Suspects but one, it could be anyone! There are 10 Suspects, each dressed up as a different Victim, Final Girl, Enemy, or the Killer. For gameplay purposes, Suspects are not considered the Killer, an Enemy, or a Victim. They will never be targeted and cannot be damaged.' },
+    { type: 'paragraph', text: 'Suspects have 7 attributes, listed on their respective Suspect card. These attributes are what will help you determine who Mort is actually disguised as.' },
+    { type: 'heading', level: 3, text: 'Revealing Clues' },
+    { type: 'paragraph', text: 'There are two new Action cards: Interrogate and Coerce. These cards can be used to reveal clues to identify which of the Suspects Mort is disguised as.' },
+    { type: 'list', ordered: true, items: ['Reveal one of the facedown Reminder tokens (numbered 1-5).', 'Use the Clue Viewer to look at the corresponding Clue on the Clue card. It will indicate an attribute that Mort does NOT possess.', 'Determine which Suspects cannot be Mort by looking at their attributes and discarding their Suspect cards from the lineup.', 'For each Suspect card discarded, remove that Suspect miniature from the board and replace it with an Informant meeple.', 'Keep the Reminder token faceup near the Clue card so that you remember which Clues you’ve already seen.'] },
+    { type: 'paragraph', text: 'Revealing a Clue will ALWAYS eliminate at least one Suspect, and may eliminate more than one.' },
+    { type: 'heading', level: 3, text: 'Interrogate & Coerce' },
+    { type: 'paragraph', text: 'Interrogate can only be resolved while in a space with a Suspect. After successfully interrogating a Suspect, they will panic.' },
+    { type: 'paragraph', text: 'Coerce can only be resolved while in a space with an Informant. After successfully coercing an Informant, you will remove them from the board.' },
+    { type: 'heading', level: 3, text: 'Informants' },
+    { type: 'paragraph', text: 'Informants are considered Victims for ALL gameplay purposes with three exceptions: when you save an Informant, after receiving the reward from your Final Girl card, you may either reduce Horror or, after increasing Bloodlust, you must increase Horror once; if an Informant is killed, after increasing Bloodlust you follow normal rules but if there are less prominent Victims over normal Victims, they are less prominent.' },
+    { type: 'heading', level: 3, text: 'Suspects Temporarily Acting as Killers' },
+    { type: 'paragraph', text: 'Whenever you see the mask icon, draw a token out of the Suspect bag. The token will correspond to one of the ten Suspects, who will then temporarily become the Killer. Mort is a master of disguise and could be impersonating ANYONE, if only for a moment. Place the token back into the bag after resolving the Killer Action(s). That Suspect could become the Active Killer again on the same or future turn.' },
+    { type: 'paragraph', text: 'When drawing a token, if the indicated Suspect has already been proven to NOT be Mort, nothing happens and the Killer Action effect is ignored. Instead, discard the token.' },
+    { type: 'paragraph', text: 'For each Location card that requires you to resolve an action as the Killer, draw a token from the bag as if there was a mask icon present on the card. As long as that Suspect is still in the lineup, they will become the Active Killer for resolving ALL Killer Actions/effects on that card.' },
+    { type: 'heading', level: 3, text: 'Horror Track Token' },
+    { type: 'paragraph', text: 'When Bloodlust reaches the highest space on the track, place the Horror Track token from the Killer board on top of the skull symbol at the end of the Horror Track on your Player board. From this point forward, if Horror exceeds its maximum level, instead of increasing Horror, you lose health instead.' },
+    { type: 'heading', level: 3, text: 'Running Out of Terror Cards Before Revealing All Clues' },
+    { type: 'paragraph', text: 'If the Finale is revealed normally when the Terror deck is exhausted, flip the Clue card over to its opposite side and reveal who Mort is disguised as. Replace that Suspect’s miniature with Mort’s miniature and flip their Suspect card over, replacing the Basic Finale card with the Suspect card. Then remove any remaining Suspects and Informant meeples from the Location board and discard their associated Suspect cards.' },
+    { type: 'paragraph', text: 'If the Dark Power hasn’t been revealed, reveal it immediately and discard any Minor Dark Powers in play.' },
+    { type: 'heading', level: 3, text: 'Panic Phase' },
+    { type: 'paragraph', text: 'Until Mort is revealed, Victims do not panic during the Panic phase.' },
+    { type: 'heading', level: 3, text: 'Mind Dark Powers' },
+    { type: 'paragraph', text: 'Some Locations may have Minor Dark Powers that have spaces for Health markers on them. If one of these is drawn, do not place Health markers on it, as Mort cannot be attacked while he is disguised. Minor Dark Power cards that are drawn in this way may be discarded when you successfully resolve an Interrogate or a Coerce Action card with two successes.' },
+  ],
+};
+
+// ─── MegaBGCon (Location) — Shriek ─────────────────────────────────────────
+const megaBgCon: EntityRuleModule = {
+  entity: 'MegaBGCon',
+  kind: 'location',
+  filmId: 's4-shriek',
+  source: 'Shriek — Location Sheet',
+  credits: { design: 'A.J. Porfirio', art: 'Tyler Johnson' },
+  tags: ['megabgcon', 'shriek', 'booths', 'exhibit areas', 'food court', 'halways', 'convention', 'location'],
+  setup: [
+    { type: 'list', items: ['Shuffle the 12 Booth cards and make a facedown Booth deck.', 'Shuffle the 10 Booth Event cards and make a facedown Booth Event deck.', 'Add the 2 Create a Panic Action cards to the Action Tableau.', 'Place the Finale Reminder card underneath the Finale card facedown side facing up. It will only be used after the Finale is revealed.'] },
+  ],
+  rules: [
+    { type: 'heading', level: 3, text: 'Definitions' },
+    { type: 'list', items: ['Exhibit Areas: The yellow spaces marked with the booth icon are considered Exhibit Area spaces. Thematically, this is where the vendor booths are and where everyone wants to be!', 'Food Court: The Food Court is located in the bottom left-hand corner of the board.', 'General Areas: All remaining spaces not captured in the 2 areas above are considered the General Areas.'] },
+    { type: 'heading', level: 3, text: 'Restricted Victim Following' },
+    { type: 'paragraph', text: 'The Victims are having such a great time at the convention that they will not willingly follow you out of Exhibit Areas and into General Areas. You may not have ANY Victims follow you when moving from an Exhibit Area space to a General Area space. Instead, you will need to use the Create a Panic Action card to attempt to scare them from an Exhibit Area space to a General Area space. Victims could also panic and move from an Exhibit Area space per the normal rules during the Panic phase, or panicking from other effects.' },
+    { type: 'heading', level: 3, text: 'Main Hallway' },
+    { type: 'paragraph', text: 'When panicking someone from the Main Hallway, roll 2 dice instead of 1 to determine the direction they panic.' },
+    { type: 'heading', level: 3, text: 'Searching' },
+    { type: 'paragraph', text: 'At Mega Boardgame Con you can search in ANY space by resolving a Search Action card. The Item deck you draw from depends on the kind of space you are searching in: an Exhibit Area space, the Food Court space, or a General Area space.' },
+    { type: 'callout', variant: 'critical', title: 'Rules on Game Ambiguity', text: 'Because all spaces can be searched, there are no search icons on the spaces. However, each space is considered a search space for the purpose of effects that reference them. If unsure what to do in certain instances, apply the Rules on Game Ambiguity.' },
+    { type: 'heading', level: 3, text: 'Moving Through Hallways and Docks' },
+    { type: 'paragraph', text: 'Hallways and docks are sparsely populated and you can move to other connected hallways and docks quickly. If you intend to move to a space connected by this icon, you get +1 movement, but the first space you move to MUST be an adjacent space connected with the hallway icon.' },
+    { type: 'heading', level: 3, text: 'Booth Cards and Booth Events' },
+    { type: 'paragraph', text: 'During each Upkeep phase you will draw a Booth card. If you need to draw a Booth card but the deck is empty, shuffle the discard pile to create a new deck.' },
+    { type: 'list', items: ['1-3: Spawn a normal Victim in the space with the Booth. This represents a new attendee showing up to the convention.', '4-6: Draw a Booth Event card and apply its effects in the space with the Booth. Discard the Booth card after resolving it. Booth Event cards will instruct you as to whether or not the card should be discarded.'] },
+  ],
+};
+
+export const ENTITY_RULE_MODULES: EntityRuleModule[] = [grimlash, storybookWoods, bigBadWolf, shadyAcres, mortTheTeenageDirtbag, megaBgCon];
+
+export interface ModulePromptContext {
+  narrativeGuidance: string;
+  visualGuidance: string;
+  rulesSummary: string;
+}
+
+const MODULE_PROMPT_CONTEXT: Record<string, ModulePromptContext> = {
+  'Mort the Teenage Dirtbag': {
+    narrativeGuidance: 'Mort is not openly present at first: he is hidden among ten costumed Suspects at MegaBGCon, and the story should emphasize paranoia, mistaken identity, clue-gathering, and convention attendees who might only be pretending to be victims, heroes, or killers. Do not reveal Mort’s true disguise in the opening unless the game state explicitly says he has been revealed.',
+    visualGuidance: 'Use a convention-floor slasher look: a hooded Ghostface-like mask with one oversized eye, charcoal hoodie, red-and-black pants, crowds of costumed boardgame fans, suspect miniatures, clue cards, and fluorescent convention lighting. If final killer identity is known, show that specific disguised suspect or reveal moment rather than generic Mort.',
+    rulesSummary: 'Mort begins disguised as one of ten Suspects. Players reveal clues through Interrogate and Coerce actions, eliminating Suspects and turning them into Informants. Suspects can temporarily act as the Killer when mask effects resolve. Mort is only truly revealed once enough clues are found or the Terror deck runs out.',
+  },
+  MegaBGCon: {
+    narrativeGuidance: 'MegaBGCon is a busy boardgame convention where crowds resist leaving the fun. Exhibit Areas, the Food Court, booths, booth events, the Main Hallway, and sparse hallway/dock routes should shape the scene.',
+    visualGuidance: 'Depict a crowded boardgame convention: vendor booths, demo tables, banners, dice, boardgame boxes, miniatures, food court signage, hallways/docks, fluorescent overhead lighting, cosplay costumes, and crowded exhibit aisles.',
+    rulesSummary: 'Victims will not willingly follow from Exhibit Areas into General Areas and often need to be panicked out. Every space can be searched, with the item deck determined by area type. Booth cards and Booth Events trigger during Upkeep, and hallway/dock movement can be faster.',
+  },
+};
+
+export function getModulePromptContext(killer: string, location: string): ModulePromptContext | null {
+  const contexts = [MODULE_PROMPT_CONTEXT[killer], MODULE_PROMPT_CONTEXT[location]].filter(Boolean) as ModulePromptContext[];
+  if (contexts.length === 0) return null;
+  return {
+    narrativeGuidance: contexts.map((c) => c.narrativeGuidance).join('\n'),
+    visualGuidance: contexts.map((c) => c.visualGuidance).join('\n'),
+    rulesSummary: contexts.map((c) => c.rulesSummary).join('\n'),
+  };
+}
 
 /**
  * Build synthetic RuleSections + a RuleChapter from an EntityRuleModule so it
