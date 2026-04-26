@@ -4,6 +4,17 @@ import { RuleChapter as RuleChapterType, RuleSection as RuleSectionType, Glossar
 import { RuleSection } from './RuleSection';
 import { RuleSubTabs } from './RuleSubTabs';
 
+const getChapterTag = (title: string, subtitle?: string) => {
+  const text = `${title} ${subtitle ?? ''}`.toLowerCase();
+  if (/killer|terror|horror|finale|bloodlust/.test(text)) return 'KILLER';
+  if (/attack|combat|damage|health/.test(text)) return 'COMBAT';
+  if (/victim|bystander|rescue|panic/.test(text)) return 'VICTIMS';
+  if (/item|search|weapon/.test(text)) return 'ITEMS';
+  if (/token|marker|time/.test(text)) return 'TOKENS';
+  if (/turn|action|planning|upkeep|phase/.test(text)) return 'TURN';
+  return 'CORE';
+};
+
 interface RuleChapterProps {
   chapter: RuleChapterType;
   allSections: RuleSectionType[];
@@ -67,6 +78,7 @@ export const RuleChapter = ({
   }, [sections, subTabs, activeSubId]);
 
   const hasHits = matchCount > 0;
+  const chapterTag = getChapterTag(chapter.title, chapter.subtitle);
 
   return (
     <div
@@ -83,6 +95,10 @@ export const RuleChapter = ({
           <span className="font-title text-lg sm:text-xl">{chapter.number}</span>
         </div>
         <div className="flex-1 min-w-0">
+          <div className="chapter-file-meta font-vhs text-[9px] sm:text-[10px] uppercase tracking-[0.22em] mb-1">
+            <span>{chapterTag}</span>
+            <span>Archive Ref · VHS-001</span>
+          </div>
           <div className="font-title text-base sm:text-lg uppercase tracking-wide text-foreground leading-tight">
             {chapter.title}
           </div>
