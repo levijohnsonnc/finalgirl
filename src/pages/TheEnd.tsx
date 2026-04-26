@@ -13,6 +13,7 @@ import { getFinalGirlDescription } from '@/data/finalGirlDescriptions';
 import { getLocationDescription } from '@/data/locationDescriptions';
 import { getFinalGirlMaxHealth } from '@/data/finalGirlHealth';
 import { getKillerSpecialRules } from '@/data/killerSpecialRules';
+import { getModulePromptContext } from '@/data/rules/moduleRules';
 import { renderFormattedText } from '@/lib/textFormatting';
 import SceneImageControls from '@/components/SceneImageControls';
 import { useImageGeneration } from '@/hooks/useImageGeneration';
@@ -52,6 +53,7 @@ const TheEnd = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { hasApiKey, autoGenerate, generateImage } = useImageGeneration();
   const autoGenerateTriggered = useRef(false);
+  const moduleContext = getModulePromptContext(result.killer, result.location);
   
   const isWin = result.outcome === 'won';
 
@@ -73,6 +75,7 @@ const TheEnd = ({
           finalGirlDescription: getFinalGirlDescription(result.finalGirl),
           location: result.location,
           locationDescription: getLocationDescription(result.location),
+          moduleVisualGuidance: moduleContext?.visualGuidance,
           sceneType: 'ending',
           outcome: result.outcome,
         });
@@ -101,6 +104,9 @@ const TheEnd = ({
       const finalGirlBackstory = getFinalGirlDescription(result.finalGirl);
       const locationDescription = getLocationDescription(result.location);
       const killerRules = getKillerSpecialRules(result.killer);
+      const moduleSpecialRules = moduleContext
+        ? [moduleContext.rulesSummary, moduleContext.narrativeGuidance].filter(Boolean).join('\n')
+        : undefined;
       const finalGirlMaxHealth = getFinalGirlMaxHealth(result.finalGirl);
 
       const payload = {
@@ -109,11 +115,14 @@ const TheEnd = ({
         killer: {
           name: result.killer,
           description: killerDescription,
-          ...(killerRules?.narrativeNote && { specialRules: killerRules.narrativeNote }),
+          ...((killerRules?.narrativeNote || moduleSpecialRules) && {
+            specialRules: [killerRules?.narrativeNote, moduleSpecialRules].filter(Boolean).join('\n'),
+          }),
         },
         location: {
           name: result.location,
           description: locationDescription,
+          ...(moduleSpecialRules && { specialRules: moduleSpecialRules }),
         },
         finalGirl: {
           name: result.finalGirl,
