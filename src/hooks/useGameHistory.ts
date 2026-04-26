@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
 import { useAuth } from './useAuth';
@@ -119,13 +119,25 @@ export const useGameHistory = () => {
   const [dbGameHistory, setDbGameHistory] = useState<GameResult[]>([]);
   const [isDbLoading, setIsDbLoading] = useState(false);
   const [hasMigrated, setHasMigrated] = useState(false);
+  const fetchIdRef = useRef(0);
 
   // Determine which history to use
   const gameHistory = user ? dbGameHistory : localGameHistory;
 
   // Fetch from database when authenticated
   useEffect(() => {
-    if (!user || authLoading) return;
+    if (authLoading) return;
+
+    if (!user) {
+      fetchIdRef.current += 1;
+      setIsDbLoading(false);
+      setDbGameHistory([]);
+      return;
+    }
+
+    const fetchId = fetchIdRef.current + 1;
+    fetchIdRef.current = fetchId;
+    const abortController = new AbortController();
 
     const fetchFromDb = async () => {
       setIsDbLoading(true);
@@ -134,22 +146,30 @@ export const useGameHistory = () => {
           .from('game_history')
           .select('*')
           .eq('user_id', user.id)
-          .order('timestamp', { ascending: false });
+          .order('timestamp', { ascending: false })
+          .abortSignal(abortController.signal);
 
         if (error) {
+          if (abortController.signal.aborted) return;
           console.error('Error fetching game history:', error);
           return;
         }
 
-        if (data) {
+        if (data && fetchIdRef.current === fetchId) {
           setDbGameHistory(data.map(row => fromDbRow(row as Record<string, unknown>)));
         }
       } finally {
-        setIsDbLoading(false);
+        if (fetchIdRef.current === fetchId) {
+          setIsDbLoading(false);
+        }
       }
     };
 
     fetchFromDb();
+
+    return () => {
+      abortController.abort();
+    };
   }, [user, authLoading]);
 
   // Migrate localStorage data on first sign-in
