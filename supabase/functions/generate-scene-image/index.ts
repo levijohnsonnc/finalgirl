@@ -43,6 +43,7 @@ serve(async (req) => {
       finalGirlDescription,
       location,
       locationDescription,
+      moduleVisualGuidance,
       sceneType,
       outcome,
     } = await req.json();
@@ -84,9 +85,9 @@ serve(async (req) => {
     let imagePrompt: string;
 
     if (isPoster) {
-      imagePrompt = buildPosterPrompt(story, killer, killerDescription, finalGirl, finalGirlDescription, location, locationDescription, outcome);
+      imagePrompt = buildPosterPrompt(story, killer, killerDescription, finalGirl, finalGirlDescription, location, locationDescription, outcome, moduleVisualGuidance);
     } else {
-      imagePrompt = buildBeginningPrompt(story, killer, killerDescription, finalGirl, finalGirlDescription, location, locationDescription);
+      imagePrompt = buildBeginningPrompt(story, killer, killerDescription, finalGirl, finalGirlDescription, location, locationDescription, moduleVisualGuidance);
     }
 
     // --- Generate image using user's chosen provider ---
@@ -128,6 +129,7 @@ function buildPosterPrompt(
   location: string,
   locationDescription: string | undefined,
   outcome: string | undefined,
+  moduleVisualGuidance: string | undefined,
 ): string {
   const isVictory = outcome === 'won';
 
@@ -156,6 +158,9 @@ CHARACTERS:
 
 LOCATION: ${location} — ${locationDescription || 'Use story context for setting details.'}
 
+MODULE VISUAL GUIDANCE:
+${moduleVisualGuidance || 'No additional module-specific visual guidance.'}
+
 OUTCOME: ${outcomeMood}
 
 COMPOSITION: ${compositionSeed}
@@ -177,6 +182,7 @@ function buildBeginningPrompt(
   finalGirlDescription: string | undefined,
   location: string,
   locationDescription: string | undefined,
+  moduleVisualGuidance: string | undefined,
 ): string {
   const characterSection: string[] = [];
   if (finalGirlDescription) {
@@ -225,6 +231,9 @@ ${characterBlock}
 
 STORY:
 ${story}
+
+MODULE VISUAL GUIDANCE:
+${moduleVisualGuidance || 'No additional module-specific visual guidance.'}
 
 ---
 
