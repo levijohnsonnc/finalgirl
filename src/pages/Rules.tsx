@@ -125,6 +125,7 @@ const Rules = () => {
     [coreModule, entitySections, killerChapters, locationChapters]
   );
   const [query, setQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<RuleCategory>('ALL');
   const [openChapterId, setOpenChapterId] = useLocalStorage<string | null>(
     'rules-open-chapter',
     null
@@ -279,9 +280,29 @@ const Rules = () => {
   );
 
   const isSearching = query.trim().length > 0;
-  const visibleChapters = isSearching
-    ? module.chapters.filter((c) => (chapterMatchCounts[c.id] ?? 0) > 0)
-    : module.chapters;
+  const killerIds = useMemo(() => new Set(killerChapters.map((c) => c.id)), [killerChapters]);
+  const locationIds = useMemo(() => new Set(locationChapters.map((c) => c.id)), [locationChapters]);
+  const chapterCategories = useMemo(
+    () => Object.fromEntries(module.chapters.map((chapter) => [chapter.id, getChapterCategory(chapter, module.sections, killerIds, locationIds)])),
+    [module, killerIds, locationIds]
+  );
+  const visibleChapters = module.chapters.filter((chapter) => {
+    const matchesSearch = !isSearching || (chapterMatchCounts[chapter.id] ?? 0) > 0;
+    const category = chapterCategories[chapter.id];
+    const matchesCategory = activeCategory === 'ALL' || category === activeCategory || (activeCategory === 'CORE' && category === 'LOCATION');
+    return matchesSearch && matchesCategory;
+  });
+  const activeChapter = module.chapters.find((chapter) => chapter.id === openChapterId) ?? visibleChapters[0];
+  const activeChapterSections = activeChapter
+    ? activeChapter.sectionIds.map((id) => module.sections.find((section) => section.id === id)).filter((section): section is RuleSectionType => !!section)
+    : [];
+  const relatedSections = activeChapterSections
+    .flatMap((section) => section.seeAlso ?? [])
+    .map((id) => module.sections.find((section) => section.id === id))
+    .filter((section, index, arr): section is RuleSectionType => !!section && arr.findIndex((item) => item?.id === section.id) === index)
+    .slice(0, 4);
+  const sidebarTip = activeChapterSections.flatMap((section) => section.body).find((block) => block.type === 'callout' || block.type === 'example');
+  const tickerContent = [...RULES_TICKER, ...RULES_TICKER];
 
   return (
     <div className="rules-page relative max-w-5xl mx-auto px-3 sm:px-4 pb-24">
