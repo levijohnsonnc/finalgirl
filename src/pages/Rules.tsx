@@ -305,63 +305,86 @@ const Rules = () => {
   const tickerContent = [...RULES_TICKER, ...RULES_TICKER];
 
   return (
-    <div className="rules-page relative max-w-5xl mx-auto px-3 sm:px-4 pb-24">
+    <div className="rules-page relative min-h-screen px-3 sm:px-5 pb-28 pt-3 sm:pt-6">
       {/* Page chrome overlays */}
       <div className="film-grain pointer-events-none" aria-hidden />
       <div className="vignette pointer-events-none" aria-hidden />
 
-      {/* Header */}
-      <header className="rules-header relative pt-2 pb-5 mb-5">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="rec-dot" aria-hidden />
-          <BookMarked className="w-5 h-5 text-secondary" />
-          <h1 className="font-title text-2xl sm:text-3xl uppercase tracking-wide neon-text text-secondary">
-            Rulebook
-          </h1>
-          <span className="vhs-spec-label hidden sm:inline-flex font-vhs text-[10px] uppercase tracking-[0.2em] px-2 py-0.5">
-            CORE · VHS-001 · FAN REF
-          </span>
-        </div>
-        <p className="font-vhs text-[11px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground">
-          Unofficial fan reference ·{' '}
-          <a
-            href="https://gamers-hq.de/media/pdf/22/ba/4a/FinalGirl_Rules.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-secondary/80 hover:text-secondary underline decoration-dotted"
-          >
-            Official Core Rulebook ↗
-          </a>
-        </p>
-      </header>
+      <div className="rules-binder mx-auto">
+        {/* Header */}
+        <header className="rules-header relative mb-5">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3 font-vhs text-[10px] sm:text-xs uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="rec-dot" aria-hidden />
+                <span>Final Girl / Unofficial Case Files</span>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <BookMarked className="w-7 h-7 text-primary" />
+                <h1 className="font-title text-4xl sm:text-6xl uppercase tracking-wide text-foreground blood-glow">
+                  Rulebook
+                </h1>
+              </div>
+              <p className="mt-3 font-vhs text-[11px] sm:text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                Unofficial Fan Reference · Recovered Binder Copy ·{' '}
+                <a
+                  href="https://gamers-hq.de/media/pdf/22/ba/4a/FinalGirl_Rules.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-secondary/80 hover:text-secondary underline decoration-dotted"
+                >
+                  Official Core Rulebook ↗
+                </a>
+              </p>
+            </div>
+            <div className="rules-dossier-card">
+              <span className="vhs-spec-label font-vhs text-[10px] uppercase tracking-[0.22em] px-2 py-0.5">CORE · VHS-001 · FAN REF</span>
+              <span className="font-vhs text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Recovered Tape / Evidence Box 07</span>
+              <span className="font-vhs text-[10px] uppercase tracking-[0.2em] text-primary/80">Archive Ref: FG-RULES-{String(visibleChapters.length).padStart(2, '0')}</span>
+            </div>
+          </div>
+        </header>
 
-      {/* Search bar — label-maker strip */}
-      <div className="rules-search-wrap mb-5 sticky top-16 sm:top-20 z-30">
-        <div className="rules-search relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/70" />
-          <input
-            type="text"
-            inputMode="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="SEARCH RULES, TERMS, ICONS…"
-            className="rules-search-input w-full pl-9 pr-9 py-2.5 font-vhs text-sm uppercase tracking-wider"
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
-              aria-label="Clear search"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
+        {/* Search bar + filters */}
+        <div className="rules-search-wrap mb-6 sticky top-3 sm:top-5 z-30">
+          <div className="rules-search relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/70" />
+            <input
+              type="text"
+              inputMode="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="SEARCH RULES, TERMS, ICONS..."
+              className="rules-search-input w-full pl-9 pr-9 py-3 font-vhs text-sm uppercase tracking-wider"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          <div className="rules-filter-strip mt-3 flex gap-2 overflow-x-auto pb-1" aria-label="Rule categories">
+            {CATEGORY_FILTERS.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className={`rules-filter-chip font-vhs text-[10px] sm:text-[11px] uppercase tracking-[0.18em] px-3 py-1.5 whitespace-nowrap ${activeCategory === category ? 'rules-filter-chip-active' : ''}`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Chapter list */}
-      <div className="space-y-2.5">
+        <div className="rules-layout-grid">
+          {/* Chapter list */}
+          <main className="space-y-2.5 min-w-0">
         {visibleChapters.length === 0 ? (
           <div className="text-center py-16 font-vhs uppercase tracking-wider text-sm text-muted-foreground">
             No chapters match "{query}".
