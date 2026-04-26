@@ -8,8 +8,10 @@ interface GameHistoryContextValue {
   updateGame: (id: string, updates: Partial<GameResult>) => void;
   deleteGame: (id: string) => Promise<void>;
   getStats: () => GameStats;
+  fetchGameDetails: (id: string) => Promise<GameResult | null>;
   clearHistory: () => Promise<void>;
   isLoading: boolean;
+  loadError: string | null;
 }
 
 const GameHistoryContext = createContext<GameHistoryContextValue | null>(null);
