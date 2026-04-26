@@ -234,6 +234,8 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             src={selectedGame.posterImageUrl}
                             alt="Game Poster"
                             className="max-h-[200px] w-auto object-contain border-4 border-[hsl(30_20%_25%)] shadow-lg"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                       ) : (
@@ -262,17 +264,23 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             src={selectedGame.sceneImageUrl}
                             alt="Scene"
                             className="max-h-[180px] w-auto object-contain rounded-sm shadow-md"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                       )}
 
-                      <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                      {isLoadingStory ? (
+                        <p className="font-vhs text-sm text-muted-foreground text-center py-6 animate-pulse">Recovering full case file...</p>
+                      ) : (
+                        <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                      )}
                     </div>
                   ) : (
                     <ScrapbookGrid
                       games={games}
                       selectedGameId={null}
-                      onSelectGame={setSelectedGame}
+                      onSelectGame={handleSelectGame}
                       type={type}
                     />
                   )}
@@ -291,6 +299,8 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             src={selectedGame.posterImageUrl}
                             alt="Game Poster"
                             className="w-full h-full object-contain"
+                            loading="lazy"
+                            decoding="async"
                           />
                         ) : (
                           <button
@@ -350,13 +360,17 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                             ← Back to Grid
                           </button>
                         </div>
-                        <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                        {isLoadingStory ? (
+                          <p className="font-vhs text-sm text-muted-foreground text-center py-6 animate-pulse">Recovering full case file...</p>
+                        ) : (
+                          <ScrapbookStoryPage game={selectedGame} type={type} onDelete={() => setShowDeleteConfirm(true)} />
+                        )}
                       </div>
                     ) : (
                       <ScrapbookGrid
                         games={games}
                         selectedGameId={null}
-                        onSelectGame={setSelectedGame}
+                        onSelectGame={handleSelectGame}
                         type={type}
                       />
                     )}
