@@ -181,7 +181,7 @@ export const useGameHistory = () => {
         }
 
         if (!ignore && data && fetchIdRef.current === fetchId) {
-          setDbGameHistory(data.map(row => fromDbRow(row as Record<string, unknown>)));
+          setDbGameHistory(data.map(row => fromDbRow(row as unknown as Record<string, unknown>)));
         }
       } catch (err) {
         console.error('Game history fetch failed:', err);
