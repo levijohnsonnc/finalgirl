@@ -73,7 +73,7 @@ export const useOwnedFilms = (): UseOwnedFilmsReturn => {
 
   // Migrate localStorage data on first sign-in
   useEffect(() => {
-    if (!user || authLoading || hasMigrated || isDbLoading) return;
+    if (!user || !isAuthReady || hasMigrated || isDbLoading) return;
     if (localOwnedFilms.length === 0) return;
     if (dbOwnedFilms.length > 0) return; // Already has data in DB
 
@@ -98,18 +98,20 @@ export const useOwnedFilms = (): UseOwnedFilmsReturn => {
         // Clear localStorage after successful migration
         setLocalOwnedFilms([]);
         setDbOwnedFilms(localOwnedFilms);
+        setCachedCloudOwnedFilms(localOwnedFilms);
       } catch (err) {
         console.error('Migration error:', err);
       }
     };
 
     migrateData();
-  }, [user, authLoading, localOwnedFilms, dbOwnedFilms, hasMigrated, isDbLoading, setLocalOwnedFilms]);
+  }, [user, isAuthReady, localOwnedFilms, dbOwnedFilms, hasMigrated, isDbLoading, setLocalOwnedFilms, setCachedCloudOwnedFilms]);
 
   const setOwnedFilms = useCallback((updater: (prev: string[]) => string[]) => {
     if (user) {
       setDbOwnedFilms(prev => {
         const newFilms = updater(prev);
+        setCachedCloudOwnedFilms(newFilms);
         
         // Save to database in background
         supabase
@@ -132,7 +134,7 @@ export const useOwnedFilms = (): UseOwnedFilmsReturn => {
     } else {
       setLocalOwnedFilms(updater);
     }
-  }, [user, setLocalOwnedFilms]);
+  }, [user, setLocalOwnedFilms, setCachedCloudOwnedFilms]);
 
   // Return appropriate data based on auth state
   const ownedFilms = user ? dbOwnedFilms : localOwnedFilms;
