@@ -6,9 +6,11 @@ import { TrendsSection } from '@/components/stats/TrendsSection';
 import { BreakdownTabs } from '@/components/stats/BreakdownTabs';
 import { PlayerArchetypeBadge } from '@/components/stats/PlayerArchetype';
 import { AlertTriangle, Film, RotateCcw } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const Stats = () => {
   const { gameHistory, isLoading, loadError, retryLoadHistory } = useGameHistoryContext();
+  const { user, authError } = useAuth();
   const stats = useGameStats(gameHistory);
   const [timestamp, setTimestamp] = useState('');
 
@@ -81,20 +83,30 @@ const Stats = () => {
       ) : loadError ? (
         <div className="stats-empty border border-destructive/40 bg-background/70">
           <AlertTriangle className="w-16 h-16 text-destructive/70 mb-4" />
-          <h2 className="font-title text-xl mb-2">Archive Retrieval Failed</h2>
+          <h2 className="font-title text-xl mb-2">{authError ? 'Session Recovery Failed' : 'Archive Retrieval Failed'}</h2>
           <p className="text-muted-foreground text-center max-w-md mb-4">
-            The cloud records timed out before the stats reel could be assembled.
+            {authError ? 'Your saved sign-in could not be restored. Please sign in again.' : 'The cloud records timed out before the stats reel could be assembled.'}
           </p>
           <p className="font-vhs text-[10px] text-muted-foreground/70 text-center max-w-md mb-5 break-words">
             {loadError}
           </p>
-          <button
-            onClick={retryLoadHistory}
-            className="font-vhs text-xs inline-flex items-center gap-2 border border-primary/40 px-4 py-2 text-primary hover:bg-primary/10 transition-colors"
-          >
-            <RotateCcw className="w-3 h-3" />
-            RETRY ARCHIVE LOAD
-          </button>
+          {!authError && (
+            <button
+              onClick={retryLoadHistory}
+              className="font-vhs text-xs inline-flex items-center gap-2 border border-primary/40 px-4 py-2 text-primary hover:bg-primary/10 transition-colors"
+            >
+              <RotateCcw className="w-3 h-3" />
+              RETRY ARCHIVE LOAD
+            </button>
+          )}
+        </div>
+      ) : !user ? (
+        <div className="stats-empty">
+          <Film className="w-16 h-16 text-muted-foreground/30 mb-4" />
+          <h2 className="font-title text-xl mb-2">Sign In Required</h2>
+          <p className="text-muted-foreground text-center max-w-md">
+            Sign in to retrieve your cloud session stats.
+          </p>
         </div>
       ) : stats.gamesPlayed === 0 ? (
         <div className="stats-empty">

@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useGameHistoryContext } from '@/contexts/GameHistoryContext';
 import { ScrapbookBook } from '@/components/ScrapbookBook';
+import { useAuth } from '@/hooks/useAuth';
+import { AlertTriangle, Film } from 'lucide-react';
 import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';
 
 const Scrapbooks = () => {
-  const { gameHistory, updateGame, deleteGame, fetchGameDetails } = useGameHistoryContext();
+  const { gameHistory, updateGame, deleteGame, fetchGameDetails, isLoading, loadError, retryLoadHistory } = useGameHistoryContext();
+  const { user, authError } = useAuth();
   const [openBook, setOpenBook] = useState<'finalGirl' | 'killer' | null>(null);
 
   const wonGames = gameHistory.filter(g => g.outcome === 'won');
@@ -25,6 +28,38 @@ const Scrapbooks = () => {
 
   return (
     <div className="min-h-[calc(100vh-12rem)] flex flex-col">
+      {isLoading ? (
+        <div className="flex-1 flex items-center justify-center px-4">
+          <p className="text-muted-foreground font-vhs text-sm tracking-widest animate-pulse text-center">
+            RETRIEVING SCRAPBOOK ARCHIVE...
+          </p>
+        </div>
+      ) : loadError ? (
+        <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
+          <AlertTriangle className="w-16 h-16 text-destructive/70 mb-4" />
+          <h1 className="font-title text-xl mb-2">{authError ? 'Session Recovery Failed' : 'Scrapbook Retrieval Failed'}</h1>
+          <p className="text-muted-foreground max-w-md mb-5">
+            {authError ? 'Your saved sign-in could not be restored. Please sign in again.' : loadError}
+          </p>
+          {!authError && (
+            <button
+              onClick={retryLoadHistory}
+              className="font-vhs text-xs inline-flex items-center gap-2 border border-primary/40 px-4 py-2 text-primary hover:bg-primary/10 transition-colors"
+            >
+              RETRY SCRAPBOOK LOAD
+            </button>
+          )}
+        </div>
+      ) : !user ? (
+        <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
+          <Film className="w-16 h-16 text-muted-foreground/30 mb-4" />
+          <h1 className="font-title text-xl mb-2">Sign In Required</h1>
+          <p className="text-muted-foreground max-w-md">
+            Sign in to retrieve your cloud scrapbooks.
+          </p>
+        </div>
+      ) : (
+      <>
       {/* Scrapbook Covers */}
       <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-20 px-4">
         {/* Final Girl Scrapbook */}
@@ -96,6 +131,8 @@ const Scrapbooks = () => {
           onDeleteGame={handleDeleteGame}
           onFetchGameDetails={fetchGameDetails}
         />
+      )}
+      </>
       )}
     </div>
   );
