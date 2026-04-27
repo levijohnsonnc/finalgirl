@@ -9,7 +9,7 @@ import { AlertTriangle, Film, RotateCcw } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 const Stats = () => {
-  const { gameHistory, isLoading, loadError, retryLoadHistory } = useGameHistoryContext();
+  const { gameHistory, isLoading, loadError, retryLoadHistory, isDegraded } = useGameHistoryContext();
   const { user, authError } = useAuth();
   const stats = useGameStats(gameHistory);
   const [timestamp, setTimestamp] = useState('');
@@ -80,7 +80,7 @@ const Stats = () => {
             <div className="h-24 bg-muted/10 rounded animate-pulse" />
           </div>
         </div>
-      ) : loadError ? (
+      ) : loadError && !isDegraded ? (
         <div className="stats-empty border border-destructive/40 bg-background/70">
           <AlertTriangle className="w-16 h-16 text-destructive/70 mb-4" />
           <h2 className="font-title text-xl mb-2">{authError ? 'Session Recovery Failed' : 'Archive Retrieval Failed'}</h2>
@@ -119,6 +119,11 @@ const Stats = () => {
         </div>
       ) : (
         <div className="stats-content">
+          {isDegraded && (
+            <div className="mb-6 border border-primary/30 bg-background/70 px-4 py-3 text-center font-vhs text-[10px] text-muted-foreground tracking-wider">
+              CLOUD ARCHIVE RECONNECTING • SHOWING LAST SAVED SESSION DATA
+            </div>
+          )}
           {/* Record Jacket */}
           <RecordJacket stats={stats} />
 
