@@ -10,6 +10,7 @@ interface GameHistoryContextValue {
   getStats: () => GameStats;
   fetchGameDetails: (id: string) => Promise<GameResult | null>;
   clearHistory: () => Promise<void>;
+  retryLoadHistory: () => Promise<void>;
   isLoading: boolean;
   loadError: string | null;
 }

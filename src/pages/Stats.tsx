@@ -5,10 +5,10 @@ import { RecordJacket } from '@/components/stats/RecordJacket';
 import { TrendsSection } from '@/components/stats/TrendsSection';
 import { BreakdownTabs } from '@/components/stats/BreakdownTabs';
 import { PlayerArchetypeBadge } from '@/components/stats/PlayerArchetype';
-import { Film } from 'lucide-react';
+import { AlertTriangle, Film, RotateCcw } from 'lucide-react';
 
 const Stats = () => {
-  const { gameHistory, isLoading } = useGameHistoryContext();
+  const { gameHistory, isLoading, loadError, retryLoadHistory } = useGameHistoryContext();
   const stats = useGameStats(gameHistory);
   const [timestamp, setTimestamp] = useState('');
 
@@ -77,6 +77,24 @@ const Stats = () => {
             <div className="h-5 w-36 bg-muted/20 rounded animate-pulse" />
             <div className="h-24 bg-muted/10 rounded animate-pulse" />
           </div>
+        </div>
+      ) : loadError ? (
+        <div className="stats-empty border border-destructive/40 bg-background/70">
+          <AlertTriangle className="w-16 h-16 text-destructive/70 mb-4" />
+          <h2 className="font-title text-xl mb-2">Archive Retrieval Failed</h2>
+          <p className="text-muted-foreground text-center max-w-md mb-4">
+            The cloud records timed out before the stats reel could be assembled.
+          </p>
+          <p className="font-vhs text-[10px] text-muted-foreground/70 text-center max-w-md mb-5 break-words">
+            {loadError}
+          </p>
+          <button
+            onClick={retryLoadHistory}
+            className="font-vhs text-xs inline-flex items-center gap-2 border border-primary/40 px-4 py-2 text-primary hover:bg-primary/10 transition-colors"
+          >
+            <RotateCcw className="w-3 h-3" />
+            RETRY ARCHIVE LOAD
+          </button>
         </div>
       ) : stats.gamesPlayed === 0 ? (
         <div className="stats-empty">
