@@ -1,111 +1,97 @@
-<final-text>
-## What’s actually going on
+## Current diagnosis
 
-The strongest signal is that this is now failing before the stats query even really gets a chance to run.
+This is not a data-loss or RLS problem.
 
-I found three important clues:
+- Your data is still in the backend: the signed-in user has **42 game records** and **1 user settings row with 14 owned films**.
+- The published app is failing at the backend layer:
+  - auth logs show repeated `POST /token` **504 timeouts** (`context deadline exceeded`)
+  - app requests to `game_history` and `user_settings` return **503 `PGRST002`**
+  - official PostgREST docs define `PGRST002` as: **could not connect to the database while building the schema cache**
+- That means the backend was unhealthy/restarting after publish, so the app could not read history, collection, or reliably complete sign-in.
 
-1. The browser is repeatedly failing the auth refresh request:
-   - `POST /auth/v1/token?grant_type=refresh_token` → `Failed to fetch`
-   - This repeats over and over.
+## Why the last fixes did not work
 
-2. `useGameHistory()` still reports loading while auth is loading:
-   - `isLoading: authLoading || isDbLoading`
-   - So if auth never settles, both Stats and Scrapbooks stay in the spinner forever.
+1. **The payload optimization fix was aimed at slow queries**, but the current failures happen **before a normal query can even run**. The backend is returning 503/504, so a lighter select alone cannot fix it.
+2. **The auth hardening fix addressed loading deadlocks**, but the real live issue is now backend auth instability. Worse, the new 10-second session timeout clears stored auth and signs the user out on a slow backend, which makes a temporary outage look like a broken login.
+3. **Collection still shows “No films in collection” because `useOwnedFilms` has no failure fallback**. When `user_settings` fails, `dbOwnedFilms` stays `[]`, and the app interprets that as “you own nothing,” even though your data exists.
 
-3. The network snapshot shows only the `OPTIONS` preflight for the `game_history` request, not a successful data `GET`.
-   - That means the app is getting stuck in auth/session recovery first, before the history fetch becomes reliable.
+## Best repair plan
 
-So the most likely primary root cause is:
+### 1. Make auth failure-safe instead of destructive
+Update `src/hooks/useAuth.ts` so temporary backend slowness does **not** erase a valid local session.
 
-- the persisted session refresh is failing,
-- `useAuth()` is not handling that failure defensively enough,
-- and the history views are blocked behind `authLoading`, so they never recover.
+- stop clearing persisted auth tokens on timeout/network/backend-unavailable errors
+- only clear the session for truly invalid/expired auth states
+- distinguish these cases in state:
+  - session unavailable because user is signed out
+  - session temporarily unavailable because backend auth is unhealthy
+  - session invalid and must be replaced
+- keep the UI usable while auth recovery is pending or temporarily degraded
 
-The earlier payload/performance issue may still exist as a secondary problem, but right now the first blocker is auth/session readiness.
+### 2. Add cached fallback for cloud-backed user data
+Update `src/hooks/useOwnedFilms.ts` and `src/hooks/useGameHistory.ts` to preserve the last successful cloud snapshot locally.
 
-## Best fix plan
+- store last successful owned films and history summary in local storage
+- when backend reads fail with 503/504/network errors, fall back to cached cloud data instead of empty arrays
+- expose explicit `loadError` / `isDegraded` states
+- add controlled retry behavior rather than indefinite loading or silent empty states
 
-### 1. Make auth initialization always resolve
-Update `src/hooks/useAuth.ts` so auth startup cannot hang forever.
+### 3. Fix the misleading empty-state UX
+Update the pages/components that currently convert backend failure into “no data.”
 
-Changes:
-- wrap `supabase.auth.getSession()` in `try/catch/finally`
-- always set `isLoading` to `false` in the failure path
-- keep `onAuthStateChange` only for later auth changes, not as the sole thing the app waits on
-- add an explicit `isAuthReady` concept so the app knows when session restoration is finished, even if it failed
-
-Result:
-- the app will stop spinning forever when refresh fails
-- it will move to either “signed in”, “signed out”, or “auth recovery failed”
-
-### 2. Clear bad/stale persisted sessions when refresh recovery fails
-If session refresh throws `Failed to fetch` / retryable auth recovery errors during initialization:
-- clear the broken local auth state
-- treat the user as signed out
-- surface a clear message like “Your saved session couldn’t be restored. Please sign in again.”
-
-Result:
-- users won’t get trapped in a permanent loading state because of a poisoned saved session
-
-### 3. Stop gating Stats/Scrapbooks behind ambiguous auth loading
-Update `src/hooks/useGameHistory.ts` so it only waits for auth initialization to finish, not for indefinite auth recovery.
-
-Changes:
-- fetch history only when `isAuthReady && user`
-- if `isAuthReady && !user`, stop loading and show the signed-out/empty-state path
-- separate auth failure from history failure in error messaging
-
-Result:
-- Stats and Scrapbooks will either load data, show a retryable history error, or prompt sign-in
-- they will not sit on “Retrieving session data...” forever
-
-### 4. Add explicit UI states for auth failure
-Update Stats and Scrapbooks UI to distinguish:
-- loading records
-- failed to restore session
-- signed out
-- history fetch failed
-
-Result:
-- users get a clear next action instead of a spinner
-
-### 5. Re-check database performance after auth is fixed
-Once auth is no longer blocking the page:
-- verify whether `game_history` summary loads normally
-- if it is still slow, add the pending index on `(user_id, timestamp desc)`
-- keep the slim summary select and on-demand detail fetch pattern already started
-
-Result:
-- we solve both the immediate blocker and any remaining performance drag
-
-## Files to update
-
-- `src/hooks/useAuth.ts`
-- `src/hooks/useGameHistory.ts`
+Files to adjust:
+- `src/pages/Auth.tsx`
+- `src/pages/Archive.tsx`
+- `src/pages/CastingRoom.tsx`
 - `src/pages/Stats.tsx`
 - `src/pages/Scrapbooks.tsx`
-- possibly a migration for `game_history (user_id, timestamp desc)` if performance still needs it after auth is fixed
+- `src/components/Marquee.tsx`
 
-## Technical notes
+Behavior changes:
+- if collection cannot load, show **“Collection unavailable”**, not **“No films in collection”**
+- if auth backend is unavailable, show **“Sign-in temporarily unavailable”** with retry guidance
+- if cached data exists, allow the user to keep browsing/playing from cached collection/history instead of blocking them
+- keep Stats/Scrapbooks error states specific and actionable
 
-Proposed auth flow:
+### 4. Re-verify the live backend after publish
+Once the code changes are in place, validate against the **published URL** and check backend health/logs during the test.
 
-```text
-App start
-  -> getSession()
-     -> success: set user/session, authReady=true
-     -> failure: clear invalid persisted auth, authReady=true, user=null
-  -> onAuthStateChange()
-     -> handle later sign-in / sign-out / token refresh events
+Validation goals:
+- existing signed-in users are not forcibly logged out during temporary backend slowness
+- collection loads from live data when backend is healthy
+- collection falls back to cached data when backend is unhealthy
+- Stats and Scrapbooks fail gracefully and recover with retry
+- sign-in works again once the backend token endpoint is healthy
 
-History loading
-  -> if !authReady: loading
-  -> if authReady && !user: not loading, show signed-out state
-  -> if authReady && user: fetch game_history summary
-```
+### 5. Keep the query optimizations already made, but don’t treat them as the root fix
+The lighter history query is still a good optimization, so I would keep it. But the main repair is **resilience to backend unavailability**, not query trimming.
 
-## Why this is the best next step
+## Technical details
 
-Because right now the app appears to be stuck before the history views can recover at all. Fixing auth readiness is the fastest way to unblock both Stats and Scrapbooks together. After that, if query speed is still an issue, I can finish the database/index side cleanly.
-</final-text>
+### Files I plan to change
+- `src/hooks/useAuth.ts`
+- `src/hooks/useOwnedFilms.ts`
+- `src/hooks/useGameHistory.ts`
+- `src/pages/Auth.tsx`
+- `src/pages/Archive.tsx`
+- `src/pages/CastingRoom.tsx`
+- `src/pages/Stats.tsx`
+- `src/pages/Scrapbooks.tsx`
+- `src/components/Marquee.tsx`
+
+### Concrete implementation approach
+- introduce non-destructive auth recovery logic
+- add cached cloud snapshot keys for:
+  - owned films
+  - game history summary
+- treat `503`, `504`, `PGRST002`, and network fetch failures as **backend unavailable**, not **no data**
+- thread an `isDegraded` / `backendUnavailable` state into the UI
+- ensure the game-start flow depends on **resolved collection state**, not just `ownedFilms.length`
+
+## Expected result
+
+After this fix:
+- you should stop seeing false “no films” states when the backend hiccups
+- Stats and Scrapbooks should either load normally or show a correct degraded-state message with retry
+- sign-in should stop being broken by the app clearing its own session during temporary backend slowness
+- the app will behave much more safely around publish-time backend restarts
