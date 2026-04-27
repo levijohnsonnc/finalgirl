@@ -47,7 +47,7 @@ export const useOwnedFilms = (): UseOwnedFilmsReturn => {
 
       const films = Array.isArray(data?.owned_films) ? data.owned_films as string[] : [];
       setDbOwnedFilms(films);
-      setCachedCloudOwnedFilms(films);
+      setCachedCloudOwnedFilms(prev => JSON.stringify(prev) === JSON.stringify(films) ? prev : films);
     } catch (err) {
       console.error('Collection fetch failed:', err);
       setLoadError(err instanceof Error ? err.message : 'Collection archive is temporarily unavailable.');
