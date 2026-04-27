@@ -186,7 +186,7 @@ export const useGameHistory = () => {
       if (data && fetchIdRef.current === fetchId) {
         const games = data.map(row => fromDbRow(row as unknown as Record<string, unknown>));
         setDbGameHistory(games);
-        setCachedCloudGameHistory(games);
+        setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(games) ? prev : games);
       }
     } catch (err) {
       console.error('Game history fetch failed:', err);
@@ -256,7 +256,7 @@ export const useGameHistory = () => {
         if (data) {
           const games = data.map(row => fromDbRow(row as Record<string, unknown>));
           setDbGameHistory(games);
-          setCachedCloudGameHistory(games);
+          setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(games) ? prev : games);
         }
       } catch (err) {
         console.error('Migration error:', err);
