@@ -7,7 +7,7 @@ import finalGirlCover from '@/assets/scrapbooks/final-girl-cover.png';
 import killerCover from '@/assets/scrapbooks/killer-cover.png';
 
 const Scrapbooks = () => {
-  const { gameHistory, updateGame, deleteGame, fetchGameDetails, isLoading, loadError, retryLoadHistory } = useGameHistoryContext();
+  const { gameHistory, updateGame, deleteGame, fetchGameDetails, isLoading, loadError, retryLoadHistory, isDegraded } = useGameHistoryContext();
   const { user, authError } = useAuth();
   const [openBook, setOpenBook] = useState<'finalGirl' | 'killer' | null>(null);
 
@@ -34,7 +34,7 @@ const Scrapbooks = () => {
             RETRIEVING SCRAPBOOK ARCHIVE...
           </p>
         </div>
-      ) : loadError ? (
+      ) : loadError && !isDegraded ? (
         <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
           <AlertTriangle className="w-16 h-16 text-destructive/70 mb-4" />
           <h1 className="font-title text-xl mb-2">{authError ? 'Session Recovery Failed' : 'Scrapbook Retrieval Failed'}</h1>
@@ -60,6 +60,11 @@ const Scrapbooks = () => {
         </div>
       ) : (
       <>
+      {isDegraded && (
+        <div className="mx-auto mb-6 max-w-2xl border border-primary/30 bg-background/70 px-4 py-3 text-center font-vhs text-[10px] text-muted-foreground tracking-wider">
+          CLOUD ARCHIVE RECONNECTING • SHOWING LAST SAVED SCRAPBOOKS
+        </div>
+      )}
       {/* Scrapbook Covers */}
       <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-20 px-4">
         {/* Final Girl Scrapbook */}
