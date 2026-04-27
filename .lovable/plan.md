@@ -1,54 +1,30 @@
 ## Diagnosis
 
-The Stats and Scrapbooks delays are related: both depend on the same shared `GameHistoryProvider` / `useGameHistory` data load.
+The Stats page is not hanging because of the visual Stats components. It is hanging before Stats gets data, inside the shared `GameHistoryProvider` / `useGameHistory` load.
 
-### What is causing the hang/delay
+The evidence points to a database read problem:
 
-1. **Duplicate auth + history loading paths**
-   - `GameHistoryProvider`, `IndexContent`, `Marquee`, `ScrapbookBook`, `useImageGeneration`, and other children each call `useAuth()` independently.
-   - Each `useAuth()` instance creates its own auth listener and `getSession()` call.
-   - The game history fetch depends on one auth instance, while the UI depends on others, so page transitions can happen while auth/history state is still churned by repeated session restoration.
+- The published app requests `game_history` with the optimized summary field list.
+- That request sometimes returns `500` with database error `57014`: `canceling statement due to statement timeout`.
+- When it does return, the payload includes at least one `poster_image_url` that is not a normal short storage URL. It is a huge `data:image/png;base64,...` string embedded directly in the row.
+- Because the initial summary query still selects `poster_image_url` and `scene_image_url`, Stats is forced to load huge image blobs even though it does not need images.
+- Scrapbooks are related: they use the same history load, and then render poster thumbnails. So one or more oversized embedded image strings can make both Stats and Scrapbooks feel frozen.
+- The database metadata/read tools are also timing out, which suggests the backend is currently under strain. But the app is still making this worse by selecting large text/image fields in the global load.
 
-2. **The recent abort-based race fix is too aggressive**
-   - Network logs show repeated `game_history` requests being aborted: `signal is aborted without reason`.
-   - A later request eventually returns `200`, but if the active effect is replaced/aborted during auth churn, Stats can remain on `RETRIEVING SESSION DATA...` until another successful fetch settles the exact active request.
+The previous optimization removed long story fields from the initial query, but it did not remove the worst offender: embedded base64 poster/scene image data stored in URL columns.
 
-3. **The history query fetches full story bodies and image URLs for every page**
-   - The main user has 42 game records with ~216k narrative characters and 40 poster URLs / 40 scene URLs.
-   - Stats only needs compact numeric/categorical fields, but currently receives all intro stories, ending narrations, highlights, and image URLs.
-   - Scrapbooks need the full records eventually, but not before showing the covers/counts.
+## Best Fix
 
-4. **Scrapbooks eagerly render many poster thumbnails**
-   - `ScrapbookGrid` renders all poster `<img>` elements immediately.
-   - For 40+ cloud images, opening Scrapbooks can trigger a large burst of image downloads/decodes, explaining the 30+ second perceived load.
+### 1. Make the global game history load truly lightweight
 
-5. **Initial page load is also heavier than needed**
-   - Performance snapshot shows ~250 script modules, ~10s full page load in the sandbox, and eager image glob imports in `gameData.ts`.
-   - This is secondary to the Stats/Scrapbooks issue, but it amplifies the delay.
+Update the initial `HISTORY_SUMMARY_SELECT` in `src/hooks/useGameHistory.ts` to remove:
 
-## Fix Plan
+- `poster_image_url`
+- `scene_image_url`
 
-### 1. Centralize auth state once
+Stats does not need either field. Scrapbook cover counts do not need them either.
 
-Create an `AuthProvider` / `useAuthContext` and wrap the app once near the top level.
-
-Then update existing consumers to read from this shared context instead of each component creating its own `useAuth()` listener.
-
-This removes duplicated session restoration and makes history loading depend on one stable auth source.
-
-### 2. Replace the fragile abort race logic in `useGameHistory`
-
-Update `useGameHistory` to use a simpler, deterministic load state:
-
-- Wait until shared auth is ready.
-- If no user, immediately use local history and set loading false.
-- If user exists, run one active database fetch for that user.
-- Use a mounted/stale flag to ignore outdated results, but do not abort normal page-transition fetches in a way that can strand loading.
-- Always clear `isDbLoading` in success and error paths for the current request.
-
-### 3. Split game history into summary vs full detail payloads
-
-Change the initial database query to fetch a compact field list needed for Stats, counts, and grids:
+The initial query should only fetch small stats/count fields:
 
 - id, timestamp, outcome
 - killer, location, final_girl
@@ -56,61 +32,96 @@ Change the initial database query to fetch a compact field list needed for Stats
 - final_horror_level, final_girl_health, killer_health
 - weapon_used, ending_sub_location
 - victims_saved, victims_killed
-- poster_image_url, scene_image_url
 
-Do **not** fetch `intro_story`, `ending_narration`, or `game_highlights` in the global load.
+This should stop Stats from being blocked by huge image data.
 
-Then add a targeted detail fetch by game id when a scrapbook story is selected, loading only that one record’s long text before rendering the story page.
+### 2. Load Scrapbook thumbnails separately and safely
 
-Result:
+For Scrapbooks, add a lightweight, on-demand thumbnail fetch that runs only when Scrapbooks opens.
 
-- Stats stops waiting on large narrative payloads it never uses.
-- Scrapbook covers/counts can render quickly.
-- Story text loads on demand only when the user opens a specific entry.
+Important: it should not blindly pull giant base64 image data into the main history load.
 
-### 4. Optimize Scrapbook image loading
+Options I will implement:
 
-Update `ScrapbookGrid` and selected-image displays to:
+- Fetch image URLs only for the currently displayed first batch of scrapbook entries.
+- Reject/ignore embedded `data:` image values when rendering thumbnails, showing `NO IMAGE` instead.
+- Keep full story/image detail loading on demand when a specific scrapbook entry is selected.
 
-- Add `loading="lazy"` and `decoding="async"` to poster/scene images.
-- Limit initial grid thumbnails to a reasonable first batch, with a “Load more recovered photos” button if needed.
-- Keep cover counts visible immediately even while thumbnails stream in.
+This means:
 
-This preserves the scrapbook feel while preventing dozens of poster downloads from blocking the page.
+- Stats loads from small rows only.
+- Scrapbook covers/counts appear quickly.
+- Thumbnail loading cannot block the whole app.
+- Bad historical rows with embedded base64 data no longer poison the page.
 
-### 5. Add page-level fallback/error states
+### 3. Add defensive cleanup in the app layer
 
-For Stats:
+Update `fromDbRow` / image handling so that any image field beginning with `data:` is treated as unsafe/oversized for list rendering.
 
-- If history fetch fails, show a VHS-style error state with a retry button instead of looping forever.
-- If loading exceeds a short threshold, keep the skeleton but display “Still recovering cloud records...” so it is clear the app is not frozen.
+For selected story details, if the row contains a base64 image instead of a cloud URL, the app should avoid rendering it as a giant inline image source. It can show the placeholder instead.
 
-For Scrapbooks:
+This prevents the browser from trying to decode megabytes of inline image text from the database.
 
-- Show covers as soon as counts are available.
-- Show lightweight placeholders for poster thumbnails while images load.
+### 4. Add database performance migration
 
-### 6. Verify with diagnostics
+Create a migration to add a compound index for the exact query pattern used by the app:
 
-After implementation, validate:
+```sql
+create index if not exists idx_game_history_user_timestamp_desc
+on public.game_history (user_id, timestamp desc);
+```
 
-- Open Stats from the marquee and footer; confirm it leaves `RETRIEVING SESSION DATA...`.
-- Open Scrapbooks; confirm covers/counts appear quickly.
-- Select a scrapbook entry; confirm long story text loads on demand.
-- Check network panel: initial `game_history` response should be smaller and no repeated abort loop should occur.
-- Check console for new errors.
+The current migrations have separate indexes on `user_id` and `timestamp`, but the app query filters by `user_id` and orders by `timestamp desc`. A combined index is better for this access pattern.
+
+I will also include a safe helper view or generated query path if useful, but the main fix is not to query heavy columns globally.
+
+### 5. Add a Stats failure state instead of infinite loading
+
+Stats currently ignores `loadError`, so if the database times out, the page can look like it is loading forever.
+
+Update `Stats.tsx` to use `loadError` from `GameHistoryContext` and show an in-world VHS error panel with:
+
+- the failed archive retrieval message
+- a clear note that the app could not retrieve cloud records
+- a retry action if feasible, or instructions to navigate away/back
+
+This does not replace the database fix, but it prevents silent infinite spinners.
+
+### 6. Optional data repair follow-up
+
+There appear to be existing rows where `poster_image_url` stores a full `data:image/...base64` payload instead of a normal cloud storage URL.
+
+In implementation mode I will first add code that avoids reading/rendering those values. If database access is healthy enough afterward, I can also inspect and propose a cleanup migration/script to null out or migrate oversized `data:` image fields. I will not delete user records; at most, I would remove invalid embedded image strings from image URL columns after confirming the exact rows.
 
 ## Files expected to change
 
-- `src/hooks/useAuth.ts` or new auth context file
-- `src/App.tsx`
 - `src/hooks/useGameHistory.ts`
+  - remove image fields from initial summary query
+  - sanitize `data:` image fields
+  - add targeted thumbnail/detail loading behavior
 - `src/contexts/GameHistoryContext.tsx`
+  - expose any needed retry/thumbnail-loading function
 - `src/pages/Stats.tsx`
+  - show `loadError` instead of an endless spinner
 - `src/pages/Scrapbooks.tsx`
-- `src/components/ScrapbookBook.tsx`
+  - trigger thumbnail/detail loading only when needed
 - `src/components/ScrapbookGrid.tsx`
+  - keep lazy rendering and placeholders for oversized/invalid images
+- `supabase/migrations/...sql`
+  - add compound `(user_id, timestamp desc)` index
 
-## Optional follow-up after this fix
+## Verification plan
 
-Further reduce initial app load by changing eager image globs in `src/types/gameData.ts` to lazy URL mapping or generated manifest entries. That is broader than the immediate Stats/Scrapbooks fix, so I would keep it separate unless the app still feels slow after the targeted changes above.
+After implementation:
+
+1. Build/typecheck the app.
+2. Open the published/preview Stats flow while signed in.
+3. Confirm the initial `game_history` request no longer includes `poster_image_url` or `scene_image_url`.
+4. Confirm Stats renders even if thumbnails are unavailable.
+5. Open Scrapbooks and confirm covers/counts appear quickly.
+6. Confirm selecting a scrapbook entry still loads full details on demand.
+7. Check console/network logs for remaining `57014` timeouts.
+
+## Note on Lovable Cloud instance size
+
+The backend is also showing timeout symptoms while reading metadata. The code fix above reduces unnecessary load and should be done first. If timeouts continue after the query is made small and indexed, the next best operational step is increasing the Lovable Cloud instance size under Backend → Advanced settings → Upgrade instance.
