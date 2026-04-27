@@ -164,6 +164,8 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
 
   const coverImage = type === 'finalGirl' ? finalGirlCover : killerCover;
   const themeClass = type === 'finalGirl' ? 'scrapbook-theme-survivor' : 'scrapbook-theme-killer';
+  const selectedPosterUrl = selectedGame?.posterImageUrl;
+  const selectedSceneUrl = selectedGame?.sceneImageUrl;
 
   return (
     <div className={`fixed inset-0 z-50 ${isMobile ? 'overflow-y-auto' : 'flex items-center justify-center'}`}>
@@ -206,8 +208,8 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
           {/* Inside Pages */}
           <div className={`scrapbook-pages ${isOpen || isMobile ? 'pages-visible' : ''}`}>
             {/* Polaroid - only on desktop */}
-            {!isMobile && selectedGame?.sceneImageUrl && (
-              <ScrapbookPolaroid sceneImageUrl={selectedGame.sceneImageUrl} />
+            {!isMobile && selectedSceneUrl && (
+              <ScrapbookPolaroid sceneImageUrl={selectedSceneUrl} />
             )}
 
             {isMobile ? (
@@ -228,10 +230,10 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                       </div>
 
                       {/* Poster above story on mobile */}
-                      {selectedGame.posterImageUrl ? (
+                      {selectedPosterUrl ? (
                         <div className="mb-4 flex justify-center">
                           <img
-                            src={selectedGame.posterImageUrl}
+                            src={selectedPosterUrl}
                             alt="Game Poster"
                             className="max-h-[200px] w-auto object-contain border-4 border-[hsl(30_20%_25%)] shadow-lg"
                             loading="lazy"
@@ -258,10 +260,10 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                       )}
 
                       {/* Scene image on mobile */}
-                      {selectedGame.sceneImageUrl && (
+                      {selectedSceneUrl && (
                         <div className="mb-4 flex justify-center">
                           <img
-                            src={selectedGame.sceneImageUrl}
+                            src={selectedSceneUrl}
                             alt="Scene"
                             className="max-h-[180px] w-auto object-contain rounded-sm shadow-md"
                             loading="lazy"
@@ -294,9 +296,9 @@ export const ScrapbookBook = ({ type, games, onClose, onUpdateGame, onDeleteGame
                   <div className="page-content">
                     {selectedGame ? (
                       <div className="poster-display">
-                        {selectedGame.posterImageUrl ? (
+                        {selectedPosterUrl ? (
                           <img
-                            src={selectedGame.posterImageUrl}
+                            src={selectedPosterUrl}
                             alt="Game Poster"
                             className="w-full h-full object-contain"
                             loading="lazy"
