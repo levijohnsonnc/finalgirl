@@ -277,6 +277,7 @@ export const useGameHistory = () => {
     if (user) {
       // Optimistically update local state
       setDbGameHistory(prev => [newResult, ...prev]);
+      setCachedCloudGameHistory(prev => [newResult, ...prev]);
       
       // Save to database in background
       supabase
@@ -288,6 +289,7 @@ export const useGameHistory = () => {
             toast.error('Failed to save game', { description: 'Your game was not saved to the cloud. Please try again.' });
             // Rollback on error
             setDbGameHistory(prev => prev.filter(g => g.id !== newResult.id));
+            setCachedCloudGameHistory(prev => prev.filter(g => g.id !== newResult.id));
           }
         });
     } else {
@@ -296,12 +298,17 @@ export const useGameHistory = () => {
     }
     
     return newResult;
-  }, [user, setLocalGameHistory]);
+  }, [user, setLocalGameHistory, setCachedCloudGameHistory]);
 
   const updateGame = useCallback((id: string, updates: Partial<GameResult>) => {
     if (user) {
       // Optimistically update local state
       setDbGameHistory(prev => 
+        prev.map(game => 
+          game.id === id ? { ...game, ...updates } : game
+        )
+      );
+      setCachedCloudGameHistory(prev => 
         prev.map(game => 
           game.id === id ? { ...game, ...updates } : game
         )
@@ -341,7 +348,7 @@ export const useGameHistory = () => {
         )
       );
     }
-  }, [user, setLocalGameHistory]);
+  }, [user, setLocalGameHistory, setCachedCloudGameHistory]);
 
   const getStats = useCallback((): GameStats => {
     const history = gameHistory;
@@ -487,5 +494,6 @@ export const useGameHistory = () => {
     retryLoadHistory: fetchFromDb,
     isLoading: !isAuthReady || authLoading || isDbLoading,
     loadError,
+    isDegraded,
   };
 };
