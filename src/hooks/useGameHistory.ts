@@ -30,6 +30,13 @@ const deleteStorageFiles = async (game: { posterImageUrl?: string; sceneImageUrl
   }
 };
 
+const sanitizeStoredImageUrl = (value: unknown): string | undefined => {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.startsWith('data:') || trimmed.length > 2048) return undefined;
+  return trimmed;
+};
+
 const HISTORY_SUMMARY_SELECT = [
   'id',
   'user_id',
@@ -47,8 +54,6 @@ const HISTORY_SUMMARY_SELECT = [
   'ending_sub_location',
   'victims_saved',
   'victims_killed',
-  'poster_image_url',
-  'scene_image_url',
 ].join(',');
 
 export interface GameResult {
@@ -106,8 +111,8 @@ const toDbRow = (result: GameResult, userId: string) => ({
   ending_sub_location: result.endingSubLocation ?? null,
   victims_saved: result.victimsSaved ?? null,
   victims_killed: result.victimsKilled ?? null,
-  poster_image_url: result.posterImageUrl ?? null,
-  scene_image_url: result.sceneImageUrl ?? null,
+  poster_image_url: sanitizeStoredImageUrl(result.posterImageUrl) ?? null,
+  scene_image_url: sanitizeStoredImageUrl(result.sceneImageUrl) ?? null,
 });
 
 // Convert snake_case from database to camelCase
@@ -130,8 +135,8 @@ const fromDbRow = (row: Record<string, unknown>): GameResult => ({
   endingSubLocation: (row.ending_sub_location as string) || undefined,
   victimsSaved: (row.victims_saved as number) || undefined,
   victimsKilled: (row.victims_killed as number) || undefined,
-  posterImageUrl: (row.poster_image_url as string) || undefined,
-  sceneImageUrl: (row.scene_image_url as string) || undefined,
+  posterImageUrl: sanitizeStoredImageUrl(row.poster_image_url),
+  sceneImageUrl: sanitizeStoredImageUrl(row.scene_image_url),
 });
 
 export const useGameHistory = () => {
@@ -146,6 +151,44 @@ export const useGameHistory = () => {
   // Determine which history to use
   const gameHistory = user ? dbGameHistory : localGameHistory;
 
+  const fetchFromDb = useCallback(async () => {
+    if (!user) return;
+
+    const fetchId = fetchIdRef.current + 1;
+    fetchIdRef.current = fetchId;
+
+    setIsDbLoading(true);
+    setLoadError(null);
+    try {
+      const { data, error } = await supabase
+        .from('game_history')
+        .select(HISTORY_SUMMARY_SELECT)
+        .eq('user_id', user.id)
+        .order('timestamp', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching game history:', error);
+        if (fetchIdRef.current === fetchId) {
+          setLoadError(error.message || 'Failed to retrieve session data.');
+        }
+        return;
+      }
+
+      if (data && fetchIdRef.current === fetchId) {
+        setDbGameHistory(data.map(row => fromDbRow(row as unknown as Record<string, unknown>)));
+      }
+    } catch (err) {
+      console.error('Game history fetch failed:', err);
+      if (fetchIdRef.current === fetchId) {
+        setLoadError(err instanceof Error ? err.message : 'Failed to retrieve session data.');
+      }
+    } finally {
+      if (fetchIdRef.current === fetchId) {
+        setIsDbLoading(false);
+      }
+    }
+  }, [user]);
+
   // Fetch from database when authenticated
   useEffect(() => {
     if (authLoading) return;
@@ -158,49 +201,8 @@ export const useGameHistory = () => {
       return;
     }
 
-    const fetchId = fetchIdRef.current + 1;
-    fetchIdRef.current = fetchId;
-    let ignore = false;
-
-    const fetchFromDb = async () => {
-      setIsDbLoading(true);
-      setLoadError(null);
-      try {
-        const { data, error } = await supabase
-          .from('game_history')
-          .select(HISTORY_SUMMARY_SELECT)
-          .eq('user_id', user.id)
-          .order('timestamp', { ascending: false });
-
-        if (error) {
-          console.error('Error fetching game history:', error);
-          if (!ignore && fetchIdRef.current === fetchId) {
-            setLoadError(error.message || 'Failed to retrieve session data.');
-          }
-          return;
-        }
-
-        if (!ignore && data && fetchIdRef.current === fetchId) {
-          setDbGameHistory(data.map(row => fromDbRow(row as unknown as Record<string, unknown>)));
-        }
-      } catch (err) {
-        console.error('Game history fetch failed:', err);
-        if (!ignore && fetchIdRef.current === fetchId) {
-          setLoadError(err instanceof Error ? err.message : 'Failed to retrieve session data.');
-        }
-      } finally {
-        if (!ignore && fetchIdRef.current === fetchId) {
-          setIsDbLoading(false);
-        }
-      }
-    };
-
     fetchFromDb();
-
-    return () => {
-      ignore = true;
-    };
-  }, [user, authLoading]);
+  }, [user, authLoading, fetchFromDb]);
 
   // Migrate localStorage data on first sign-in
   useEffect(() => {
@@ -298,8 +300,8 @@ export const useGameHistory = () => {
       if (updates.endingSubLocation !== undefined) dbUpdates.ending_sub_location = updates.endingSubLocation;
       if (updates.victimsSaved !== undefined) dbUpdates.victims_saved = updates.victimsSaved;
       if (updates.victimsKilled !== undefined) dbUpdates.victims_killed = updates.victimsKilled;
-      if (updates.posterImageUrl !== undefined) dbUpdates.poster_image_url = updates.posterImageUrl;
-      if (updates.sceneImageUrl !== undefined) dbUpdates.scene_image_url = updates.sceneImageUrl;
+      if (updates.posterImageUrl !== undefined) dbUpdates.poster_image_url = sanitizeStoredImageUrl(updates.posterImageUrl) ?? null;
+      if (updates.sceneImageUrl !== undefined) dbUpdates.scene_image_url = sanitizeStoredImageUrl(updates.sceneImageUrl) ?? null;
 
       // Update database in background
       supabase
@@ -463,6 +465,7 @@ export const useGameHistory = () => {
     getStats,
     fetchGameDetails,
     clearHistory,
+    retryLoadHistory: fetchFromDb,
     isLoading: authLoading || isDbLoading,
     loadError,
   };
