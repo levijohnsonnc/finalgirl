@@ -140,7 +140,7 @@ const fromDbRow = (row: Record<string, unknown>): GameResult => ({
 });
 
 export const useGameHistory = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, isAuthReady, authError } = useAuth();
   const [localGameHistory, setLocalGameHistory] = useLocalStorage<GameResult[]>('final-girl-game-history', []);
   const [dbGameHistory, setDbGameHistory] = useState<GameResult[]>([]);
   const [isDbLoading, setIsDbLoading] = useState(false);
@@ -199,22 +199,22 @@ export const useGameHistory = () => {
 
   // Fetch from database when authenticated
   useEffect(() => {
-    if (authLoading) return;
+    if (!isAuthReady) return;
 
     if (!user) {
       fetchIdRef.current += 1;
       setIsDbLoading(false);
-      setLoadError(null);
+      setLoadError(authError);
       setDbGameHistory([]);
       return;
     }
 
     fetchFromDb();
-  }, [user, authLoading, fetchFromDb]);
+  }, [user, isAuthReady, authError, fetchFromDb]);
 
   // Migrate localStorage data on first sign-in
   useEffect(() => {
-    if (!user || authLoading || hasMigrated || isDbLoading) return;
+    if (!user || !isAuthReady || hasMigrated || isDbLoading) return;
     if (localGameHistory.length === 0) return;
     if (dbGameHistory.length > 0) return; // Already has data in DB
 
@@ -253,7 +253,7 @@ export const useGameHistory = () => {
     };
 
     migrateData();
-  }, [user, authLoading, localGameHistory, dbGameHistory, hasMigrated, isDbLoading, setLocalGameHistory]);
+  }, [user, isAuthReady, localGameHistory, dbGameHistory, hasMigrated, isDbLoading, setLocalGameHistory]);
 
   // recordGame returns synchronously but may do async work in background
   const recordGame = useCallback((result: Omit<GameResult, 'id' | 'timestamp'>): GameResult => {
@@ -474,7 +474,7 @@ export const useGameHistory = () => {
     fetchGameDetails,
     clearHistory,
     retryLoadHistory: fetchFromDb,
-    isLoading: authLoading || isDbLoading,
+    isLoading: !isAuthReady || authLoading || isDbLoading,
     loadError,
   };
 };
