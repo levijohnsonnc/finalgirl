@@ -31,7 +31,7 @@ const MARQUEE_SCREEN_RECT = {
 
 export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onStats, onRules }: MarqueeProps) => {
   const navigate = useNavigate();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, authError } = useAuth();
   const { gameHistory } = useGameHistoryContext();
   const [isClicked, setIsClicked] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -153,6 +153,11 @@ export const Marquee = ({ onStart, onArchive, onNavigateHome, onScrapbooks, onSt
             START THE TAPE
           </span>
         </button>
+        {authError && (
+          <p className="mt-3 max-w-xs text-center font-vhs text-[9px] tracking-wider text-primary/80">
+            SIGN-IN SERVICES RECONNECTING
+          </p>
+        )}
       </div>
       
       {/* Bottom Navigation - Centered on mobile, spread on desktop */}
