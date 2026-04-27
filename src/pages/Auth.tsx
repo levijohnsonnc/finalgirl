@@ -15,7 +15,7 @@ const passwordSchema = z.string().min(6, { message: "Password must be at least 6
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { user, isLoading, signIn, signUp, signInWithGoogle, signOut } = useAuth();
+  const { user, isLoading, authError, signIn, signUp, signInWithGoogle, signOut } = useAuth();
   const { toast } = useToast();
   
   const [isSignUp, setIsSignUp] = useState(false);
@@ -178,6 +178,13 @@ const Auth = () => {
               {user ? user.email : (isSignUp ? 'CREATE YOUR ACCOUNT' : 'SIGN IN TO CONTINUE')}
             </p>
           </div>
+
+          {authError && (
+            <div className="mb-5 border border-primary/30 bg-background/70 px-3 py-2 text-center">
+              <p className="font-vhs text-[10px] text-primary tracking-wider">SIGN-IN TEMPORARILY UNAVAILABLE</p>
+              <p className="mt-1 text-xs text-muted-foreground">{authError}</p>
+            </div>
+          )}
 
           {user ? (
             // Logged in state

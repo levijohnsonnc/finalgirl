@@ -13,6 +13,7 @@ interface GameHistoryContextValue {
   retryLoadHistory: () => Promise<void>;
   isLoading: boolean;
   loadError: string | null;
+  isDegraded: boolean;
 }
 
 const GameHistoryContext = createContext<GameHistoryContextValue | null>(null);

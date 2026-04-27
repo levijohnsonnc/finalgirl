@@ -15,10 +15,22 @@ interface SignInResult {
   error: AuthError | Error | null;
 }
 
-const clearPersistedAuthSession = () => {
-  Object.keys(window.localStorage)
-    .filter((key) => key === 'supabase.auth.token' || /^sb-.+-auth-token$/.test(key))
-    .forEach((key) => window.localStorage.removeItem(key));
+const getPersistedSession = (): Session | null => {
+  const authKey = Object.keys(window.localStorage).find((key) => /^sb-.+-auth-token$/.test(key));
+  if (!authKey) return null;
+
+  try {
+    const stored = window.localStorage.getItem(authKey);
+    if (!stored) return null;
+    const parsed = JSON.parse(stored) as { currentSession?: Session; access_token?: string; user?: User; expires_at?: number };
+    const session = parsed.currentSession ?? (parsed.access_token && parsed.user ? parsed as Session : null);
+    if (!session?.access_token || !session.user) return null;
+    if (session.expires_at && session.expires_at * 1000 < Date.now()) return null;
+    return session;
+  } catch (error) {
+    console.error('Failed to read persisted auth session:', error);
+    return null;
+  }
 };
 
 export const useAuth = () => {
@@ -76,17 +88,18 @@ const useAuthState = () => {
         });
       } catch (error) {
         console.error('Failed to restore saved auth session:', error);
-        clearPersistedAuthSession();
-        void supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+        const persistedSession = getPersistedSession();
 
         if (!isMounted) return;
         initialSessionResolvedRef.current = true;
         setAuthState({
-          session: null,
-          user: null,
+          session: persistedSession,
+          user: persistedSession?.user ?? null,
           isLoading: false,
           isAuthReady: true,
-          authError: 'Your saved session could not be restored. Please sign in again.',
+          authError: persistedSession
+            ? 'Sign-in services are temporarily slow. Using your saved session while the archive reconnects.'
+            : 'Sign-in services are temporarily unavailable. Please try again shortly.',
         });
       }
     };

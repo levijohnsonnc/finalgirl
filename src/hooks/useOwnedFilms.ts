@@ -8,47 +8,72 @@ interface UseOwnedFilmsReturn {
   ownedFilms: string[];
   setOwnedFilms: (updater: (prev: string[]) => string[]) => void;
   isLoading: boolean;
+  loadError: string | null;
+  isDegraded: boolean;
+  retryLoadOwnedFilms: () => Promise<void>;
 }
 
 export const useOwnedFilms = (): UseOwnedFilmsReturn => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, isAuthReady, authError } = useAuth();
   const [localOwnedFilms, setLocalOwnedFilms] = useLocalStorage<string[]>('final-girl-owned-films', []);
+  const [cachedCloudOwnedFilms, setCachedCloudOwnedFilms] = useLocalStorage<string[]>('final-girl-cloud-owned-films-cache', []);
   const [dbOwnedFilms, setDbOwnedFilms] = useState<string[]>([]);
   const [isDbLoading, setIsDbLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [isDegraded, setIsDegraded] = useState(false);
   const [hasMigrated, setHasMigrated] = useState(false);
+
+  const fetchFromDb = useCallback(async () => {
+    if (!user) return;
+
+    setIsDbLoading(true);
+    setLoadError(null);
+    setIsDegraded(false);
+
+    try {
+      const { data, error } = await supabase
+        .from('user_settings')
+        .select('owned_films')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error fetching user settings:', error);
+        setLoadError(error.message || 'Collection archive is temporarily unavailable.');
+        setIsDegraded(cachedCloudOwnedFilms.length > 0);
+        if (cachedCloudOwnedFilms.length > 0) setDbOwnedFilms(cachedCloudOwnedFilms);
+        return;
+      }
+
+      const films = Array.isArray(data?.owned_films) ? data.owned_films as string[] : [];
+      setDbOwnedFilms(films);
+      setCachedCloudOwnedFilms(prev => JSON.stringify(prev) === JSON.stringify(films) ? prev : films);
+    } catch (err) {
+      console.error('Collection fetch failed:', err);
+      setLoadError(err instanceof Error ? err.message : 'Collection archive is temporarily unavailable.');
+      setIsDegraded(cachedCloudOwnedFilms.length > 0);
+      if (cachedCloudOwnedFilms.length > 0) setDbOwnedFilms(cachedCloudOwnedFilms);
+    } finally {
+      setIsDbLoading(false);
+    }
+  }, [user, cachedCloudOwnedFilms, setCachedCloudOwnedFilms]);
 
   // Fetch from database when authenticated
   useEffect(() => {
-    if (!user || authLoading) return;
-
-    const fetchFromDb = async () => {
-      setIsDbLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from('user_settings')
-          .select('owned_films')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error('Error fetching user settings:', error);
-          return;
-        }
-
-        if (data?.owned_films) {
-          setDbOwnedFilms(data.owned_films as string[]);
-        }
-      } finally {
-        setIsDbLoading(false);
-      }
-    };
+    if (!isAuthReady) return;
+    if (!user) {
+      setIsDbLoading(false);
+      setLoadError(authError);
+      setIsDegraded(false);
+      return;
+    }
 
     fetchFromDb();
-  }, [user, authLoading]);
+  }, [user, isAuthReady, authError, fetchFromDb]);
 
   // Migrate localStorage data on first sign-in
   useEffect(() => {
-    if (!user || authLoading || hasMigrated || isDbLoading) return;
+    if (!user || !isAuthReady || hasMigrated || isDbLoading) return;
     if (localOwnedFilms.length === 0) return;
     if (dbOwnedFilms.length > 0) return; // Already has data in DB
 
@@ -73,18 +98,20 @@ export const useOwnedFilms = (): UseOwnedFilmsReturn => {
         // Clear localStorage after successful migration
         setLocalOwnedFilms([]);
         setDbOwnedFilms(localOwnedFilms);
+        setCachedCloudOwnedFilms(localOwnedFilms);
       } catch (err) {
         console.error('Migration error:', err);
       }
     };
 
     migrateData();
-  }, [user, authLoading, localOwnedFilms, dbOwnedFilms, hasMigrated, isDbLoading, setLocalOwnedFilms]);
+  }, [user, isAuthReady, localOwnedFilms, dbOwnedFilms, hasMigrated, isDbLoading, setLocalOwnedFilms, setCachedCloudOwnedFilms]);
 
   const setOwnedFilms = useCallback((updater: (prev: string[]) => string[]) => {
     if (user) {
       setDbOwnedFilms(prev => {
         const newFilms = updater(prev);
+        setCachedCloudOwnedFilms(newFilms);
         
         // Save to database in background
         supabase
@@ -107,15 +134,18 @@ export const useOwnedFilms = (): UseOwnedFilmsReturn => {
     } else {
       setLocalOwnedFilms(updater);
     }
-  }, [user, setLocalOwnedFilms]);
+  }, [user, setLocalOwnedFilms, setCachedCloudOwnedFilms]);
 
   // Return appropriate data based on auth state
   const ownedFilms = user ? dbOwnedFilms : localOwnedFilms;
-  const isLoading = authLoading || (user ? isDbLoading : false);
+  const isLoading = authLoading || !isAuthReady || (user ? isDbLoading : false);
 
   return {
     ownedFilms,
     setOwnedFilms,
     isLoading,
+    loadError,
+    isDegraded,
+    retryLoadOwnedFilms: fetchFromDb,
   };
 };

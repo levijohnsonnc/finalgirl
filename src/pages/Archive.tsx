@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { AlertTriangle, RotateCcw, Trash2 } from 'lucide-react';
 import { FilmToggle } from '@/components/FilmToggle';
 import { FEATURE_FILMS } from '@/types/gameData';
 import { useGameHistoryContext } from '@/contexts/GameHistoryContext';
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const Archive = () => {
-  const { ownedFilms, setOwnedFilms } = useOwnedFilms();
+  const { ownedFilms, setOwnedFilms, loadError, isDegraded, retryLoadOwnedFilms } = useOwnedFilms();
   const { clearHistory } = useGameHistoryContext();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -82,6 +82,25 @@ const Archive = () => {
           MANAGE YOUR COLLECTION • CONFIGURE SETTINGS
         </p>
       </div>
+
+      {loadError && (
+        <div className="mx-auto max-w-2xl border border-primary/30 bg-background/70 px-4 py-3 text-center">
+          <div className="flex items-center justify-center gap-2 font-vhs text-xs tracking-wider text-primary mb-2">
+            <AlertTriangle className="w-4 h-4" />
+            {isDegraded ? 'CLOUD ARCHIVE RECONNECTING' : 'COLLECTION UNAVAILABLE'}
+          </div>
+          <p className="text-sm text-muted-foreground mb-3">
+            {isDegraded ? 'Showing your last saved collection while the archive reconnects.' : 'Your cloud collection could not be reached. This is not an empty collection.'}
+          </p>
+          <button
+            onClick={retryLoadOwnedFilms}
+            className="font-vhs text-xs inline-flex items-center gap-2 border border-primary/40 px-4 py-2 text-primary hover:bg-primary/10 transition-colors"
+          >
+            <RotateCcw className="w-3 h-3" />
+            RETRY COLLECTION LOAD
+          </button>
+        </div>
+      )}
 
       {/* Reset Plays Button - Right aligned */}
       <div className="flex justify-end px-2">

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Play, Loader2 } from 'lucide-react';
+import { AlertTriangle, Play, Loader2, RotateCcw } from 'lucide-react';
 import { CastingSlot } from '@/components/CastingSlot';
 import { CastingPicker } from '@/components/CastingPicker';
 import { ScenarioDropdowns } from '@/components/ScenarioDropdowns';
@@ -26,7 +26,7 @@ interface CastingRoomProps {
 }
 
 const CastingRoom = ({ onStartGame, onGoToArchive }: CastingRoomProps) => {
-  const { ownedFilms, isLoading } = useOwnedFilms();
+  const { ownedFilms, isLoading, loadError, isDegraded, retryLoadOwnedFilms } = useOwnedFilms();
   
   const [selection, setSelection] = useState<CastingSelection>({
     killer: null,
@@ -105,6 +105,25 @@ const CastingRoom = ({ onStartGame, onGoToArchive }: CastingRoomProps) => {
     );
   }
 
+  if (loadError && !isDegraded && !hasOwnedContent) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <AlertTriangle className="w-16 h-16 mb-6 text-destructive/70" />
+        <h2 className="font-display text-3xl text-foreground mb-3 tracking-wider">COLLECTION UNAVAILABLE</h2>
+        <p className="font-vhs text-muted-foreground max-w-md mb-5">
+          Your cloud collection could not be reached. This is a connection problem, not an empty collection.
+        </p>
+        <button
+          onClick={retryLoadOwnedFilms}
+          className="font-vhs text-xs inline-flex items-center gap-2 border border-primary/40 px-4 py-2 text-primary hover:bg-primary/10 transition-colors"
+        >
+          <RotateCcw className="w-3 h-3" />
+          RETRY COLLECTION LOAD
+        </button>
+      </div>
+    );
+  }
+
   if (!hasOwnedContent) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
@@ -143,6 +162,11 @@ const CastingRoom = ({ onStartGame, onGoToArchive }: CastingRoomProps) => {
       
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center py-8 pt-24">
+        {isDegraded && (
+          <div className="mb-6 border border-primary/30 bg-background/70 px-4 py-2 text-center font-vhs text-[10px] text-muted-foreground tracking-wider">
+            CLOUD ARCHIVE RECONNECTING • USING SAVED COLLECTION
+          </div>
+        )}
         {/* Three Casting Slots - flex layout for different card sizes */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-10 mb-10 md:mb-14 w-full px-4">
           <CastingSlot
