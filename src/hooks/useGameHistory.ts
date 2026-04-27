@@ -142,9 +142,11 @@ const fromDbRow = (row: Record<string, unknown>): GameResult => ({
 export const useGameHistory = () => {
   const { user, isLoading: authLoading, isAuthReady, authError } = useAuth();
   const [localGameHistory, setLocalGameHistory] = useLocalStorage<GameResult[]>('final-girl-game-history', []);
+  const [cachedCloudGameHistory, setCachedCloudGameHistory] = useLocalStorage<GameResult[]>('final-girl-cloud-game-history-cache', []);
   const [dbGameHistory, setDbGameHistory] = useState<GameResult[]>([]);
   const [isDbLoading, setIsDbLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [isDegraded, setIsDegraded] = useState(false);
   const [hasMigrated, setHasMigrated] = useState(false);
   const fetchIdRef = useRef(0);
 
@@ -159,6 +161,7 @@ export const useGameHistory = () => {
 
     setIsDbLoading(true);
     setLoadError(null);
+    setIsDegraded(false);
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), 20000);
 
@@ -174,12 +177,16 @@ export const useGameHistory = () => {
         console.error('Error fetching game history:', error);
         if (fetchIdRef.current === fetchId) {
           setLoadError(error.message || 'Failed to retrieve session data.');
+          setIsDegraded(cachedCloudGameHistory.length > 0);
+          if (cachedCloudGameHistory.length > 0) setDbGameHistory(cachedCloudGameHistory);
         }
         return;
       }
 
       if (data && fetchIdRef.current === fetchId) {
-        setDbGameHistory(data.map(row => fromDbRow(row as unknown as Record<string, unknown>)));
+        const games = data.map(row => fromDbRow(row as unknown as Record<string, unknown>));
+        setDbGameHistory(games);
+        setCachedCloudGameHistory(games);
       }
     } catch (err) {
       console.error('Game history fetch failed:', err);
@@ -188,6 +195,8 @@ export const useGameHistory = () => {
           ? 'Cloud records did not respond within 20 seconds.'
           : err instanceof Error ? err.message : 'Failed to retrieve session data.';
         setLoadError(message);
+        setIsDegraded(cachedCloudGameHistory.length > 0);
+        if (cachedCloudGameHistory.length > 0) setDbGameHistory(cachedCloudGameHistory);
       }
     } finally {
       window.clearTimeout(timeoutId);
@@ -195,7 +204,7 @@ export const useGameHistory = () => {
         setIsDbLoading(false);
       }
     }
-  }, [user]);
+  }, [user, cachedCloudGameHistory, setCachedCloudGameHistory]);
 
   // Fetch from database when authenticated
   useEffect(() => {
@@ -245,7 +254,9 @@ export const useGameHistory = () => {
           .order('timestamp', { ascending: false });
 
         if (data) {
-          setDbGameHistory(data.map(row => fromDbRow(row as Record<string, unknown>)));
+          const games = data.map(row => fromDbRow(row as Record<string, unknown>));
+          setDbGameHistory(games);
+          setCachedCloudGameHistory(games);
         }
       } catch (err) {
         console.error('Migration error:', err);
@@ -253,7 +264,7 @@ export const useGameHistory = () => {
     };
 
     migrateData();
-  }, [user, isAuthReady, localGameHistory, dbGameHistory, hasMigrated, isDbLoading, setLocalGameHistory]);
+  }, [user, isAuthReady, localGameHistory, dbGameHistory, hasMigrated, isDbLoading, setLocalGameHistory, setCachedCloudGameHistory]);
 
   // recordGame returns synchronously but may do async work in background
   const recordGame = useCallback((result: Omit<GameResult, 'id' | 'timestamp'>): GameResult => {
