@@ -159,12 +159,16 @@ export const useGameHistory = () => {
 
     setIsDbLoading(true);
     setLoadError(null);
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 20000);
+
     try {
       const { data, error } = await supabase
         .from('game_history')
         .select(HISTORY_SUMMARY_SELECT)
         .eq('user_id', user.id)
-        .order('timestamp', { ascending: false });
+        .order('timestamp', { ascending: false })
+        .abortSignal(controller.signal);
 
       if (error) {
         console.error('Error fetching game history:', error);
@@ -180,9 +184,13 @@ export const useGameHistory = () => {
     } catch (err) {
       console.error('Game history fetch failed:', err);
       if (fetchIdRef.current === fetchId) {
-        setLoadError(err instanceof Error ? err.message : 'Failed to retrieve session data.');
+        const message = err instanceof DOMException && err.name === 'AbortError'
+          ? 'Cloud records did not respond within 20 seconds.'
+          : err instanceof Error ? err.message : 'Failed to retrieve session data.';
+        setLoadError(message);
       }
     } finally {
+      window.clearTimeout(timeoutId);
       if (fetchIdRef.current === fetchId) {
         setIsDbLoading(false);
       }
