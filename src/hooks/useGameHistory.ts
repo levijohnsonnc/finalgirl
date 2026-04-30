@@ -33,7 +33,13 @@ const deleteStorageFiles = async (game: { posterImageUrl?: string; sceneImageUrl
 const sanitizeStoredImageUrl = (value: unknown): string | undefined => {
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();
-  if (!trimmed || trimmed.startsWith('data:') || trimmed.length > 2048) return undefined;
+  if (!trimmed) return undefined;
+  // Allow http(s) URLs and inline data: image URIs (legacy stored posters).
+  // Data URIs can be several MB; only reject impossibly large strings to avoid memory issues.
+  if (trimmed.startsWith('data:')) {
+    return trimmed.startsWith('data:image/') ? trimmed : undefined;
+  }
+  if (trimmed.length > 4096) return undefined;
   return trimmed;
 };
 
