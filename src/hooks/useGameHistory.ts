@@ -54,6 +54,8 @@ const HISTORY_SUMMARY_SELECT = [
   'ending_sub_location',
   'victims_saved',
   'victims_killed',
+  'poster_image_url',
+  'scene_image_url',
 ].join(',');
 
 export interface GameResult {
