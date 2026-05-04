@@ -209,7 +209,8 @@ export const useGameHistory = () => {
       if (data && fetchIdRef.current === fetchId) {
         const games = data.map(row => fromDbRow(row as unknown as Record<string, unknown>));
         setDbGameHistory(games);
-        setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(games) ? prev : games);
+        const slimmed = slimGamesForCache(games);
+        setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(slimmed) ? prev : slimmed);
       }
     } catch (err) {
       console.error('Game history fetch failed:', err);
