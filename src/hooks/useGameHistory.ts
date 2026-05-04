@@ -333,9 +333,9 @@ export const useGameHistory = () => {
           game.id === id ? { ...game, ...updates } : game
         )
       );
-      setCachedCloudGameHistory(prev => 
-        prev.map(game => 
-          game.id === id ? { ...game, ...updates } : game
+      setCachedCloudGameHistory(prev =>
+        prev.map(game =>
+          game.id === id ? slimGameForCache({ ...game, ...updates }) : game
         )
       );
       
