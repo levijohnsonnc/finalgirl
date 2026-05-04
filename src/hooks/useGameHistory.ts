@@ -280,7 +280,8 @@ export const useGameHistory = () => {
         if (data) {
           const games = data.map(row => fromDbRow(row as Record<string, unknown>));
           setDbGameHistory(games);
-          setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(games) ? prev : games);
+          const slimmed = slimGamesForCache(games);
+          setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(slimmed) ? prev : slimmed);
         }
       } catch (err) {
         console.error('Migration error:', err);
