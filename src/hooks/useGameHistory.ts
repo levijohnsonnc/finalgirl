@@ -302,7 +302,7 @@ export const useGameHistory = () => {
     if (user) {
       // Optimistically update local state
       setDbGameHistory(prev => [newResult, ...prev]);
-      setCachedCloudGameHistory(prev => [newResult, ...prev]);
+      setCachedCloudGameHistory(prev => [slimGameForCache(newResult), ...prev]);
       
       // Save to database in background
       supabase
