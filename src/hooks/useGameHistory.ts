@@ -30,6 +30,21 @@ const deleteStorageFiles = async (game: { posterImageUrl?: string; sceneImageUrl
   }
 };
 
+// Strip heavy inline data: URIs before caching to localStorage to avoid
+// QuotaExceededError. The full image is still available via cloud refetch.
+const slimGameForCache = (game: GameResult): GameResult => {
+  const slim = { ...game };
+  if (typeof slim.posterImageUrl === 'string' && slim.posterImageUrl.startsWith('data:')) {
+    delete slim.posterImageUrl;
+  }
+  if (typeof slim.sceneImageUrl === 'string' && slim.sceneImageUrl.startsWith('data:')) {
+    delete slim.sceneImageUrl;
+  }
+  return slim;
+};
+
+const slimGamesForCache = (games: GameResult[]): GameResult[] => games.map(slimGameForCache);
+
 const sanitizeStoredImageUrl = (value: unknown): string | undefined => {
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();
@@ -194,7 +209,8 @@ export const useGameHistory = () => {
       if (data && fetchIdRef.current === fetchId) {
         const games = data.map(row => fromDbRow(row as unknown as Record<string, unknown>));
         setDbGameHistory(games);
-        setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(games) ? prev : games);
+        const slimmed = slimGamesForCache(games);
+        setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(slimmed) ? prev : slimmed);
       }
     } catch (err) {
       console.error('Game history fetch failed:', err);
@@ -264,7 +280,8 @@ export const useGameHistory = () => {
         if (data) {
           const games = data.map(row => fromDbRow(row as Record<string, unknown>));
           setDbGameHistory(games);
-          setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(games) ? prev : games);
+          const slimmed = slimGamesForCache(games);
+          setCachedCloudGameHistory(prev => JSON.stringify(prev) === JSON.stringify(slimmed) ? prev : slimmed);
         }
       } catch (err) {
         console.error('Migration error:', err);
@@ -285,7 +302,7 @@ export const useGameHistory = () => {
     if (user) {
       // Optimistically update local state
       setDbGameHistory(prev => [newResult, ...prev]);
-      setCachedCloudGameHistory(prev => [newResult, ...prev]);
+      setCachedCloudGameHistory(prev => [slimGameForCache(newResult), ...prev]);
       
       // Save to database in background
       supabase
@@ -316,9 +333,9 @@ export const useGameHistory = () => {
           game.id === id ? { ...game, ...updates } : game
         )
       );
-      setCachedCloudGameHistory(prev => 
-        prev.map(game => 
-          game.id === id ? { ...game, ...updates } : game
+      setCachedCloudGameHistory(prev =>
+        prev.map(game =>
+          game.id === id ? slimGameForCache({ ...game, ...updates }) : game
         )
       );
       
