@@ -30,6 +30,21 @@ const deleteStorageFiles = async (game: { posterImageUrl?: string; sceneImageUrl
   }
 };
 
+// Strip heavy inline data: URIs before caching to localStorage to avoid
+// QuotaExceededError. The full image is still available via cloud refetch.
+const slimGameForCache = (game: GameResult): GameResult => {
+  const slim = { ...game };
+  if (typeof slim.posterImageUrl === 'string' && slim.posterImageUrl.startsWith('data:')) {
+    delete slim.posterImageUrl;
+  }
+  if (typeof slim.sceneImageUrl === 'string' && slim.sceneImageUrl.startsWith('data:')) {
+    delete slim.sceneImageUrl;
+  }
+  return slim;
+};
+
+const slimGamesForCache = (games: GameResult[]): GameResult[] => games.map(slimGameForCache);
+
 const sanitizeStoredImageUrl = (value: unknown): string | undefined => {
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();
